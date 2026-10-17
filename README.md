@@ -1,12 +1,37 @@
-# Squishy Studio
+# Squishy Studio｜虚拟脆皮捏捏
 
-A planned website for a realistic 3D virtual squishy toy with crunchy ASMR effects and elastic deformation.
+一个正在规划中的中文虚拟解压网站，让用户直接在浏览器中体验拟真 3D 脆皮捏捏玩具，感受局部挤压、脆皮碎裂、柔软回弹与同步 ASMR 音效。
 
-## Development goals
+## 产品目标
 
-- Build an interactive 3D toy that responds naturally to touch, pointer, and keyboard input.
-- Add elastic deformation and a satisfying return to shape.
-- Create crunchy ASMR audio that responds to the toy's motion.
-- Make the experience usable across desktop and mobile devices.
+- 打开网页即可开始体验，无需安装或注册账号。
+- 通过按压、拖动和松开，获得自然、连续的形变反馈。
+- 将清脆的表面碎裂与柔软的弹性回弹结合起来。
+- 使用与动作同步的 ASMR 音效，并提供明确的声音开关。
+- 兼顾桌面鼠标与手机触屏操作。
 
-The repository currently contains project setup only. Application development has not started.
+## 语言与视觉方向
+
+- 网站默认使用简体中文，导航、操作提示、按钮和状态反馈均采用中文文案。
+- 项目说明与面向用户的文档优先使用中文，保留 Squishy Studio 品牌名称。
+- 视觉以拟真 3D 为主，营造安静、精致的数字解压工作室氛围。
+
+## 首版范围
+
+先做好一个玩具和一套完整的脆皮与软芯体验，再根据验证结果考虑更多材质和玩具。
+
+首版聚焦页面体验、玩具表现、核心交互、音效和移动端适配。账号、支付、社交、收藏和多玩具商城暂不纳入首版。
+
+## 阶段规划
+
+1. **页面 UI 与视觉框架**：确定中文页面结构、视觉层级、操作控件和响应式布局。
+2. **正式 3D 玩具与材质**：规划并验证模型、材质、光影与渲染表现。
+3. **核心交互**：实现按压、拖动、局部形变、脆皮反馈与弹性恢复。
+4. **声音与材质差异**：完善 ASMR 音效与动作同步，再评估材质扩展。
+5. **体验优化与上线准备**：完成性能、兼容性、加载、基础 SEO 和上线验收。
+
+## 当前状态
+
+项目处于产品规划阶段，仓库目前仅包含基础项目说明与配置，尚未开始网站功能开发。
+
+具体技术方案将在后续验证后确定，当前没有可运行的网站或启动命令。
