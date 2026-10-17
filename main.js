@@ -10,7 +10,7 @@ toggle.addEventListener('click', () => {
   toggle.setAttribute('aria-pressed', String(isNight));
   toggle.setAttribute('aria-label', isNight ? '切换到白天' : '切换到夜晚');
   label.textContent = isNight ? '夜晚' : '白天';
-  themeMeta.content = isNight ? '#241849' : '#f9f3f4';
+  themeMeta.content = isNight ? '#17243d' : '#f9f3f4';
   scene.classList.add('is-transitioning');
   clearTimeout(transitionTimer);
   transitionTimer = setTimeout(() => scene.classList.remove('is-transitioning'), 1500);

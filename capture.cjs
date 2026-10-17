@@ -17,7 +17,7 @@ const fs = require('node:fs');
    if (name === 'desktop') await page.screenshot({ path: 'artifacts/desktop-transition.png' });
    await page.waitForTimeout(1100);
    await page.screenshot({ path: `artifacts/${name}-night.png` });
-   if (name === 'desktop') { await page.getByRole('button', { name: '切换到白天' }).click(); await page.waitForTimeout(350); await page.getByRole('button', { name: '切换到夜晚' }).click(); await page.waitForTimeout(1250); }
+   if (name === 'desktop') { await page.getByRole('button', { name: '切换到白天' }).click(); await page.waitForTimeout(550); await page.screenshot({ path: 'artifacts/desktop-night-to-day.png' }); await page.getByRole('button', { name: '切换到夜晚' }).click(); await page.waitForTimeout(1250); }
    const video = name === 'desktop' ? page.video() : null;
    await context.close();
    if (video) fs.renameSync(await video.path(), 'artifacts/day-night-demo.webm');

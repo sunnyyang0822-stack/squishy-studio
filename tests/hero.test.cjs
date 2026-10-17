@@ -33,10 +33,12 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   const toggle = page.getByRole('button', { name: '切换到夜晚' });
   await toggle.click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
+  assert.equal(await page.locator('meta[name="theme-color"]').getAttribute('content'), '#17243d');
   assert.equal(await page.locator('.scene').evaluate(el => el.classList.contains('is-transitioning')), true);
   assert.equal(await page.locator('.theme-toggle__label').textContent(), '夜晚');
   const midOpacity = await page.locator('.scene').evaluate(el => Number(getComputedStyle(el, '::before').opacity));
   assert.ok(midOpacity < 1, `背景应连续过渡，得到 ${midOpacity}`);
+  assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).textShadow), 'none');
   await page.waitForTimeout(180);
   const { beforeReverse, afterReverse } = await page.evaluate(() => {
     const scene = document.querySelector('.scene');
@@ -45,6 +47,9 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
     return { beforeReverse: before, afterReverse: Number(getComputedStyle(scene, '::before').opacity) };
   });
   assert.ok(Math.abs(afterReverse - beforeReverse) < .05, `反向切换不应重置亮度：${beforeReverse} → ${afterReverse}`);
+  assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).textShadow), 'none');
+  await page.waitForTimeout(500);
+  assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).color), 'rgb(129, 92, 118)');
   await page.getByRole('button', { name: '切换到夜晚' }).click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   assert.equal(await page.locator('.theme-toggle').getAttribute('aria-pressed'), 'true');
@@ -52,15 +57,21 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   await page.close();
 });
 
-test('品牌保留确认版的挤出字形和正侧面层次', () => {
+test('品牌曲面细分更平滑，交叠更轻，保留磨砂层次', () => {
   const source = readFileSync('src/brand3d.js', 'utf8');
   assert.match(source, /new TextGeometry\(char/);
-  assert.match(source, /bevelEnabled: true, bevelThickness: \.22, bevelSize: \.125, bevelSegments: 8/);
+  assert.match(source, /curveSegments: 36/);
+  assert.match(source, /bevelEnabled: true, bevelThickness: \.22, bevelSize: \.125, bevelSegments: 16/);
   assert.doesNotMatch(source, /TubeGeometry/);
-  assert.match(source, /face: new THREE\.Color\(0xf72489\), side: new THREE\.Color\(0xaa1d67\)/);
-  assert.match(source, /face: new THREE\.Color\(0xf250a4\), side: new THREE\.Color\(0x89276b\)/);
-  assert.match(source, /color: 0xf72489, roughness: \.49, metalness: 0, clearcoat: \.5/);
-  assert.match(source, /color: 0xaa1d67, roughness: \.56, metalness: 0, clearcoat: \.25/);
+  assert.match(source, /letter\.position\.set\(cursor, 0, 0\)/);
+  assert.doesNotMatch(source, /letter\.rotation\.y/);
+  assert.match(source, /color: 0xe3297f, roughness: \.49, metalness: 0, clearcoat: \.5/);
+  assert.match(source, /color: 0x9f2b65, roughness: \.56, metalness: 0, clearcoat: \.25/);
+  const saturation = hex => {
+    const channels = [hex >> 16 & 255, hex >> 8 & 255, hex & 255];
+    return Math.max(...channels) - Math.min(...channels);
+  };
+  assert.ok(saturation(0xe3297f) < saturation(0xf72489));
 });
 
 test('手机和短屏仍能看到主体与切换控件', async () => {
