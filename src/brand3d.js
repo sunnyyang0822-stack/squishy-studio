@@ -81,10 +81,10 @@ try {
     keyPower: 3.1, fillPower: 1.5, exposure: 1.34,
   };
   const night = {
-    ambient: new THREE.Color(0x778eb7), key: new THREE.Color(0xffd9e8),
-    fill: new THREE.Color(0x8cdae8), rim: new THREE.Color(0xc494c0),
-    face: new THREE.Color(0xbf6194), side: new THREE.Color(0x68416d),
-    keyPower: 2.15, fillPower: 1.2, exposure: 1.18,
+    ambient: new THREE.Color(0x786ba9), key: new THREE.Color(0xe9d4f7),
+    fill: new THREE.Color(0x86a7d5), rim: new THREE.Color(0xbd7ee2),
+    face: new THREE.Color(0xb761b5), side: new THREE.Color(0x593779),
+    keyPower: 2.15, fillPower: 1.1, exposure: 1.18,
   };
   let light = document.documentElement.dataset.theme === 'night' ? 1 : 0;
   let from = light;

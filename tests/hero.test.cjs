@@ -30,10 +30,25 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   assert.equal(await page.locator('.brand-face').first().evaluate(el => getComputedStyle(el).stroke), 'none');
   assert.equal(await page.locator('.brand-depth-mid').count(), 2);
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'day');
+  assert.equal(await page.locator('.sparkle-left').evaluate(el => getComputedStyle(el).color), 'rgb(248, 243, 156)');
   const toggle = page.getByRole('button', { name: '切换到夜晚' });
   await toggle.click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
-  assert.equal(await page.locator('meta[name="theme-color"]').getAttribute('content'), '#17243d');
+  assert.equal(await page.locator('meta[name="theme-color"]').getAttribute('content'), '#11142d');
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--star').trim()), '#a8f3ff');
+  const nightPalette = await page.evaluate(() => {
+    const css = getComputedStyle(document.documentElement);
+    return ['--sky-top', '--sky-bottom', '--ink', '--subtle'].map(name => css.getPropertyValue(name).trim());
+  });
+  assert.equal(nightPalette[0], '#11142d');
+  const luminance = hex => {
+    const values = hex.match(/[\da-f]{2}/gi).map(value => parseInt(value, 16) / 255);
+    const [r, g, b] = values.map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
+    return .2126 * r + .7152 * g + .0722 * b;
+  };
+  const contrast = (a, b) => (Math.max(luminance(a), luminance(b)) + .05) / (Math.min(luminance(a), luminance(b)) + .05);
+  assert.ok(contrast(nightPalette[2], nightPalette[1]) >= 4.5);
+  assert.ok(contrast(nightPalette[3], nightPalette[1]) >= 4.5);
   assert.equal(await page.locator('.scene').evaluate(el => el.classList.contains('is-transitioning')), true);
   assert.equal(await page.locator('.theme-toggle__label').textContent(), '夜晚');
   const midOpacity = await page.locator('.scene').evaluate(el => Number(getComputedStyle(el, '::before').opacity));
