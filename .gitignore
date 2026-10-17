@@ -1,0 +1,15 @@
+node_modules/
+.next/
+dist/
+.vercel/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local editor and operating-system files
+.DS_Store
+Thumbs.db
