@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="day">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f9f3f4" />
+    <meta name="description" content="Squishy Studio：一个可以在浏览器里玩的虚拟脆皮捏捏。" />
+    <title>Squishy Studio｜柔软的一刻</title>
+    <link rel="preload" href="assets/fredoka-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <main class="scene" aria-labelledby="page-title">
+      <div class="ambient ambient-cyan" aria-hidden="true"></div>
+      <div class="ambient ambient-pink" aria-hidden="true"></div>
+      <div class="horizon" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
+      <div class="stars" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+
+      <header class="topbar">
+        <div class="studio-mark" aria-label="柔软的一刻">
+          <span class="mark-sparkle" aria-hidden="true">✦</span>
+          <span>柔软的一刻</span>
+        </div>
+        <button class="theme-toggle" type="button" aria-label="切换到夜晚" aria-pressed="false">
+          <span class="theme-toggle__track" aria-hidden="true">
+            <span class="theme-toggle__sun"></span>
+            <span class="theme-toggle__moon"></span>
+            <span class="theme-toggle__thumb"></span>
+          </span>
+          <span class="theme-toggle__label">白天</span>
+        </button>
+      </header>
+
+      <div class="floating-shape shape-left" aria-hidden="true"></div>
+      <div class="floating-shape shape-right" aria-hidden="true"></div>
+      <div class="sparkle sparkle-left" aria-hidden="true">✦</div>
+      <div class="sparkle sparkle-right" aria-hidden="true">✧</div>
+
+      <section class="hero">
+        <p class="eyebrow"><span class="eyebrow-line"></span>你好，欢迎来到<span class="eyebrow-line"></span></p>
+        <h1 id="page-title" class="sr-only">Squishy Studio</h1>
+        <div class="brand-stage" aria-hidden="true">
+          <div class="brand-halo"></div>
+          <svg class="brand" viewBox="0 0 1100 490" xmlns="http://www.w3.org/2000/svg" role="presentation">
+            <defs>
+              <linearGradient id="face" x1="0" y1="0" x2="0.18" y2="1" objectBoundingBox="true">
+                <stop offset="0" stop-color="#fff0f2" />
+                <stop offset="0.17" stop-color="#ff9ec2" />
+                <stop offset="0.54" stop-color="#ff4e9b" />
+                <stop offset="1" stop-color="#d82778" />
+              </linearGradient>
+              <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#ffbfd4" />
+                <stop offset="0.5" stop-color="#f54791" />
+                <stop offset="1" stop-color="#a92c70" />
+              </linearGradient>
+              <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#fff" stop-opacity=".88" />
+                <stop offset=".28" stop-color="#fff" stop-opacity=".18" />
+                <stop offset=".58" stop-color="#fff" stop-opacity="0" />
+              </linearGradient>
+              <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="160%">
+                <feGaussianBlur stdDeviation="13" />
+              </filter>
+            </defs>
+            <g class="brand-row row-one">
+              <text class="brand-shadow" x="550" y="204">Squishy</text>
+              <text class="brand-depth" x="550" y="204">Squishy</text>
+              <text class="brand-edge" x="550" y="204">Squishy</text>
+              <text class="brand-face" x="550" y="204">Squishy</text>
+              <text class="brand-shine" x="550" y="204">Squishy</text>
+            </g>
+            <g class="brand-row row-two">
+              <text class="brand-shadow" x="550" y="414">Studio</text>
+              <text class="brand-depth" x="550" y="414">Studio</text>
+              <text class="brand-edge" x="550" y="414">Studio</text>
+              <text class="brand-face" x="550" y="414">Studio</text>
+              <text class="brand-shine" x="550" y="414">Studio</text>
+            </g>
+          </svg>
+        </div>
+        <p class="hero-line">把片刻留给自己。<br />在柔软与清脆之间，找到一点松弛。</p>
+        <p class="hero-note">一个可以在浏览器里玩的虚拟脆皮捏捏。</p>
+      </section>
+
+      <footer class="scene-footer">
+        <span class="footer-star" aria-hidden="true">✳</span>
+        <span>给心情一点回弹的空间</span>
+        <span class="footer-star" aria-hidden="true">✳</span>
+      </footer>
+    </main>
+  </body>
+</html>
