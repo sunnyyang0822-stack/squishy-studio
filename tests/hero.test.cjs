@@ -31,8 +31,18 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   assert.equal(await page.locator('.brand-depth-mid').count(), 2);
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'day');
   assert.equal(await page.locator('.sparkle-left').evaluate(el => getComputedStyle(el).color), 'rgb(248, 243, 156)');
-  const toggle = page.getByRole('button', { name: '切换到夜晚' });
-  await toggle.click();
+  const firstSwitch = await page.evaluate(() => {
+    const scene = document.querySelector('.scene');
+    const before = Number(getComputedStyle(scene, '::before').opacity);
+    document.querySelector('.theme-toggle').click();
+    return {
+      before,
+      after: Number(getComputedStyle(scene, '::before').opacity),
+      transitioning: scene.classList.contains('is-transitioning'),
+    };
+  });
+  assert.equal(firstSwitch.transitioning, true);
+  assert.ok(Math.abs(firstSwitch.after - firstSwitch.before) < .05);
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   assert.equal(await page.locator('meta[name="theme-color"]').getAttribute('content'), '#11142d');
   assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--star').trim()), '#a8f3ff');
@@ -49,10 +59,7 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   const contrast = (a, b) => (Math.max(luminance(a), luminance(b)) + .05) / (Math.min(luminance(a), luminance(b)) + .05);
   assert.ok(contrast(nightPalette[2], nightPalette[1]) >= 4.5);
   assert.ok(contrast(nightPalette[3], nightPalette[1]) >= 4.5);
-  assert.equal(await page.locator('.scene').evaluate(el => el.classList.contains('is-transitioning')), true);
   assert.equal(await page.locator('.theme-toggle__label').textContent(), '夜晚');
-  const midOpacity = await page.locator('.scene').evaluate(el => Number(getComputedStyle(el, '::before').opacity));
-  assert.ok(midOpacity < 1, `背景应连续过渡，得到 ${midOpacity}`);
   assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).textShadow), 'none');
   await page.waitForTimeout(180);
   const { beforeReverse, afterReverse } = await page.evaluate(() => {
