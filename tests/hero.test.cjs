@@ -52,17 +52,15 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   await page.close();
 });
 
-test('品牌使用连续倒角的挤出字形，并保持正面与侧面色相接近', () => {
+test('品牌保留确认版的挤出字形和正侧面层次', () => {
   const source = readFileSync('src/brand3d.js', 'utf8');
   assert.match(source, /new TextGeometry\(char/);
   assert.match(source, /bevelEnabled: true, bevelThickness: \.22, bevelSize: \.125, bevelSegments: 8/);
   assert.doesNotMatch(source, /TubeGeometry/);
-  const faceColor = Number(source.match(/face: new THREE\.Color\((0x[\da-f]+)\)/i)?.[1]);
-  const sideColor = Number(source.match(/side: new THREE\.Color\((0x[\da-f]+)\)/i)?.[1]);
-  const channels = color => [color >> 16 & 255, color >> 8 & 255, color & 255];
-  const face = channels(faceColor);
-  const side = channels(sideColor);
-  assert.ok(face.every((value, index) => Math.abs(value - side[index]) < 20));
+  assert.match(source, /face: new THREE\.Color\(0xf72489\), side: new THREE\.Color\(0xaa1d67\)/);
+  assert.match(source, /face: new THREE\.Color\(0xf250a4\), side: new THREE\.Color\(0x89276b\)/);
+  assert.match(source, /color: 0xf72489, roughness: \.49, metalness: 0, clearcoat: \.5/);
+  assert.match(source, /color: 0xaa1d67, roughness: \.56, metalness: 0, clearcoat: \.25/);
 });
 
 test('手机和短屏仍能看到主体与切换控件', async () => {

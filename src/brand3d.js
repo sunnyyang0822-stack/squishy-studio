@@ -41,7 +41,7 @@ try {
   scene.add(rim);
 
   const face = new THREE.MeshPhysicalMaterial({ color: 0xf72489, roughness: .49, metalness: 0, clearcoat: .5, clearcoatRoughness: .45, specularIntensity: .65 });
-  const side = new THREE.MeshPhysicalMaterial({ color: 0xe82786, roughness: .52, metalness: 0, clearcoat: .4, clearcoatRoughness: .48, specularIntensity: .6 });
+  const side = new THREE.MeshPhysicalMaterial({ color: 0xaa1d67, roughness: .56, metalness: 0, clearcoat: .25, clearcoatRoughness: .5, specularIntensity: .55 });
   const font = new FontLoader().parse(fontData);
   const title = new THREE.Group();
   title.rotation.set(-.09, -.1, -.018);
@@ -76,13 +76,13 @@ try {
   const day = {
     ambient: new THREE.Color(0xffe3ef), key: new THREE.Color(0xfff2e8),
     fill: new THREE.Color(0x9df5ff), rim: new THREE.Color(0xff83bd),
-    face: new THREE.Color(0xf72489), side: new THREE.Color(0xe82786),
+    face: new THREE.Color(0xf72489), side: new THREE.Color(0xaa1d67),
     keyPower: 3.3, fillPower: 1.5, exposure: 1.38,
   };
   const night = {
     ambient: new THREE.Color(0x958bc8), key: new THREE.Color(0xffbee1),
     fill: new THREE.Color(0x80e7ff), rim: new THREE.Color(0xff70b4),
-    face: new THREE.Color(0xf250a4), side: new THREE.Color(0xde479c),
+    face: new THREE.Color(0xf250a4), side: new THREE.Color(0x89276b),
     keyPower: 2.7, fillPower: 1.4, exposure: 1.48,
   };
   let light = document.documentElement.dataset.theme === 'night' ? 1 : 0;
