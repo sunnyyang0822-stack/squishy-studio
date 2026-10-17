@@ -107,13 +107,17 @@ button { font: inherit; }
 .brand-stage { position: relative; width: min(85vw, 1040px); margin: 0 auto; }
 .brand-halo { position: absolute; z-index: -1; inset: 23% 9% 7%; border-radius: 50%; background: var(--halo); filter: blur(55px); transition: background-color 1100ms ease; }
 .brand { display: block; width: 100%; overflow: visible; filter: brightness(var(--brand-brightness)) drop-shadow(0 25px 21px var(--brand-shadow)); transition: filter 1100ms ease; }
-.brand-row text { font: 700 195px Fredoka, "Arial Rounded MT Bold", sans-serif; text-anchor: middle; dominant-baseline: alphabetic; paint-order: stroke fill; stroke-linecap: round; stroke-linejoin: round; letter-spacing: -5px; }
+.brand-canvas { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 450ms ease; }
+.brand-stage.is-3d-ready .brand-canvas { opacity: 1; }
+.brand-stage.is-3d-ready .brand-fallback { opacity: 0; }
+.brand-row text { font: 700 195px Fredoka, "Arial Rounded MT Bold", sans-serif; text-anchor: middle; dominant-baseline: alphabetic; letter-spacing: -3px; stroke: none; }
 .row-two text { font-size: 208px; }
-.brand-shadow { fill: #783d73; stroke: #783d73; stroke-width: 34px; opacity: .25; transform: translateY(39px); filter: url(#soft-shadow); }
-.brand-depth { fill: #a93072; stroke: #a93072; stroke-width: 34px; transform: translateY(27px); }
-.brand-edge { fill: url(#edge); stroke: url(#edge); stroke-width: 35px; transform: translateY(12px); }
-.brand-face { fill: url(#face); stroke: url(#edge); stroke-width: 33px; }
-.brand-shine { fill: url(#shine); stroke: none; opacity: .68; transform: translateY(-3px); }
+.brand-shadow { fill: #783d73; opacity: .25; transform: translate(-12px, 43px); filter: url(#soft-shadow); }
+.brand-depth { fill: #a93072; transform: translate(-11px, 31px); }
+.brand-depth-mid { fill: #c3387f; transform: translate(-8px, 22px); }
+.brand-edge { fill: url(#edge); transform: translate(-5px, 14px); }
+.brand-face { fill: url(#face); }
+.brand-shine { fill: url(#shine); opacity: .4; transform: translateY(-3px); }
 .hero-line { margin: -1px 0 11px; color: var(--ink); font-size: clamp(20px, 2vw, 27px); font-weight: 600; line-height: 1.65; letter-spacing: .045em; transition: color 1050ms ease; }
 .hero-note { margin: 0; color: var(--subtle); font-size: clamp(13px, 1.08vw, 16px); line-height: 1.6; letter-spacing: .04em; transition: color 1050ms ease; }
 .floating-shape { position: absolute; z-index: 0; border-radius: 48% 52% 65% 35% / 42% 47% 53% 58%; background: linear-gradient(140deg, var(--shape-a), var(--shape-b)); box-shadow: inset 10px 12px 23px rgba(255,255,255,.72), inset -12px -15px 21px rgba(150,72,144,.12), 0 25px 35px rgba(139,75,133,.12); opacity: .76; transition: background 1100ms ease, box-shadow 1100ms ease, opacity 1100ms ease; }

@@ -1,7 +1,7 @@
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
-const { existsSync } = require('node:fs');
+const { existsSync, readFileSync } = require('node:fs');
 const { chromium } = require('playwright');
 
 let server;
@@ -25,6 +25,10 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   await page.goto(url);
   await page.evaluate(() => document.fonts.ready);
   assert.equal(await page.locator('h1').textContent(), 'Squishy Studio');
+  await page.locator('.brand-stage.is-3d-ready').waitFor();
+  assert.equal(await page.locator('.brand-canvas').evaluate(el => !!el.getContext('webgl2')), true);
+  assert.equal(await page.locator('.brand-face').first().evaluate(el => getComputedStyle(el).stroke), 'none');
+  assert.equal(await page.locator('.brand-depth-mid').count(), 2);
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'day');
   const toggle = page.getByRole('button', { name: '切换到夜晚' });
   await toggle.click();
@@ -34,10 +38,13 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   const midOpacity = await page.locator('.scene').evaluate(el => Number(getComputedStyle(el, '::before').opacity));
   assert.ok(midOpacity < 1, `背景应连续过渡，得到 ${midOpacity}`);
   await page.waitForTimeout(180);
-  const beforeReverse = await page.locator('.scene').evaluate(el => Number(getComputedStyle(el, '::before').opacity));
-  await page.getByRole('button', { name: '切换到白天' }).click();
-  const afterReverse = await page.locator('.scene').evaluate(el => Number(getComputedStyle(el, '::before').opacity));
-  assert.ok(Math.abs(afterReverse - beforeReverse) < .18, `反向切换不应重置亮度：${beforeReverse} → ${afterReverse}`);
+  const { beforeReverse, afterReverse } = await page.evaluate(() => {
+    const scene = document.querySelector('.scene');
+    const before = Number(getComputedStyle(scene, '::before').opacity);
+    document.querySelector('.theme-toggle').click();
+    return { beforeReverse: before, afterReverse: Number(getComputedStyle(scene, '::before').opacity) };
+  });
+  assert.ok(Math.abs(afterReverse - beforeReverse) < .05, `反向切换不应重置亮度：${beforeReverse} → ${afterReverse}`);
   await page.getByRole('button', { name: '切换到夜晚' }).click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   assert.equal(await page.locator('.theme-toggle').getAttribute('aria-pressed'), 'true');
@@ -45,11 +52,25 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   await page.close();
 });
 
+test('品牌使用连续倒角的挤出字形，并保持正面与侧面色相接近', () => {
+  const source = readFileSync('src/brand3d.js', 'utf8');
+  assert.match(source, /new TextGeometry\(char/);
+  assert.match(source, /bevelEnabled: true, bevelThickness: \.22, bevelSize: \.125, bevelSegments: 8/);
+  assert.doesNotMatch(source, /TubeGeometry/);
+  const faceColor = Number(source.match(/face: new THREE\.Color\((0x[\da-f]+)\)/i)?.[1]);
+  const sideColor = Number(source.match(/side: new THREE\.Color\((0x[\da-f]+)\)/i)?.[1]);
+  const channels = color => [color >> 16 & 255, color >> 8 & 255, color & 255];
+  const face = channels(faceColor);
+  const side = channels(sideColor);
+  assert.ok(face.every((value, index) => Math.abs(value - side[index]) < 20));
+});
+
 test('手机和短屏仍能看到主体与切换控件', async () => {
   for (const viewport of [{ width: 390, height: 844 }, { width: 375, height: 667 }, { width: 320, height: 568 }]) {
     const page = await browser.newPage({ viewport, isMobile: true, deviceScaleFactor: 1 });
     await page.goto(url);
     await page.evaluate(() => document.fonts.ready);
+    await page.locator('.brand-stage.is-3d-ready').waitFor();
     const result = await page.evaluate(() => {
       const box = selector => document.querySelector(selector).getBoundingClientRect();
       return { brand: box('.brand-stage').toJSON(), letters: [...document.querySelectorAll('.brand-face')].map(el => el.getBoundingClientRect().toJSON()), toggle: box('.theme-toggle').toJSON(), note: box('.hero-note').toJSON(), width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth };
@@ -71,5 +92,21 @@ test('减少动态效果时仍能切换', async () => {
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   const duration = await page.locator('.scene').evaluate(el => getComputedStyle(el).transitionDuration);
   assert.match(duration, /0\.18s/);
+  await page.close();
+});
+
+test('WebGL 不可用时保留可读的备用字标', async () => {
+  const page = await browser.newPage();
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+      if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') return null;
+      return original.call(this, type, ...args);
+    };
+  });
+  await page.goto(url);
+  assert.equal(await page.locator('.brand-stage').evaluate(el => el.classList.contains('is-3d-ready')), false);
+  assert.equal(await page.locator('.brand-fallback').evaluate(el => getComputedStyle(el).opacity), '1');
+  assert.equal(await page.locator('h1').textContent(), 'Squishy Studio');
   await page.close();
 });

@@ -52,4 +52,4 @@ npm run capture
 
 测试通过 Playwright 使用本机 Edge；其他系统可先执行 `npx playwright install chromium`。也可用 `PLAYWRIGHT_BROWSER_PATH` 指定浏览器可执行文件。截图与昼夜切换录屏保存在 `artifacts/`。
 
-品牌字标使用本地 Fredoka 字体文件，授权文本见 `assets/FREDOKA-LICENSE.txt`。背景与品牌表现由项目内 HTML、SVG 和 CSS 实现，未来的主体交互可从 `brand-stage` 独立接入。
+品牌字标由 `src/brand3d.js` 使用 Three.js 生成真实挤出网格、圆角倒角与昼夜灯光；`npm start` 和 `npm test` 会先执行 `npm run build:brand`，生成浏览器脚本和 Fredoka 字形数据。WebGL 不可用时显示 SVG 备用字标。字体与 Three.js 授权文本分别见 `assets/FREDOKA-LICENSE.txt` 和 `assets/THREE-LICENSE.txt`。未来的主体交互可从 `brand-stage` 和独立的 3D 模块接入。

@@ -9,6 +9,7 @@
     <link rel="preload" href="assets/fredoka-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="styles.css" />
     <script src="main.js" defer></script>
+    <script src="assets/brand3d.js" defer></script>
   </head>
   <body>
     <main class="scene" aria-labelledby="page-title">
@@ -45,7 +46,8 @@
         <h1 id="page-title" class="sr-only">Squishy Studio</h1>
         <div class="brand-stage" aria-hidden="true">
           <div class="brand-halo"></div>
-          <svg class="brand" viewBox="0 0 1100 490" xmlns="http://www.w3.org/2000/svg" role="presentation">
+          <canvas class="brand-canvas" aria-hidden="true"></canvas>
+          <svg class="brand brand-fallback" viewBox="0 0 1100 490" xmlns="http://www.w3.org/2000/svg" role="presentation">
             <defs>
               <linearGradient id="face" x1="0" y1="0" x2="0.18" y2="1" objectBoundingBox="true">
                 <stop offset="0" stop-color="#fff0f2" />
@@ -70,6 +72,7 @@
             <g class="brand-row row-one">
               <text class="brand-shadow" x="550" y="204">Squishy</text>
               <text class="brand-depth" x="550" y="204">Squishy</text>
+              <text class="brand-depth-mid" x="550" y="204">Squishy</text>
               <text class="brand-edge" x="550" y="204">Squishy</text>
               <text class="brand-face" x="550" y="204">Squishy</text>
               <text class="brand-shine" x="550" y="204">Squishy</text>
@@ -77,6 +80,7 @@
             <g class="brand-row row-two">
               <text class="brand-shadow" x="550" y="414">Studio</text>
               <text class="brand-depth" x="550" y="414">Studio</text>
+              <text class="brand-depth-mid" x="550" y="414">Studio</text>
               <text class="brand-edge" x="550" y="414">Studio</text>
               <text class="brand-face" x="550" y="414">Studio</text>
               <text class="brand-shine" x="550" y="414">Studio</text>

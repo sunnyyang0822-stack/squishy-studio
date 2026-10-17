@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Squishy Studio 首页首屏视觉原型",
   "scripts": {
+    "build:brand": "node scripts/build-brand.cjs",
+    "prestart": "npm run build:brand",
     "start": "node server.mjs",
+    "pretest": "npm run build:brand",
     "test": "node --test tests/*.test.cjs",
     "capture": "node capture.cjs"
   },
@@ -20,9 +23,12 @@
   },
   "homepage": "https://github.com/sunnyyang0822-stack/squishy-studio#readme",
   "devDependencies": {
+    "esbuild": "^0.28.2",
+    "fontkit": "^2.0.4",
     "playwright": "^1.64.1"
   },
   "dependencies": {
-    "@fontsource/fredoka": "^5.3.0"
+    "@fontsource/fredoka": "^5.3.0",
+    "three": "^0.186.1"
   }
 }
