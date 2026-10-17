@@ -32,6 +32,24 @@
 
 ## 当前状态
 
-项目处于产品规划阶段，仓库目前仅包含基础项目说明与配置，尚未开始网站功能开发。
+目前已完成首页第一屏的本地视觉原型：中央软质品牌字标、中文介绍、海报色卡对应的昼夜场景，以及手动切换。捏捏交互、声音和下方页面仍属于后续阶段。
 
-具体技术方案将在后续验证后确定，当前没有可运行的网站或启动命令。
+## 本地运行
+
+```bash
+npm install
+npm start
+```
+
+浏览器打开 `http://127.0.0.1:4173`。按 `Ctrl+C` 停止服务。
+
+## 验证与素材
+
+```bash
+npm test
+npm run capture
+```
+
+测试通过 Playwright 使用本机 Edge；其他系统可先执行 `npx playwright install chromium`。也可用 `PLAYWRIGHT_BROWSER_PATH` 指定浏览器可执行文件。截图与昼夜切换录屏保存在 `artifacts/`。
+
+品牌字标由 `src/brand3d.js` 使用 Three.js 生成真实挤出网格、圆角倒角与昼夜灯光；`npm start` 和 `npm test` 会先执行 `npm run build:brand`，生成浏览器脚本和 Fredoka 字形数据。WebGL 不可用时显示 SVG 备用字标。字体与 Three.js 授权文本分别见 `assets/FREDOKA-LICENSE.txt` 和 `assets/THREE-LICENSE.txt`。未来的主体交互可从 `brand-stage` 和独立的 3D 模块接入。
