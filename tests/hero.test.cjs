@@ -60,7 +60,8 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   const contrast = (a, b) => (Math.max(luminance(a), luminance(b)) + .05) / (Math.min(luminance(a), luminance(b)) + .05);
   assert.ok(contrast(nightPalette[2], nightPalette[1]) >= 4.5);
   assert.ok(contrast(nightPalette[3], nightPalette[1]) >= 4.5);
-  await page.waitForTimeout(1200);
+  await page.waitForFunction(() => ['.stars', '.sparkle-left', '.mark-sparkle', '.footer-star']
+    .every(selector => Number(getComputedStyle(document.querySelector(selector)).opacity) > .95), null, { timeout: 15000 });
   const nightStars = await page.evaluate(() => ['.stars', '.sparkle-left', '.mark-sparkle', '.footer-star'].map(selector => {
     const style = getComputedStyle(document.querySelector(selector));
     return { opacity: Number(style.opacity), color: style.color };
