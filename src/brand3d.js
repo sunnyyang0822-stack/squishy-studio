@@ -41,6 +41,9 @@ try {
   const rim = new THREE.DirectionalLight(0xff83bd, 2.2);
   rim.position.set(1, 3, -4);
   scene.add(rim);
+  const starlight = new THREE.PointLight(0xf8f39c, 0, 10, 2);
+  starlight.position.set(2.9, 2.1, 4);
+  scene.add(starlight);
 
   const face = new THREE.MeshPhysicalMaterial({ color: 0xe3297f, roughness: .49, metalness: 0, clearcoat: .5, clearcoatRoughness: .45, specularIntensity: .65 });
   const side = new THREE.MeshPhysicalMaterial({ color: 0x9f2b65, roughness: .56, metalness: 0, clearcoat: .25, clearcoatRoughness: .5, specularIntensity: .55 });
@@ -109,6 +112,7 @@ try {
     side.color.copy(day.side).lerp(night.side, light);
     key.intensity = THREE.MathUtils.lerp(day.keyPower, night.keyPower, light);
     fill.intensity = THREE.MathUtils.lerp(day.fillPower, night.fillPower, light);
+    starlight.intensity = THREE.MathUtils.lerp(0, 18, light);
     renderer.toneMappingExposure = THREE.MathUtils.lerp(day.exposure, night.exposure, light);
     renderer.render(scene, camera);
   }

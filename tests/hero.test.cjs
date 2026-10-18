@@ -30,7 +30,8 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   assert.equal(await page.locator('.brand-face').first().evaluate(el => getComputedStyle(el).stroke), 'none');
   assert.equal(await page.locator('.brand-depth-mid').count(), 2);
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'day');
-  assert.equal(await page.locator('.sparkle-left').evaluate(el => getComputedStyle(el).color), 'rgb(248, 243, 156)');
+  const dayStars = await page.evaluate(() => ['.stars', '.sparkle-left', '.mark-sparkle', '.footer-star'].map(selector => getComputedStyle(document.querySelector(selector)).opacity));
+  assert.deepEqual(dayStars, ['0', '0', '0', '0']);
   const firstSwitch = await page.evaluate(() => {
     const scene = document.querySelector('.scene');
     const before = Number(getComputedStyle(scene, '::before').opacity);
@@ -45,7 +46,7 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   assert.ok(Math.abs(firstSwitch.after - firstSwitch.before) < .05);
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   assert.equal(await page.locator('meta[name="theme-color"]').getAttribute('content'), '#11142d');
-  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--star').trim()), '#a8f3ff');
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--star').trim()), '#f8f39c');
   const nightPalette = await page.evaluate(() => {
     const css = getComputedStyle(document.documentElement);
     return ['--sky-top', '--sky-bottom', '--ink', '--subtle'].map(name => css.getPropertyValue(name).trim());
@@ -59,6 +60,13 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   const contrast = (a, b) => (Math.max(luminance(a), luminance(b)) + .05) / (Math.min(luminance(a), luminance(b)) + .05);
   assert.ok(contrast(nightPalette[2], nightPalette[1]) >= 4.5);
   assert.ok(contrast(nightPalette[3], nightPalette[1]) >= 4.5);
+  await page.waitForTimeout(1200);
+  const nightStars = await page.evaluate(() => ['.stars', '.sparkle-left', '.mark-sparkle', '.footer-star'].map(selector => {
+    const style = getComputedStyle(document.querySelector(selector));
+    return { opacity: Number(style.opacity), color: style.color };
+  }));
+  assert.ok(nightStars.every(star => star.opacity > .95));
+  assert.ok(nightStars.slice(1).every(star => star.color === 'rgb(248, 243, 156)'));
   assert.equal(await page.locator('.theme-toggle__label').textContent(), '夜晚');
   assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).textShadow), 'none');
   await page.waitForTimeout(180);
@@ -89,6 +97,8 @@ test('品牌曲面细分更平滑，交叠更轻，保留磨砂层次', () => {
   assert.doesNotMatch(source, /letter\.rotation\.y/);
   assert.match(source, /color: 0xe3297f, roughness: \.49, metalness: 0, clearcoat: \.5/);
   assert.match(source, /color: 0x9f2b65, roughness: \.56, metalness: 0, clearcoat: \.25/);
+  assert.match(source, /new THREE\.PointLight\(0xf8f39c, 0, 10, 2\)/);
+  assert.match(source, /starlight\.intensity = THREE\.MathUtils\.lerp\(0, 18, light\)/);
   const saturation = hex => {
     const channels = [hex >> 16 & 255, hex >> 8 & 255, hex & 255];
     return Math.max(...channels) - Math.min(...channels);
