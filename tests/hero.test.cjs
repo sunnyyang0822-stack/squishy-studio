@@ -79,7 +79,7 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   });
   assert.ok(Math.abs(afterReverse - beforeReverse) < .05, `反向切换不应重置亮度：${beforeReverse} → ${afterReverse}`);
   assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).textShadow), 'none');
-  await page.waitForTimeout(500);
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('.hero-note')).color === 'rgb(129, 92, 118)', null, { timeout: 15000 });
   assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).color), 'rgb(129, 92, 118)');
   await page.getByRole('button', { name: '切换到夜晚' }).click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
