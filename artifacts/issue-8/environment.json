@@ -1,0 +1,12 @@
+{
+  "baseline": "ab1420733dca02cac9beb81b14b736270a507548",
+  "node": "v24.21.0",
+  "platform": "win32",
+  "arch": "x64",
+  "browser": "155.0.4283.62",
+  "buildExitCode": 0,
+  "testExitCode": 0,
+  "testCount": 16,
+  "captureExitCode": 0,
+  "deviceEvidence": "桌面浏览器及移动视口模拟，非真机"
+}

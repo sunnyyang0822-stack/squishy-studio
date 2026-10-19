@@ -1,0 +1,152 @@
+[
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "name": "desktop",
+    "geometryUnchanged": true,
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 1296000,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 856,
+        "significantPixels": 0,
+        "maximumChannelDelta": 1,
+        "bounds": {
+          "left": 37,
+          "top": 36,
+          "right": 1385,
+          "bottom": 868
+        },
+        "totalPixels": 1296000,
+        "ratio": 0.0006604938271604938
+      }
+    }
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "name": "mobile",
+    "geometryUnchanged": true,
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 329160,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 435,
+        "significantPixels": 0,
+        "maximumChannelDelta": 1,
+        "bounds": {
+          "left": 20,
+          "top": 37,
+          "right": 357,
+          "bottom": 818
+        },
+        "totalPixels": 329160,
+        "ratio": 0.0013215457528253736
+      }
+    }
+  },
+  {
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "name": "compact",
+    "geometryUnchanged": true,
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 250125,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 250125,
+        "ratio": 0
+      }
+    }
+  },
+  {
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "name": "short",
+    "geometryUnchanged": true,
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 181760,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 296,
+        "significantPixels": 0,
+        "maximumChannelDelta": 1,
+        "bounds": {
+          "left": 21,
+          "top": 36,
+          "right": 287,
+          "bottom": 52
+        },
+        "totalPixels": 181760,
+        "ratio": 0.0016285211267605634
+      }
+    }
+  },
+  {
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "name": "landscape",
+    "geometryUnchanged": true,
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 329160,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 2495,
+        "significantPixels": 0,
+        "maximumChannelDelta": 1,
+        "bounds": {
+          "left": 0,
+          "top": 41,
+          "right": 789,
+          "bottom": 366
+        },
+        "totalPixels": 329160,
+        "ratio": 0.007579900352412201
+      }
+    }
+  }
+]

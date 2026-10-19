@@ -1,0 +1,3 @@
+
+> squishy-studio@1.0.0 build:brand
+> node scripts/build-brand.cjs
