@@ -28,9 +28,14 @@
         </div>
         <button class="theme-toggle" type="button" aria-label="切换到夜晚" aria-pressed="false">
           <span class="theme-toggle__track" aria-hidden="true">
-            <span class="theme-toggle__sun"></span>
-            <span class="theme-toggle__moon"></span>
-            <span class="theme-toggle__thumb"></span>
+            <svg class="theme-toggle__cloud" viewBox="0 0 26 18" focusable="false"><path d="M7 15a5 5 0 0 1-.7-10A6 6 0 0 1 17.7 4a5.5 5.5 0 0 1 .8 11Z" fill="currentColor" /></svg>
+            <svg class="theme-toggle__star" viewBox="0 0 20 20" focusable="false"><path d="M10 1 12.4 7.6 19 10 12.4 12.4 10 19 7.6 12.4 1 10 7.6 7.6Z" fill="currentColor" /></svg>
+            <span class="theme-toggle__thumb">
+              <svg viewBox="0 0 28 28" focusable="false">
+                <defs><mask id="theme-moon-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="28"><rect width="28" height="28" fill="white" /><circle class="theme-toggle__cutout" cx="40" cy="6" r="12" fill="black" /></mask></defs>
+                <circle cx="14" cy="14" r="14" fill="currentColor" mask="url(#theme-moon-cutout)" />
+              </svg>
+            </span>
           </span>
           <span class="theme-toggle__label">白天</span>
         </button>

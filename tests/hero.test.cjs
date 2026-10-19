@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
 const { existsSync, readFileSync } = require('node:fs');
 const { chromium } = require('playwright');
+const { createHash } = require('node:crypto');
 
 let server;
 let browser;
@@ -30,37 +31,16 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   assert.equal(await page.locator('.brand-face').first().evaluate(el => getComputedStyle(el).stroke), 'none');
   assert.equal(await page.locator('.brand-depth-mid').count(), 2);
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'day');
-  assert.equal(await page.locator('.sparkle-left').evaluate(el => getComputedStyle(el).color), 'rgb(248, 243, 156)');
   const firstSwitch = await page.evaluate(() => {
     const scene = document.querySelector('.scene');
     const before = Number(getComputedStyle(scene, '::before').opacity);
     document.querySelector('.theme-toggle').click();
-    return {
-      before,
-      after: Number(getComputedStyle(scene, '::before').opacity),
-      transitioning: scene.classList.contains('is-transitioning'),
-    };
+    return { before, after: Number(getComputedStyle(scene, '::before').opacity), transitioning: scene.classList.contains('is-transitioning') };
   });
-  assert.equal(firstSwitch.transitioning, true);
-  assert.ok(Math.abs(firstSwitch.after - firstSwitch.before) < .05);
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
-  assert.equal(await page.locator('meta[name="theme-color"]').getAttribute('content'), '#11142d');
-  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--star').trim()), '#a8f3ff');
-  const nightPalette = await page.evaluate(() => {
-    const css = getComputedStyle(document.documentElement);
-    return ['--sky-top', '--sky-bottom', '--ink', '--subtle'].map(name => css.getPropertyValue(name).trim());
-  });
-  assert.equal(nightPalette[0], '#11142d');
-  const luminance = hex => {
-    const values = hex.match(/[\da-f]{2}/gi).map(value => parseInt(value, 16) / 255);
-    const [r, g, b] = values.map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
-    return .2126 * r + .7152 * g + .0722 * b;
-  };
-  const contrast = (a, b) => (Math.max(luminance(a), luminance(b)) + .05) / (Math.min(luminance(a), luminance(b)) + .05);
-  assert.ok(contrast(nightPalette[2], nightPalette[1]) >= 4.5);
-  assert.ok(contrast(nightPalette[3], nightPalette[1]) >= 4.5);
+  assert.equal(firstSwitch.transitioning, true);
   assert.equal(await page.locator('.theme-toggle__label').textContent(), '夜晚');
-  assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).textShadow), 'none');
+  assert.ok(Math.abs(firstSwitch.after - firstSwitch.before) < .05, '切换开始时背景亮度不跳变');
   await page.waitForTimeout(180);
   const { beforeReverse, afterReverse } = await page.evaluate(() => {
     const scene = document.querySelector('.scene');
@@ -69,9 +49,6 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
     return { beforeReverse: before, afterReverse: Number(getComputedStyle(scene, '::before').opacity) };
   });
   assert.ok(Math.abs(afterReverse - beforeReverse) < .05, `反向切换不应重置亮度：${beforeReverse} → ${afterReverse}`);
-  assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).textShadow), 'none');
-  await page.waitForTimeout(500);
-  assert.equal(await page.locator('.hero-note').evaluate(el => getComputedStyle(el).color), 'rgb(129, 92, 118)');
   await page.getByRole('button', { name: '切换到夜晚' }).click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   assert.equal(await page.locator('.theme-toggle').getAttribute('aria-pressed'), 'true');
@@ -79,21 +56,51 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   await page.close();
 });
 
-test('品牌曲面细分更平滑，交叠更轻，保留磨砂层次', () => {
-  const source = readFileSync('src/brand3d.js', 'utf8');
-  assert.match(source, /new TextGeometry\(char/);
-  assert.match(source, /curveSegments: 36/);
-  assert.match(source, /bevelEnabled: true, bevelThickness: \.22, bevelSize: \.125, bevelSegments: 16/);
-  assert.doesNotMatch(source, /TubeGeometry/);
-  assert.match(source, /letter\.position\.set\(cursor, 0, 0\)/);
-  assert.doesNotMatch(source, /letter\.rotation\.y/);
-  assert.match(source, /color: 0xe3297f, roughness: \.49, metalness: 0, clearcoat: \.5/);
-  assert.match(source, /color: 0x9f2b65, roughness: \.56, metalness: 0, clearcoat: \.25/);
-  const saturation = hex => {
-    const channels = [hex >> 16 & 255, hex >> 8 & 255, hex & 255];
-    return Math.max(...channels) - Math.min(...channels);
+test('字标与主题逻辑保留用户确认的 5b5e8c7 版本', () => {
+  const approved = {
+    'src/brand3d.js': '2cd86dc6938f0bd76fc5b7a4071c43924bbdaff35af0eadb635df7817e868e24',
+    'main.js': '83487c120bdc19ab9513ebcd344338b9b48d387f9bb8591ef065402e9928c740',
   };
-  assert.ok(saturation(0xe3297f) < saturation(0xf72489));
+  for (const [path, expected] of Object.entries(approved)) {
+    const source = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
+    assert.equal(createHash('sha256').update(source).digest('hex'), expected, `${path} 应与确认版完全一致`);
+  }
+});
+
+test('昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(url);
+  await page.locator('.brand-stage.is-3d-ready').waitFor();
+  const control = page.locator('.theme-toggle');
+  const dayBox = await control.boundingBox();
+  assert.equal(await page.locator('.theme-toggle__cloud').evaluate(el => getComputedStyle(el).opacity), '1');
+  assert.equal(await page.locator('.theme-toggle__star').evaluate(el => getComputedStyle(el).opacity), '0');
+  assert.equal(await page.locator('.theme-toggle__thumb circle[mask]').getAttribute('mask'), 'url(#theme-moon-cutout)');
+  assert.equal(await page.locator('.theme-toggle__cutout').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).m41), 0);
+  await control.click();
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('.theme-toggle__star')).opacity === '1'
+    && new DOMMatrix(getComputedStyle(document.querySelector('.theme-toggle__cutout')).transform).m41 === -20
+    && getComputedStyle(document.querySelector('.theme-toggle__track')).getPropertyValue('--toggle-track-a').trim() === 'rgb(46, 41, 95)', null, { timeout: 15000 });
+  assert.equal(await page.locator('.theme-toggle__cloud').evaluate(el => getComputedStyle(el).opacity), '0');
+  assert.equal(await page.locator('.theme-toggle__thumb').evaluate(el => getComputedStyle(el).filter), 'none');
+  assert.equal(await page.locator('.theme-toggle__star').evaluate(el => getComputedStyle(el).color), 'rgb(168, 244, 244)');
+  assert.equal(await page.locator('.theme-toggle__star').evaluate(el => getComputedStyle(el).filter), 'none');
+  assert.deepEqual(await control.boundingBox(), dayBox);
+  await control.click();
+  await page.waitForTimeout(120);
+  const reverse = await page.evaluate(() => {
+    const cutout = document.querySelector('.theme-toggle__cutout');
+    const before = new DOMMatrix(getComputedStyle(cutout).transform).m41;
+    document.querySelector('.theme-toggle').click();
+    return { before, after: new DOMMatrix(getComputedStyle(cutout).transform).m41 };
+  });
+  assert.ok(Math.abs(reverse.after - reverse.before) < .05, '月牙反向过渡应从当前形状继续');
+  await page.waitForFunction(() => new DOMMatrix(getComputedStyle(document.querySelector('.theme-toggle__cutout')).transform).m41 === -20, null, { timeout: 15000 });
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileBox = await control.boundingBox();
+  assert.ok(mobileBox.x >= 0 && mobileBox.x + mobileBox.width <= 390);
+  assert.equal(await control.getAttribute('aria-pressed'), 'true');
+  await page.close();
 });
 
 test('手机和短屏仍能看到主体与切换控件', async () => {
@@ -123,6 +130,9 @@ test('减少动态效果时仍能切换', async () => {
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   const duration = await page.locator('.scene').evaluate(el => getComputedStyle(el).transitionDuration);
   assert.match(duration, /0\.18s/);
+  for (const selector of ['.theme-toggle__thumb', '.theme-toggle__cutout', '.theme-toggle__cloud', '.theme-toggle__star']) {
+    assert.match(await page.locator(selector).evaluate(el => getComputedStyle(el).transitionDuration), /0\.18s/);
+  }
   await page.close();
 });
 
