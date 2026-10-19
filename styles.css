@@ -97,7 +97,7 @@ button { font: inherit; }
 [data-theme="night"] .theme-toggle { background: #382b67; border-color: #695b89; box-shadow: 0 8px 24px rgba(18,10,40,.18); }
 [data-theme="night"] .theme-toggle:hover { box-shadow: 0 10px 30px rgba(18,10,40,.2), 0 0 0 3px rgba(182,158,227,.1); }
 .theme-toggle:focus-visible { outline: 3px solid #00a8c2; outline-offset: 4px; }
-.theme-toggle__label { min-width: 2em; font-size: 14px; font-weight: 700; letter-spacing: .05em; }
+.theme-toggle__label { min-width: 2em; font-size: 14px; font-weight: 700; letter-spacing: .05em; color: var(--ink); }
 .theme-toggle__track { --toggle-track-a: #88e1ed; --toggle-track-b: #f9cce5; position: relative; display: block; width: 63px; height: 36px; flex: none; overflow: hidden; border-radius: 99px; background: linear-gradient(120deg, var(--toggle-track-a), var(--toggle-track-b)); transition: --toggle-track-a 1100ms ease, --toggle-track-b 1100ms ease; }
 [data-theme="night"] .theme-toggle__track { --toggle-track-a: #2e295f; --toggle-track-b: #715691; }
 .theme-toggle__thumb { position: absolute; z-index: 2; top: 4px; left: 31px; width: 28px; height: 28px; color: #fff0b7; transition: transform 900ms cubic-bezier(.22,.65,.25,1), color 900ms ease; }
@@ -138,8 +138,8 @@ button { font: inherit; }
 .sparkle-left { left: 15%; bottom: 25%; } .sparkle-right { right: 17%; top: 27%; font-size: clamp(24px, 3vw, 42px); }
 .scene-footer { position: relative; z-index: 3; display: flex; justify-content: center; align-items: center; gap: 13px; padding: 0 24px max(27px, env(safe-area-inset-bottom)); color: var(--subtle); font-size: 12px; letter-spacing: .23em; transition: color 1050ms ease; }
 .footer-star { color: var(--star); font-size: 13px; transition: color 1050ms ease; }
-.eyebrow, .hero-line, .hero-note, .studio-mark, .scene-footer, .theme-toggle__label { transition-property: color, text-shadow; transition-duration: 1050ms, 180ms; transition-timing-function: ease; }
-.scene.is-transitioning .eyebrow, .scene.is-transitioning .hero-line, .scene.is-transitioning .hero-note, .scene.is-transitioning .studio-mark, .scene.is-transitioning .scene-footer, .scene.is-transitioning .theme-toggle__label { text-shadow: 0 1px 2px rgba(30, 10, 62, .8), 0 0 10px rgba(30, 10, 62, .6); }
+.eyebrow, .hero-line, .hero-note, .studio-mark, .scene-footer, .theme-toggle__label { text-shadow: none; transition: color 1050ms ease; }
+:root[data-theme="day"] .eyebrow, :root[data-theme="day"] .hero-line, :root[data-theme="day"] .hero-note, :root[data-theme="day"] .studio-mark, :root[data-theme="day"] .scene-footer, :root[data-theme="day"] .theme-toggle__label { transition-duration: 420ms; }
 
 @media (max-width: 700px) {
   .topbar { padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)); }
