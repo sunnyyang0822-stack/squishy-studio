@@ -56,6 +56,34 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   await page.close();
 });
 
+test('夜间切回白天时文字快速清晰，连续切换不会重置颜色', async () => {
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+    const page = await browser.newPage({ viewport });
+    await page.goto(url);
+    await page.locator('.brand-stage.is-3d-ready').waitFor();
+    await page.getByRole('button', { name: '切换到夜晚' }).click();
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('.hero-note')).color === 'rgb(230, 198, 231)', null, { timeout: 15000 });
+    await page.getByRole('button', { name: '切换到白天' }).click();
+    const styles = await page.evaluate(() => ['.eyebrow', '.hero-line', '.hero-note', '.studio-mark', '.scene-footer', '.theme-toggle__label'].map(selector => {
+      const css = getComputedStyle(document.querySelector(selector));
+      return { shadow: css.textShadow, filter: css.filter, property: css.transitionProperty, duration: css.transitionDuration, opacity: css.opacity };
+    }));
+    for (const css of styles) assert.deepEqual(css, { shadow: 'none', filter: 'none', property: 'color', duration: '0.42s', opacity: '1' });
+    await page.waitForTimeout(100);
+    const reverse = await page.evaluate(() => {
+      const note = document.querySelector('.hero-note');
+      const before = getComputedStyle(note).color;
+      document.querySelector('.theme-toggle').click();
+      return { before, after: getComputedStyle(note).color, shadow: getComputedStyle(note).textShadow };
+    });
+    assert.equal(reverse.after, reverse.before);
+    assert.equal(reverse.shadow, 'none');
+    await page.getByRole('button', { name: '切换到白天' }).click();
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('.hero-note')).color === 'rgb(129, 92, 118)', null, { timeout: 15000 });
+    await page.close();
+  }
+});
+
 test('字标与主题逻辑保留用户确认的 5b5e8c7 版本', () => {
   const approved = {
     'src/brand3d.js': '2cd86dc6938f0bd76fc5b7a4071c43924bbdaff35af0eadb635df7817e868e24',
