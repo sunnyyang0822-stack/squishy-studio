@@ -9,7 +9,7 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 try {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
-  renderer.setPixelRatio(Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.38;
@@ -32,8 +32,6 @@ try {
   key.shadow.camera.top = 4;
   key.shadow.camera.bottom = -4;
   key.shadow.bias = -.0004;
-  key.shadow.normalBias = .025;
-  key.shadow.radius = 2;
   scene.add(key);
   const fill = new THREE.DirectionalLight(0x9df5ff, 1.8);
   fill.position.set(4, -.4, 4);
@@ -41,12 +39,9 @@ try {
   const rim = new THREE.DirectionalLight(0xff83bd, 2.2);
   rim.position.set(1, 3, -4);
   scene.add(rim);
-  const starlight = new THREE.PointLight(0xf8f39c, 0, 10, 2);
-  starlight.position.set(2.9, 2.1, 4);
-  scene.add(starlight);
 
-  const face = new THREE.MeshPhysicalMaterial({ color: 0xe3297f, roughness: .49, metalness: 0, clearcoat: .5, clearcoatRoughness: .45, specularIntensity: .65 });
-  const side = new THREE.MeshPhysicalMaterial({ color: 0x9f2b65, roughness: .56, metalness: 0, clearcoat: .25, clearcoatRoughness: .5, specularIntensity: .55 });
+  const face = new THREE.MeshPhysicalMaterial({ color: 0xf72489, roughness: .49, metalness: 0, clearcoat: .5, clearcoatRoughness: .45, specularIntensity: .65 });
+  const side = new THREE.MeshPhysicalMaterial({ color: 0xaa1d67, roughness: .56, metalness: 0, clearcoat: .25, clearcoatRoughness: .5, specularIntensity: .55 });
   const font = new FontLoader().parse(fontData);
   const title = new THREE.Group();
   title.rotation.set(-.09, -.1, -.018);
@@ -60,11 +55,12 @@ try {
     let cursor = -fullWidth / 2;
     [...word].forEach((char, index) => {
       const geometry = new TextGeometry(char, {
-        font, size, depth: .46, curveSegments: 36, steps: 2,
-        bevelEnabled: true, bevelThickness: .22, bevelSize: .125, bevelSegments: 16,
+        font, size, depth: .46, curveSegments: 18, steps: 2,
+        bevelEnabled: true, bevelThickness: .22, bevelSize: .125, bevelSegments: 8,
       });
       const letter = new THREE.Mesh(geometry, [face, side]);
-      letter.position.set(cursor, 0, 0);
+      letter.position.set(cursor, 0, index % 3 === 1 ? .025 : 0);
+      letter.rotation.y = (index % 3 - 1) * .025;
       letter.castShadow = true;
       letter.receiveShadow = true;
       group.add(letter);
@@ -74,20 +70,20 @@ try {
     title.add(group);
   }
 
-  addWord('Squishy', 1.52, .55, -.04, -.04);
-  addWord('Studio', 1.62, -.78, .3, -.03);
+  addWord('Squishy', 1.52, .55, -.04, -.065);
+  addWord('Studio', 1.62, -.78, .3, -.055);
 
   const day = {
     ambient: new THREE.Color(0xffe3ef), key: new THREE.Color(0xfff2e8),
     fill: new THREE.Color(0x9df5ff), rim: new THREE.Color(0xff83bd),
-    face: new THREE.Color(0xe3297f), side: new THREE.Color(0x9f2b65),
-    keyPower: 3.1, fillPower: 1.5, exposure: 1.34,
+    face: new THREE.Color(0xf72489), side: new THREE.Color(0xaa1d67),
+    keyPower: 3.3, fillPower: 1.5, exposure: 1.38,
   };
   const night = {
-    ambient: new THREE.Color(0x786ba9), key: new THREE.Color(0xe9d4f7),
-    fill: new THREE.Color(0x86a7d5), rim: new THREE.Color(0xbd7ee2),
-    face: new THREE.Color(0xb761b5), side: new THREE.Color(0x593779),
-    keyPower: 2.15, fillPower: 1.1, exposure: 1.18,
+    ambient: new THREE.Color(0x958bc8), key: new THREE.Color(0xffbee1),
+    fill: new THREE.Color(0x80e7ff), rim: new THREE.Color(0xff70b4),
+    face: new THREE.Color(0xf250a4), side: new THREE.Color(0x89276b),
+    keyPower: 2.7, fillPower: 1.4, exposure: 1.48,
   };
   let light = document.documentElement.dataset.theme === 'night' ? 1 : 0;
   let from = light;
@@ -112,7 +108,6 @@ try {
     side.color.copy(day.side).lerp(night.side, light);
     key.intensity = THREE.MathUtils.lerp(day.keyPower, night.keyPower, light);
     fill.intensity = THREE.MathUtils.lerp(day.fillPower, night.fillPower, light);
-    starlight.intensity = THREE.MathUtils.lerp(0, 18, light);
     renderer.toneMappingExposure = THREE.MathUtils.lerp(day.exposure, night.exposure, light);
     renderer.render(scene, camera);
   }
