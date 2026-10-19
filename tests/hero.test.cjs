@@ -56,16 +56,51 @@ test('桌面首屏可读且昼夜切换可连续操作', async () => {
   await page.close();
 });
 
-test('字标与昼夜视觉完整恢复到用户确认的 5b5e8c7 版本', () => {
+test('字标与主题逻辑保留用户确认的 5b5e8c7 版本', () => {
   const approved = {
     'src/brand3d.js': '2cd86dc6938f0bd76fc5b7a4071c43924bbdaff35af0eadb635df7817e868e24',
-    'styles.css': 'dfba038118d92320e29192a6f45c511112554f10bc8793acaae78831d403b2d3',
     'main.js': '83487c120bdc19ab9513ebcd344338b9b48d387f9bb8591ef065402e9928c740',
   };
   for (const [path, expected] of Object.entries(approved)) {
     const source = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
     assert.equal(createHash('sha256').update(source).digest('hex'), expected, `${path} 应与确认版完全一致`);
   }
+});
+
+test('昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(url);
+  await page.locator('.brand-stage.is-3d-ready').waitFor();
+  const control = page.locator('.theme-toggle');
+  const dayBox = await control.boundingBox();
+  assert.equal(await page.locator('.theme-toggle__cloud').evaluate(el => getComputedStyle(el).opacity), '1');
+  assert.equal(await page.locator('.theme-toggle__star').evaluate(el => getComputedStyle(el).opacity), '0');
+  assert.equal(await page.locator('.theme-toggle__thumb circle[mask]').getAttribute('mask'), 'url(#theme-moon-cutout)');
+  assert.equal(await page.locator('.theme-toggle__cutout').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).m41), 0);
+  await control.click();
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('.theme-toggle__star')).opacity === '1'
+    && new DOMMatrix(getComputedStyle(document.querySelector('.theme-toggle__cutout')).transform).m41 === -20
+    && getComputedStyle(document.querySelector('.theme-toggle__track')).getPropertyValue('--toggle-track-a').trim() === 'rgb(46, 41, 95)', null, { timeout: 15000 });
+  assert.equal(await page.locator('.theme-toggle__cloud').evaluate(el => getComputedStyle(el).opacity), '0');
+  assert.equal(await page.locator('.theme-toggle__thumb').evaluate(el => getComputedStyle(el).filter), 'none');
+  assert.equal(await page.locator('.theme-toggle__star').evaluate(el => getComputedStyle(el).color), 'rgb(168, 244, 244)');
+  assert.equal(await page.locator('.theme-toggle__star').evaluate(el => getComputedStyle(el).filter), 'none');
+  assert.deepEqual(await control.boundingBox(), dayBox);
+  await control.click();
+  await page.waitForTimeout(120);
+  const reverse = await page.evaluate(() => {
+    const cutout = document.querySelector('.theme-toggle__cutout');
+    const before = new DOMMatrix(getComputedStyle(cutout).transform).m41;
+    document.querySelector('.theme-toggle').click();
+    return { before, after: new DOMMatrix(getComputedStyle(cutout).transform).m41 };
+  });
+  assert.ok(Math.abs(reverse.after - reverse.before) < .05, '月牙反向过渡应从当前形状继续');
+  await page.waitForFunction(() => new DOMMatrix(getComputedStyle(document.querySelector('.theme-toggle__cutout')).transform).m41 === -20, null, { timeout: 15000 });
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileBox = await control.boundingBox();
+  assert.ok(mobileBox.x >= 0 && mobileBox.x + mobileBox.width <= 390);
+  assert.equal(await control.getAttribute('aria-pressed'), 'true');
+  await page.close();
 });
 
 test('手机和短屏仍能看到主体与切换控件', async () => {
@@ -95,6 +130,9 @@ test('减少动态效果时仍能切换', async () => {
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   const duration = await page.locator('.scene').evaluate(el => getComputedStyle(el).transitionDuration);
   assert.match(duration, /0\.18s/);
+  for (const selector of ['.theme-toggle__thumb', '.theme-toggle__cutout', '.theme-toggle__cloud', '.theme-toggle__star']) {
+    assert.match(await page.locator(selector).evaluate(el => getComputedStyle(el).transitionDuration), /0\.18s/);
+  }
   await page.close();
 });
 
