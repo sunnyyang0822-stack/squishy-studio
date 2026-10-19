@@ -60,3 +60,7 @@ npm run capture:showcase
 第二屏由 `showcase.css`、`showcase.js` 和 `assets/samples/` 独立维护，没有新增 WebGL 场景或依赖。四只样例为本项目原创 SVG 插画，来源与替换方式见 [样例资源说明](assets/samples/README.md)。
 
 品牌字标由 `src/brand3d.js` 使用 Three.js 生成真实挤出网格、圆角倒角与昼夜灯光；`npm start` 和 `npm test` 会先执行 `npm run build:brand`，生成浏览器脚本和 Fredoka 字形数据。WebGL 不可用时显示 SVG 备用字标。字体与 Three.js 授权文本分别见 `assets/FREDOKA-LICENSE.txt` 和 `assets/THREE-LICENSE.txt`。未来的主体交互可从 `brand-stage` 和独立的 3D 模块接入。
+
+## 项目级 Agent 技能
+
+项目内已安装 Emil Kowalski 的设计与动效技能集及 Impeccable，使用说明、跨项目使用方式、固定来源版本和许可证见 [项目技能说明](.agents/README.md)。
