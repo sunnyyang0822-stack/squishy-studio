@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
+  <defs>
+    <radialGradient id="body" cx=".3" cy=".22" r=".9"><stop stop-color="#ffebdf"/><stop offset=".4" stop-color="#ffc2d4"/><stop offset=".76" stop-color="#ed87ad"/><stop offset="1" stop-color="#c95e96"/></radialGradient>
+    <linearGradient id="leaf" x2=".7" y2="1"><stop stop-color="#ddf7bd"/><stop offset="1" stop-color="#85bd9e"/></linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="7"/></filter><filter id="soft"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+  <ellipse cx="162" cy="270" rx="87" ry="17" fill="#805177" opacity=".19" filter="url(#blur)"/>
+  <path d="M162 110C124 68 56 101 47 158C32 221 98 269 160 267C220 269 286 221 272 158C261 102 199 72 162 110Z" fill="url(#body)"/>
+  <path d="M157 117C175 153 186 211 160 251" stroke="#c56294" stroke-opacity=".32" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M165 110C167 92 172 82 181 72" fill="none" stroke="#a17c85" stroke-width="9" stroke-linecap="round"/>
+  <path d="M170 95C150 53 111 58 102 64C111 96 145 108 170 95Z" fill="url(#leaf)"/>
+  <path d="M116 71Q144 76 166 94" fill="none" stroke="#eff7cb" stroke-width="3" opacity=".8"/>
+  <path d="M73 156C79 126 102 112 124 117" fill="none" stroke="#fff5e9" stroke-width="15" stroke-linecap="round" opacity=".65" filter="url(#soft)"/>
+  <path d="M209 117Q239 124 248 151" fill="none" stroke="#ffe8e7" stroke-width="9" stroke-linecap="round" opacity=".55" filter="url(#soft)"/>
+  <ellipse cx="111" cy="203" rx="15" ry="10" fill="#ffd6db" opacity=".4"/>
+</svg>

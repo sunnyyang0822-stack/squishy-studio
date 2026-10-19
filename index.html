@@ -4,15 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#f9f3f4" />
+    <script src="/theme-preference.js"></script>
     <meta name="description" content="Squishy Studio：一个可以在浏览器里玩的虚拟脆皮捏捏。" />
     <title>Squishy Studio｜柔软的一刻</title>
     <link rel="preload" href="assets/fredoka-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/showcase.css" />
     <script src="main.js" defer></script>
     <script src="assets/brand3d.js" defer></script>
+    <script src="/showcase.js" defer></script>
   </head>
   <body>
-    <main class="scene" aria-labelledby="page-title">
+    <main>
+    <div class="scene" aria-labelledby="page-title">
       <div class="ambient ambient-cyan" aria-hidden="true"></div>
       <div class="ambient ambient-pink" aria-hidden="true"></div>
       <div class="horizon" aria-hidden="true"></div>
@@ -101,6 +105,34 @@
         <span>给心情一点回弹的空间</span>
         <span class="footer-star" aria-hidden="true">✳</span>
       </footer>
+    </div>
+    <section class="samples-section" id="samples" aria-labelledby="samples-heading">
+      <div class="samples-inner">
+        <p class="samples-kicker"><span aria-hidden="true">✦</span> 柔软灵感，先睹为快</p>
+        <h2 id="samples-heading">先看看，想捏哪一个</h2>
+        <p class="samples-intro">清脆的外皮，柔软的回弹。<br class="mobile-break" />去合集里，挑一组喜欢的捏捏。</p>
+        <div class="sample-stage" role="group" aria-label="四只捏捏的视觉样例">
+          <figure class="sample sample-cloud">
+            <div class="sample-art"><img src="/assets/samples/cloud.svg" width="320" height="320" loading="lazy" decoding="async" alt="奶油小云：圆鼓鼓的云朵形软胶捏捏，带柔和的珍珠高光" /><span class="sample-fallback" hidden>奶油小云<br /><small>样例图片暂未显示</small></span></div>
+            <figcaption>奶油小云</figcaption>
+          </figure>
+          <figure class="sample sample-peach">
+            <div class="sample-art"><img src="/assets/samples/peach.svg" width="320" height="320" loading="lazy" decoding="async" alt="桃桃团子：带一片绿叶的饱满粉桃，表面泛着细腻柔光" /><span class="sample-fallback" hidden>桃桃团子<br /><small>样例图片暂未显示</small></span></div>
+            <figcaption>桃桃团子</figcaption>
+          </figure>
+          <figure class="sample sample-cat">
+            <div class="sample-art"><img src="/assets/samples/cat.svg" width="320" height="320" loading="lazy" decoding="async" alt="薄荷小猫：薄荷绿色圆润猫咪捏捏，带小耳朵、奶油肚皮和软软的爪子" /><span class="sample-fallback" hidden>薄荷小猫<br /><small>样例图片暂未显示</small></span></div>
+            <figcaption>薄荷小猫</figcaption>
+          </figure>
+          <figure class="sample sample-flower">
+            <div class="sample-art"><img src="/assets/samples/flower.svg" width="320" height="320" loading="lazy" decoding="async" alt="奶油小花：奶黄色厚实花瓣围着粉色花心的软质玩具" /><span class="sample-fallback" hidden>奶油小花<br /><small>样例图片暂未显示</small></span></div>
+            <figcaption>奶油小花</figcaption>
+          </figure>
+        </div>
+        <a class="collection-link" href="/collections/">去合集大厅挑选 <span aria-hidden="true">↗</span></a>
+        <p class="samples-status">样例展示 · 正式捏捏正在制作中</p>
+      </div>
+    </section>
     </main>
   </body>
 </html>

@@ -32,7 +32,7 @@
 
 ## 当前状态
 
-目前已完成首页第一屏的本地视觉原型：中央软质品牌字标、中文介绍、海报色卡对应的昼夜场景，以及手动切换。捏捏交互、声音和下方页面仍属于后续阶段。
+目前已有首页 Hero、第二屏四只静态捏捏样例，以及独立的最小合集大厅。第二屏通过「去合集大厅挑选」进入 `/collections/`；大厅只有一个标记为「制作中」的合集，没有可玩资源或开始按钮。正式捏压、声音与完整合集体验属于后续阶段。
 
 ## 本地运行
 
@@ -43,13 +43,20 @@ npm start
 
 浏览器打开 `http://127.0.0.1:4173`。按 `Ctrl+C` 停止服务。
 
+可直接访问 `http://127.0.0.1:4173/collections/`，刷新仍可打开。返回首页链接定位到 `/#samples`；浏览器返回沿用原生滚动恢复。昼夜偏好保存在本机 localStorage，导航时在样式加载前读取；存储被浏览器禁用时页面仍可使用，但跨页偏好无法持久保存。
+
 ## 验证与素材
 
 ```bash
 npm test
 npm run capture
+npm run capture:showcase
 ```
 
 测试通过 Playwright 使用本机 Edge；其他系统可先执行 `npx playwright install chromium`。也可用 `PLAYWRIGHT_BROWSER_PATH` 指定浏览器可执行文件。截图与昼夜切换录屏保存在 `artifacts/`。
+
+`capture:showcase` 需要先启动预览服务，在五种视口生成第二屏、大厅与图片失败截图，并对照本次保存的 Hero 基准图。基准图来自 Windows Edge，像素比较应在相同环境执行；CI 使用浏览器行为和原有 Hero 源码指纹回归，不将不同系统的字体渲染当成相同像素。导航录屏和前后对照位于 `artifacts/issue-8/`，详情见 [第二屏交付记录](docs/issue-8-delivery.md)。
+
+第二屏由 `showcase.css`、`showcase.js` 和 `assets/samples/` 独立维护，没有新增 WebGL 场景或依赖。四只样例为本项目原创 SVG 插画，来源与替换方式见 [样例资源说明](assets/samples/README.md)。
 
 品牌字标由 `src/brand3d.js` 使用 Three.js 生成真实挤出网格、圆角倒角与昼夜灯光；`npm start` 和 `npm test` 会先执行 `npm run build:brand`，生成浏览器脚本和 Fredoka 字形数据。WebGL 不可用时显示 SVG 备用字标。字体与 Three.js 授权文本分别见 `assets/FREDOKA-LICENSE.txt` 和 `assets/THREE-LICENSE.txt`。未来的主体交互可从 `brand-stage` 和独立的 3D 模块接入。

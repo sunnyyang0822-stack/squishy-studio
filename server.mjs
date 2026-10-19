@@ -8,8 +8,14 @@ const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=
 
 createServer(async (request, response) => {
   try {
-    const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-    const file = resolve(root, `.${pathname === '/' ? '/index.html' : pathname}`);
+    const requestUrl = new URL(request.url, 'http://localhost');
+    const pathname = decodeURIComponent(requestUrl.pathname);
+    if (pathname === '/collections') {
+      response.writeHead(308, { location: `/collections/${requestUrl.search}` });
+      response.end();
+      return;
+    }
+    const file = resolve(root, `.${pathname.endsWith('/') ? `${pathname}index.html` : pathname}`);
     if (file !== root && !file.startsWith(root + sep)) throw new Error('invalid path');
     const body = await readFile(file);
     response.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream' });

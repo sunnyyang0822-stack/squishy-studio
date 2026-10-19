@@ -1,0 +1,55 @@
+
+> squishy-studio@1.0.0 pretest
+> npm run build:brand
+
+
+> squishy-studio@1.0.0 build:brand
+> node scripts/build-brand.cjs
+
+
+> squishy-studio@1.0.0 test
+> node --test tests/*.test.cjs
+
+✔ 桌面首屏可读且昼夜切换可连续操作 (1954.9689ms)
+✔ 夜间切回白天时文字快速清晰，连续切换不会重置颜色 (4258.7828ms)
+✔ 字标与主题逻辑保留用户确认的 5b5e8c7 版本 (1.7056ms)
+✔ 昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变 (1933.2037ms)
+✔ 手机和短屏仍能看到主体与切换控件 (1234.9108ms)
+✔ 减少动态效果时仍能切换 (531.7862ms)
+✔ WebGL 不可用时保留可读的备用字标 (275.8907ms)
+✔ PR 检查安装依赖和浏览器并执行完整测试 (0.7804ms)
+✔ PR 模板要求范围、验证和回滚信息 (0.4072ms)
+✔ 原有 Hero 样式文件保持基线原样 (526.6676ms)
+✔ Hero 后通过原生滚动到达四只独立样例和真实大厅链接 (1614.5286ms)
+✔ 大厅直接访问、无尾斜线跳转和浏览器返回均有效 (868.7391ms)
+✔ 昼夜选择跨导航、刷新和返回保持一致，样例过渡可反向连续操作 (2203.7179ms)
+✖ 手机、短屏和横屏：样例未裁切，主入口可触达，没有水平溢出 (1198.2792ms)
+✔ 样例图片失败时占位尺寸稳定，仍能进入大厅 (816.7075ms)
+✔ 主题存储被禁用时页面、图片和导航仍可用 (629.5144ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 15
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10946.138
+
+✖ failing tests:
+
+test at tests\showcase.test.cjs:113:1
+✖ 手机、短屏和横屏：样例未裁切，主入口可触达，没有水平溢出 (1198.2792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  false !== true
+
+      at TestContext.<anonymous> (D:\squishy-studio\tests\showcase.test.cjs:127:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

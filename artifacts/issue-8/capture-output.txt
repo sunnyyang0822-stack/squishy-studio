@@ -1,0 +1,141 @@
+
+> squishy-studio@1.0.0 capture:showcase
+> node capture-showcase.cjs
+
+desktop day: {"changedPixels":0,"significantPixels":0,"maximumChannelDelta":0,"bounds":null,"totalPixels":1296000,"ratio":0}
+desktop night: {"changedPixels":856,"significantPixels":0,"maximumChannelDelta":1,"bounds":{"left":37,"top":36,"right":1385,"bottom":868},"totalPixels":1296000,"ratio":0.0006604938271604938}
+mobile day: {"changedPixels":0,"significantPixels":0,"maximumChannelDelta":0,"bounds":null,"totalPixels":329160,"ratio":0}
+mobile night: {"changedPixels":435,"significantPixels":0,"maximumChannelDelta":1,"bounds":{"left":20,"top":37,"right":357,"bottom":818},"totalPixels":329160,"ratio":0.0013215457528253736}
+compact day: {"changedPixels":0,"significantPixels":0,"maximumChannelDelta":0,"bounds":null,"totalPixels":250125,"ratio":0}
+compact night: {"changedPixels":0,"significantPixels":0,"maximumChannelDelta":0,"bounds":null,"totalPixels":250125,"ratio":0}
+short day: {"changedPixels":0,"significantPixels":0,"maximumChannelDelta":0,"bounds":null,"totalPixels":181760,"ratio":0}
+short night: {"changedPixels":296,"significantPixels":0,"maximumChannelDelta":1,"bounds":{"left":21,"top":36,"right":287,"bottom":52},"totalPixels":181760,"ratio":0.0016285211267605634}
+landscape day: {"changedPixels":0,"significantPixels":0,"maximumChannelDelta":0,"bounds":null,"totalPixels":329160,"ratio":0}
+landscape night: {"changedPixels":2495,"significantPixels":0,"maximumChannelDelta":1,"bounds":{"left":0,"top":41,"right":789,"bottom":366},"totalPixels":329160,"ratio":0.007579900352412201}
+[
+  {
+    "name": "desktop",
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 1296000,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 856,
+        "significantPixels": 0,
+        "maximumChannelDelta": 1,
+        "bounds": {
+          "left": 37,
+          "top": 36,
+          "right": 1385,
+          "bottom": 868
+        },
+        "totalPixels": 1296000,
+        "ratio": 0.0006604938271604938
+      }
+    }
+  },
+  {
+    "name": "mobile",
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 329160,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 435,
+        "significantPixels": 0,
+        "maximumChannelDelta": 1,
+        "bounds": {
+          "left": 20,
+          "top": 37,
+          "right": 357,
+          "bottom": 818
+        },
+        "totalPixels": 329160,
+        "ratio": 0.0013215457528253736
+      }
+    }
+  },
+  {
+    "name": "compact",
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 250125,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 250125,
+        "ratio": 0
+      }
+    }
+  },
+  {
+    "name": "short",
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 181760,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 296,
+        "significantPixels": 0,
+        "maximumChannelDelta": 1,
+        "bounds": {
+          "left": 21,
+          "top": 36,
+          "right": 287,
+          "bottom": 52
+        },
+        "totalPixels": 181760,
+        "ratio": 0.0016285211267605634
+      }
+    }
+  },
+  {
+    "name": "landscape",
+    "hero": {
+      "day": {
+        "changedPixels": 0,
+        "significantPixels": 0,
+        "maximumChannelDelta": 0,
+        "bounds": null,
+        "totalPixels": 329160,
+        "ratio": 0
+      },
+      "night": {
+        "changedPixels": 2495,
+        "significantPixels": 0,
+        "maximumChannelDelta": 1,
+        "bounds": {
+          "left": 0,
+          "top": 41,
+          "right": 789,
+          "bottom": 366
+        },
+        "totalPixels": 329160,
+        "ratio": 0.007579900352412201
+      }
+    }
+  }
+]
