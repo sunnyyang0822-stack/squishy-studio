@@ -34,6 +34,8 @@
 
 目前已有首页 Hero、第二屏四只静态捏捏样例，以及独立的最小合集大厅。第二屏通过「去合集大厅挑选」进入 `/collections/`；大厅只有一个标记为「制作中」的合集，没有可玩资源或开始按钮。正式捏压、声音与完整合集体验属于后续阶段。
 
+新增奶油小云详情页 `/squishy/cloud/`：独立静态外观预览、脆皮厚度与材质选择、音量偏好面板。可从大厅的「查看小云外观预览」进入；不代表玩具已经可捏压。详情页复用昼夜偏好，支持直接打开、刷新和返回合集。
+
 ## 本地运行
 
 ```bash
@@ -51,6 +53,7 @@ npm start
 npm test
 npm run capture
 npm run capture:showcase
+npm run capture:detail
 ```
 
 测试通过 Playwright 使用本机 Edge；其他系统可先执行 `npx playwright install chromium`。也可用 `PLAYWRIGHT_BROWSER_PATH` 指定浏览器可执行文件。截图与昼夜切换录屏保存在 `artifacts/`。
@@ -60,3 +63,5 @@ npm run capture:showcase
 第二屏由 `showcase.css`、`showcase.js` 和 `assets/samples/` 独立维护，没有新增 WebGL 场景或依赖。四只样例为本项目原创 SVG 插画，来源与替换方式见 [样例资源说明](assets/samples/README.md)。
 
 品牌字标由 `src/brand3d.js` 使用 Three.js 生成真实挤出网格、圆角倒角与昼夜灯光；`npm start` 和 `npm test` 会先执行 `npm run build:brand`，生成浏览器脚本和 Fredoka 字形数据。WebGL 不可用时显示 SVG 备用字标。字体与 Three.js 授权文本分别见 `assets/FREDOKA-LICENSE.txt` 和 `assets/THREE-LICENSE.txt`。未来的主体交互可从 `brand-stage` 和独立的 3D 模块接入。
+
+详情页没有新增依赖、Canvas 或音源。`detail/state.mjs` 管理独立资源、配置、音频状态；`detail/adapters.js` 预留渲染与主音量接口。接入方式、静态资源来源、测试结果及截图录屏见 [详情页交付记录](docs/issue-10-delivery.md)。`capture:detail` 需要运行当前预览服务，并将 `BASELINE_URL` 指向同环境下运行的明确 `origin/main` 基线；`PREVIEW_URL` 默认是 `http://127.0.0.1:4173`。截图及录屏写入 `artifacts/issue-10/`。
