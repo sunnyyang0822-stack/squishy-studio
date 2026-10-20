@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createOrbDeformation } from './orb-deformation.mjs';
 import { bindOrbInput } from './orb-input.js';
+import { bindOrbRotation } from './orb-rotation.js';
 
 const MODEL_URL = '/assets/models/squishy-orb.glb';
 const abortError = () => new DOMException('Aborted', 'AbortError');
@@ -28,6 +29,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     view = undefined;
     old.events.abort();
     old.input.dispose();
+    old.rotation.dispose();
     old.restSurface.geometry.dispose();
     old.resize.disconnect();
     old.theme.disconnect();
@@ -50,13 +52,15 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       throw Object.assign(error, { code: 'UNAVAILABLE' });
     }
     const scene = new THREE.Scene();
-    scene.add(root);
+    const pivot = new THREE.Group();
+    const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
+    pivot.position.copy(center); root.position.sub(center); pivot.add(root); scene.add(pivot);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = .95;
     renderer.domElement.setAttribute('role', 'img');
-    renderer.domElement.setAttribute('aria-label', '奶油粉色圆球，接触位置可局部凹陷并柔软恢复');
+    renderer.domElement.setAttribute('aria-label', '奶油粉色圆球，局部按压后部分恢复并保留凹痕');
 
     const studio = new RoomEnvironment();
     const pmrem = new THREE.PMREMGenerator(renderer);
@@ -101,12 +105,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     const deformation = createOrbDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
-    surface.setAttribute('aria-label', '按住并拖动圆球，松开回弹；也可按住空格或回车');
+    surface.setAttribute('aria-label', '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
     surface.setAttribute('aria-pressed', 'false');
     const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
     root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
     restSurface.matrixWorld.copy(mesh.matrixWorld);
     function hitTest(x, y, actual) {
+      pivot.updateMatrixWorld(true);
+      restSurface.matrixWorld.copy(mesh.matrixWorld);
       const box = renderer.domElement.getBoundingClientRect();
       pointer.set((x - box.x) / box.width * 2 - 1, -(y - box.y) / box.height * 2 + 1);
       raycaster.setFromCamera(pointer, camera);
@@ -125,6 +131,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       camera.left = -halfHeight * width / height; camera.right = -camera.left;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
+      updateBounds();
+      current.input.resize();
+    }
+    function updateBounds() {
+      const { width, height } = current;
+      if (!width || !height) return;
+      pivot.updateMatrixWorld(true);
+      restSurface.matrixWorld.copy(mesh.matrixWorld);
       // Only the projected toy reserves touch gestures. Transparent stage
       // margins and every other page region retain native scrolling.
       const projected = new THREE.Vector3();
@@ -136,7 +150,6 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
         top = Math.max(top, projected.y); bottom = Math.min(bottom, projected.y);
       }
       Object.assign(surface.style, { left: `${(left + 1) * width / 2}px`, top: `${(1 - top) * height / 2}px`, width: `${(right - left) * width / 2}px`, height: `${(top - bottom) * height / 2}px` });
-      current.input.resize();
     }
     function draw(time) {
       current.frame = 0;
@@ -166,6 +179,22 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
     }
     current.input = bindOrbInput({ surface, hitTest, deformation, invalidate });
+    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+    const turn = new THREE.Quaternion(), worldPoint = new THREE.Vector3();
+    current.rotation = bindOrbRotation({ isSqueezing: current.input.isActive, rotate(dx, dy) {
+      pivot.quaternion.premultiply(turn.setFromAxisAngle(up, dx));
+      pivot.quaternion.premultiply(turn.setFromAxisAngle(right, dy));
+      updateBounds();
+      let lowest = Infinity;
+      const positions = geometry.attributes.position;
+      for (let i = 0; i < positions.count; i++) {
+        worldPoint.fromBufferAttribute(positions, i).applyMatrix4(mesh.matrixWorld);
+        lowest = Math.min(lowest, worldPoint.y);
+      }
+      floor.position.y = lowest - .003;
+      invalidate();
+    } });
     motionPreference.addEventListener('change', event => { deformation.setReducedMotion(event.matches); invalidate(); }, { signal: events.signal });
     current.resize = new ResizeObserver(invalidate);
     current.resize.observe(mount);

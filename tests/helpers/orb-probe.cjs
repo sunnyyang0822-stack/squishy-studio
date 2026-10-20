@@ -14,13 +14,30 @@ function modelAttribute(name) {
 // the product. The position buffer is identified by the actual GLB rest data.
 async function installOrbProbe(page) {
   await page.addInitScript(rest => {
-    window.orbMeshProbe = { rest, positions: null, uploads: 0, contexts: [] };
+    window.orbMeshProbe = { rest, positions: null, uploads: 0, contexts: [], modelViewMatrix: null, orbDraws: 0 };
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, ...args) {
       const gl = original.call(this, type, ...args);
       if (type !== 'webgl2' || !gl || window.orbMeshProbe.contexts.includes(gl)) return gl;
       window.orbMeshProbe.contexts.push(gl);
       const probe = window.orbMeshProbe;
+      const names = new Map(), matrices = new Map();
+      const getUniformLocation = gl.getUniformLocation.bind(gl);
+      gl.getUniformLocation = function(program, name) {
+        const location = getUniformLocation(program, name);
+        if (location) names.set(location, name);
+        return location;
+      };
+      const uniformMatrix4fv = gl.uniformMatrix4fv.bind(gl);
+      gl.uniformMatrix4fv = function(location, transpose, value, ...args) {
+        if (names.get(location) === 'modelViewMatrix') matrices.set(gl.getParameter(gl.CURRENT_PROGRAM), Array.from(value));
+        return uniformMatrix4fv(location, transpose, value, ...args);
+      };
+      const drawElements = gl.drawElements.bind(gl);
+      gl.drawElements = function(mode, count, ...args) {
+        if (count === 15360) { probe.modelViewMatrix = matrices.get(gl.getParameter(gl.CURRENT_PROGRAM))?.slice() || null; probe.orbDraws++; }
+        return drawElements(mode, count, ...args);
+      };
       let positionBuffer;
       const bufferData = gl.bufferData.bind(gl);
       gl.bufferData = function(target, data, ...other) {
@@ -47,17 +64,29 @@ async function installOrbProbe(page) {
   }, Array.from(modelAttribute('POSITION')));
 }
 
-async function meshStats(page) {
-  return page.evaluate(() => {
+async function meshStats(page, baseline) {
+  return page.evaluate(baseline => {
     const p = window.orbMeshProbe;
+    const origin = baseline || p.rest;
     let maximum = 0, changed = 0, total = 0;
     const center = [0, 0, 0];
     for (let i = 0; i < p.rest.length; i += 3) {
-      const d = Math.hypot(...[0, 1, 2].map(k => p.positions[i + k] - p.rest[i + k]));
+      const d = Math.hypot(...[0, 1, 2].map(k => p.positions[i + k] - origin[i + k]));
       maximum = Math.max(maximum, d);
       if (d > .00001) { changed++; total += d; for (let k = 0; k < 3; k++) center[k] += p.rest[i + k] * d; }
     }
     return { maximum, changed, center: center.map(v => v / (total || 1)), uploads: p.uploads, contexts: p.contexts.length };
+  }, baseline ? Array.from(baseline) : undefined);
+}
+async function settled(page) {
+  // Every call starts a fresh observation window; prior settled samples cannot
+  // satisfy a subsequent release before its GPU updates have arrived.
+  await page.evaluate(() => { window.orbSettleSample = { uploads: -1, stableAt: performance.now() }; });
+  await page.waitForFunction(() => {
+    const p = window.orbMeshProbe, sample = window.orbSettleSample;
+    if (!p?.positions || document.querySelector('.orb-input')?.getAttribute('aria-pressed') !== 'false') { sample.stableAt = performance.now(); return false; }
+    if (sample.uploads !== p.uploads) { sample.uploads = p.uploads; sample.stableAt = performance.now(); }
+    return performance.now() - sample.stableAt >= 180;
   });
 }
-module.exports = { modelAttribute, installOrbProbe, meshStats };
+module.exports = { modelAttribute, installOrbProbe, meshStats, settled };

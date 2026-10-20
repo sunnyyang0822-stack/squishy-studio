@@ -10,7 +10,7 @@ export function bindOrbInput({ surface, hitTest, deformation, invalidate }) {
     keyboardKey = null;
     if (typeof previous === 'number' && surface.hasPointerCapture(previous)) surface.releasePointerCapture(previous);
     setPressed(false);
-    if (immediate) deformation.reset(); else deformation.release();
+    if (immediate) deformation.cancel(); else deformation.release();
     invalidate();
   }
   function update(clientX, clientY) {
@@ -49,6 +49,7 @@ export function bindOrbInput({ surface, hitTest, deformation, invalidate }) {
   on(window, 'blur', () => finish({ immediate: true }));
   on(document, 'visibilitychange', () => { if (document.hidden) finish({ immediate: true }); });
   return {
+    isActive() { return owner !== null; },
     resize() { if (typeof owner === 'number' && last) update(...last); },
     dispose() { finish({ immediate: true }); events.abort(); },
   };

@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
-const { installOrbProbe, meshStats } = require('./helpers/orb-probe.cjs');
+const { installOrbProbe, meshStats, settled } = require('./helpers/orb-probe.cjs');
 const base = 'http://127.0.0.1:4187';
 let browser, server;
 before(async () => {
@@ -26,22 +26,25 @@ async function point(page, x = .5, y = .5) {
   return { x: box.x + box.width * x, y: box.y + box.height * y };
 }
 async function press(page, x = .5, y = .5) {
+  const baseline = await page.evaluate(() => Array.from(window.orbMeshProbe.positions));
   const p = await point(page, x, y);
   await page.mouse.move(p.x, p.y); await page.mouse.down();
-  await page.waitForFunction(() => window.orbMeshProbe.positions.some((v, i) => Math.abs(v - window.orbMeshProbe.rest[i]) > .05));
+  await page.waitForFunction(baseline => window.orbMeshProbe.positions.some((v, i) => Math.abs(v - baseline[i]) > .025), baseline);
   return p;
 }
 async function restored(page) {
-  await page.waitForFunction(() => window.orbMeshProbe.positions.every((v, i) => Math.abs(v - window.orbMeshProbe.rest[i]) < .000001));
+  await settled(page);
   assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'false');
 }
+async function positions(page) { return page.evaluate(() => Array.from(window.orbMeshProbe.positions)); }
+async function pristine(page) { assert.equal((await meshStats(page)).maximum, 0); }
 
 test('真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；按住时长增强并有界', async () => {
   const page = await open({ viewport: { width: 1440, height: 900 } });
-  const originalPixels = await page.locator('.toy-mount canvas').screenshot();
   for (const [x, y, axis, sign] of [[.27,.5,0,-1],[.73,.5,0,1],[.5,.25,1,1]]) {
+    const baseline = await positions(page);
     await press(page, x, y); await page.waitForTimeout(350);
-    const stats = await meshStats(page);
+    const stats = await meshStats(page, baseline);
     assert.ok(stats.maximum > .15 && stats.maximum <= .361, JSON.stringify(stats));
     assert.ok(stats.changed > 100 && stats.changed < 700, 'Local neighborhood, not whole-object scaling');
     assert.ok(stats.center[axis] * sign > .25, JSON.stringify(stats));
@@ -49,7 +52,11 @@ test('真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；
       const p = window.orbMeshProbe;
       return p.rest.every((v, i) => p.rest[Math.floor(i / 3) * 3 + 2] >= -.5 || v === p.positions[i]);
     }), 'Back surface stays unchanged');
+    const held = await positions(page);
     await page.mouse.up(); await restored(page);
+    const retained = await meshStats(page, baseline);
+    assert.ok(retained.maximum > .03 && retained.maximum < stats.maximum * .65);
+    assert.notDeepEqual(await positions(page), held);
   }
   await press(page); const early = await meshStats(page);
   await page.waitForTimeout(900); const held = await meshStats(page);
@@ -58,7 +65,8 @@ test('真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；
   const frame = await page.locator('.toy-mount').getAttribute('data-render-count');
   await page.waitForTimeout(200);
   assert.equal(await page.locator('.toy-mount').getAttribute('data-render-count'), frame, 'Sleep after the spring settles');
-  assert.deepEqual(await page.locator('.toy-mount canvas').screenshot(), originalPixels, 'Restoring positions and original normals restores the approved image');
+  assert.ok((await meshStats(page)).maximum > .03, 'Settling retains visible deformation');
+  const stable = await positions(page); await page.waitForTimeout(250); assert.deepEqual(await positions(page), stable);
   await page.close();
 });
 
@@ -93,8 +101,11 @@ test('连续拖动、回弹中再次按压、移出松开和键盘操作；缩�
   await page.close();
 });
 
-test('pointercancel、丢失捕获、窗口失焦、后台和离页均释放输入与网格', async () => {
+test('pointercancel、丢失捕获、窗口失焦、后台和离页均释放输入并保留已完成凹痕', async () => {
   const page = await open();
+  await press(page, .3, .4); await page.waitForTimeout(400); await page.mouse.up(); await settled(page);
+  const retained = await positions(page);
+  assert.ok((await meshStats(page)).maximum > .02);
   for (const kind of ['cancel', 'capture', 'blur', 'hidden']) {
     await press(page); await page.waitForTimeout(100);
     await page.evaluate(kind => {
@@ -106,17 +117,18 @@ test('pointercancel、丢失捕获、窗口失焦、后台和离页均释放输�
     await page.mouse.up();
     if (kind === 'hidden') await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange')); });
     await restored(page);
+    assert.deepEqual(await positions(page), retained, kind + ' preserves prior dents and discards transient input');
   }
   await press(page);
   await page.getByRole('link', { name: '返回合集' }).evaluate(el => el.click());
   await page.waitForURL('**/collections/');
   await page.goBack(); await page.waitForFunction(() => window.orbMeshProbe?.positions);
-  await restored(page);
+  await restored(page); await pristine(page);
   await press(page);
   await page.evaluate(() => window.orbMeshProbe.contexts.at(-1).getExtension('WEBGL_lose_context').loseContext());
   await page.waitForSelector('[data-state=unavailable]');
   await page.getByRole('button', { name: '重新加载' }).click();
-  await page.waitForSelector('.toy-mount[data-render-count] .orb-input'); await restored(page);
+  await page.waitForSelector('.toy-mount[data-render-count] .orb-input'); await restored(page); await pristine(page);
   await page.close();
 });
 
@@ -152,6 +164,7 @@ test('减少动态仍有局部反馈，偏好可在按住期间切换并恢复',
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.mouse.up(); await restored(page);
+  assert.ok((await meshStats(page)).maximum > .03);
   assert.equal((await meshStats(page)).contexts, 1);
   await page.close();
 });

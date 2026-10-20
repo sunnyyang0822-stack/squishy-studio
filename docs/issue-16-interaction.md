@@ -1,88 +1,84 @@
-# Issue #16：阶段 1B 局部捏压与回弹
+# Issue #16：阶段 1B 局部捏压、留痕与旋转
 
-产品负责人已走查 1A，并明确要求“开始阶段1B”。本轮交付圆球基础捏压；没有推进碎裂或声音。继续使用从 `origin/main` `0845e80` 建立的独立分支 `codex/issue-16-orb-appearance` 和 PR #17，包含之前的 1A 提交 `3169fe2`。该 PR 关联 #16、交付阶段一，不自动关闭整个 Issue。
+负责人已走查 1A 并授权开始 1B，随后要求不完全回弹，并确认“按住鼠标拖动留白才旋转”。本文记录当前行为；`artifacts/issue-16-1b/` 是此前完全回弹版本的历史证据，最新证据为 `artifacts/issue-16-plastic/`。本轮没有碎裂或声音。沿用明确的 `origin/main` 基线 `0845e80`、分支 `codex/issue-16-orb-appearance`、PR #17（关联 #16，交付阶段一，不关闭整个 Issue）。
 
-## 当前行为与边界
+## 当前行为
 
-- `/squishy/cloud/` 保留已有布局、设置与导航，提示“捏压原型”；按住接触位置局部凹陷，拖动连续跟随，松开柔软恢复。
-- 鼠标与单指触摸为主输入；额外触点不会夺走当前 owner。圆球按钮可用空格或回车按住，只有启动键的释放结束该次按压，Escape 取消。
-- 球体投影的椭圆区域使用 `touch-action:none`；展示区透明留白及页面其他区域保留滚动。不是整页禁滚动，也不拿整个矩形展示容器拦截手势。
-- 厚度/材质/音量继续只记录偏好，不改变半径、形变强度或材质行为；切换偏好不重载模型、不重新挂载输入按钮、不丢失现有捕获。没有音源、AudioContext、碎片、裂纹或复杂软体物理系统。
-- Blender 源和 GLB 沿用 1A，不新增 morph 或导出动画；仍为 124,324 bytes、2,562 顶点、5,120 三角面、一套 PBR + 顶点色，无外部贴图或必需扩展。
+- 按住实际命中点产生局部凹陷，拖动平滑跟随；松开弹性恢复，保留本次相对既有形状位移约三分之一。旧凹痕可叠加，但总深度有上限。
+- 按住鼠标左键拖动页面留白，绕球体真实包围盒中心旋转。水平一屏宽、垂直一屏高各对应一整圈，方向无限制，无惯性。普通悬停、捏球、导航和设置不触发旋转。
+- 凹痕位于模型自身坐标，随球旋转；旋转后更新命中矩阵和投影输入区，仍可从新视角按压。页面重进、模型重试会清除留痕，不写入本地存储。
+- 手机单指按球操作，额外触点不夺取当前操作；留白仍正常滚页，本轮不提供触屏留白旋转。只有球体投影椭圆使用 `touch-action:none`。
+- 空格/回车按住球体，只有启动键释放结束按压；Escape取消。中断取消尚未释放的按压，恢复到之前已保留的形状，不清除旧痕。
+- 页面已有厚度、材质、音量控件保留，只记录偏好；没有材质行为、真实壳厚、声音或试音。昼夜、缩放与配置复用场景，不重挂输入节点。
 
-## 技术选择与模块
+## 技术选择和资产契约
 
-| 方案 | 局部命中适配 | 代价与限制 |
+| 方案 | 任意局部按压 | 成本与限制 |
 | --- | --- | --- |
-| Blender shape keys / GLB morph | 固定位置可精修，少量预设无法覆盖任意触点 | 多方向组合增加资产和混合复杂度，不直接解决任意接触点 |
-| **受控 CPU 网格变形（实际采用）** | 用命中点对连续邻域变形；渲染、法线及实际命中网格一致 | 活动期间遍历 2,562 顶点、重算法线；需真机量成本，不提供体积守恒或真实材料力学 |
-| GPU 顶点着色器 | 不增加 morph 数据，顶点更新便宜 | CPU raycast 与形变后的视觉不一致，法线/未来阴影和碎片同步增加复杂度 |
+| Blender shape keys / GLB morph | 固定触点可精修，少量预设不能覆盖任意触点 | 多方向组合增大资产及混合复杂度，难以任意留痕 |
+| **受控 CPU 网格变形（采用）** | 实际 raycast 触点，连续邻域逐顶点位移 | 2,562 顶点，活动期间更新位置、重算法线；非体积守恒软体 |
+| GPU 顶点着色器 | 可高效任意形变 | CPU 命中网格与视觉不同步，法线和未来碎片同步更复杂 |
 
-| 文件 | 实际职责 |
+Blender 源 `assets-source/squishy-orb/squishy-orb.blend` 与 GLB `assets/models/squishy-orb.glb` 不变。GLB 124,324 bytes（121.4 KiB），2,562 顶点/5,120 三角形，一套不透明标准 PBR + 顶点色，无贴图、morph、动画或必需扩展。网格连续无 seam，尺度半径约1，glTF Y-up；隐藏软芯仅为 Blender 结构参考，不导出。静态资源从仓库根提供，路径 `/assets/models/squishy-orb.glb`、MIME `model/gltf-binary`；无 public 路径转换。
+
+| 文件 | 边界 |
 | --- | --- |
-| `src/orb-deformation.mjs` | 不依赖 DOM/Three 的形变核：rest positions、邻域衰减、时间/位移强度、阻尼与精确恢复 |
+| `src/orb-deformation.mjs` | 无 DOM/Three：rest 数据、每顶点位移/速度/保留值、邻域、强度与恢复 |
 | `src/orb-input.js` | 单一 pointer/启动键 ownership、捕获、拖动、释放和中断 |
-| `src/orb-preview.js` | GLB、Three 场景、实际 mesh 命中、rest 代理锚点、GPU 更新、缩放/主题与资源清理 |
-| `detail/adapters.js` / `detail/state.mjs` / `detail/page.js` | 延续加载/失败/重试、配置状态与页面生命周期；不承载网格算法 |
-| `tests/helpers/orb-probe.cjs` | 仅用于验证，观察实际 WebGL position buffer 上传；产品没有注入测试形变接口 |
+| `src/orb-rotation.js` | 鼠标留白拖动归属、控件排除、取消与清理；不接管触摸 |
+| `src/orb-preview.js` | 独立 Three 场景、GLB、raycast、中心 pivot、GPU 更新、生命周期 |
+| `detail/adapters.js` / `detail/state.mjs` / `detail/page.js` | 加载/失败/重试、配置状态和页面生命周期 |
+| `tests/helpers/orb-probe.cjs` | 仅测试观察真实 GPU 顶点上传和绘制矩阵；无产品测试 API |
 
-按下先对实际渲染 mesh 做 raycast，未命中不启动。拖动使用同一模型未形变的代理网格求稳定接触锚点，避免静止按住时锚点随着凹陷向内漂移；代理不显示。拖到球体以外时保留最后有效锚点，捕获仍能接收松开。它不是体积射线或皮肤摩擦模拟，拖动中的接触精度仍需真机体验评审。
+按下先 raycast 实际形变网格；拖动用未形变代理网格提供稳定锚点，避免锚点随凹陷向内漂移。代理矩阵随旋转同步。移出球体后保留最后有效锚点，捕获仍接收释放。旋转使用相机 up/right 轴四元数增量，避免欧拉角限制。中心来自原网格包围盒，初始外观不变；仅改变模型矩阵，凹痕顶点不因旋转重写。
 
-## 可复现的强度和恢复规则
-
-归一化模型半径约 1。每一帧始终从初始顶点计算，不把上一帧位移累计进下一帧。
+## 可复现规则
 
 ```text
-targetDepth = min(0.34, 0.17 + 0.15 * min(holdSeconds / 0.8, 1)
-                              + 0.06 * min(dragDistance / 0.5, 1))
-dragDistance = 距按下点的屏幕位移 / 当前圆球输入区域宽度
+strength = min(0.34, 0.17 + 0.15 * min(holdSeconds / 0.8, 1)
+                           + 0.06 * min(dragDistance / 0.5, 1))
+dragDistance = 距按下点的屏幕位移 / 当前球体输入区域宽度
+q = rest 顶点到平滑接触点的距离 / 0.66
+weight = q < 1 ? (1-q²)² * (1-2.2*q²) : 0
+activeTarget[i] = clamp(retained[i] + strength*weight, -0.02, 0.36)
+onRelease: retained[i] = clamp(retained[i] + (offset[i]-retained[i])/3, -0.01, 0.22)
+inactiveTarget[i] = retained[i]
+position[i] = rest[i] - restNormal[i] * offset[i]
 ```
 
-不读取设备 `pressure`。按住 0.8 秒后时长贡献达到上限，拖动增加有限强度。接触点以 `1-exp(-18*dt)` 连续跟随，重新按住可接续当前回弹状态。邻域半径 0.66；令 `q=distance/radius`，`q<1` 时权重为 `(1-q²)²*(1-2.2*q²)`，外侧为 0。中心沿初始法线向内凹，边缘有小幅外鼓，邻域边界位移和斜率都归零。底部不低于原接触平面 -0.905。
+不读取设备压力。每顶点 spring mass=1、stiffness=100、damping=10；积分子步≤4ms，单帧追赶≤64ms。目标差≤0.0002且速度≤0.003时精确吸附，稳定后停止请求帧。位移始终从 rest 计算，保留值有界，未做无界累积。接触点按 `1-exp(-18*dt)` 跟随；新按压保留当前每顶点位移和速度，不跳回原形。小幅外鼓被限制，模型局部底部不低于 -0.905。
 
-普通模式使用 mass=1、stiffness=100、damping=10 的弹簧。积分子步不大于 4ms，单帧追赶时间不大于 64ms，深度限制在 `[-0.012,0.36]`；负值仅作很小的向外回弹。收敛到深度差0.0002/速度0.003以内后精确设为目标值，释放后的目标为0，最终复制原始 positions 和 normals。因此不是整球缩放，也不会不断累积变形。
+减少动态用 `1-exp(-30*dt)` 无振荡趋近目标；旋转始终直接响应拖动，无额外装饰运动。保留凹痕的法线重新计算，只有全零时恢复原始法线。`cancel()`丢弃未释放操作并恢复已保留形状，`reset()`才清空所有留痕。
 
-减少动态模式保留按压反馈，用 `1-exp(-30*dt)` 无振荡接近目标，缩短释放恢复；偏好可在操作中切换。普通释放的整体收敛随当前速度而变，不是固定延时播放预设动画。
+## 生命周期
 
-## 输入生命周期和资源
-
-| 事件 | 处理 |
+| 事件 | 行为 |
 | --- | --- |
-| pointerup（包括区域外）/ 启动键keyup | 结束 owner，释放捕获，阻尼恢复 |
-| pointercancel / lostpointercapture / window blur / 隐藏页面 / Escape | 立即清 owner，恢复 rest；后台不继续请求帧，显示后重绘 |
-| 第二触点 / 非启动键keyup | 忽略，不改变主锚点或结束主操作 |
-| 容器缩放/旋转 | 更新相机和投影输入区域，重求当前屏幕触点，复用同一场景和捕获 |
-| 昼夜/配置变化 | 场景和材质保持基础外观，复用同一输入 surface |
-| pagehide / WebGL context lost / 重试 | 移除监听和 observer、取消帧、清输入，释放 rest 代理及渲染资源；重试建立新实例 |
+| pointerup（含区域外）/启动键keyup | 清 owner/捕获，保存三分之一新位移并回弹 |
+| pointercancel/lost capture/失焦/后台/Escape | 清输入，丢弃未完成按压，保留旧痕；后台不请求帧 |
+| 背景拖动的 up/cancel/lost capture/失焦/后台 | 终止旋转，无惯性；下一次拖动可用 |
+| 第二触点/非启动键keyup | 不抢占，不提前结束当前操作 |
+| 旋转/窗口缩放 | 更新矩阵与投影输入区域；复用 renderer 和按钮 |
+| 离页/context lost/重试 | abort监听、断开observer、取消动画、释放GPU及代理；新实例从原形开始 |
 
-活动帧更新位置和法线，恢复结束后停止帧循环。原 1A 静态接触阴影仍是近似，不会随局部凹陷精确变形；本轮没有实时阴影图。当前网格未增加细分。手机降级可从较低 DPR、降低活动法线更新频率或同形低分辨率资产开始，但本轮未根据真机数据启用这些降级，也不虚构性能已达标。
+接触阴影为柔和近似平面，无实时阴影图；旋转后按当前最低顶点调整阴影平面，防止穿入球体。没有体积守恒、应力、摩擦或真实塑性材料模拟。桌面/手机 DPR 上限1.75，活动时遍历网格并更新法线；暂无真机数据支持更激进降级。将来可降低 DPR/法线更新频率或提供同形低分辨率资产，不能据当前模拟结果宣称手机性能达标。
 
 ## 验证与证据
 
-本机 Windows 10.0.26200 x64、Node 24.21.0、Edge 155.0.4283.62、Intel UHD / ANGLE D3D11。手机录屏与触摸测试均为 Chromium CDP 模拟，**没有真实手机验证**。
+本机 Windows 10.0.26200 x64、Node 24.21.0、Edge 155.0.4283.62、Intel UHD / ANGLE D3D11。触摸来自 Chromium CDP 模拟，无物理手机。测试 probe 有额外观察开销，不作 FPS 基准。
 
-| 命令 | 结果 |
-| --- | --- |
-| `npm test`（包含构建） | 44/44通过，退出0，0失败/跳过；[完整输出](../artifacts/issue-16-1b/tests.txt) |
-| `node capture-orb-interaction.cjs` | 退出0，10种尺寸/昼夜记录、按压/恢复截图、两段实际操作录屏，0 pageerror |
+- `npm test`：49/49通过，0失败、0跳过，退出0；[完整输出](../artifacts/issue-16-plastic/tests.txt)。保留首页、合集、详情控件、加载失败/重试/WebGL不可用等既有测试，补充真实 GPU 留痕、连续输入、中断与旋转验证。
+- `node capture-orb-interaction.cjs`：退出0、0 pageerror；[运行记录](../artifacts/issue-16-plastic/validation.json)，10种尺寸/昼夜截图、真实鼠标和原生 CDP 触摸录屏，无静态拼帧。桌面视频17.80秒、手机模拟12.28秒，已查看实际视频帧；静态包635,169 bytes。
+- [桌面操作录屏](../artifacts/issue-16-plastic/desktop-interaction.webm)：局部按压、拖动、部分恢复、异处留痕、整圈及四分之一圈旋转、昼夜切换后再按压。
+- [手机模拟触摸录屏](../artifacts/issue-16-plastic/mobile-touch-interaction.webm)：单指局部按压、连续拖动、多处留痕、夜间取消后恢复到旧形状。
+- 桌面：[白天留痕](../artifacts/issue-16-plastic/desktop-day-retained.png)、[夜晚留痕](../artifacts/issue-16-plastic/desktop-night-retained.png)、[旋转留痕](../artifacts/issue-16-plastic/desktop-retained-rotated.png)。
+- 手机390px：[白天留痕](../artifacts/issue-16-plastic/mobile-day-retained.png)、[夜晚留痕](../artifacts/issue-16-plastic/mobile-night-retained.png)。同目录 compact（375×667）、short（320×568）、landscape（844×390）昼夜整页图；短屏设置自然纵向滚动。
+- [1A Blender/浏览器外观与导出说明](issue-16-appearance.md)；其证据对应静态形态，不替代当前交互录屏。
 
-测试既检查真实 GLB 的局部邻域、20轮操作归零，也截取浏览器实际 position buffer：左右上命中分别改变对应顶点；远侧不动；拖动连续；恢复中可再次按压；回弹后画布像素与按压前一致。覆盖移出松开、取消/失焦/后台、离页返回、操作中 context loss/重试、额外触点、圆球内拖动与留白滚动、键盘按键隔离、偏好/主题/旋转复用及减少动态切换。保留首页、合集、详情控件和资源失败的既有测试。
+后台/失焦用模拟生命周期事件，触屏取消用原生CDP输入，不能等同真机锁屏或切应用。真机待验：iOS Safari/Android Chrome 的触控命中、页面滚动、方向变化、切后台、触控延迟、发热、帧率与内存。当前不编造性能数字。
 
-`document.hidden`/失焦中断为模拟生命周期事件，额外触摸和touchCancel来自原生 CDP 输入；不能把这些等同真实手机切后台/锁屏。GPU 上传观察是验证手段，有额外测试开销，不是独立的用户帧率基准。
+## 评审、后续与回滚
 
-- [桌面鼠标操作视频](../artifacts/issue-16-1b/desktop-interaction.webm)：左侧按住、拖到右侧、释放、上方和右方再次按压、昼夜变化及区域外松开。
-- [手机模拟触摸视频](../artifacts/issue-16-1b/mobile-touch-interaction.webm)：同样的原生触摸输入过程，夜间触摸取消后恢复。两段均为正常速度录制，**不是静态截图拼接**。
-- [实际位移与恢复记录](../artifacts/issue-16-1b/validation.json)：各次改变顶点的数量/加权位置/最大位移；恢复最大位移为0。
-- 桌面：[日间按压](../artifacts/issue-16-1b/desktop-day-pressed.png)、[夜间按压](../artifacts/issue-16-1b/desktop-night-pressed.png)、[日间恢复](../artifacts/issue-16-1b/desktop-day-restored.png)。
-- 手机390×844：[日间按压](../artifacts/issue-16-1b/mobile-day-pressed.png)、[夜间按压](../artifacts/issue-16-1b/mobile-night-pressed.png)、[夜间恢复](../artifacts/issue-16-1b/mobile-night-restored.png)。
-- 其余尺寸为同目录 `compact-*`（375×667）、`short-*`（320×568）、`landscape-*`（844×390）昼夜整页截图。短屏/横屏的设置需要自然纵向滚动。
+阶段1B当前行为等待负责人实际体验；没有进入碎裂阶段。进入碎裂前需确认留痕比例/上限与旋转体验、补真机验证，定义真正外壳/软芯拓扑、破口内壁、壳厚意义、触发去重、塑性外壳和软芯的关系、重置规则及碎片预算。当前单表面不能直接用作可碎裂壳体。
 
-已有独立只读审查查看核心代码、相关截图、两段视频，并在独立浏览器检查GPU顶点按住位移、释放归零和context复用。其发现的键盘第二按键提前释放问题已修复并加入测试。没有将静态截图或单元测试替代触感评审。
-
-## 限制、下一阶段与回滚
-
-待真机验证：iOS Safari/Android Chrome 上的实际单指拖动与滚动、方向变化、锁屏/切应用、触控延迟、持续运行发热、帧率及内存。现阶段只有桌面硬件和移动模拟证据，不提供虚构FPS。当前算法是有界局部视觉变形，不守恒体积、不模拟真实应力/黏性，也不改变蜡/指甲油/糖的材质行为。
-
-进入碎裂阶段前：负责人实际体验并接受局部触感与节奏，补真机验证，定义真实壳厚与内芯拓扑、破口内壁、破坏触发/事件去重、不可逆外壳与可回弹软芯、重置规则和碎片预算。当前不透明单表面和隐藏core参考不能直接冒充可碎裂壳体。本轮到阶段一交付停止。
-
-回滚1B：正常 revert 本轮交互提交并重建静态包，恢复到 `3169fe2` 的已确认1A静态预览。回滚整个阶段一：revert PR #17 的合并提交，恢复原详情占位与入口。无数据迁移、不强推、不改写共享历史。继续保持 Private，未提交 `.edge-tmp/`、`pelican-bike/`、浏览器配置或临时视频目录。
+仅回滚此次留痕/旋转修订：正常 revert 对应第三个提交并重新构建，回到 `676581a` 的完全回弹版。回滚1B：再 revert `676581a`，回到 `3169fe2` 的已确认静态1A。回滚整个阶段一：revert PR #17合并提交。无数据迁移、不强推、不改写共享历史。仓库保持Private，原有`.edge-tmp/`、`pelican-bike/`和浏览器配置/临时录屏目录不提交。

@@ -3,12 +3,12 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const assert = require('node:assert/strict');
-const { installOrbProbe, meshStats } = require('./tests/helpers/orb-probe.cjs');
-const folder = 'artifacts/issue-16-1b';
+const { installOrbProbe, meshStats, settled } = require('./tests/helpers/orb-probe.cjs');
+const folder = 'artifacts/issue-16-plastic';
 const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4190';
 const sizes = [['desktop',1440,900],['mobile',390,844],['compact',375,667],['short',320,568],['landscape',844,390]];
 const ready = page => page.waitForFunction(() => window.orbMeshProbe?.positions && document.querySelector('.toy-stage').dataset.state === 'ready');
-const restored = page => page.waitForFunction(() => window.orbMeshProbe.positions.every((v,i)=>Math.abs(v-window.orbMeshProbe.rest[i])<.000001));
+const restored = settled;
 const shot = (page,name) => page.screenshot({ path:`${folder}/${name}.png`,fullPage:true });
 async function point(page,x=.5,y=.5) {const b=await page.locator('.orb-input').boundingBox();return {x:b.x+b.width*x,y:b.y+b.height*y};}
 (async()=>{
@@ -29,8 +29,8 @@ async function point(page,x=.5,y=.5) {const b=await page.locator('.orb-input').b
         const p=await point(page,.35,.4);await page.mouse.move(p.x,p.y);await page.mouse.down();await page.waitForTimeout(800);
         const pressed=await meshStats(page);assert.ok(pressed.maximum>.2&&pressed.changed<700);
         await shot(page,`${name}-${theme}-pressed`);await page.mouse.up();await restored(page);
-        await shot(page,`${name}-${theme}-restored`);
-        geometry.pressed=pressed;geometry.restored=await meshStats(page);
+        await shot(page,`${name}-${theme}-retained`);
+        geometry.pressed=pressed;geometry.retained=await meshStats(page);
       }
       report.viewports.push({name,width,height,theme,...geometry});await page.close();
     }
@@ -57,7 +57,19 @@ async function point(page,x=.5,y=.5) {const b=await page.locator('.orb-input').b
           await page.waitForTimeout(200);observations.push({label:'dragged-right',held:await meshStats(page)});
         }
         if(touch)await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});else await page.mouse.up();
-        await restored(page);await page.waitForTimeout(300);observations.push({label:`${label}-restored`,rest:await meshStats(page)});
+        await restored(page);await page.waitForTimeout(300);observations.push({label:`${label}-retained`,rest:await meshStats(page)});
+      }
+      if (!touch) {
+        // Native mouse drag on page whitespace rotates the retained dents.
+        await page.mouse.move(80, 250); await page.mouse.down();
+        for (let step=1;step<=48;step++) {
+          await page.mouse.move(80+width*step/48,250); await page.waitForTimeout(35);
+        }
+        await page.mouse.up(); await page.waitForTimeout(400);
+        await page.mouse.move(80,250); await page.mouse.down();
+        await page.mouse.move(80+width/4,250,{steps:24}); await page.mouse.up();
+        await page.waitForTimeout(500); await shot(page,'desktop-retained-rotated');
+        observations.push({label:'retained-rotated',mesh:await meshStats(page),matrix:await page.evaluate(()=>window.orbMeshProbe.modelViewMatrix)});
       }
       // Real continuous interaction remains available after a theme change.
       await page.evaluate(()=>document.documentElement.dataset.theme='night');
@@ -67,7 +79,7 @@ async function point(page,x=.5,y=.5) {const b=await page.locator('.orb-input').b
       if(touch)await session.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});else{await page.mouse.move(8,8,{steps:8});await page.mouse.up();}
       await restored(page);await page.waitForTimeout(500);
       const renderer=await page.evaluate(()=>{const gl=window.orbMeshProbe.contexts.at(-1);const debug=gl.getExtension('WEBGL_debug_renderer_info');return debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);});
-      report.recordings.push({name,touch:'Browser emulated '+(touch?'native CDP touch events':'mouse events'),renderer,observations,restored:await meshStats(page)});
+      report.recordings.push({name,touch:'Browser emulated '+(touch?'native CDP touch events':'mouse events'),renderer,observations,retained:await meshStats(page)});
       await session?.detach();await context.close();await video.saveAs(`${folder}/${name}-interaction.webm`);fs.unlinkSync(await video.path());fs.rmdirSync(temp);
     }
     assert.deepEqual(report.errors,[]);
