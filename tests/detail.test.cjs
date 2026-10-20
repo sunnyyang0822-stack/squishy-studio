@@ -73,6 +73,7 @@ test('音量面板：键盘滑杆、静音恢复、Esc、关闭、外部焦点',
   await page.keyboard.press('Escape'); assert.equal(await page.locator('#sound-panel').isVisible(), false);
   assert.equal(await page.locator('.sound-trigger').evaluate(el => el === document.activeElement), true);
   await page.locator('.sound-trigger').click(); await page.getByRole('button', { name: '关闭音量面板' }).click();
+  await page.locator('#sound-panel').waitFor({ state: 'hidden' });
   assert.equal(await page.locator('#sound-panel').isVisible(), false);
   await page.locator('.sound-trigger').click(); await page.locator('[value=thin]').click();
   assert.equal(await page.locator('#sound-panel').isVisible(), false);

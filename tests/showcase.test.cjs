@@ -87,7 +87,7 @@ test('昼夜选择跨导航、刷新和返回保持一致，样例过渡可反�
   assert.equal(await page.evaluate(() => localStorage.getItem('squishy-studio-theme')), 'night');
   await scrollSamples(page);
   await page.waitForFunction(() => getComputedStyle(document.getElementById('samples')).getPropertyValue('--sample-top').trim() === 'rgb(75, 86, 133)', null, { timeout: 15000 });
-  assert.notEqual(await page.locator('.sample-art img').first().evaluate(el => getComputedStyle(el).filter), 'none');
+  assert.equal(await page.locator('.sample-art img').first().evaluate(el => getComputedStyle(el).filter), 'none', '夜间保留玩具原色');
   await page.getByRole('link', { name: '去合集大厅挑选' }).click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
   assert.equal(await page.locator('meta[name="theme-color"]').getAttribute('content'), '#241849');

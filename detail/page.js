@@ -1,5 +1,6 @@
 import { createDetailController, thicknessNames, materialNames } from './state.mjs';
 import { createStaticPreview, createSilentAudio } from './adapters.js';
+import { createPanelMotion } from './panel-motion.js';
 
 const stage = document.querySelector('.toy-stage');
 const trigger = document.querySelector('.sound-trigger');
@@ -8,6 +9,8 @@ const slider = document.querySelector('#volume');
 const mute = document.querySelector('.mute-button');
 const retry = document.querySelector('.retry-button');
 const listeners = new AbortController();
+const panelMotion = createPanelMotion(panel, { signal: listeners.signal });
+let panelOpen = false;
 const controller = createDetailController({
   renderer: createStaticPreview(document.querySelector('.toy-mount')),
   audio: createSilentAudio(),
@@ -32,18 +35,20 @@ const controller = createDetailController({
   },
 });
 const on = (target, event, fn) => target.addEventListener(event, fn, { signal: listeners.signal });
-function closePanel(restoreFocus = true) {
-  panel.hidden = true; trigger.setAttribute('aria-expanded', 'false');
+function closePanel(restoreFocus = true, instant = true) {
+  panelOpen = false; trigger.setAttribute('aria-expanded', 'false');
+  panelMotion.setOpen(false, { instant });
   if (restoreFocus) trigger.focus();
 }
-on(trigger, 'click', () => {
-  if (!panel.hidden) return closePanel();
-  panel.hidden = false; trigger.setAttribute('aria-expanded', 'true'); slider.focus();
+on(trigger, 'click', event => {
+  if (panelOpen) return closePanel(true, event.detail === 0);
+  panelOpen = true; trigger.setAttribute('aria-expanded', 'true');
+  panelMotion.setOpen(true, { instant: event.detail === 0 }); slider.focus();
 });
-on(document.querySelector('.panel-close'), 'click', () => closePanel());
-on(document, 'keydown', event => { if (event.key === 'Escape' && !panel.hidden) { event.preventDefault(); closePanel(); } });
-on(document, 'click', event => { if (!panel.hidden && !event.target.closest('.sound-tool')) closePanel(false); });
-on(panel, 'focusout', event => { if (!panel.hidden && event.relatedTarget && !event.relatedTarget.closest('.sound-tool')) closePanel(false); });
+on(document.querySelector('.panel-close'), 'click', event => closePanel(true, event.detail === 0));
+on(document, 'keydown', event => { if (event.key === 'Escape' && panelOpen) { event.preventDefault(); closePanel(); } });
+on(document, 'click', event => { if (panelOpen && !event.target.closest('.sound-tool')) closePanel(false, event.detail === 0); });
+on(panel, 'focusout', event => { if (panelOpen && event.relatedTarget && !event.relatedTarget.closest('.sound-tool')) closePanel(false); });
 on(slider, 'input', () => controller.setVolume(slider.value));
 on(mute, 'click', () => controller.toggleMute());
 on(retry, 'click', () => controller.retry());
