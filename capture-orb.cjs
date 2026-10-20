@@ -63,7 +63,7 @@ const shot = (page, name) => page.screenshot({ path: `${folder}/${name}.png`, fu
     const context=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,recordVideo:{dir:tempVideo,size:{width:390,height:844}}});
     const page=await context.newPage();const video=page.video();
     await page.goto(base+'/collections/');await page.waitForTimeout(400);
-    await page.getByRole('link',{name:'查看圆球外观预览'}).click();await ready(page);await page.waitForTimeout(800);
+    await page.getByRole('link',{name:'体验圆球捏压原型'}).click();await ready(page);await page.waitForTimeout(800);
     for(const value of ['thin','sugar','thick','wax','medium']) {await page.locator(`[value=${value}]`).check();await page.waitForTimeout(350);}
     await page.locator('.sound-trigger').click();await page.waitForTimeout(400);await page.getByRole('button',{name:'解除静音',exact:true}).click();await page.waitForTimeout(400);await page.keyboard.press('Escape');
     await page.evaluate(()=>{localStorage.setItem('squishy-studio-theme','night');document.documentElement.dataset.theme='night';});await page.waitForTimeout(800);

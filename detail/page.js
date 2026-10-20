@@ -17,6 +17,7 @@ const controller = createDetailController({
   onChange(state) {
     stage.dataset.state = state.resource;
     stage.setAttribute('aria-busy', String(state.resource === 'loading'));
+    document.querySelector('.preview-badge').textContent = { loading: '加载中', ready: '捏压原型', error: '加载失败', unavailable: '暂不可用' }[state.resource];
     document.querySelector('.resource-message').hidden = state.resource === 'ready';
     document.querySelector('.resource-status').textContent = { loading: '正在加载圆球…', ready: '', error: '圆球暂时没能加载。可以重试，或先选择喜欢的搭配。', unavailable: '当前环境暂时无法展示圆球。可以重试，仍可调整下方偏好。' }[state.resource];
     retry.hidden = state.resource === 'ready' || state.resource === 'loading';

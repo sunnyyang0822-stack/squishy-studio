@@ -80,7 +80,7 @@ test('配置、主题、旋转复用真实 WebGL 场景；静止及后台不持�
   assert.equal(await page.evaluate(() => window.orbProbe.frames), disposedFrames, 'Observers and pending frames removed');
   for (let i = 0; i < 3; i++) {
     await page.goto(base + '/collections/');
-    await page.getByRole('link', { name: '查看圆球外观预览' }).click(); await ready(page);
+    await page.getByRole('link', { name: '体验圆球捏压原型' }).click(); await ready(page);
     assert.equal(await page.locator('.toy-mount canvas').count(), 1);
     assert.equal(await page.evaluate(() => window.orbProbe.contexts.length), 1);
   }
@@ -120,13 +120,13 @@ test('HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重
   await bundle.locator('.retry-button').click(); await ready(bundle); await bundle.close();
 });
 
-test('手机模拟的真实触屏滑动可从静态圆球区域滚动页面', async () => {
+test('手机模拟可从圆球之外的留白滚动页面', async () => {
   const page = await browser.newPage({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
   await page.goto(base + path); await ready(page);
   const session = await page.context().newCDPSession(page);
-  await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 160, y: 420 }] });
+  await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 20, y: 420 }] });
   for (let y = 400; y >= 180; y -= 20) {
-    await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 160, y }] });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 20, y }] });
     await page.waitForTimeout(16);
   }
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });

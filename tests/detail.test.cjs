@@ -20,10 +20,10 @@ test('大厅真实制作中入口、详情直达、刷新和返回合集', async
   page.on('pageerror', e => errors.push(e.message));
   await page.goto(`${base}/collections/`);
   assert.equal(await page.getByText('制作中', { exact: true }).isVisible(), true);
-  await page.getByRole('link', { name: '查看圆球外观预览' }).click(); await ready(page);
+  await page.getByRole('link', { name: '体验圆球捏压原型' }).click(); await ready(page);
   assert.equal(page.url(), `${base}${path}`);
   await page.reload(); await ready(page);
-  assert.equal(await page.getByText('外观预览', { exact: true }).isVisible(), true);
+  assert.equal(await page.getByText('捏压原型', { exact: true }).isVisible(), true);
   assert.equal(await page.locator('.preview-note').count(), 0);
   assert.ok(await page.locator('.configuration-note').evaluate(el => parseFloat(getComputedStyle(el).fontSize)) >= 12);
   assert.match(await page.locator('.configuration-note').innerText(), /仅记录偏好/);
