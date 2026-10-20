@@ -1,0 +1,775 @@
+{
+  "date": "2026-10-20",
+  "browser": "155.0.4283.62",
+  "host": "win32 10.0.26200 x64",
+  "device": "Desktop host; all mobile touch is Chromium CDP emulation, not physical phones",
+  "modelBytes": 124324,
+  "engineBytes": 635169,
+  "errors": [],
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 410,
+        "y": 203.5,
+        "width": 620,
+        "height": 432,
+        "top": 203.5,
+        "right": 1030,
+        "bottom": 635.5,
+        "left": 410
+      },
+      "input": {
+        "x": 568.9375,
+        "y": 273.796875,
+        "width": 302.09375,
+        "height": 282.3125,
+        "top": 273.796875,
+        "right": 871.03125,
+        "bottom": 556.109375,
+        "left": 568.9375
+      },
+      "settings": {
+        "x": 395,
+        "y": 748.609375,
+        "width": 650,
+        "height": 121.390625,
+        "top": 748.609375,
+        "right": 1045,
+        "bottom": 870,
+        "left": 395
+      },
+      "canvas": [
+        620,
+        432
+      ],
+      "pressed": {
+        "maximum": 0.3096401186101047,
+        "changed": 295,
+        "center": [
+          -0.29127146568858403,
+          0.4497144170083314,
+          0.7783804890097537
+        ],
+        "uploads": 25,
+        "contexts": 1
+      },
+      "retained": {
+        "maximum": 0.10544770423265662,
+        "changed": 294,
+        "center": [
+          -0.2913060322734959,
+          0.44979842625863886,
+          0.7784799895829531
+        ],
+        "uploads": 37,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 410,
+        "y": 203.5,
+        "width": 620,
+        "height": 432,
+        "top": 203.5,
+        "right": 1030,
+        "bottom": 635.5,
+        "left": 410
+      },
+      "input": {
+        "x": 568.9375,
+        "y": 273.796875,
+        "width": 302.09375,
+        "height": 282.3125,
+        "top": 273.796875,
+        "right": 871.03125,
+        "bottom": 556.109375,
+        "left": 568.9375
+      },
+      "settings": {
+        "x": 395,
+        "y": 748.609375,
+        "width": 650,
+        "height": 121.390625,
+        "top": 748.609375,
+        "right": 1045,
+        "bottom": 870,
+        "left": 395
+      },
+      "canvas": [
+        620,
+        432
+      ],
+      "pressed": {
+        "maximum": 0.3096473670118325,
+        "changed": 295,
+        "center": [
+          -0.2912715376844987,
+          0.4497145883208639,
+          0.7783806902050219
+        ],
+        "uploads": 25,
+        "contexts": 1
+      },
+      "retained": {
+        "maximum": 0.10544770423265662,
+        "changed": 294,
+        "center": [
+          -0.2913060322734959,
+          0.44979842625863886,
+          0.7784799895829531
+        ],
+        "uploads": 37,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 366,
+        "height": 303.828125,
+        "top": 194.5,
+        "right": 378,
+        "bottom": 498.328125,
+        "left": 12
+      },
+      "input": {
+        "x": 88.765625,
+        "y": 243.9375,
+        "width": 212.453125,
+        "height": 198.546875,
+        "top": 243.9375,
+        "right": 301.21875,
+        "bottom": 442.484375,
+        "left": 88.765625
+      },
+      "settings": {
+        "x": 18,
+        "y": 594.609375,
+        "width": 354,
+        "height": 219.390625,
+        "top": 594.609375,
+        "right": 372,
+        "bottom": 814,
+        "left": 18
+      },
+      "canvas": [
+        366,
+        303
+      ],
+      "pressed": {
+        "maximum": 0.30965393840461614,
+        "changed": 295,
+        "center": [
+          -0.29122396285878144,
+          0.44975446570182126,
+          0.7783721380538964
+        ],
+        "uploads": 25,
+        "contexts": 1
+      },
+      "retained": {
+        "maximum": 0.1054438262707885,
+        "changed": 293,
+        "center": [
+          -0.2912581038707974,
+          0.449839242002293,
+          0.7784714340025292
+        ],
+        "uploads": 37,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 366,
+        "height": 303.828125,
+        "top": 194.5,
+        "right": 378,
+        "bottom": 498.328125,
+        "left": 12
+      },
+      "input": {
+        "x": 88.765625,
+        "y": 243.9375,
+        "width": 212.453125,
+        "height": 198.546875,
+        "top": 243.9375,
+        "right": 301.21875,
+        "bottom": 442.484375,
+        "left": 88.765625
+      },
+      "settings": {
+        "x": 18,
+        "y": 594.609375,
+        "width": 354,
+        "height": 219.390625,
+        "top": 594.609375,
+        "right": 372,
+        "bottom": 814,
+        "left": 18
+      },
+      "canvas": [
+        366,
+        303
+      ],
+      "pressed": {
+        "maximum": 0.30961467404069887,
+        "changed": 295,
+        "center": [
+          -0.2912239353327594,
+          0.44975440628657254,
+          0.7783720665628852
+        ],
+        "uploads": 25,
+        "contexts": 1
+      },
+      "retained": {
+        "maximum": 0.1054438262707885,
+        "changed": 293,
+        "center": [
+          -0.2912581038707974,
+          0.449839242002293,
+          0.7784714340025292
+        ],
+        "uploads": 37,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "compact",
+      "width": 375,
+      "height": 667,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 351,
+        "height": 255,
+        "top": 194.5,
+        "right": 363,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "input": {
+        "x": 98.328125,
+        "y": 235.984375,
+        "width": 178.3125,
+        "height": 166.640625,
+        "top": 235.984375,
+        "right": 276.640625,
+        "bottom": 402.625,
+        "left": 98.328125
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 339,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 357,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        351,
+        255
+      ]
+    },
+    {
+      "name": "compact",
+      "width": 375,
+      "height": 667,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 351,
+        "height": 255,
+        "top": 194.5,
+        "right": 363,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "input": {
+        "x": 98.328125,
+        "y": 235.984375,
+        "width": 178.3125,
+        "height": 166.640625,
+        "top": 235.984375,
+        "right": 276.640625,
+        "bottom": 402.625,
+        "left": 98.328125
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 339,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 357,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        351,
+        255
+      ]
+    },
+    {
+      "name": "short",
+      "width": 320,
+      "height": 568,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 296,
+        "height": 255,
+        "top": 194.5,
+        "right": 308,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "input": {
+        "x": 70.828125,
+        "y": 235.984375,
+        "width": 178.3125,
+        "height": 166.640625,
+        "top": 235.984375,
+        "right": 249.140625,
+        "bottom": 402.625,
+        "left": 70.828125
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 284,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 302,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        296,
+        255
+      ]
+    },
+    {
+      "name": "short",
+      "width": 320,
+      "height": 568,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 296,
+        "height": 255,
+        "top": 194.5,
+        "right": 308,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "input": {
+        "x": 70.828125,
+        "y": 235.984375,
+        "width": 178.3125,
+        "height": 166.640625,
+        "top": 235.984375,
+        "right": 249.140625,
+        "bottom": 402.625,
+        "left": 70.828125
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 284,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 302,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        296,
+        255
+      ]
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 112,
+        "y": 181.5,
+        "width": 620,
+        "height": 290,
+        "top": 181.5,
+        "right": 732,
+        "bottom": 471.5,
+        "left": 112
+      },
+      "input": {
+        "x": 320.59375,
+        "y": 228.6875,
+        "width": 202.796875,
+        "height": 189.515625,
+        "top": 228.6875,
+        "right": 523.390625,
+        "bottom": 418.203125,
+        "left": 320.59375
+      },
+      "settings": {
+        "x": 97,
+        "y": 507.5,
+        "width": 650,
+        "height": 121.390625,
+        "top": 507.5,
+        "right": 747,
+        "bottom": 628.890625,
+        "left": 97
+      },
+      "canvas": [
+        620,
+        290
+      ]
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 112,
+        "y": 181.5,
+        "width": 620,
+        "height": 290,
+        "top": 181.5,
+        "right": 732,
+        "bottom": 471.5,
+        "left": 112
+      },
+      "input": {
+        "x": 320.59375,
+        "y": 228.6875,
+        "width": 202.796875,
+        "height": 189.515625,
+        "top": 228.6875,
+        "right": 523.390625,
+        "bottom": 418.203125,
+        "left": 320.59375
+      },
+      "settings": {
+        "x": 97,
+        "y": 507.5,
+        "width": 650,
+        "height": 121.390625,
+        "top": 507.5,
+        "right": 747,
+        "bottom": 628.890625,
+        "left": 97
+      },
+      "canvas": [
+        620,
+        290
+      ]
+    }
+  ],
+  "recordings": [
+    {
+      "name": "desktop",
+      "touch": "Browser emulated mouse events",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "observations": [
+        {
+          "label": "left",
+          "held": {
+            "maximum": 0.3181886098410696,
+            "changed": 293,
+            "center": [
+              -0.4726214223289812,
+              0.3048409935029525,
+              0.7693509049930198
+            ],
+            "uploads": 147,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "dragged-right",
+          "held": {
+            "maximum": 0.35532585966014224,
+            "changed": 368,
+            "center": [
+              0.36644754561406007,
+              0.2915174123408223,
+              0.8340625714362974
+            ],
+            "uploads": 307,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "left-retained",
+          "rest": {
+            "maximum": 0.11832106759828637,
+            "changed": 366,
+            "center": [
+              0.3673479595598805,
+              0.29135008594760187,
+              0.8337538672446848
+            ],
+            "uploads": 495,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "upper",
+          "held": {
+            "maximum": 0.3173584635374515,
+            "changed": 476,
+            "center": [
+              0.11091362047310956,
+              0.5672038991729189,
+              0.6881397038577174
+            ],
+            "uploads": 609,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "upper-retained",
+          "rest": {
+            "maximum": 0.11689611807893589,
+            "changed": 475,
+            "center": [
+              0.21272364691400245,
+              0.4579610544756324,
+              0.744956676680999
+            ],
+            "uploads": 776,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "right",
+          "held": {
+            "maximum": 0.3600000617598598,
+            "changed": 482,
+            "center": [
+              0.33729671712672465,
+              0.3473732857566967,
+              0.7895085683857824
+            ],
+            "uploads": 924,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "right-retained",
+          "rest": {
+            "maximum": 0.1979307678664977,
+            "changed": 483,
+            "center": [
+              0.28112461410508127,
+              0.39702576996156214,
+              0.7699604666006137
+            ],
+            "uploads": 1149,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "retained-rotated",
+          "mesh": {
+            "maximum": 0.1979307678664977,
+            "changed": 483,
+            "center": [
+              0.28112461410508127,
+              0.39702576996156214,
+              0.7699604666006137
+            ],
+            "uploads": 1149,
+            "contexts": 1
+          },
+          "matrix": [
+            1.887379141862766e-15,
+            0,
+            -1,
+            0,
+            0.30822551250457764,
+            0.951313316822052,
+            5.551115123125783e-16,
+            0,
+            0.951313316822052,
+            -0.30822551250457764,
+            1.7763568394002505e-15,
+            0,
+            -0.005393920931965113,
+            0.019026266410946846,
+            -5.244333267211914,
+            1
+          ]
+        }
+      ],
+      "retained": {
+        "maximum": 0.1979307678664977,
+        "changed": 962,
+        "center": [
+          0.009758203724391602,
+          0.3225491251805145,
+          0.5096655302970274
+        ],
+        "uploads": 1406,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "mobile-touch",
+      "touch": "Browser emulated native CDP touch events",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "observations": [
+        {
+          "label": "left",
+          "held": {
+            "maximum": 0.3187333592595518,
+            "changed": 293,
+            "center": [
+              -0.4725954867259799,
+              0.3049163834283131,
+              0.7693971784771588
+            ],
+            "uploads": 146,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "dragged-right",
+          "held": {
+            "maximum": 0.35634105535840305,
+            "changed": 437,
+            "center": [
+              0.35978166889994934,
+              0.2926867411396045,
+              0.8350076138072562
+            ],
+            "uploads": 330,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "left-retained",
+          "rest": {
+            "maximum": 0.11876721969785094,
+            "changed": 435,
+            "center": [
+              0.3652415840182841,
+              0.29155685397817066,
+              0.8330929817894328
+            ],
+            "uploads": 551,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "upper",
+          "held": {
+            "maximum": 0.3139656689931411,
+            "changed": 528,
+            "center": [
+              0.11365216892537999,
+              0.5639129618218494,
+              0.6895025374784832
+            ],
+            "uploads": 696,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "upper-retained",
+          "rest": {
+            "maximum": 0.1181742332353189,
+            "changed": 527,
+            "center": [
+              0.21560254753321956,
+              0.45439316680607394,
+              0.7462885964230404
+            ],
+            "uploads": 923,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "right",
+          "held": {
+            "maximum": 0.3600000617598598,
+            "changed": 533,
+            "center": [
+              0.3377877140591865,
+              0.34661307584671125,
+              0.7896714289089469
+            ],
+            "uploads": 1086,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "right-retained",
+          "rest": {
+            "maximum": 0.19878281780397383,
+            "changed": 533,
+            "center": [
+              0.28272811751639065,
+              0.39518715691036194,
+              0.7704609770789683
+            ],
+            "uploads": 1321,
+            "contexts": 1
+          }
+        }
+      ],
+      "retained": {
+        "maximum": 0.19878281780397383,
+        "changed": 533,
+        "center": [
+          0.28272811751639065,
+          0.39518715691036194,
+          0.7704609770789683
+        ],
+        "uploads": 1434,
+        "contexts": 1
+      }
+    }
+  ]
+}

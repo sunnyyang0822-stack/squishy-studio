@@ -1,5 +1,5 @@
 import { createDetailController, thicknessNames, materialNames } from './state.mjs';
-import { createStaticPreview, createSilentAudio } from './adapters.js';
+import { createModelPreview, createSilentAudio } from './adapters.js';
 import { createPanelMotion } from './panel-motion.js';
 
 const stage = document.querySelector('.toy-stage');
@@ -12,13 +12,14 @@ const listeners = new AbortController();
 const panelMotion = createPanelMotion(panel, { signal: listeners.signal });
 let panelOpen = false;
 const controller = createDetailController({
-  renderer: createStaticPreview(document.querySelector('.toy-mount')),
+  renderer: createModelPreview(document.querySelector('.toy-mount'), { onUnavailable: () => controller.rendererUnavailable() }),
   audio: createSilentAudio(),
   onChange(state) {
     stage.dataset.state = state.resource;
     stage.setAttribute('aria-busy', String(state.resource === 'loading'));
+    document.querySelector('.preview-badge').textContent = { loading: '加载中', ready: '捏压原型', error: '加载失败', unavailable: '暂不可用' }[state.resource];
     document.querySelector('.resource-message').hidden = state.resource === 'ready';
-    document.querySelector('.resource-status').textContent = { loading: '正在加载小云…', ready: '', error: '小云暂时没能加载。可以重试，或先选择喜欢的搭配。', unavailable: '当前环境暂时无法展示小云，仍可调整下方偏好。' }[state.resource];
+    document.querySelector('.resource-status').textContent = { loading: '正在加载圆球…', ready: '', error: '圆球暂时没能加载。可以重试，或先选择喜欢的搭配。', unavailable: '当前环境暂时无法展示圆球。可以重试，仍可调整下方偏好。' }[state.resource];
     retry.hidden = state.resource === 'ready' || state.resource === 'loading';
     document.querySelector('.configuration-summary').textContent = `已选择：${thicknessNames[state.config.thickness]}厚度 · ${materialNames[state.config.material]}`;
     document.querySelector('.configuration-error').hidden = !state.configError;

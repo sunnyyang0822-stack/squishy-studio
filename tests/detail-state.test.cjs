@@ -72,3 +72,23 @@ test('音量接口：初始静音、首次50%、0静音、最近值恢复、边�
   await c.load(); await c.select('material', 'sugar'); assert.equal(h.calls.length, count);
   c.dispose(); c.toggleMute(); c.setVolume(99); assert.equal(h.calls.length, count); assert.equal(h.disposed, 1);
 });
+
+test('渲染上下文中断清除当前资源状态，重试恢复且晚到加载不能覆盖中断', async () => {
+  const { createDetailController } = await stateModule;
+  let resolve;
+  let delayed = false;
+  let released = 0;
+  const handle = () => ({ commit() {}, dispose() { released++; } });
+  const { controller: c } = harness(createDetailController, { prepare() { return delayed ? new Promise(r => resolve = r) : Promise.resolve(handle()); } });
+  await c.load();
+  c.rendererUnavailable();
+  assert.equal(c.getState().resource, 'unavailable'); assert.equal(released, 1);
+  await c.retry(); assert.equal(c.getState().resource, 'ready');
+  delayed = true;
+  const pending = c.select('material', 'sugar');
+  c.rendererUnavailable(); resolve(handle()); await pending;
+  assert.equal(c.getState().resource, 'unavailable');
+  assert.equal(released, 3);
+  c.dispose(); c.rendererUnavailable();
+  assert.equal(released, 3);
+});

@@ -17,10 +17,11 @@ after(async () => { await browser?.close(); server?.kill(); });
 test('详情、四只样例及大厅玩具在昼夜和过渡中均保留原色', async () => {
   for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     const page = await browser.newPage({ viewport });
-    for (const [path,selector] of [['/squishy/cloud/','.toy-mount img'],['/#samples','.sample-art img'],['/collections/','.collection-pending img']]) {
+    for (const [path,selector] of [['/squishy/cloud/','.toy-mount canvas'],['/#samples','.sample-art img'],['/collections/','.collection-pending img']]) {
       await page.goto(base + path);
       await page.locator(selector).first().waitFor();
-      await page.locator(selector).evaluateAll(images => Promise.all(images.map(image => image.decode())));
+      if (selector.includes('canvas')) await page.waitForSelector('.toy-mount[data-render-count]');
+      else await page.locator(selector).evaluateAll(images => Promise.all(images.map(image => image.decode())));
       await page.evaluate(() => document.fonts.ready);
       // Fixed backing isolates original texture/color from the intended change
       // of environment visible through the SVGs' transparent pixels.

@@ -1,0 +1,743 @@
+{
+  "date": "2026-10-20",
+  "browser": "155.0.4283.62",
+  "host": "win32 10.0.26200 x64",
+  "device": "Desktop host; all mobile touch is Chromium CDP emulation, not physical phones",
+  "modelBytes": 124324,
+  "engineBytes": 633036,
+  "errors": [],
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 410,
+        "y": 203.5,
+        "width": 620,
+        "height": 432,
+        "top": 203.5,
+        "right": 1030,
+        "bottom": 635.5,
+        "left": 410
+      },
+      "input": {
+        "x": 568.9375,
+        "y": 273.796875,
+        "width": 302.09375,
+        "height": 282.3125,
+        "top": 273.796875,
+        "right": 871.03125,
+        "bottom": 556.109375,
+        "left": 568.9375
+      },
+      "settings": {
+        "x": 395,
+        "y": 748.609375,
+        "width": 650,
+        "height": 121.390625,
+        "top": 748.609375,
+        "right": 1045,
+        "bottom": 870,
+        "left": 395
+      },
+      "canvas": [
+        620,
+        432
+      ],
+      "pressed": {
+        "maximum": 0.3138660489557804,
+        "changed": 295,
+        "center": [
+          -0.2913051848565904,
+          0.44979889545785784,
+          0.7784796541601727
+        ],
+        "uploads": 144,
+        "contexts": 1
+      },
+      "restored": {
+        "maximum": 0,
+        "changed": 0,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "uploads": 200,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 410,
+        "y": 203.5,
+        "width": 620,
+        "height": 432,
+        "top": 203.5,
+        "right": 1030,
+        "bottom": 635.5,
+        "left": 410
+      },
+      "input": {
+        "x": 568.9375,
+        "y": 273.796875,
+        "width": 302.09375,
+        "height": 282.3125,
+        "top": 273.796875,
+        "right": 871.03125,
+        "bottom": 556.109375,
+        "left": 568.9375
+      },
+      "settings": {
+        "x": 395,
+        "y": 748.609375,
+        "width": 650,
+        "height": 121.390625,
+        "top": 748.609375,
+        "right": 1045,
+        "bottom": 870,
+        "left": 395
+      },
+      "canvas": [
+        620,
+        432
+      ],
+      "pressed": {
+        "maximum": 0.31387343296910747,
+        "changed": 295,
+        "center": [
+          -0.29130518692230206,
+          0.4497988815881152,
+          0.7784796652714905
+        ],
+        "uploads": 148,
+        "contexts": 1
+      },
+      "restored": {
+        "maximum": 0,
+        "changed": 0,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "uploads": 207,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 366,
+        "height": 303.828125,
+        "top": 194.5,
+        "right": 378,
+        "bottom": 498.328125,
+        "left": 12
+      },
+      "input": {
+        "x": 88.765625,
+        "y": 243.9375,
+        "width": 212.453125,
+        "height": 198.546875,
+        "top": 243.9375,
+        "right": 301.21875,
+        "bottom": 442.484375,
+        "left": 88.765625
+      },
+      "settings": {
+        "x": 18,
+        "y": 594.609375,
+        "width": 354,
+        "height": 219.390625,
+        "top": 594.609375,
+        "right": 372,
+        "bottom": 814,
+        "left": 18
+      },
+      "canvas": [
+        366,
+        303
+      ],
+      "pressed": {
+        "maximum": 0.31423835099203473,
+        "changed": 295,
+        "center": [
+          -0.2912577063373615,
+          0.44983870420872774,
+          0.7784711287750454
+        ],
+        "uploads": 149,
+        "contexts": 1
+      },
+      "restored": {
+        "maximum": 0,
+        "changed": 0,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "uploads": 207,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 366,
+        "height": 303.828125,
+        "top": 194.5,
+        "right": 378,
+        "bottom": 498.328125,
+        "left": 12
+      },
+      "input": {
+        "x": 88.765625,
+        "y": 243.9375,
+        "width": 212.453125,
+        "height": 198.546875,
+        "top": 243.9375,
+        "right": 301.21875,
+        "bottom": 442.484375,
+        "left": 88.765625
+      },
+      "settings": {
+        "x": 18,
+        "y": 594.609375,
+        "width": 354,
+        "height": 219.390625,
+        "top": 594.609375,
+        "right": 372,
+        "bottom": 814,
+        "left": 18
+      },
+      "canvas": [
+        366,
+        303
+      ],
+      "pressed": {
+        "maximum": 0.3138544241808859,
+        "changed": 295,
+        "center": [
+          -0.29125769969944626,
+          0.44983871833843186,
+          0.7784711203291222
+        ],
+        "uploads": 147,
+        "contexts": 1
+      },
+      "restored": {
+        "maximum": 0,
+        "changed": 0,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "uploads": 206,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "compact",
+      "width": 375,
+      "height": 667,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 351,
+        "height": 255,
+        "top": 194.5,
+        "right": 363,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "input": {
+        "x": 98.328125,
+        "y": 235.984375,
+        "width": 178.3125,
+        "height": 166.640625,
+        "top": 235.984375,
+        "right": 276.640625,
+        "bottom": 402.625,
+        "left": 98.328125
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 339,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 357,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        351,
+        255
+      ]
+    },
+    {
+      "name": "compact",
+      "width": 375,
+      "height": 667,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 351,
+        "height": 255,
+        "top": 194.5,
+        "right": 363,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "input": {
+        "x": 98.328125,
+        "y": 235.984375,
+        "width": 178.3125,
+        "height": 166.640625,
+        "top": 235.984375,
+        "right": 276.640625,
+        "bottom": 402.625,
+        "left": 98.328125
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 339,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 357,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        351,
+        255
+      ]
+    },
+    {
+      "name": "short",
+      "width": 320,
+      "height": 568,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 296,
+        "height": 255,
+        "top": 194.5,
+        "right": 308,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "input": {
+        "x": 70.828125,
+        "y": 235.984375,
+        "width": 178.3125,
+        "height": 166.640625,
+        "top": 235.984375,
+        "right": 249.140625,
+        "bottom": 402.625,
+        "left": 70.828125
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 284,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 302,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        296,
+        255
+      ]
+    },
+    {
+      "name": "short",
+      "width": 320,
+      "height": 568,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 296,
+        "height": 255,
+        "top": 194.5,
+        "right": 308,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "input": {
+        "x": 70.828125,
+        "y": 235.984375,
+        "width": 178.3125,
+        "height": 166.640625,
+        "top": 235.984375,
+        "right": 249.140625,
+        "bottom": 402.625,
+        "left": 70.828125
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 284,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 302,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        296,
+        255
+      ]
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "theme": "day",
+      "overflow": false,
+      "stage": {
+        "x": 112,
+        "y": 181.5,
+        "width": 620,
+        "height": 290,
+        "top": 181.5,
+        "right": 732,
+        "bottom": 471.5,
+        "left": 112
+      },
+      "input": {
+        "x": 320.59375,
+        "y": 228.6875,
+        "width": 202.796875,
+        "height": 189.515625,
+        "top": 228.6875,
+        "right": 523.390625,
+        "bottom": 418.203125,
+        "left": 320.59375
+      },
+      "settings": {
+        "x": 97,
+        "y": 507.5,
+        "width": 650,
+        "height": 121.390625,
+        "top": 507.5,
+        "right": 747,
+        "bottom": 628.890625,
+        "left": 97
+      },
+      "canvas": [
+        620,
+        290
+      ]
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "theme": "night",
+      "overflow": false,
+      "stage": {
+        "x": 112,
+        "y": 181.5,
+        "width": 620,
+        "height": 290,
+        "top": 181.5,
+        "right": 732,
+        "bottom": 471.5,
+        "left": 112
+      },
+      "input": {
+        "x": 320.59375,
+        "y": 228.6875,
+        "width": 202.796875,
+        "height": 189.515625,
+        "top": 228.6875,
+        "right": 523.390625,
+        "bottom": 418.203125,
+        "left": 320.59375
+      },
+      "settings": {
+        "x": 97,
+        "y": 507.5,
+        "width": 650,
+        "height": 121.390625,
+        "top": 507.5,
+        "right": 747,
+        "bottom": 628.890625,
+        "left": 97
+      },
+      "canvas": [
+        620,
+        290
+      ]
+    }
+  ],
+  "recordings": [
+    {
+      "name": "desktop",
+      "touch": "Browser emulated mouse events",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "observations": [
+        {
+          "label": "left",
+          "held": {
+            "maximum": 0.3195202595091076,
+            "changed": 293,
+            "center": [
+              -0.4726517065945763,
+              0.30486341120288074,
+              0.7693888208713485
+            ],
+            "uploads": 164,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "dragged-right",
+          "held": {
+            "maximum": 0.33952172459059793,
+            "changed": 289,
+            "center": [
+              0.3632610567025008,
+              0.2927578501472687,
+              0.8360710200291163
+            ],
+            "uploads": 351,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "left-restored",
+          "rest": {
+            "maximum": 0,
+            "changed": 0,
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "uploads": 546,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "upper",
+          "held": {
+            "maximum": 0.3189329486001511,
+            "changed": 286,
+            "center": [
+              0.010259585608002823,
+              0.6769573480077137,
+              0.6335003855278032
+            ],
+            "uploads": 709,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "upper-restored",
+          "rest": {
+            "maximum": 0,
+            "changed": 0,
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "uploads": 905,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "right",
+          "held": {
+            "maximum": 0.31786790304180423,
+            "changed": 281,
+            "center": [
+              0.4110968041527428,
+              0.28476218586432606,
+              0.8158175346759708
+            ],
+            "uploads": 1068,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "right-restored",
+          "rest": {
+            "maximum": 0,
+            "changed": 0,
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "uploads": 1264,
+            "contexts": 1
+          }
+        }
+      ],
+      "restored": {
+        "maximum": 0,
+        "changed": 0,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "uploads": 1572,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "mobile-touch",
+      "touch": "Browser emulated native CDP touch events",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "observations": [
+        {
+          "label": "left",
+          "held": {
+            "maximum": 0.3195221220181692,
+            "changed": 293,
+            "center": [
+              -0.4725987304468676,
+              0.30491332341702104,
+              0.7693991844235716
+            ],
+            "uploads": 165,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "dragged-right",
+          "held": {
+            "maximum": 0.33970322984872664,
+            "changed": 289,
+            "center": [
+              0.37376220826256334,
+              0.29122947607215144,
+              0.8319107410882776
+            ],
+            "uploads": 353,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "left-restored",
+          "rest": {
+            "maximum": 0,
+            "changed": 0,
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "uploads": 549,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "upper",
+          "held": {
+            "maximum": 0.3186045677866531,
+            "changed": 286,
+            "center": [
+              0.010287708863840629,
+              0.6769858445891448,
+              0.6334656547904713
+            ],
+            "uploads": 712,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "upper-restored",
+          "rest": {
+            "maximum": 0,
+            "changed": 0,
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "uploads": 908,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "right",
+          "held": {
+            "maximum": 0.31761594689907663,
+            "changed": 281,
+            "center": [
+              0.41110169971911315,
+              0.2848032683176671,
+              0.8157995809749282
+            ],
+            "uploads": 1071,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "right-restored",
+          "rest": {
+            "maximum": 0,
+            "changed": 0,
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "uploads": 1267,
+            "contexts": 1
+          }
+        }
+      ],
+      "restored": {
+        "maximum": 0,
+        "changed": 0,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "uploads": 1381,
+        "contexts": 1
+      }
+    }
+  ]
+}

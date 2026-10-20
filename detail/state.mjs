@@ -45,6 +45,12 @@ export function createDetailController({ renderer, audio, onChange = () => {} })
     getState: snapshot,
     load: prepare,
     retry: prepare,
+    rendererUnavailable() {
+      if (disposed) return;
+      ++revision; pending?.abort(); current?.dispose(); current = undefined;
+      state = { ...state, resource: 'unavailable', configStatus: 'idle', configError: false };
+      emit();
+    },
     select(group, value) {
       if (disposed || !Object.hasOwn(group === 'thickness' ? thicknessNames : group === 'material' ? materialNames : {}, value)) return Promise.resolve();
       if (state.config[group] === value) return Promise.resolve();

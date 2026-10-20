@@ -1,0 +1,359 @@
+{
+  "browser": "155.0.4283.62",
+  "os": "win32 10.0.26200 x64",
+  "device": "Desktop host, headless browser; mobile viewports are emulation, not physical phones",
+  "modelBytes": 124324,
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "theme": "day",
+      "stage": {
+        "x": 410,
+        "y": 203.5,
+        "width": 620,
+        "height": 432,
+        "top": 203.5,
+        "right": 1030,
+        "bottom": 635.5,
+        "left": 410
+      },
+      "settings": {
+        "x": 395,
+        "y": 748.609375,
+        "width": 650,
+        "height": 121.390625,
+        "top": 748.609375,
+        "right": 1045,
+        "bottom": 870,
+        "left": 395
+      },
+      "canvas": [
+        620,
+        432
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 4.5,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "theme": "night",
+      "stage": {
+        "x": 410,
+        "y": 203.5,
+        "width": 620,
+        "height": 432,
+        "top": 203.5,
+        "right": 1030,
+        "bottom": 635.5,
+        "left": 410
+      },
+      "settings": {
+        "x": 395,
+        "y": 748.609375,
+        "width": 650,
+        "height": 121.390625,
+        "top": 748.609375,
+        "right": 1045,
+        "bottom": 870,
+        "left": 395
+      },
+      "canvas": [
+        620,
+        432
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 3.4000000001396984,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "theme": "day",
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 366,
+        "height": 303.828125,
+        "top": 194.5,
+        "right": 378,
+        "bottom": 498.328125,
+        "left": 12
+      },
+      "settings": {
+        "x": 18,
+        "y": 594.609375,
+        "width": 354,
+        "height": 219.390625,
+        "top": 594.609375,
+        "right": 372,
+        "bottom": 814,
+        "left": 18
+      },
+      "canvas": [
+        366,
+        303
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 3.699999999953434,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "theme": "night",
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 366,
+        "height": 303.828125,
+        "top": 194.5,
+        "right": 378,
+        "bottom": 498.328125,
+        "left": 12
+      },
+      "settings": {
+        "x": 18,
+        "y": 594.609375,
+        "width": 354,
+        "height": 219.390625,
+        "top": 594.609375,
+        "right": 372,
+        "bottom": 814,
+        "left": 18
+      },
+      "canvas": [
+        366,
+        303
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 3.1000000000931323,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "compact",
+      "width": 375,
+      "height": 667,
+      "theme": "day",
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 351,
+        "height": 255,
+        "top": 194.5,
+        "right": 363,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 339,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 357,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        351,
+        255
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 2.6000000000931323,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "compact",
+      "width": 375,
+      "height": 667,
+      "theme": "night",
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 351,
+        "height": 255,
+        "top": 194.5,
+        "right": 363,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 339,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 357,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        351,
+        255
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 2.3999999999068677,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "short",
+      "width": 320,
+      "height": 568,
+      "theme": "day",
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 296,
+        "height": 255,
+        "top": 194.5,
+        "right": 308,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 284,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 302,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        296,
+        255
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 2.300000000046566,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "short",
+      "width": 320,
+      "height": 568,
+      "theme": "night",
+      "stage": {
+        "x": 12,
+        "y": 194.5,
+        "width": 296,
+        "height": 255,
+        "top": 194.5,
+        "right": 308,
+        "bottom": 449.5,
+        "left": 12
+      },
+      "settings": {
+        "x": 18,
+        "y": 485.5,
+        "width": 284,
+        "height": 219.390625,
+        "top": 485.5,
+        "right": 302,
+        "bottom": 704.890625,
+        "left": 18
+      },
+      "canvas": [
+        296,
+        255
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 2.699999999953434,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "theme": "day",
+      "stage": {
+        "x": 112,
+        "y": 181.5,
+        "width": 620,
+        "height": 290,
+        "top": 181.5,
+        "right": 732,
+        "bottom": 471.5,
+        "left": 112
+      },
+      "settings": {
+        "x": 97,
+        "y": 507.5,
+        "width": 650,
+        "height": 121.390625,
+        "top": 507.5,
+        "right": 747,
+        "bottom": 628.890625,
+        "left": 97
+      },
+      "canvas": [
+        620,
+        290
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 2.699999999953434,
+      "renderCount": "2",
+      "overflow": false
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "theme": "night",
+      "stage": {
+        "x": 112,
+        "y": 181.5,
+        "width": 620,
+        "height": 290,
+        "top": 181.5,
+        "right": 732,
+        "bottom": 471.5,
+        "left": 112
+      },
+      "settings": {
+        "x": 97,
+        "y": 507.5,
+        "width": 650,
+        "height": 121.390625,
+        "top": 507.5,
+        "right": 747,
+        "bottom": 628.890625,
+        "left": 97
+      },
+      "canvas": [
+        620,
+        290
+      ],
+      "dpr": 1,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "modelLoadMs": 3.300000000046566,
+      "renderCount": "2",
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

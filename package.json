@@ -4,13 +4,15 @@
   "description": "Squishy Studio 首页首屏视觉原型",
   "scripts": {
     "build:brand": "node scripts/build-brand.cjs",
-    "prestart": "npm run build:brand",
+    "prestart": "npm run build",
     "start": "node server.mjs",
-    "pretest": "npm run build:brand",
+    "pretest": "npm run build",
     "test": "node --test tests/*.test.cjs",
     "capture": "node capture.cjs",
     "capture:showcase": "node capture-showcase.cjs",
-    "capture:detail": "node capture-detail.cjs"
+    "capture:detail": "node capture-detail.cjs",
+    "build:orb": "node scripts/build-orb.cjs",
+    "build": "npm run build:brand && npm run build:orb"
   },
   "repository": {
     "type": "git",

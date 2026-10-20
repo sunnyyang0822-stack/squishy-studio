@@ -32,15 +32,15 @@ const screenshot = (page, name) => page.screenshot({ path: `${folder}/${name}.pn
       await context.close();
     }
     const failure = await browser.newPage({ viewport: { width:390,height:844 } });
-    await failure.route('**/cloud-preview.svg', route => route.abort());
+    await failure.route('**/squishy-orb.glb', route => route.abort());
     await failure.goto(`${base}/squishy/cloud/`); await failure.waitForSelector('[data-state=error]');
     await screenshot(failure, 'resource-failure');
-    await failure.unroute('**/cloud-preview.svg'); await failure.locator('.retry-button').click(); await failure.waitForSelector('[data-state=ready]');
+    await failure.unroute('**/squishy-orb.glb'); await failure.locator('.retry-button').click(); await failure.waitForSelector('[data-state=ready]');
     await failure.close();
     const context = await browser.newContext({ viewport: { width:1440,height:900 }, recordVideo: { dir:folder,size:{width:1440,height:900} } });
     const page = await context.newPage(); const video = page.video();
     await page.goto(`${base}/collections/`); await page.waitForTimeout(650);
-    await page.getByRole('link', { name:'查看小云外观预览' }).click(); await page.waitForSelector('[data-state=ready]'); await page.waitForTimeout(600);
+    await page.getByRole('link', { name:'体验圆球捏压原型' }).click(); await page.waitForSelector('[data-state=ready]'); await page.waitForTimeout(600);
     for (const value of ['thin','thick','medium','polish','sugar','wax']) { await page.locator(`[value=${value}]`).check(); await page.waitForTimeout(450); }
     await page.locator('.sound-trigger').click(); await page.waitForTimeout(600);
     await page.getByRole('button', { name:'解除静音',exact:true }).click(); await page.waitForTimeout(600);
@@ -52,7 +52,7 @@ const screenshot = (page, name) => page.screenshot({ path: `${folder}/${name}.pn
     await page.keyboard.press('Escape');
     await page.getByRole('link', { name:'返回合集' }).click(); await page.getByRole('link', { name:'返回首页样例' }).click();
     await page.locator('.theme-toggle').click(); await page.waitForTimeout(1600);
-    await page.getByRole('link', { name:'去合集大厅挑选' }).click(); await page.getByRole('link', { name:'查看小云外观预览' }).click();
+    await page.getByRole('link', { name:'去合集大厅挑选' }).click(); await page.getByRole('link', { name:'体验圆球捏压原型' }).click();
     await page.waitForSelector('[data-state=ready]'); assert.equal(await page.locator('html').getAttribute('data-theme'),'night');
     await page.waitForTimeout(900); await page.locator('.sound-trigger').click(); await page.waitForTimeout(700); await page.keyboard.press('Escape');
     await page.getByRole('link', { name:'返回合集' }).click(); await page.waitForTimeout(500);

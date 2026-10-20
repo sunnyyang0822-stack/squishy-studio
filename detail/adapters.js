@@ -1,4 +1,25 @@
-// This is an original static illustration, not a GLB or a material simulation.
+// Lazy import keeps settings and retry usable if the engine bundle fails.
+export function createModelPreview(mount, options) {
+  let renderer;
+  let disposed = false;
+  let attempt = 0;
+  return {
+    async prepare(config, context) {
+      if (!renderer) {
+        // Failed module fetches are cached by browsers; a retry needs a fresh URL.
+        const url = '/assets/orb-preview.js' + (attempt ? `?retry=${attempt}` : '');
+        attempt++;
+        const module = await import(url);
+        if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+        renderer ||= module.createOrbPreview(mount, options);
+      }
+      return renderer.prepare(config, context);
+    },
+    dispose() { disposed = true; renderer?.dispose(); },
+  };
+}
+
+// Retained illustration adapter for independent UI fixtures and future assets.
 // Preparing never mutates the live mount. Only a current revision may commit.
 export function createStaticPreview(mount, url = '/assets/samples/cloud-preview.svg') {
   return {
