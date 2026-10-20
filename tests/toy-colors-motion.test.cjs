@@ -24,15 +24,21 @@ test('详情、四只样例及大厅玩具在昼夜和过渡中均保留原色',
       await page.evaluate(() => document.fonts.ready);
       // Fixed backing isolates original texture/color from the intended change
       // of environment visible through the SVGs' transparent pixels.
-      await page.addStyleTag({ content: `${selector}{background:#807b87!important} .sample-art{transform:none!important}` });
+      await page.addStyleTag({ content: `${selector}{background:#807b87!important} .sample,.sample-art{transform:none!important} .toy-stage:has([data-color-proof]),.sample:has([data-color-proof]){z-index:2147483647!important} [data-color-proof]{position:fixed!important;inset:0 auto auto 0!important;width:192px!important;height:192px!important;z-index:2147483647!important}` });
       const images = await page.locator(selector).all();
       const texturePixels = async image => {
-        await image.scrollIntoViewIfNeeded();
+        // A fixed integer pixel position prevents scroll-dependent SVG edge
+        // rasterization from masquerading as a theme color change on Chromium.
+        // Keep the real DOM ancestry and all theme/filter rules in effect.
+        await image.evaluate(el => el.setAttribute('data-color-proof', ''));
+        await page.evaluate(() => scrollTo(0, 0));
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
         const box = await image.boundingBox();
+        assert.deepEqual({ x:box.x,y:box.y,width:box.width,height:box.height }, { x:0,y:0,width:192,height:192 });
         // Fractional CSS boundaries blend one outer row/column with the changing
         // environment. Compare the full interior on its fixed opaque backing.
-        return page.screenshot({ clip: { x: Math.ceil(box.x) + 1, y: Math.ceil(box.y) + 1, width: Math.floor(box.width) - 2, height: Math.floor(box.height) - 2 } });
+        try { return await page.screenshot({ clip: { x:1,y:1,width:190,height:190 } }); }
+        finally { await image.evaluate(el=>el.removeAttribute('data-color-proof')); }
       };
       const reference = [];
       await page.evaluate(() => document.documentElement.dataset.theme = 'day');
@@ -116,5 +122,45 @@ test('减少动态时无面板位移，鼠标和键盘操作均可用；偏好�
   await link.focus();
   assert.equal(await link.locator('span').evaluate(el=>getComputedStyle(el).transform),'none', '键盘聚焦不触发箭头移动');
   assert.equal(await link.locator('span').evaluate(el=>getComputedStyle(el).transitionProperty),'none');
+  await page.close();
+});
+
+test('两组滑动底块独立、200ms、连续反向不跳；键盘和减少动态即时定位', async () => {
+  const page = await browser.newPage(); await page.goto(base+'/squishy/cloud/'); await page.waitForSelector('[data-state=ready]');
+  const result = await page.evaluate(async () => {
+    const groups = [...document.querySelectorAll('.choice-group')];
+    const thumb = groups[0].querySelector('.choice-highlight');
+    const other = getComputedStyle(groups[1].querySelector('.choice-highlight')).transform;
+    document.querySelector('[value=thin]').click();
+    getComputedStyle(thumb).transform;
+    const first = thumb.getAnimations()[0]; first.pause(); first.currentTime = 65;
+    const interrupted = getComputedStyle(thumb).transform;
+    document.querySelector('[value=thick]').click();
+    const resumed = getComputedStyle(thumb).transform;
+    const duration = thumb.getAnimations()[0].effect.getTiming().duration;
+    await thumb.getAnimations()[0].finished;
+    return {interrupted,resumed,duration,otherUnchanged:other === getComputedStyle(groups[1].querySelector('.choice-highlight')).transform};
+  });
+  const translation = text => Number(text.split(',')[4]);
+  assert.ok(Math.abs(translation(result.interrupted)-translation(result.resumed)) < .01);
+  assert.equal(result.duration,200); assert.equal(result.otherUnchanged,true);
+  const aligned = async group => {
+    const positions = await group.evaluate(el => ({thumb:el.querySelector('.choice-highlight').getBoundingClientRect().toJSON(),input:el.querySelector('input:checked').getBoundingClientRect().toJSON()}));
+    assert.ok(Math.abs(positions.thumb.x-positions.input.x) < 1 && Math.abs(positions.thumb.width-positions.input.width) < 1,JSON.stringify(positions));
+  };
+  const thickness = page.getByRole('group',{name:'脆皮厚度'}).locator('.choice-group');
+  const material = page.getByRole('group',{name:'脆皮材质'}).locator('.choice-group');
+  await aligned(thickness); await aligned(material);
+  await page.locator('[value=thick]').focus(); await page.keyboard.press('ArrowLeft');
+  assert.equal(await page.locator('[value=medium]').isChecked(),true);
+  assert.equal(await thickness.locator('.choice-highlight').evaluate(el=>el.getAnimations().length),0);
+  await aligned(thickness);
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.locator('[value=sugar]').check();
+  assert.equal(await material.locator('.choice-highlight').evaluate(el=>el.getAnimations().length),0);
+  await aligned(material);
+  for (const [width,height] of [[390,844],[375,667],[320,568],[844,390]]) {
+    await page.setViewportSize({width,height}); await aligned(thickness); await aligned(material);
+  }
   await page.close();
 });

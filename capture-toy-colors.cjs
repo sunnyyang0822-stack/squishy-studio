@@ -27,7 +27,11 @@ const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
     for (const pause of [55,45,650]) { await page.mouse.click(button.x+button.width/2,button.y+button.height/2); await page.waitForTimeout(pause); }
     await page.locator('.mute-button').click(); await page.waitForTimeout(600);
     await page.locator('.panel-close').click(); await page.waitForTimeout(350);
-    for (const value of ['thin','thick','polish','sugar']) { await page.locator(`[value=${value}]`).check(); await page.waitForTimeout(300); }
+    const thin = await page.locator('[value=thin]').boundingBox();
+    const thick = await page.locator('[value=thick]').boundingBox();
+    await page.mouse.click(thin.x+thin.width/2,thin.y+thin.height/2); await page.waitForTimeout(65);
+    await page.mouse.click(thick.x+thick.width/2,thick.y+thick.height/2); await page.waitForTimeout(400);
+    for (const value of ['medium','polish','sugar']) { await page.locator(`[value=${value}]`).check(); await page.waitForTimeout(350); }
     await page.getByRole('link',{name:'返回合集'}).click(); await page.getByRole('link',{name:'返回首页样例'}).click();
     await page.locator('.sample-art img').evaluateAll(images=>Promise.all(images.map(image=>image.decode()))); await page.waitForTimeout(650);
     await page.locator('.theme-toggle').click(); await page.waitForTimeout(1300);
