@@ -20,13 +20,16 @@ test('大厅真实制作中入口、详情直达、刷新和返回合集', async
   page.on('pageerror', e => errors.push(e.message));
   await page.goto(`${base}/collections/`);
   assert.equal(await page.getByText('制作中', { exact: true }).isVisible(), true);
-  await page.getByRole('link', { name: '查看小云外观预览' }).click(); await ready(page);
+  await page.getByRole('link', { name: '查看圆球外观预览' }).click(); await ready(page);
   assert.equal(page.url(), `${base}${path}`);
   await page.reload(); await ready(page);
   assert.equal(await page.getByText('外观预览', { exact: true }).isVisible(), true);
   assert.equal(await page.locator('.preview-note').count(), 0);
+  assert.ok(await page.locator('.configuration-note').evaluate(el => parseFloat(getComputedStyle(el).fontSize)) >= 12);
+  assert.match(await page.locator('.configuration-note').innerText(), /仅记录偏好/);
   assert.equal(await page.locator('.configuration-summary').evaluate(el => el.getBoundingClientRect().width), 1, '配置摘要仅供辅助技术读取，不显示底部小字');
-  assert.equal(await page.locator('canvas,audio').count(), 0);
+  assert.equal(await page.locator('.toy-mount canvas').count(), 1);
+  assert.equal(await page.locator('audio').count(), 0);
   await page.getByRole('link', { name: '返回合集' }).click(); assert.equal(page.url(), `${base}/collections/`);
   await page.goto(`${base}/squishy/cloud`); await ready(page); assert.equal(page.url(), `${base}${path}`);
   assert.deepEqual(errors, []); await page.close();
@@ -34,7 +37,7 @@ test('大厅真实制作中入口、详情直达、刷新和返回合集', async
 
 test('浏览器九种配置、连续选择、键盘单选与清晰反馈', async () => {
   const page = await browser.newPage(); await page.goto(base + path); await ready(page);
-  const originalSize = await page.locator('.toy-mount img').boundingBox();
+  const originalSize = await page.locator('.toy-mount canvas').boundingBox();
   for (const [thickness, name] of [['thin','薄'],['medium','中'],['thick','厚']]) for (const [material, label] of [['wax','蜡'],['polish','指甲油'],['sugar','糖']]) {
     await page.locator(`[name=thickness][value=${thickness}]`).check();
     await page.locator(`[name=material][value=${material}]`).check();
@@ -47,8 +50,8 @@ test('浏览器九种配置、连续选择、键盘单选与清晰反馈', async
   await page.locator('[name=thickness][value=thick]').focus(); await page.keyboard.press('ArrowLeft');
   assert.equal(await page.locator('[name=thickness][value=medium]').isChecked(), true);
   assert.equal(await page.locator('[name=material][value=sugar]').isChecked(), true);
-  assert.deepEqual(await page.locator('.toy-mount img').boundingBox(), originalSize, '厚度选择不缩放玩具');
-  assert.equal(await page.locator('.toy-mount img').count(), 1); await page.close();
+  assert.deepEqual(await page.locator('.toy-mount canvas').boundingBox(), originalSize, '厚度选择不缩放玩具');
+  assert.equal(await page.locator('.toy-mount canvas').count(), 1); await page.close();
 });
 
 test('音量面板：键盘滑杆、静音恢复、Esc、关闭、外部焦点', async () => {
@@ -81,18 +84,18 @@ test('音量面板：键盘滑杆、静音恢复、Esc、关闭、外部焦点',
   assert.equal(await page.locator('audio').count(), 0); await page.close();
 });
 
-test('真实图片失败与重试，挂起加载及不可用状态不阻塞控件', async () => {
+test('真实模型失败与重试，挂起加载及不可用状态不阻塞控件', async () => {
   const page = await browser.newPage();
-  await page.route('**/cloud-preview.svg', route => route.abort());
+  await page.route('**/squishy-orb.glb', route => route.abort());
   await page.goto(base + path); await page.waitForSelector('[data-state=error]');
   await page.locator('[value=sugar]').check();
   assert.match(await page.locator('.configuration-summary').innerText(), /糖/);
   await page.waitForSelector('[data-state=error]');
-  await page.unroute('**/cloud-preview.svg'); await page.getByRole('button', { name: '重新加载' }).click(); await ready(page);
+  await page.unroute('**/squishy-orb.glb'); await page.getByRole('button', { name: '重新加载' }).click(); await ready(page);
   assert.equal(await page.locator('.toy-mount').getAttribute('data-material'), 'sugar');
   await page.close();
   const pending = await browser.newPage(); let release;
-  await pending.route('**/cloud-preview.svg', async route => { await new Promise(resolve => release = resolve); await route.continue().catch(() => {}); });
+  await pending.route('**/squishy-orb.glb', async route => { await new Promise(resolve => release = resolve); await route.continue().catch(() => {}); });
   await pending.goto(base + path, { waitUntil: 'domcontentloaded' });
   await pending.waitForSelector('[data-state=loading]');
   assert.equal(await pending.locator('.toy-stage').getAttribute('aria-busy'), 'true');
@@ -100,7 +103,7 @@ test('真实图片失败与重试，挂起加载及不可用状态不阻塞控�
   assert.equal(await pending.locator('#volume-value').innerText(), '50%');
   release(); await ready(pending); await pending.close();
   const unavailable = await browser.newPage();
-  await unavailable.addInitScript(() => { window.Image = undefined; });
+  await unavailable.addInitScript(() => { const getContext = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(type, ...args) { return type.startsWith('webgl') ? null : getContext.call(this, type, ...args); }; });
   await unavailable.goto(base + path); await unavailable.waitForSelector('[data-state=unavailable]');
   await unavailable.locator('[value=thick]').check();
   assert.match(await unavailable.locator('.configuration-summary').innerText(), /厚厚度/);
@@ -121,7 +124,7 @@ test('五种尺寸昼夜、触控目标、面板不遮挡、减少动态与跨�
         const box = await item.boundingBox(); assert.ok(box.width >= 44 && box.height >= 44, JSON.stringify(box));
       }
       const toy = await page.locator('.toy-stage').boundingBox(); const settings = await page.locator('.customization').boundingBox();
-      const image = await page.locator('.toy-mount img').boundingBox();
+      const image = await page.locator('.toy-mount canvas').boundingBox();
       assert.ok(image.y >= toy.y && image.y + image.height <= toy.y + toy.height + 1, `${width} image must stay inside its stage`);
       assert.ok(settings.y >= toy.y + toy.height + 35, `${width} settings need breathing room`);
       if (width === 1440) assert.ok(settings.y + settings.height >= height - 40, '桌面设置区位于页面底部');
