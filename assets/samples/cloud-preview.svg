@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="410" viewBox="0 75 640 410">
+  <defs>
+    <path id="cloud" d="M143 420C54 426 25 365 43 306C51 274 73 254 104 245C91 175 129 120 193 120C229 120 256 135 276 155C303 103 362 88 407 114C448 136 469 173 470 220C533 211 583 251 591 305C603 375 558 419 493 423Z"/>
+    <clipPath id="clip"><use href="#cloud"/></clipPath>
+    <radialGradient id="body" cx=".34" cy=".13" r=".95" gradientTransform="translate(0 -.05) scale(1 1.1)"><stop stop-color="#fffef9"/><stop offset=".36" stop-color="#f7f5ff"/><stop offset=".65" stop-color="#dde4f4"/><stop offset=".87" stop-color="#b3c2df"/><stop offset="1" stop-color="#96a9cd"/></radialGradient>
+    <radialGradient id="shine"><stop stop-color="#fffef9" stop-opacity=".85"/><stop offset="1" stop-color="#fffef9" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bottom" x2="0" y2="1"><stop stop-color="#778ab8" stop-opacity="0"/><stop offset="1" stop-color="#778ab8" stop-opacity=".6"/></linearGradient>
+    <filter id="shadow"><feGaussianBlur stdDeviation="12"/></filter>
+    <filter id="broad"><feGaussianBlur stdDeviation="16"/></filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+  <ellipse cx="324" cy="450" rx="213" ry="20" fill="#746a91" opacity=".2" filter="url(#shadow)"/>
+  <ellipse cx="324" cy="442" rx="135" ry="8" fill="#7c78a0" opacity=".15" filter="url(#soft)"/>
+  <use href="#cloud" fill="url(#body)"/>
+  <g clip-path="url(#clip)">
+    <path d="M40 344C77 420 174 397 267 401C401 408 531 416 593 339V450H32Z" fill="url(#bottom)" filter="url(#broad)"/>
+    <ellipse cx="194" cy="171" rx="98" ry="74" fill="url(#shine)"/>
+    <ellipse cx="364" cy="159" rx="87" ry="69" fill="url(#shine)"/>
+    <ellipse cx="100" cy="291" rx="68" ry="64" fill="url(#shine)"/>
+    <path d="M122 224C114 175 151 139 188 140M300 149C335 110 390 118 418 150M59 320C55 293 70 273 92 262" fill="none" stroke="#fffdf7" stroke-width="10" stroke-linecap="round" opacity=".57" filter="url(#soft)"/>
+    <ellipse cx="213" cy="331" rx="25" ry="13" fill="#edbfd5" opacity=".6" filter="url(#soft)"/>
+    <ellipse cx="419" cy="331" rx="25" ry="13" fill="#edbfd5" opacity=".6" filter="url(#soft)"/>
+    <ellipse cx="254" cy="308" rx="7" ry="10" fill="#81758d"/>
+    <ellipse cx="378" cy="308" rx="7" ry="10" fill="#81758d"/>
+    <circle cx="252" cy="305" r="2" fill="#fff8fc" opacity=".8"/>
+    <circle cx="376" cy="305" r="2" fill="#fff8fc" opacity=".8"/>
+    <path d="M301 328Q316 343 331 328" fill="none" stroke="#9a819c" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>
