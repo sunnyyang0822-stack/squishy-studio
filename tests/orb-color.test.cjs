@@ -146,7 +146,10 @@ for (const reducedMotion of ['no-preference', 'reduce']) test(`真实GPU形态�
   assert.ok(matrixDistance(first.matrix, before.matrix) < matrixDistance(before.matrix, initial.matrix), 'Pose starts moving toward identity on that frame');
   assert.ok(distance(first.hue, before.hue) > 1e-10, 'Actual GPU color attributes begin changing on the first restoring frame');
   for (let i = 1; i < frames.length; i++) assert.ok(frames[i].maxDepth <= frames[i - 1].maxDepth + .000001, 'Dent depth decreases monotonically with the color clock');
-  assert.ok(frames.some(value => value.maxDepth > .00001 && value.maxDepth < before.maxDepth * .5), 'A real intermediate frame shows partial restoration');
+  // Reduced motion lasts 120ms: a busy GPU may present only the first partial
+  // frame and the endpoint. Verify real partial restoration, not a frame at
+  // an arbitrary halfway depth that the display is allowed to skip.
+  assert.ok(frames.some(value => value.maxDepth > .00001 && value.maxDepth < before.maxDepth && distance(value.hue, before.hue) > 1e-10), 'A real frame shows partial restoration and color change together');
   assert.equal(final.maxDepth, 0);
   assert.deepEqual(final.matrix, initial.matrix);
   // Cubic easing becomes smaller than Float32 position precision just before

@@ -140,6 +140,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     }
     const current = { renderer, scene, environment, camera, events, restSurface, surface, frame: 0, count: 0, lastTime: null, width: 0, height: 0 };
     let restorePose;
+    let daylight = document.documentElement.dataset.theme !== 'night', colorLightingDirty = true;
     const initialOrientation = new THREE.Quaternion();
     function beginRestore() {
       deformation.beginRestore();
@@ -193,15 +194,23 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       const step = deformation.step(dt);
       const needsFrame = step.needsFrame || colorStep.needsFrame;
       current.lastTime = needsFrame ? time : null;
-      if (colorStep.changed || step.changed) {
+      if (colorStep.changed || step.changed || colorLightingDirty) {
         const positions = geometry.attributes.position.array;
         // Gentle cavity shading keeps retained impressions legible under the
         // broad fill. It is a bounded visual approximation, not a shadow pass.
         for (let i = 0; i < colors.length; i += 3) {
           const depth = Math.hypot(restPositions[i] - positions[i], restPositions[i + 1] - positions[i + 1], restPositions[i + 2] - positions[i + 2]);
           const visibility = 1 - Math.min(.24, depth);
-          for (let k = 0; k < 3; k++) colors[i + k] = coatingColors[i + k] * visibility;
+          // Daylight compensation preserves pastel chroma through the soft
+          // studio lighting/tone mapping. The palette and coating clock stay
+          // in their original color space; night uses the unmodified color.
+          const luminance = .2126 * coatingColors[i] + .7152 * coatingColors[i + 1] + .0722 * coatingColors[i + 2];
+          for (let k = 0; k < 3; k++) {
+            const pigment = daylight ? Math.max(0, Math.min(1, (luminance + (coatingColors[i + k] - luminance) * 1.3) * 1.06)) : coatingColors[i + k];
+            colors[i + k] = pigment * visibility;
+          }
         }
+        colorLightingDirty = false;
         geometry.attributes.color.needsUpdate = true;
       }
       if (step.changed) {
@@ -270,7 +279,10 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     }, { signal: events.signal });
     current.resize = new ResizeObserver(invalidate);
     current.resize.observe(mount);
-    current.theme = new MutationObserver(invalidate);
+    current.theme = new MutationObserver(() => {
+      daylight = document.documentElement.dataset.theme !== 'night';
+      colorLightingDirty = true; invalidate();
+    });
     current.theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     document.addEventListener('visibilitychange', invalidate, { signal: events.signal });
     renderer.domElement.addEventListener('webglcontextlost', event => {
