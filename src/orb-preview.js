@@ -4,6 +4,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createOrbDeformation } from './orb-deformation.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
+import { createOrbColor } from './orb-color.mjs';
+import { orbColors } from '../detail/orb-colors.mjs';
 
 const MODEL_URL = '/assets/models/squishy-orb.glb';
 const abortError = () => new DOMException('Aborted', 'AbortError');
@@ -43,7 +45,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     delete mount.dataset.renderCount;
   }
 
-  function build(root) {
+  function build(root, initialColor) {
     let renderer;
     try {
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
@@ -67,13 +69,13 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     const environment = pmrem.fromScene(studio, .06);
     studio.dispose(); pmrem.dispose();
     scene.environment = environment.texture;
-    scene.environmentIntensity = .8;
-    const fill = new THREE.HemisphereLight(0xfff4ed, 0x897aab, .9);
+    scene.environmentIntensity = .28;
+    const fill = new THREE.HemisphereLight(0xfff7ef, 0x8a8293, .42);
     scene.add(fill);
-    const key = new THREE.DirectionalLight(0xfff0e4, 2.3);
-    key.position.set(-3, 5, 4);
+    const key = new THREE.DirectionalLight(0xfff5ed, 2.6);
+    key.position.set(-3.5, 2.4, 1.8);
     scene.add(key);
-    const rim = new THREE.DirectionalLight(0xe6d8ff, 1.1);
+    const rim = new THREE.DirectionalLight(0xe9e4ff, .55);
     rim.position.set(3, 2, -3); scene.add(rim);
     // Static soft contact shadow. No shadow-map pass for this appearance gate.
     const shadowCanvas = document.createElement('canvas');
@@ -97,11 +99,24 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     const events = new AbortController();
     const mesh = root.getObjectByName('Orb_Surface');
     const geometry = mesh.geometry;
+    // Diffuse, solid surface. Colors share the existing geometry and material;
+    // no new GLBs, textures, transparent shells or layered draw calls.
+    mesh.material.color.set(0xffffff);
+    mesh.material.roughness = .82;
+    mesh.material.metalness = 0;
+    const colors = new Float32Array(geometry.attributes.position.count * 3);
+    const coatingColors = new Float32Array(colors.length);
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3).setUsage(THREE.DynamicDrawUsage));
     const restNormals = geometry.attributes.normal.array.slice();
     geometry.attributes.position.setUsage(THREE.DynamicDrawUsage);
     geometry.attributes.normal.setUsage(THREE.DynamicDrawUsage);
     const restSurface = new THREE.Mesh(geometry.clone(), mesh.material);
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+    let selectedColor = orbColors.find(color => color.id === initialColor) || orbColors[0];
+    const coating = createOrbColor(coatingColors, new THREE.Color(selectedColor.hex).toArray(), { reducedMotion: motionPreference.matches });
+    colors.set(coatingColors);
+    const restPositions = geometry.attributes.position.array.slice();
+    renderer.domElement.setAttribute('aria-label', `${selectedColor.name}圆球，可按压留痕`);
     const deformation = createOrbDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
@@ -157,8 +172,22 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       const { width, height } = mount.getBoundingClientRect();
       if (width < 1 || height < 1) return;
       if (width !== current.width || height !== current.height) resize(width, height);
-      const step = deformation.step(current.lastTime === null ? 1 / 60 : (time - current.lastTime) / 1000);
-      current.lastTime = step.needsFrame ? time : null;
+      const dt = current.lastTime === null ? 1 / 60 : (time - current.lastTime) / 1000;
+      const step = deformation.step(dt);
+      const colorStep = coating.step(dt);
+      const needsFrame = step.needsFrame || colorStep.needsFrame;
+      current.lastTime = needsFrame ? time : null;
+      if (colorStep.changed || step.changed) {
+        const positions = geometry.attributes.position.array;
+        // Gentle cavity shading keeps retained impressions legible under the
+        // broad fill. It is a bounded visual approximation, not a shadow pass.
+        for (let i = 0; i < colors.length; i += 3) {
+          const depth = Math.hypot(restPositions[i] - positions[i], restPositions[i + 1] - positions[i + 1], restPositions[i + 2] - positions[i + 2]);
+          const visibility = 1 - Math.min(.24, depth);
+          for (let k = 0; k < 3; k++) colors[i + k] = coatingColors[i + k] * visibility;
+        }
+        geometry.attributes.color.needsUpdate = true;
+      }
       if (step.changed) {
         geometry.attributes.position.needsUpdate = true;
         if (step.atRest) {
@@ -170,7 +199,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       try {
         renderer.render(scene, camera);
         mount.dataset.renderCount = String(++current.count);
-        if (step.needsFrame) invalidate();
+        if (needsFrame) invalidate();
       } catch {
         broken = true; destroyView(); onUnavailable();
       }
@@ -195,7 +224,24 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       floor.position.y = lowest - .003;
       invalidate();
     } });
-    motionPreference.addEventListener('change', event => { deformation.setReducedMotion(event.matches); invalidate(); }, { signal: events.signal });
+    current.selectColor = id => {
+      const next = orbColors.find(color => color.id === id) || orbColors[0];
+      if (next.id === selectedColor.id) return;
+      selectedColor = next;
+      pivot.updateMatrixWorld(true);
+      const heights = new Float32Array(geometry.attributes.position.count);
+      let low = Infinity, high = -Infinity;
+      for (let i = 0; i < heights.length; i++) {
+        worldPoint.fromBufferAttribute(geometry.attributes.position, i).applyMatrix4(mesh.matrixWorld);
+        heights[i] = worldPoint.y; low = Math.min(low, heights[i]); high = Math.max(high, heights[i]);
+      }
+      for (let i = 0; i < heights.length; i++) heights[i] = (heights[i] - low) / Math.max(.001, high - low);
+      coating.select(new THREE.Color(next.hex).toArray(), heights);
+      renderer.domElement.setAttribute('aria-label', `${next.name}圆球，可按压留痕`);
+    };
+    motionPreference.addEventListener('change', event => {
+      deformation.setReducedMotion(event.matches); coating.setReducedMotion(event.matches); invalidate();
+    }, { signal: events.signal });
     current.resize = new ResizeObserver(invalidate);
     current.resize.observe(mount);
     current.theme = new MutationObserver(invalidate);
@@ -224,7 +270,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
         if (bytes.byteLength < 12 || new DataView(bytes).getUint32(0, true) !== 0x46546c67) throw new Error('Invalid GLB response');
         const gltf = await new GLTFLoader().parseAsync(bytes, new URL('.', new URL(MODEL_URL, location.href)).href);
         if (signal.aborted || disposed) { releaseObject(gltf.scene); throw abortError(); }
-        view = build(gltf.scene);
+        view = build(gltf.scene, config.color);
       }
       const prepared = view;
       return {
@@ -234,8 +280,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
           if (prepared.renderer.domElement.parentNode !== mount || prepared.surface.parentNode !== mount) {
             mount.replaceChildren(prepared.renderer.domElement, prepared.surface);
           }
-          mount.dataset.thickness = config.thickness;
-          mount.dataset.material = config.material;
+          mount.dataset.color = config.color || orbColors[0].id;
+          prepared.selectColor(config.color);
           prepared.invalidate();
         },
         // Preference handles share the page scene; only the adapter owns GPU resources.

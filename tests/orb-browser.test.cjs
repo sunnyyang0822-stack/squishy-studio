@@ -47,7 +47,7 @@ test('配置、主题、旋转复用真实 WebGL 场景；静止及后台不持�
   const settledFrames = await page.evaluate(() => window.orbProbe.frames);
   await page.waitForTimeout(180);
   assert.equal(await page.evaluate(() => window.orbProbe.frames), settledFrames, 'No idle animation loop');
-  for (const value of ['thin', 'polish', 'thick', 'sugar', 'medium', 'wax']) await page.locator(`[value=${value}]`).check();
+  for (const index of [1, 4, 7, 2, 9, 0]) await page.locator('[name=color]').nth(index).check();
   await page.evaluate(() => document.documentElement.dataset.theme = 'night');
   await page.setViewportSize({ width: 844, height: 390 });
   assert.equal(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')), true);
@@ -92,13 +92,13 @@ test('真实上下文丢失可重试重建，控件与导航在中断后可用',
   await page.goto(base + path); await ready(page);
   await page.evaluate(() => window.orbProbe.contexts[0].getExtension('WEBGL_lose_context').loseContext());
   await page.waitForSelector('[data-state=unavailable]');
-  await page.locator('[value=sugar]').check();
+  await page.locator('[name=color]').nth(3).check();
   // A configuration change is allowed to recover the unavailable renderer.
   await ready(page);
   await page.evaluate(() => window.orbProbe.contexts.at(-1).getExtension('WEBGL_lose_context').loseContext());
   await page.waitForSelector('[data-state=unavailable]');
   await page.getByRole('button', { name: '重新加载' }).click(); await ready(page);
-  assert.equal(await page.locator('.toy-mount').getAttribute('data-material'), 'sugar');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-color'), await page.locator('[name=color]').nth(3).inputValue());
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
   assert.equal(await page.getByRole('link', { name: '返回合集' }).isVisible(), true);
   await page.close();
@@ -113,9 +113,9 @@ test('HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重
   const bundle = await browser.newPage();
   await bundle.route('**/orb-preview.js*', route => route.abort());
   await bundle.goto(base + path); await bundle.waitForSelector('[data-state=error]');
-  await bundle.locator('.sound-trigger').click();
-  assert.equal(await bundle.locator('#sound-panel').isVisible(), true);
-  await bundle.keyboard.press('Escape');
+  await bundle.locator('[name=color]').nth(2).check();
+  assert.equal(await bundle.locator('[name=color]').nth(2).isChecked(), true);
+  assert.equal(await bundle.getByRole('link', { name: '返回合集' }).isVisible(), true);
   await bundle.unroute('**/orb-preview.js*');
   await bundle.locator('.retry-button').click(); await ready(bundle); await bundle.close();
 });
@@ -132,7 +132,7 @@ test('手机模拟可从圆球之外的留白滚动页面', async () => {
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await page.waitForFunction(() => scrollY > 40);
   assert.equal(await page.locator('.toy-mount canvas').evaluate(el => getComputedStyle(el).touchAction), 'auto');
-  await page.locator('[value=sugar]').check();
-  assert.equal(await page.locator('[value=sugar]').isChecked(), true);
+  await page.locator('[name=color]').nth(3).check();
+  assert.equal(await page.locator('[name=color]').nth(3).isChecked(), true);
   await session.detach(); await page.close();
 });

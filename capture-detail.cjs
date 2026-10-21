@@ -22,8 +22,8 @@ const screenshot = (page, name) => page.screenshot({ path: `${folder}/${name}.pn
         await page.evaluate(() => document.fonts.ready);
         await screenshot(page, `detail-${name}-${theme}`);
         if (['desktop','mobile','short'].includes(name)) {
-          await page.locator('.sound-trigger').click(); await screenshot(page, `volume-${name}-${theme}`);
-          await page.keyboard.press('Escape');
+          await page.locator('[name=color][value=mint]').check(); await page.waitForTimeout(700);
+          await screenshot(page, `color-${name}-${theme}`);
         }
         const geometry = await page.evaluate(() => ({ viewport: [innerWidth,innerHeight], document: [document.documentElement.scrollWidth,document.documentElement.scrollHeight], stage: document.querySelector('.toy-stage').getBoundingClientRect().toJSON(), settings: document.querySelector('.customization').getBoundingClientRect().toJSON() }));
         report.push({ name,theme,...geometry });
@@ -41,20 +41,12 @@ const screenshot = (page, name) => page.screenshot({ path: `${folder}/${name}.pn
     const page = await context.newPage(); const video = page.video();
     await page.goto(`${base}/collections/`); await page.waitForTimeout(650);
     await page.getByRole('link', { name:'体验圆球捏压原型' }).click(); await page.waitForSelector('[data-state=ready]'); await page.waitForTimeout(600);
-    for (const value of ['thin','thick','medium','polish','sugar','wax']) { await page.locator(`[value=${value}]`).check(); await page.waitForTimeout(450); }
-    await page.locator('.sound-trigger').click(); await page.waitForTimeout(600);
-    await page.getByRole('button', { name:'解除静音',exact:true }).click(); await page.waitForTimeout(600);
-    const slider = await page.locator('#volume').boundingBox();
-    await page.mouse.move(slider.x+slider.width*.5,slider.y+slider.height/2); await page.mouse.down();
-    await page.mouse.move(slider.x+slider.width*.82,slider.y+slider.height/2,{steps:24}); await page.mouse.up(); await page.waitForTimeout(600);
-    await page.getByRole('button', { name:'静音',exact:true }).click(); await page.waitForTimeout(350);
-    await page.getByRole('button', { name:'解除静音',exact:true }).click(); await page.waitForTimeout(400);
-    await page.keyboard.press('Escape');
+    for (const value of ['rose','mint','sky','lavender','peach','cream']) { await page.locator(`[name=color][value=${value}]`).check(); await page.waitForTimeout(700); }
     await page.getByRole('link', { name:'返回合集' }).click(); await page.getByRole('link', { name:'返回首页样例' }).click();
     await page.locator('.theme-toggle').click(); await page.waitForTimeout(1600);
     await page.getByRole('link', { name:'去合集大厅挑选' }).click(); await page.getByRole('link', { name:'体验圆球捏压原型' }).click();
     await page.waitForSelector('[data-state=ready]'); assert.equal(await page.locator('html').getAttribute('data-theme'),'night');
-    await page.waitForTimeout(900); await page.locator('.sound-trigger').click(); await page.waitForTimeout(700); await page.keyboard.press('Escape');
+    await page.waitForTimeout(900); await page.locator('[name=color][value=sky]').check(); await page.waitForTimeout(700);
     await page.getByRole('link', { name:'返回合集' }).click(); await page.waitForTimeout(500);
     await context.close(); await video.saveAs(`${folder}/detail-walkthrough.webm`); fs.unlinkSync(await video.path());
     // Capture an explicit origin/main worktree in the same browser/environment,

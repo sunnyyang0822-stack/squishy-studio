@@ -23,22 +23,16 @@ const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
     const context = await browser.newContext({viewport:{width:1440,height:900},recordVideo:{dir:folder,size:{width:1440,height:900}}});
     const page = await context.newPage(); const video = page.video();
     await page.goto(base+'/squishy/cloud/'); await page.waitForSelector('[data-state=ready]'); await page.waitForTimeout(500);
-    const button = await page.locator('.sound-trigger').boundingBox();
-    for (const pause of [55,45,650]) { await page.mouse.click(button.x+button.width/2,button.y+button.height/2); await page.waitForTimeout(pause); }
-    await page.locator('.mute-button').click(); await page.waitForTimeout(600);
-    await page.locator('.panel-close').click(); await page.waitForTimeout(350);
-    const thin = await page.locator('[value=thin]').boundingBox();
-    const thick = await page.locator('[value=thick]').boundingBox();
-    await page.mouse.click(thin.x+thin.width/2,thin.y+thin.height/2); await page.waitForTimeout(65);
-    await page.mouse.click(thick.x+thick.width/2,thick.y+thick.height/2); await page.waitForTimeout(400);
-    for (const value of ['medium','polish','sugar']) { await page.locator(`[value=${value}]`).check(); await page.waitForTimeout(350); }
+    for (const [value,pause] of [['mint',180],['lavender',130],['peach',750],['sky',750]]) {
+      await page.locator(`[name=color][value=${value}]`).check(); await page.waitForTimeout(pause);
+    }
     await page.getByRole('link',{name:'返回合集'}).click(); await page.getByRole('link',{name:'返回首页样例'}).click();
     await page.locator('.sample-art img').evaluateAll(images=>Promise.all(images.map(image=>image.decode()))); await page.waitForTimeout(650);
     await page.locator('.theme-toggle').click(); await page.waitForTimeout(1300);
     await page.evaluate(()=>document.getElementById('samples').scrollIntoView()); await page.waitForTimeout(1000);
     await page.locator('.collection-link').hover(); await page.waitForTimeout(300); await page.locator('.collection-link').click();
-    await page.getByRole('link',{name:'查看小云外观预览'}).click(); await page.waitForSelector('[data-state=ready]'); await page.waitForTimeout(700);
-    await page.locator('.sound-trigger').click(); await page.waitForTimeout(500); await page.keyboard.press('Escape'); await page.waitForTimeout(250);
+    await page.getByRole('link',{name:'体验圆球捏压原型'}).click(); await page.waitForSelector('[data-state=ready]'); await page.waitForTimeout(700);
+    await page.locator('[name=color][value=mint]').check(); await page.waitForTimeout(750);
     await context.close(); await video.saveAs(`${folder}/motion-demo.webm`); fs.unlinkSync(await video.path());
     console.log('已生成桌面、手机的昼夜详情／样例截图，以及连续操作录屏。');
   } finally { await browser.close(); }

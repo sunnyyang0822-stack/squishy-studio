@@ -1,3 +1,5 @@
+import { colorNames } from './orb-colors.mjs';
+export { colorNames } from './orb-colors.mjs';
 export const thicknessNames = Object.freeze({ thin: '薄', medium: '中', thick: '厚' });
 export const materialNames = Object.freeze({ wax: '蜡', polish: '指甲油', sugar: '糖' });
 
@@ -11,7 +13,7 @@ export function createDetailController({ renderer, audio, onChange = () => {} })
   let current;
   let state = {
     resource: 'loading', configStatus: 'idle', configError: false,
-    config: { thickness: 'medium', material: 'wax' },
+    config: { thickness: 'medium', material: 'wax', color: 'rose' },
     audio: { volume: 0, muted: true, lastNonZero: 50, ready: Boolean(audio.ready) },
   };
   const snapshot = () => structuredClone(state);
@@ -52,7 +54,7 @@ export function createDetailController({ renderer, audio, onChange = () => {} })
       emit();
     },
     select(group, value) {
-      if (disposed || !Object.hasOwn(group === 'thickness' ? thicknessNames : group === 'material' ? materialNames : {}, value)) return Promise.resolve();
+      if (disposed || !Object.hasOwn(group === 'color' ? colorNames : group === 'thickness' ? thicknessNames : group === 'material' ? materialNames : {}, value)) return Promise.resolve();
       if (state.config[group] === value) return Promise.resolve();
       state = { ...state, config: { ...state.config, [group]: value } };
       return prepare();

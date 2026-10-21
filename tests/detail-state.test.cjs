@@ -14,11 +14,11 @@ test('九种完整配置、独立分组及同值不重新初始化', async () =>
   const { createDetailController } = await stateModule;
   const { controller: c, configurations } = harness(createDetailController);
   await c.load();
-  assert.deepEqual(c.getState().config, { thickness: 'medium', material: 'wax' });
+  assert.deepEqual(c.getState().config, { thickness: 'medium', material: 'wax', color: 'rose' });
   for (const thickness of ['thin', 'medium', 'thick']) for (const material of ['wax', 'polish', 'sugar']) {
     await c.select('thickness', thickness); await c.select('material', material);
-    assert.deepEqual(c.getState().config, { thickness, material });
-    assert.deepEqual(configurations.at(-1), { thickness, material });
+    assert.deepEqual(c.getState().config, { thickness, material, color: 'rose' });
+    assert.deepEqual(configurations.at(-1), { thickness, material, color: 'rose' });
   }
   const count = configurations.length;
   await c.select('material', 'sugar'); await c.select('thickness', 'thick'); await c.select('unknown', 'wax');
@@ -36,7 +36,7 @@ test('快速连续选择只提交最后一次；旧失败不覆盖新状态；�
   pending[2].resolve(); await third;
   pending[0].resolve(); await first;
   pending[1].reject(new Error('old failure')); await second;
-  assert.deepEqual(commits, [{ thickness: 'thick', material: 'sugar' }]);
+  assert.deepEqual(commits, [{ thickness: 'thick', material: 'sugar', color: 'rose' }]);
   assert.equal(releases.length, 1); assert.equal(c.getState().resource, 'ready');
   const late = c.select('material', 'wax'); c.dispose(); c.dispose();
   assert.equal(pending[3].signal.aborted, true); pending[3].resolve(); await late;
@@ -91,4 +91,39 @@ test('渲染上下文中断清除当前资源状态，重试恢复且晚到加�
   assert.equal(released, 3);
   c.dispose(); c.rendererUnavailable();
   assert.equal(released, 3);
+});
+
+
+test('十色共享色表、默认粉色、完整配置及非法颜色不产生渲染', async () => {
+  const { createDetailController, colorNames } = await stateModule;
+  const { orbColors } = await import('../detail/orb-colors.mjs');
+  assert.equal(orbColors.length, 10);
+  assert.equal(new Set(orbColors.map(c => c.hex)).size, 10);
+  const { controller: c, configurations } = harness(createDetailController);
+  await c.load(); assert.equal(c.getState().config.color, 'rose');
+  for (const color of orbColors) {
+    assert.equal(colorNames[color.id], color.name);
+    await c.select('color', color.id);
+    assert.equal(configurations.at(-1).color, color.id);
+  }
+  const count = configurations.length;
+  await c.select('color', 'cream'); await c.select('color', 'invalid');
+  assert.equal(configurations.length, count); c.dispose();
+});
+
+test('加载中快速换色只提交最后颜色，错误后重试保留选择且不触发声音', async () => {
+  const { createDetailController } = await stateModule;
+  const pending = [], commits = [];
+  const { controller: c, calls } = harness(createDetailController, {
+    prepare(config, { signal }) { return new Promise((resolve, reject) => pending.push({ config, signal, reject, resolve: () => resolve({ commit() { commits.push(config.color); }, dispose() {} }) })); },
+  });
+  const first = c.load(), second = c.select('color', 'sky'), last = c.select('color', 'mint');
+  assert.equal(pending[0].signal.aborted, true);
+  pending[1].resolve(); await second; pending[0].reject(new Error('old')); await first;
+  pending[2].reject(new Error('load failed')); await last;
+  assert.equal(c.getState().resource, 'error'); assert.equal(c.getState().config.color, 'mint');
+  const retry = c.retry(); assert.equal(pending[3].config.color, 'mint');
+  pending[3].resolve(); await retry;
+  assert.deepEqual(commits, ['mint']);
+  assert.deepEqual(calls, [{ volume: 0, muted: true }]); c.dispose();
 });

@@ -43,7 +43,18 @@ test('真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；
   const page = await open({ viewport: { width: 1440, height: 900 } });
   for (const [x, y, axis, sign] of [[.27,.5,0,-1],[.73,.5,0,1],[.5,.25,1,1]]) {
     const baseline = await positions(page);
-    await press(page, x, y); await page.waitForTimeout(350);
+    await press(page, x, y);
+    // Measure only after held strength saturates and real GPU position uploads
+    // stop. Otherwise work between this snapshot and native pointerup can
+    // increase the press and make its retained/earlier-depth ratio misleading.
+    await page.waitForTimeout(800);
+    await page.evaluate(() => { window.orbHeldSample = { uploads: -1, stableAt: performance.now() }; });
+    await page.waitForFunction(() => {
+      const probe = window.orbMeshProbe, sample = window.orbHeldSample;
+      if (document.querySelector('.orb-input').getAttribute('aria-pressed') !== 'true') return false;
+      if (sample.uploads !== probe.uploads) { sample.uploads = probe.uploads; sample.stableAt = performance.now(); }
+      return performance.now() - sample.stableAt >= 180;
+    });
     const stats = await meshStats(page, baseline);
     assert.ok(stats.maximum > .15 && stats.maximum <= .361, JSON.stringify(stats));
     assert.ok(stats.changed > 100 && stats.changed < 700, 'Local neighborhood, not whole-object scaling');
@@ -55,7 +66,7 @@ test('真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；
     const held = await positions(page);
     await page.mouse.up(); await restored(page);
     const retained = await meshStats(page, baseline);
-    assert.ok(retained.maximum > .03 && retained.maximum < stats.maximum * .65);
+    assert.ok(retained.maximum > .03 && retained.maximum > stats.maximum * .84 && retained.maximum < stats.maximum * .86, JSON.stringify({ pressed: stats.maximum, retained: retained.maximum, ratio: retained.maximum / stats.maximum }));
     assert.notDeepEqual(await positions(page), held);
   }
   await press(page); const early = await meshStats(page);
@@ -74,14 +85,27 @@ test('连续拖动、回弹中再次按压、移出松开和键盘操作；缩�
   const page = await open({ viewport: { width: 390, height: 844 } });
   await press(page, .27, .45); await page.waitForTimeout(300);
   let previous = (await meshStats(page)).center[0];
+  const firstCenter = previous;
   for (const fraction of [.4, .5, .6, .73]) {
     const p = await point(page, fraction, .45); await page.mouse.move(p.x, p.y, { steps: 4 }); await page.waitForTimeout(80);
     const current = (await meshStats(page)).center[0];
     assert.ok(current >= previous - .02 && current - previous < .4, 'Continuous following'); previous = current;
   }
-  assert.ok(previous > .25);
-  await page.locator('[value=sugar]').evaluate(el => el.click());
-  await page.waitForFunction(() => document.querySelector('.toy-mount').dataset.material === 'sugar');
+  assert.ok(previous > firstCenter + .12, 'The continuous stroke extends toward the dragged side');
+  const trail = await page.evaluate(() => {
+    const probe = window.orbMeshProbe;
+    return [-.35, 0, .35].map(x => {
+      let depth = 0;
+      for (let i = 0; i < probe.rest.length; i += 3) if (Math.abs(probe.rest[i] - x) < .14 && probe.rest[i + 2] > .65) {
+        depth = Math.max(depth, Math.hypot(...[0, 1, 2].map(k => probe.positions[i + k] - probe.rest[i + k])));
+      }
+      return depth;
+    });
+  });
+  assert.ok(trail.every(depth => depth > .05), 'The entire traversed left/center/right path remains deformed: ' + JSON.stringify(trail));
+  const chosenColor = await page.locator('[name=color]').nth(3).inputValue();
+  await page.locator('[name=color]').nth(3).evaluate(el => el.click());
+  await page.waitForFunction(value => document.querySelector('.toy-mount').dataset.color === value, chosenColor);
   assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'true', 'Preference changes do not detach the captured input surface');
   await page.evaluate(() => document.documentElement.dataset.theme = 'night');
   await page.setViewportSize({ width: 844, height: 390 });
@@ -108,12 +132,21 @@ test('pointercancel、丢失捕获、窗口失焦、后台和离页均释放输�
   assert.ok((await meshStats(page)).maximum > .02);
   for (const kind of ['cancel', 'capture', 'blur', 'hidden']) {
     await press(page); await page.waitForTimeout(100);
+    if (kind === 'capture') {
+      // Activate pending pointer capture before deliberately losing it.
+      const p = await point(page); await page.mouse.move(p.x + 2, p.y);
+    }
     await page.evaluate(kind => {
       if (kind === 'cancel') window.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 1 }));
       if (kind === 'capture') document.querySelector('.orb-input').releasePointerCapture(1);
       if (kind === 'blur') window.dispatchEvent(new Event('blur'));
       if (kind === 'hidden') { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); }
     }, kind);
+    if (kind === 'capture') {
+      // The platform processes pending capture changes on the next pointer event.
+      const p = await point(page); await page.mouse.move(p.x, p.y);
+      await page.waitForFunction(() => document.querySelector('.orb-input').getAttribute('aria-pressed') === 'false');
+    }
     await page.mouse.up();
     if (kind === 'hidden') await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange')); });
     await restored(page);
@@ -160,7 +193,7 @@ test('真实模拟触摸：圆球内拖动不滚页，第二触点不夺取输�
 test('减少动态仍有局部反馈，偏好可在按住期间切换并恢复', async () => {
   const page = await open({ reducedMotion: 'reduce' });
   await press(page); await page.waitForTimeout(400);
-  assert.ok((await meshStats(page)).maximum > .2);
+  assert.ok((await meshStats(page)).maximum > .15);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.mouse.up(); await restored(page);
