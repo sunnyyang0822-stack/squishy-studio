@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f9f3f4" />
   <script src="/theme-preference.js"></script>
   <title>奶油圆球 · 捏压原型｜Squishy Studio</title>
-  <meta name="description" content="按住局部轻压，松开部分回弹并保留凹痕。按住鼠标拖动留白可旋转圆球。当前厚度、材质与声音仅记录偏好。" />
+  <meta name="description" content="按住局部轻压，松开部分回弹并保留凹痕。按住鼠标拖动留白可旋转圆球。十种马卡龙颜色随心选。" />
   <link rel="stylesheet" href="/styles.css" />
   <link rel="stylesheet" href="/detail/detail.css" />
   <script type="module" src="/detail/page.js"></script>
@@ -15,19 +15,6 @@
   <header class="detail-topbar">
     <a class="detail-back" href="/collections/"><span aria-hidden="true">←</span> 返回合集</a>
     <a class="detail-brand" href="/">Squishy Studio</a>
-    <div class="sound-tool">
-      <button class="sound-trigger" type="button" aria-expanded="false" aria-controls="sound-panel" aria-label="音量：已静音，打开调节面板">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round"/><path class="sound-muted-icon" d="m16 9 5 6m0-6-5 6" stroke-linecap="round"/><path class="sound-on-icon" d="M16 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" stroke-linecap="round" hidden/></svg>
-        <span>音量</span><span class="sound-indicator">已静音</span>
-      </button>
-      <section id="sound-panel" class="sound-panel" role="dialog" aria-labelledby="sound-title" hidden>
-        <div class="sound-panel-heading"><h2 id="sound-title">声音偏好</h2><button type="button" class="panel-close" aria-label="关闭音量面板">×</button></div>
-        <div class="volume-label"><label for="volume">音量</label><output for="volume" id="volume-value">0%</output></div>
-        <input id="volume" type="range" min="0" max="100" step="1" value="0" aria-describedby="sound-note" />
-        <button type="button" class="mute-button">解除静音</button>
-        <p id="sound-note">声音素材准备中，先记下你的偏好。</p>
-      </section>
-    </div>
   </header>
   <main class="detail-main">
     <div class="toy-heading"><span class="preview-badge">加载中</span><h1>奶油圆球</h1><p>按住轻压，松开留痕。鼠标拖动留白可旋转。</p></div>
@@ -36,26 +23,12 @@
       <div class="toy-mount"></div>
       <div class="resource-message"><p class="resource-status" role="status">正在加载圆球…</p><button class="retry-button" type="button" hidden>重新加载</button></div>
     </div>
-    <section class="customization" aria-label="圆球自定义" aria-describedby="configuration-note">
-      <div class="settings-groups">
-        <fieldset><legend>脆皮厚度</legend><div class="choice-group">
-          <i class="choice-highlight" aria-hidden="true"></i>
-          <label><input type="radio" name="thickness" value="thin" /><span>薄</span></label>
-          <label><input type="radio" name="thickness" value="medium" checked /><span>中</span></label>
-          <label><input type="radio" name="thickness" value="thick" /><span>厚</span></label>
-        </div></fieldset>
-        <fieldset><legend>脆皮材质</legend><div class="choice-group">
-          <i class="choice-highlight" aria-hidden="true"></i>
-          <label><input type="radio" name="material" value="wax" checked /><span>蜡</span></label>
-          <label><input type="radio" name="material" value="polish" /><span>指甲油</span></label>
-          <label><input type="radio" name="material" value="sugar" /><span>糖</span></label>
-        </div></fieldset>
-      </div>
-      <output class="configuration-summary sr-only" aria-live="polite">已选择：中厚度 · 蜡</output>
+    <section class="customization" aria-label="圆球颜色">
+      <fieldset class="color-picker"><legend>挑个喜欢的颜色</legend><div class="color-options"></div></fieldset>
+      <output class="configuration-summary sr-only" aria-live="polite">已选择：奶油粉</output>
       <p class="configuration-error" role="status" hidden></p>
-      <p id="configuration-note" class="configuration-note">厚度与材质仅记录偏好，当前展示基础外观。</p>
     </section>
-    <noscript><p class="no-script">请启用 JavaScript 以加载圆球和调整偏好；仍可通过上方导航返回合集。</p></noscript>
+    <noscript><p class="no-script">请启用 JavaScript 以加载圆球和选择颜色；仍可通过上方导航返回合集。</p></noscript>
   </main>
 </body>
 </html>

@@ -58,110 +58,88 @@ test('详情、四只样例及大厅玩具在昼夜和过渡中均保留原色',
   }
 });
 
-test('面板180/120ms、反向连续、立即不可交互及键盘无动画', async () => {
-  const page = await browser.newPage(); await page.goto(base + '/squishy/cloud/');
-  await page.waitForSelector('[data-state=ready]');
-  // Drive real click handlers in one browser task so timings do not depend on
-  // the runner's speed or on animation completion before the next tool call.
+// The old sound UI was removed. Keep the reusable motion module's behavior
+// covered in a standalone fixture, independent of the current detail controls.
+async function panelFixture(page) {
+  await page.goto(base + '/');
+  await page.evaluate(async () => {
+    const panel = document.createElement('section'); panel.id = 'motion-fixture'; panel.hidden = true;
+    panel.style.cssText = 'position:fixed;inset:80px auto auto 20px;width:200px;height:120px;background:white;transform-origin:top right';
+    document.body.append(panel);
+    const { createPanelMotion } = await import('/detail/panel-motion.js');
+    window.fixtureMotion = createPanelMotion(panel);
+  });
+}
+
+test('独立面板fixture保留180/120ms、连续反转与关闭立即inert契约', async () => {
+  const page = await browser.newPage(); await panelFixture(page);
   const result = await page.evaluate(async () => {
-    const trigger = document.querySelector('.sound-trigger');
-    const panel = document.querySelector('.sound-panel');
-    trigger.dispatchEvent(new MouseEvent('click', { bubbles:true,detail:1 }));
-    const opening = panel.getAnimations()[0];
-    opening.pause(); opening.currentTime = 75;
+    const panel = document.querySelector('#motion-fixture'), motion = window.fixtureMotion;
+    motion.setOpen(true);
+    const opening = panel.getAnimations()[0]; opening.pause(); opening.currentTime = 75;
     const before = Number(getComputedStyle(panel).opacity);
-    trigger.dispatchEvent(new MouseEvent('click', { bubbles:true,detail:1 }));
-    const closing = panel.getAnimations()[0];
-    const after = Number(getComputedStyle(panel).opacity);
-    const inert = panel.inert;
+    motion.setOpen(false);
+    const closing = panel.getAnimations()[0], after = Number(getComputedStyle(panel).opacity), inert = panel.inert;
     closing.pause(); closing.currentTime = 50;
     const closingOpacity = Number(getComputedStyle(panel).opacity);
-    trigger.dispatchEvent(new MouseEvent('click', { bubbles:true,detail:1 }));
-    const reopenedOpacity = Number(getComputedStyle(panel).opacity);
+    motion.setOpen(true); const reopenedOpacity = Number(getComputedStyle(panel).opacity);
     await panel.getAnimations()[0].finished;
-    return { before,after,inert,closingOpacity,reopenedOpacity,openingDuration:opening.effect.getTiming().duration,closingDuration:closing.effect.getTiming().duration,hidden:panel.hidden,expanded:trigger.getAttribute('aria-expanded'),active:document.activeElement.id };
+    return { before, after, inert, closingOpacity, reopenedOpacity, openingDuration:opening.effect.getTiming().duration, closingDuration:closing.effect.getTiming().duration, hidden:panel.hidden, aria:panel.getAttribute('aria-hidden') };
   });
   assert.ok(result.before > 0 && result.before < 1);
   assert.ok(Math.abs(result.before - result.after) < .01);
   assert.ok(Math.abs(result.closingOpacity - result.reopenedOpacity) < .01);
-  assert.equal(result.inert, true); assert.equal(result.openingDuration,180); assert.equal(result.closingDuration,120);
-  assert.equal(result.hidden,false); assert.equal(result.expanded,'true'); assert.equal(result.active,'volume');
-  await page.keyboard.press('Escape');
-  assert.equal(await page.locator('.sound-panel').isVisible(),false);
-  await page.keyboard.press('Enter');
-  assert.equal(await page.locator('.sound-panel').evaluate(el => el.getAnimations().length),0);
-  assert.equal(await page.locator('#volume').evaluate(el => el === document.activeElement),true);
-  await page.keyboard.press('Escape');
-  const close = await page.evaluate(() => {
-    const trigger = document.querySelector('.sound-trigger'), panel = document.querySelector('.sound-panel');
-    trigger.dispatchEvent(new MouseEvent('click',{bubbles:true,detail:1}));
-    document.querySelector('.panel-close').dispatchEvent(new MouseEvent('click',{bubbles:true,detail:1}));
-    return { inert:panel.inert,hidden:panel.hidden,expanded:trigger.getAttribute('aria-expanded'),focused:document.activeElement === trigger };
-  });
-  assert.deepEqual(close,{inert:true,hidden:false,expanded:'false',focused:true});
-  await page.locator('.sound-panel').waitFor({state:'hidden'});
+  assert.equal(result.inert, true); assert.equal(result.openingDuration, 180); assert.equal(result.closingDuration, 120);
+  assert.equal(result.hidden, false); assert.equal(result.aria, 'false');
+  await page.evaluate(() => window.fixtureMotion.setOpen(false, { instant:true }));
+  assert.equal(await page.locator('#motion-fixture').isVisible(), false);
+  assert.equal(await page.locator('#motion-fixture').evaluate(el => el.getAnimations().length), 0);
   await page.close();
 });
 
-test('减少动态时无面板位移，鼠标和键盘操作均可用；偏好动态更新也能收束', async () => {
-  const page = await browser.newPage({ reducedMotion:'reduce',viewport:{width:390,height:844} });
-  await page.goto(base + '/squishy/cloud/'); await page.waitForSelector('[data-state=ready]');
-  await page.locator('.sound-trigger').click();
-  assert.equal(await page.locator('.sound-panel').evaluate(el => el.getAnimations().length),0);
-  await page.getByRole('button',{name:'关闭音量面板'}).click();
-  assert.equal(await page.locator('.sound-panel').isVisible(),false);
+test('独立面板fixture响应减少动态并收束正在执行的动画，首页键盘保持即时反馈', async () => {
+  const page = await browser.newPage({ reducedMotion:'reduce', viewport:{width:390,height:844} });
+  await panelFixture(page);
+  await page.evaluate(() => window.fixtureMotion.setOpen(true));
+  assert.equal(await page.locator('#motion-fixture').evaluate(el => el.getAnimations().length), 0);
+  await page.evaluate(() => window.fixtureMotion.setOpen(false));
+  assert.equal(await page.locator('#motion-fixture').isVisible(), false);
   await page.emulateMedia({reducedMotion:'no-preference'});
-  await page.evaluate(() => { document.querySelector('.sound-trigger').dispatchEvent(new MouseEvent('click',{bubbles:true,detail:1})); document.querySelector('.sound-panel').getAnimations()[0].pause(); });
+  await page.evaluate(() => { window.fixtureMotion.setOpen(true); document.querySelector('#motion-fixture').getAnimations()[0].pause(); });
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.waitForFunction(() => document.querySelector('.sound-panel').getAnimations().length === 0);
-  assert.equal(await page.locator('.sound-panel').isVisible(),true);
-  await page.keyboard.press('Escape'); assert.equal(await page.locator('.sound-panel').isVisible(),false);
+  await page.waitForFunction(() => document.querySelector('#motion-fixture').getAnimations().length === 0);
+  assert.equal(await page.locator('#motion-fixture').isVisible(), true);
+  await page.evaluate(() => { window.fixtureMotion.dispose(); document.querySelector('#motion-fixture').remove(); });
   await page.goto(base+'/#samples');
   const link = page.locator('.collection-link'); await link.hover();
-  assert.equal(await link.locator('span').evaluate(el=>getComputedStyle(el).transform),'none');
-  await page.emulateMedia({reducedMotion:'no-preference'});
-  await link.focus();
-  assert.equal(await link.locator('span').evaluate(el=>getComputedStyle(el).transform),'none', '键盘聚焦不触发箭头移动');
-  assert.equal(await link.locator('span').evaluate(el=>getComputedStyle(el).transitionProperty),'none');
+  assert.equal(await link.locator('span').evaluate(el=>getComputedStyle(el).transform), 'none');
+  await page.emulateMedia({reducedMotion:'no-preference'}); await link.focus();
+  assert.equal(await link.locator('span').evaluate(el=>getComputedStyle(el).transform), 'none');
+  assert.equal(await link.locator('span').evaluate(el=>getComputedStyle(el).transitionProperty), 'none');
   await page.close();
 });
 
-test('两组滑动底块独立、200ms、连续反向不跳；键盘和减少动态即时定位', async () => {
+test('颜色卡片选中与键盘即时反馈，减少动态下无位移动画且色块遵循共享色表', async () => {
+  const { orbColors } = await import('../detail/orb-colors.mjs');
   const page = await browser.newPage(); await page.goto(base+'/squishy/cloud/'); await page.waitForSelector('[data-state=ready]');
-  const result = await page.evaluate(async () => {
-    const groups = [...document.querySelectorAll('.choice-group')];
-    const thumb = groups[0].querySelector('.choice-highlight');
-    const other = getComputedStyle(groups[1].querySelector('.choice-highlight')).transform;
-    document.querySelector('[value=thin]').click();
-    getComputedStyle(thumb).transform;
-    const first = thumb.getAnimations()[0]; first.pause(); first.currentTime = 65;
-    const interrupted = getComputedStyle(thumb).transform;
-    document.querySelector('[value=thick]').click();
-    const resumed = getComputedStyle(thumb).transform;
-    const duration = thumb.getAnimations()[0].effect.getTiming().duration;
-    await thumb.getAnimations()[0].finished;
-    return {interrupted,resumed,duration,otherUnchanged:other === getComputedStyle(groups[1].querySelector('.choice-highlight')).transform};
-  });
-  const translation = text => Number(text.split(',')[4]);
-  assert.ok(Math.abs(translation(result.interrupted)-translation(result.resumed)) < .01);
-  assert.equal(result.duration,200); assert.equal(result.otherUnchanged,true);
-  const aligned = async group => {
-    const positions = await group.evaluate(el => ({thumb:el.querySelector('.choice-highlight').getBoundingClientRect().toJSON(),input:el.querySelector('input:checked').getBoundingClientRect().toJSON()}));
-    assert.ok(Math.abs(positions.thumb.x-positions.input.x) < 1 && Math.abs(positions.thumb.width-positions.input.width) < 1,JSON.stringify(positions));
-  };
-  const thickness = page.getByRole('group',{name:'脆皮厚度'}).locator('.choice-group');
-  const material = page.getByRole('group',{name:'脆皮材质'}).locator('.choice-group');
-  await aligned(thickness); await aligned(material);
-  await page.locator('[value=thick]').focus(); await page.keyboard.press('ArrowLeft');
-  assert.equal(await page.locator('[value=medium]').isChecked(),true);
-  assert.equal(await thickness.locator('.choice-highlight').evaluate(el=>el.getAnimations().length),0);
-  await aligned(thickness);
-  await page.emulateMedia({reducedMotion:'reduce'});
-  await page.locator('[value=sugar]').check();
-  assert.equal(await material.locator('.choice-highlight').evaluate(el=>el.getAnimations().length),0);
-  await aligned(material);
-  for (const [width,height] of [[390,844],[375,667],[320,568],[844,390]]) {
-    await page.setViewportSize({width,height}); await aligned(thickness); await aligned(material);
+  for (const theme of ['day','night']) {
+    await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
+    for (const color of orbColors) {
+      const input = page.locator(`[name=color][value=${color.id}]`);
+      await input.check();
+      const state = await input.evaluate(el => {
+        const face = el.nextElementSibling, style = getComputedStyle(face);
+        return { border:style.borderTopStyle, width:style.borderTopWidth, weight:style.fontWeight, swatch:getComputedStyle(face.querySelector('.color-swatch')).backgroundColor, check:getComputedStyle(face.querySelector('.color-swatch'), '::after').content, animations:face.getAnimations().length };
+      });
+      const rgb = color.hex.slice(1).match(/../g).map(hex => parseInt(hex,16));
+      assert.equal(state.swatch, `rgb(${rgb.join(', ')})`);
+      assert.equal(state.border, 'solid'); assert.equal(state.width, '2px');
+      assert.equal(state.weight, '650'); assert.notEqual(state.check, 'none'); assert.equal(state.animations, 0);
+    }
   }
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.locator('[value=cream]').focus(); await page.keyboard.press('ArrowLeft');
+  assert.equal(await page.locator('[value=lavender]').isChecked(), true, JSON.stringify(await page.locator('[name=color]').evaluateAll(inputs => inputs.map(el => [el.value, el.checked, el === document.activeElement]))));
+  assert.equal(await page.locator('.color-face').evaluateAll(elements => elements.every(el => el.getAnimations().length === 0)), true);
   await page.close();
 });

@@ -12,9 +12,9 @@ function modelAttribute(name) {
 
 // Observe real vertex uploads instead of adding a test-only deformation API to
 // the product. The position buffer is identified by the actual GLB rest data.
-async function installOrbProbe(page) {
-  await page.addInitScript(rest => {
-    window.orbMeshProbe = { rest, positions: null, uploads: 0, contexts: [], modelViewMatrix: null, orbDraws: 0 };
+async function installOrbProbe(page, { pixels = false } = {}) {
+  await page.addInitScript(({ rest, pixels }) => {
+    window.orbMeshProbe = { rest, positions: null, uploads: 0, contexts: [], modelViewMatrix: null, orbDraws: 0, pixelFrames: [] };
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, ...args) {
       const gl = original.call(this, type, ...args);
@@ -36,7 +36,23 @@ async function installOrbProbe(page) {
       const drawElements = gl.drawElements.bind(gl);
       gl.drawElements = function(mode, count, ...args) {
         if (count === 15360) { probe.modelViewMatrix = matrices.get(gl.getParameter(gl.CURRENT_PROGRAM))?.slice() || null; probe.orbDraws++; }
-        return drawElements(mode, count, ...args);
+        const result = drawElements(mode, count, ...args);
+        if (pixels && count === 15360 && !gl.getParameter(gl.FRAMEBUFFER_BINDING)) {
+          const surface = document.querySelector('.orb-input');
+          if (surface) {
+            const box = surface.getBoundingClientRect(), canvas = gl.canvas.getBoundingClientRect();
+            const sample = fraction => {
+              const x = Math.round((box.x + box.width / 2 - canvas.x) / canvas.width * gl.drawingBufferWidth);
+              const y = Math.round((canvas.bottom - box.y - box.height * fraction) / canvas.height * gl.drawingBufferHeight);
+              const rgba = new Uint8Array(4);
+              gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, rgba);
+              return Array.from(rgba);
+            };
+            probe.pixelFrames.push({ time: performance.now(), top: sample(.25), middle: sample(.5), bottom: sample(.75) });
+            if (probe.pixelFrames.length > 1000) probe.pixelFrames.shift();
+          }
+        }
+        return result;
       };
       let positionBuffer;
       const bufferData = gl.bufferData.bind(gl);
@@ -61,7 +77,7 @@ async function installOrbProbe(page) {
       };
       return gl;
     };
-  }, Array.from(modelAttribute('POSITION')));
+  }, { rest: Array.from(modelAttribute('POSITION')), pixels });
 }
 
 async function meshStats(page, baseline) {

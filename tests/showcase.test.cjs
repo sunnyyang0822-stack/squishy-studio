@@ -60,7 +60,10 @@ test('Hero 后通过原生滚动到达四只独立样例和真实大厅链接', 
   await page.reload();
   assert.equal(await page.getByRole('heading', { name: '合集大厅', exact: true }).isVisible(), true);
   await page.getByRole('link', { name: '返回首页样例' }).click();
-  await page.waitForFunction(() => Math.abs(document.getElementById('samples').getBoundingClientRect().top) < 5);
+  await page.waitForFunction(() => {
+    const samples = document.getElementById('samples');
+    return samples && Math.abs(samples.getBoundingClientRect().top) < 5;
+  });
   assert.match(page.url(), /\/#samples$/);
   assert.deepEqual(errors, []);
   await page.close();
@@ -75,7 +78,10 @@ test('大厅直接访问、无尾斜线跳转和浏览器返回均有效', async
   await scrollSamples(page);
   await page.getByRole('link', { name: '去合集大厅挑选' }).click();
   await page.goBack();
-  await page.waitForFunction(() => Math.abs(document.getElementById('samples').getBoundingClientRect().top) < 5);
+  await page.waitForFunction(() => {
+    const samples = document.getElementById('samples');
+    return samples && Math.abs(samples.getBoundingClientRect().top) < 5;
+  });
   assert.equal(await page.getByRole('link', { name: '去合集大厅挑选' }).isVisible(), true);
   await page.close();
 });
