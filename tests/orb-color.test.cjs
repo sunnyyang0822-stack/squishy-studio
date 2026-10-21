@@ -50,19 +50,19 @@ test('真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停
   await page.close();
 });
 
-test('快速换色从当前屏幕连续接续，凹痕和旋转不清零', async () => {
-  const page = await open(); const box = await page.locator('.orb-input').boundingBox();
+test('换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作', async () => {
+  const page = await open();
+  const initialMatrix = await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice());
+  let box = await page.locator('.orb-input').boundingBox();
   await page.mouse.move(box.x + box.width * .35, box.y + box.height * .45); await page.mouse.down();
-  await page.waitForTimeout(500); await page.mouse.up(); await settled(page);
+  await page.waitForTimeout(1200); await page.mouse.up(); await settled(page);
   await page.mouse.move(100, 250); await page.mouse.down(); await page.mouse.move(280, 300, { steps: 8 }); await page.mouse.up(); await idle(page);
-  const baseline = await page.evaluate(() => ({ vertices: Array.from(window.orbMeshProbe.positions), matrix: window.orbMeshProbe.modelViewMatrix.slice(), uploads: window.orbMeshProbe.uploads }));
-  const rotatedBefore = await frame(page);
+  assert.ok(await page.evaluate(() => window.orbMeshProbe.positions.some((value, index) => Math.abs(value - window.orbMeshProbe.rest[index]) > .05)));
+  assert.notDeepEqual(await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice()), initialMatrix);
+  const before = await page.evaluate(() => ({ loads: performance.getEntriesByType('resource').filter(resource => resource.name.includes('squishy-orb.glb')).length, contexts: window.orbMeshProbe.contexts.length }));
   await choose(page, 5);
-  await page.waitForFunction(before => {
-    const sample = window.orbMeshProbe.pixelFrames.at(-1);
-    const delta = key => Math.max(...sample[key].slice(0, 3).map((value, index) => Math.abs(value - before[key][index])));
-    return delta('top') > 12 && delta('bottom') < 4;
-  }, rotatedBefore);
+  await page.waitForFunction(() => window.orbMeshProbe.positions.every((value, index) => value === window.orbMeshProbe.rest[index]));
+  assert.deepEqual(await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice()), initialMatrix);
   const { interrupted, start } = await page.locator('[name=color]').nth(8).evaluate(input => {
     const probe = window.orbMeshProbe;
     const sample = { interrupted: structuredClone(probe.pixelFrames.at(-1)), start: probe.pixelFrames.length };
@@ -72,8 +72,41 @@ test('快速换色从当前屏幕连续接续，凹痕和旋转不清零', async
   const first = await page.evaluate(start => structuredClone(window.orbMeshProbe.pixelFrames[start]), start);
   for (const sample of ['top', 'middle', 'bottom']) assert.ok(distance(first[sample], interrupted[sample]) < 28, sample + ' does not jump to an earlier color on interruption: ' + JSON.stringify({ interrupted, first }));
   await page.waitForTimeout(100); await choose(page, 2); await idle(page);
-  const after = await page.evaluate(() => ({ vertices: Array.from(window.orbMeshProbe.positions), matrix: window.orbMeshProbe.modelViewMatrix.slice(), uploads: window.orbMeshProbe.uploads }));
-  assert.deepEqual(after, baseline, 'Color-only updates preserve dent vertices, orientation and GPU position uploads');
+  assert.equal(await page.evaluate(() => window.orbMeshProbe.positions.every((value, index) => value === window.orbMeshProbe.rest[index])), true);
+  assert.deepEqual(await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice()), initialMatrix);
+  assert.deepEqual(await page.evaluate(() => ({ loads: performance.getEntriesByType('resource').filter(resource => resource.name.includes('squishy-orb.glb')).length, contexts: window.orbMeshProbe.contexts.length })), before, 'Reset uses the existing model and renderer');
+  box = await page.locator('.orb-input').boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.mouse.down();
+  await page.waitForFunction(() => window.orbMeshProbe.positions.some((value, index) => Math.abs(value - window.orbMeshProbe.rest[index]) > .04));
+  await page.mouse.up(); await settled(page);
+  await page.mouse.move(100, 250); await page.mouse.down(); await page.mouse.move(280, 300, { steps: 8 }); await page.mouse.up(); await idle(page);
+  assert.notDeepEqual(await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice()), initialMatrix, 'Fresh squeezing and rotation work after reset');
+  await page.close();
+});
+
+test('换色取消键盘、鼠标捏压和正在旋转的owner，旧输入后续事件不会再修改重置模型', async () => {
+  const page = await open();
+  const initialMatrix = await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice());
+  for (const [index, kind] of ['keyboard', 'squeeze', 'rotation'].entries()) {
+    const box = await page.locator('.orb-input').boundingBox();
+    if (kind === 'keyboard') { await page.locator('.orb-input').focus(); await page.keyboard.down('Space'); }
+    else if (kind === 'squeeze') { await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.mouse.down(); }
+    else { await page.mouse.move(100, 250); await page.mouse.down(); await page.mouse.move(280, 300, { steps: 8 }); }
+    if (kind !== 'rotation') {
+      await page.waitForFunction(() => window.orbMeshProbe.positions.some((value, index) => Math.abs(value - window.orbMeshProbe.rest[index]) > .025));
+      assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'true');
+    } else assert.equal(await page.locator('body').evaluate(element => element.classList.contains('orb-rotating')), true);
+    await page.locator('[name=color]').nth(index + 1).evaluate(input => input.click());
+    await page.waitForFunction(() => window.orbMeshProbe.positions.every((value, index) => value === window.orbMeshProbe.rest[index]));
+    assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'false');
+    assert.equal(await page.locator('body').evaluate(element => element.classList.contains('orb-rotating')), false);
+    assert.equal(await page.evaluate(() => document.querySelector('.orb-input').hasPointerCapture(1) || document.documentElement.hasPointerCapture(1)), false);
+    if (kind === 'keyboard') await page.keyboard.up('Space');
+    else { await page.mouse.move(380, 330, { steps: 8 }); await page.mouse.up(); }
+    await idle(page);
+    assert.equal(await page.evaluate(() => window.orbMeshProbe.positions.every((value, index) => value === window.orbMeshProbe.rest[index])), true, kind + ' cannot leave a stuck owner or reapply a dent');
+    assert.deepEqual(await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice()), initialMatrix, kind + ' cannot resume an old rotation');
+  }
   await page.close();
 });
 

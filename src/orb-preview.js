@@ -228,6 +228,16 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       const next = orbColors.find(color => color.id === id) || orbColors[0];
       if (next.id === selectedColor.id) return;
       selectedColor = next;
+      // A different color starts a fresh toy, without rebuilding the scene.
+      // End captured gestures first so a held key/pointer cannot reapply a dent.
+      current.input.cancel();
+      current.rotation.cancel();
+      deformation.reset();
+      pivot.quaternion.identity();
+      floor.position.y = -.908;
+      current.lastTime = null;
+      geometry.computeBoundingSphere();
+      updateBounds();
       pivot.updateMatrixWorld(true);
       const heights = new Float32Array(geometry.attributes.position.count);
       let low = Infinity, high = -Infinity;

@@ -61,14 +61,16 @@ test('普通移动不转；按住留白以真实模型中心连续整圈旋转�
 
 test('球体捏压与设置不触发旋转；已有凹痕跟随刚体旋转且不上传新位置', async () => {
   const page = await open(); const original = await matrix(page);
+  await page.locator('[name=color]').nth(3).check();
+  await page.locator('[name=color]').nth(6).focus(); await page.keyboard.press('ArrowRight');
+  await settled(page);
+
   const box = await page.locator('.orb-input').boundingBox();
   await page.mouse.move(box.x + box.width * .3, box.y + box.height * .45); await page.mouse.down();
   await page.mouse.move(box.x + box.width * .65, box.y + box.height * .4, { steps: 12 });
   await page.waitForTimeout(500); assert.deepEqual(await matrix(page), original);
   await page.mouse.up(); await settled(page);
   assert.ok((await meshStats(page)).maximum > .03);
-  await page.locator('[name=color]').nth(3).check();
-  await page.locator('[name=color]').nth(6).focus(); await page.keyboard.press('ArrowRight');
   const back = await page.locator('.detail-back').boundingBox();
   await page.mouse.move(back.x + back.width / 2, back.y + back.height / 2); await page.mouse.down();
   await page.mouse.move(300, 170, { steps: 8 }); await page.mouse.up();

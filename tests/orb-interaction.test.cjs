@@ -47,7 +47,7 @@ test('真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；
     // Measure only after held strength saturates and real GPU position uploads
     // stop. Otherwise work between this snapshot and native pointerup can
     // increase the press and make its retained/earlier-depth ratio misleading.
-    await page.waitForTimeout(800);
+    await page.waitForTimeout(2800);
     await page.evaluate(() => { window.orbHeldSample = { uploads: -1, stableAt: performance.now() }; });
     await page.waitForFunction(() => {
       const probe = window.orbMeshProbe, sample = window.orbHeldSample;
@@ -56,7 +56,7 @@ test('真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；
       return performance.now() - sample.stableAt >= 180;
     });
     const stats = await meshStats(page, baseline);
-    assert.ok(stats.maximum > .15 && stats.maximum <= .361, JSON.stringify(stats));
+    assert.ok(stats.maximum > .30 && stats.maximum < .65, JSON.stringify(stats));
     assert.ok(stats.changed > 100 && stats.changed < 700, 'Local neighborhood, not whole-object scaling');
     assert.ok(stats.center[axis] * sign > .25, JSON.stringify(stats));
     assert.ok(await page.evaluate(() => {
@@ -69,9 +69,10 @@ test('真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；
     assert.ok(retained.maximum > .03 && retained.maximum > stats.maximum * .84 && retained.maximum < stats.maximum * .86, JSON.stringify({ pressed: stats.maximum, retained: retained.maximum, ratio: retained.maximum / stats.maximum }));
     assert.notDeepEqual(await positions(page), held);
   }
+  await page.locator('[name=color]').nth(4).check(); await restored(page); await pristine(page);
   await press(page); const early = await meshStats(page);
-  await page.waitForTimeout(900); const held = await meshStats(page);
-  assert.ok(held.maximum > early.maximum && held.maximum <= .361);
+  await page.waitForTimeout(2700); const held = await meshStats(page);
+  assert.ok(held.maximum > early.maximum && held.maximum < .90);
   await page.mouse.up(); await restored(page);
   const frame = await page.locator('.toy-mount').getAttribute('data-render-count');
   await page.waitForTimeout(200);
@@ -106,7 +107,10 @@ test('连续拖动、回弹中再次按压、移出松开和键盘操作；缩�
   const chosenColor = await page.locator('[name=color]').nth(3).inputValue();
   await page.locator('[name=color]').nth(3).evaluate(el => el.click());
   await page.waitForFunction(value => document.querySelector('.toy-mount').dataset.color === value, chosenColor);
-  assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'true', 'Preference changes do not detach the captured input surface');
+  await page.waitForFunction(() => window.orbMeshProbe.positions.every((value, index) => value === window.orbMeshProbe.rest[index]));
+  assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'false', 'A different color cancels the captured gesture and resets dents');
+  await page.mouse.up();
+  await press(page);
   await page.evaluate(() => document.documentElement.dataset.theme = 'night');
   await page.setViewportSize({ width: 844, height: 390 });
   assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'true');
@@ -192,12 +196,33 @@ test('真实模拟触摸：圆球内拖动不滚页，第二触点不夺取输�
 
 test('减少动态仍有局部反馈，偏好可在按住期间切换并恢复', async () => {
   const page = await open({ reducedMotion: 'reduce' });
-  await press(page); await page.waitForTimeout(400);
+  await press(page); await page.waitForTimeout(1200);
   assert.ok((await meshStats(page)).maximum > .15);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.mouse.up(); await restored(page);
   assert.ok((await meshStats(page)).maximum > .03);
   assert.equal((await meshStats(page)).contexts, 1);
+  await page.close();
+});
+
+
+test('轻点明显浅于长按；真实GPU长按和重复按压可以超过旧0.30硬上限', async () => {
+  const page = await open();
+  const p = await point(page);
+  await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(50); await page.mouse.up(); await restored(page);
+  const tap = (await meshStats(page)).maximum;
+  assert.ok(tap < .08, 'A light click stays shallow: ' + tap);
+  await page.locator('[name=color]').nth(1).check(); await restored(page); await pristine(page);
+  await press(page); await page.waitForTimeout(3200); await page.mouse.up(); await restored(page);
+  const long = (await meshStats(page)).maximum;
+  assert.ok(long > .30 && long > tap * 3, JSON.stringify({ tap, long }));
+  await press(page); await page.waitForTimeout(3200); await page.mouse.up(); await restored(page);
+  const repeated = (await meshStats(page)).maximum;
+  assert.ok(repeated > long + .08 && repeated < .95, JSON.stringify({ long, repeated }));
+  assert.ok(await page.evaluate(() => {
+    const probe = window.orbMeshProbe;
+    return probe.positions.every(Number.isFinite);
+  }), 'Large deformation remains finite');
   await page.close();
 });

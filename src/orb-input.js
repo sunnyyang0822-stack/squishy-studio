@@ -50,6 +50,7 @@ export function bindOrbInput({ surface, hitTest, deformation, invalidate }) {
   on(document, 'visibilitychange', () => { if (document.hidden) finish({ immediate: true }); });
   return {
     isActive() { return owner !== null; },
+    cancel() { finish({ immediate: true }); },
     resize() { if (typeof owner === 'number' && last) update(...last); },
     dispose() { finish({ immediate: true }); events.abort(); },
   };

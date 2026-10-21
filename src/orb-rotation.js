@@ -22,5 +22,5 @@ export function bindOrbRotation({ isSqueezing, rotate }) {
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) on(window, type, event => { if (event.pointerId === owner) finish(); });
   on(window, 'blur', finish);
   on(document, 'visibilitychange', () => { if (document.hidden) finish(); });
-  return { dispose() { finish(); events.abort(); } };
+  return { cancel: finish, dispose() { finish(); events.abort(); } };
 }
