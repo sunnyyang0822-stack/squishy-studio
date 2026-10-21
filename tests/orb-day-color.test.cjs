@@ -72,6 +72,7 @@ async function idle(page) {
   });
 }
 const snapshot = page => page.evaluate(() => ({
+  samples: ['top', 'middle', 'bottom'].map(key => window.orbMeshProbe.pixelFrames.at(-1)[key].slice(0, 3)),
   colors: window.dayColorProbe.colors.slice(),
   positions: Array.from(window.orbMeshProbe.positions),
   matrix: window.orbMeshProbe.modelViewMatrix.slice(),
@@ -124,6 +125,9 @@ test('十色真实GPU：白天首帧和night→day→night提升色度与明度�
     const night = await snapshot(page), rgb = new Color(color.hex).toArray();
     assertPigment(night.colors, rgb, color.id + ' original night pigment');
     const day = await theme(page, 'day');
+    const average = (values, metric) => values.reduce((sum, rgb) => sum + metric(rgb), 0) / values.length;
+    assert.ok(average(day.samples, chroma) > average(night.samples, chroma) * 1.2, color.id + ' has visibly more chroma in rendered pixels');
+    assert.ok(average(day.samples, rgb => Math.max(...rgb)) > average(night.samples, rgb => Math.max(...rgb)) + 8, color.id + ' has brighter dominant pigment in rendered pixels');
     assertPigment(day.colors, daytime(rgb), color.id + ' day pigment');
     const dayRGB = day.colors.slice(0, 3), nightRGB = night.colors.slice(0, 3);
     assert.ok(chroma(dayRGB) > chroma(nightRGB) * 1.2, color.id + ' has more chroma');
@@ -131,6 +135,7 @@ test('十色真实GPU：白天首帧和night→day→night提升色度与明度�
     assertSameShape(day, night, color.id + ' day');
     const returned = await theme(page, 'night');
     assert.deepEqual(returned.colors, night.colors, color.id + ' restores exact original night GPU data');
+    assert.deepEqual(returned.samples, night.samples, color.id + ' restores exact night lighting/tone mapping pixels');
     assertSameShape(returned, night, color.id + ' night');
   }
   assert.equal(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')), true);

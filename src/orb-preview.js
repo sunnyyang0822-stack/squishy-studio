@@ -180,6 +180,17 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       const { width, height } = mount.getBoundingClientRect();
       if (width < 1 || height < 1) return;
       if (width !== current.width || height !== current.height) resize(width, height);
+      if (colorLightingDirty) {
+        // A neutral daylight response keeps pastel pigment clear; the broad
+        // pale fill lifts the grey underside without flattening the side key.
+        // Night restores its original filmic response and warm/purple lights.
+        renderer.toneMapping = daylight ? THREE.NeutralToneMapping : THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = daylight ? 1.15 : .95;
+        fill.intensity = daylight ? .85 : .42;
+        fill.color.set(daylight ? 0xffffff : 0xfff7ef);
+        fill.groundColor.set(daylight ? 0xe4e6ed : 0x8a8293);
+        key.color.set(daylight ? 0xffffff : 0xfff5ed);
+      }
       const dt = current.lastTime === null ? 1 / 60 : (time - current.lastTime) / 1000;
       const colorStep = coating.step(dt);
       if (restorePose && colorStep.progress !== undefined) {
