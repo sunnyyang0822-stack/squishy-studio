@@ -27,26 +27,26 @@ position[i] = rest[i] - direction[i]*offset[i]
 - 软限制每次按剩余空间逐步收紧，不在0.30处硬停。逐顶点保留至少原半径8%作防越中心的几何边界；没有增加可见内球。径向位移保持正半径，防止深压时法线方向位移交叉或翻面。
 - 松开仍保留本次新增位移85%，无振荡或额外外鼓。单步追赶≤64ms、误差≤0.00002精确收敛，稳定后停帧。不是体积守恒或真实材料力学；持续深压可以形成明显凹面或轮廓变化。
 
-## 换色：先重新开始，再覆盖
+## 换色：回弹与覆色同步
 
-选择不同颜色时，在同一场景中依次：结束捏压与旋转owner、释放捕获/按键状态；清空瞬态/永久压痕并立即拷回原始顶点；朝向恢复identity、接触阴影恢复初始位置；刷新碰撞包围球、矩阵与投影输入区，然后以既有顶部向下方式覆盖新颜色。
+用户进一步明确：不用额外慢回弹，回弹同时变色，动作同步。选择不同颜色先结束旧捏压/旋转owner和捕获，捕获当前可见形态、姿态和颜色；用同一个颜色进度同时驱动顶部向下覆色、压痕恢复、朝向与接触阴影归位。正常沿用0.65秒换色时长，减少动态0.12秒，不另加慢速段或结束后的回弹尾巴。形态剩余位移为`startOffset*(1-progress)^3`，姿态用相同ease-out进度slerp，终点精确恢复原始状态。包围球、矩阵、投影输入区随实际恢复更新。
 
-不整页reload、不重新下载GLB或新建renderer。旧指针move/up、键盘keyup不会再施加旧形变；下一次按压、旋转照常。快速换色仍从当前颜色接续，但球形始终重新开始。默认颜色首次加载直接正确显示；选中同一radio未发生颜色更换，不额外重置。新页面/重试原有清理逻辑保持。
+不整页reload、不重新下载GLB或新建renderer。旧指针move/up、键盘keyup不会再施加旧形变。快速换色或中途切换动态偏好，都从当前形态/姿态/颜色重新捕获，连续接续；恢复过程中主动开始新的按压或旋转，会中断自动恢复并交还控制，颜色继续完成。默认颜色首次加载直接正确显示；选中同一radio未发生颜色更换，不额外重置。新页面/重试原有清理逻辑保持。
 
-模块：`src/orb-deformation.mjs`负责软限制/响应/重置；`src/orb-input.js`与`src/orb-rotation.js`新增取消接口；`src/orb-preview.js`协调reset、碰撞与换色；`src/orb-color.mjs`本轮无修改。
+模块：`src/orb-deformation.mjs`负责软限制/响应、可中断restore及硬reset；`src/orb-input.js`与`src/orb-rotation.js`负责旧操作取消和新操作接管；`src/orb-preview.js`协调形态/姿态/碰撞；`src/orb-color.mjs`向协调层提供真实颜色进度，统一时钟。
 
 ## 验证和证据
 
 本机Windows10.0.26200 x64、Node24.21.0、Edge155.0.4283.62、Intel UHD/ANGLE D3D11。手机为Chromium/CDP模拟，无物理手机验证。
 
-- `npm test`：**61/61通过，0失败、0跳过，退出0**，含构建；[完整日志](../artifacts/issue-16-pressure-reset/tests.txt)。保留已有首页/合集/加载失败/重试/不可用/手势/旋转/颜色覆盖回归。
-- Kernel 8项包括100ms<0.025、3s>0.30、30次渐进深压、85%逐顶点单调保留、连续路径/稀疏输入、cancel/立即reset、六方向30次真实GLB indices每三角朝外、顶点径向未越中心且≥原半径8%。
-- 三文件浏览器14项实际GPU验证：轻触比长按浅、长按突破0.30、重复继续深入、左右上局部命中与整路径留痕；换色后positions与GLB rest一致、矩阵与初始一致；GLB请求/context数未增加。键盘/鼠标捏压/旋转中换色均取消owner，旧事件不能复活，之后可再次操作；快切/reduce/停帧保留。
+- `npm test`：**69/69通过，0失败、0跳过，退出0**，含构建；[完整日志](../artifacts/issue-16-pressure-reset/tests.txt)。保留已有首页/合集/加载失败/重试/不可用/手势/旋转/颜色覆盖回归。
+- Kernel 13项包括100ms<0.025、3s>0.30、30次渐进深压、85%逐顶点单调保留、连续路径/稀疏输入、cancel/立即reset、六方向30次真实GLB indices每三角朝外、顶点径向未越中心且≥原半径8%；增加共享进度恢复/冻结进度/快切接续/新操作中断验证。
+- 三文件浏览器17项实际GPU验证：轻触比长按浅、长按突破0.30、重复继续深入、左右上局部命中与整路径留痕；换色完成后positions与GLB rest一致、矩阵与初始一致；GLB请求/context数未增加。键盘/鼠标捏压/旋转中换色均取消owner，旧事件不能复活。GPU实际颜色属性、深度与绘制矩阵逐帧验证正常/reduce首帧已同步变化且不瞬移、中间态、终点及停帧；快切/减动切换/新按压和旋转接管均覆盖。Float32可在最终相邻帧将极小剩余位移舍入为零，测试保留精度边界，不把不可见舍入误判为不同步。
 - `node capture-orb-interaction.cjs`：退出0、0 pageerror，10组尺寸/昼夜、两段实际操作录屏；[环境/位移记录](../artifacts/issue-16-pressure-reset/validation.json)。桌面记录轻触约0.01376、持续3秒约0.36936模型单位，换色后位移0且矩阵精确回到初始。未以这些数值虚构帧率。
-- [桌面鼠标录屏24.20秒](../artifacts/issue-16-pressure-reset/desktop-interaction.webm)、[手机模拟触摸录屏19.44秒](../artifacts/issue-16-pressure-reset/mobile-touch-interaction.webm)，是真实输入过程，非静态拼帧；已查看实际视频帧。
-- [长按深压](../artifacts/issue-16-pressure-reset/desktop-day-pressed.png)、[带痕旋转](../artifacts/issue-16-pressure-reset/desktop-retained-rotated.png)、[换色重置后覆盖中](../artifacts/issue-16-pressure-reset/desktop-color-start.png)、[换色完成](../artifacts/issue-16-pressure-reset/desktop-color-complete.png)。同目录覆盖1440×900、390×844、375×667、320×568、844×390的昼夜截图。
+- [桌面鼠标录屏24.16秒](../artifacts/issue-16-pressure-reset/desktop-interaction.webm)、[手机模拟触摸录屏19.40秒](../artifacts/issue-16-pressure-reset/mobile-touch-interaction.webm)，是真实输入过程，非静态拼帧；已按最终同步版本重录并查看实际视频帧。
+- [长按深压](../artifacts/issue-16-pressure-reset/desktop-day-pressed.png)、[带痕旋转](../artifacts/issue-16-pressure-reset/desktop-retained-rotated.png)、[回弹与覆色同时进行](../artifacts/issue-16-pressure-reset/desktop-color-start.png)、[换色完成](../artifacts/issue-16-pressure-reset/desktop-color-complete.png)。同目录覆盖1440×900、390×844、375×667、320×568、844×390的昼夜截图。
 
-GLB仍124,324 bytes（121.4KiB）、2562顶点/5120三角形，Blender源与材质/灯光/十色无改动；静态包639,099 bytes（比前版增加397 bytes）。无新模型、贴图、音源、依赖或场景副本。所有图形/监听/动画清理继续由独立场景负责。
+GLB仍124,324 bytes（121.4KiB）、2562顶点/5120三角形，Blender源与材质/灯光/十色无改动；静态包639,839 bytes（比PR18增加1,137 bytes）。无新模型、贴图、音源、依赖或场景副本。所有图形/监听/动画清理继续由独立场景负责。
 
 ## 评审、限制与回滚
 

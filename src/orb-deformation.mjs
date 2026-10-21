@@ -10,6 +10,7 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
   const origin = low.map((value, k) => (value + high[k]) / 2);
   const axes = low.map((value, k) => Math.max(.001, (high[k] - value) / 2));
   const directions = new Float32Array(rest.length), limits = new Float32Array(count);
+  const restoreOffsets = new Float32Array(count);
   for (let i = 0; i < count; i++) {
     const index = i * 3;
     const radial = origin.map((value, k) => rest[index + k] - value);
@@ -17,7 +18,7 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
     limits[i] = radius * .92;
     for (let k = 0; k < 3; k++) directions[index + k] = radial[k] / Math.max(.001, radius);
   }
-  let active = false, held = 0, drag = 0, dirty = false;
+  let active = false, held = 0, drag = 0, dirty = false, restoring = false;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const copyPoint = (out, point) => { for (let i = 0; i < 3; i++) out[i] = point[i]; };
   function stamp(point) {
@@ -54,11 +55,17 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
   }
   function cancel() {
     active = false; held = drag = 0; envelope.fill(0);
+    if (restoring) return;
     offsets.set(retained); dirty = true;
     copyPoint(center, targetCenter);
   }
+  function interruptRestore() {
+    if (!restoring) return;
+    retained.set(offsets); restoring = false;
+  }
   return {
     begin(point) {
+      interruptRestore();
       active = true; held = drag = 0; envelope.fill(0);
       copyPoint(center, point); copyPoint(targetCenter, point); stamp(point);
     },
@@ -74,9 +81,21 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
       envelope.fill(0);
     },
     cancel,
-    reset() { retained.fill(0); cancel(); positions.set(rest); },
+    reset() { restoring = false; retained.fill(0); cancel(); positions.set(rest); },
+    beginRestore() {
+      active = false; held = drag = 0; envelope.fill(0);
+      restoreOffsets.set(offsets); retained.fill(0); restoring = true;
+    },
+    applyRestore(progress) {
+      if (!restoring) return;
+      const remaining = (1 - clamp(progress, 0, 1)) ** 3;
+      for (let i = 0; i < count; i++) offsets[i] = restoreOffsets[i] * remaining;
+      dirty = true;
+      if (progress >= 1) restoring = false;
+    },
+    interruptRestore,
     setReducedMotion(value) { reducedMotion = value; },
-    getState() { return { active, held, drag, depth: Math.max(...offsets), retainedDepth: Math.max(...retained), center: [...center] }; },
+    getState() { return { active, restoring, held, drag, depth: Math.max(...offsets), retainedDepth: Math.max(...retained), center: [...center] }; },
     step(elapsed) {
       const dt = clamp(elapsed, 0, .064);
       if (active) held += Math.max(0, elapsed);
@@ -95,7 +114,7 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
         // Compression stiffens continuously as material approaches its center.
         // Radial motion preserves a positive radius, avoiding an inverted skin;
         // there is no shared 0.30 stop or rigid inner sphere.
-        const target = active ? retained[i] + (limits[i] - retained[i]) * (1 - Math.exp(-strength * envelope[i] / limits[i])) : retained[i];
+        const target = restoring ? offsets[i] : active ? retained[i] + (limits[i] - retained[i]) * (1 - Math.exp(-strength * envelope[i] / limits[i])) : retained[i];
         const before = offsets[i];
         const next = before + (target - before) * blend;
         if (Math.abs(target - next) <= .00002) offsets[i] = target;
@@ -112,7 +131,7 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
         }
         dirty = false;
       }
-      return { changed, atRest, needsFrame: moving || (active && (held < 2.52 || centerDelta > .000001)) };
+      return { changed, atRest, needsFrame: moving || restoring || (active && (held < 2.52 || centerDelta > .000001)) };
     },
   };
 }

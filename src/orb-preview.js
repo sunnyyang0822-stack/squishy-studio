@@ -139,6 +139,13 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       return mesh.worldToLocal(hit.point).toArray();
     }
     const current = { renderer, scene, environment, camera, events, restSurface, surface, frame: 0, count: 0, lastTime: null, width: 0, height: 0 };
+    let restorePose;
+    const initialOrientation = new THREE.Quaternion();
+    function beginRestore() {
+      deformation.beginRestore();
+      restorePose = { orientation: pivot.quaternion.clone(), floor: floor.position.y };
+    }
+    function interruptRestore() { deformation.interruptRestore(); restorePose = undefined; }
     function resize(width, height) {
       current.width = width; current.height = height;
       const halfHeight = Math.max(1.43, 1.25 * height / width);
@@ -173,8 +180,17 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       if (width < 1 || height < 1) return;
       if (width !== current.width || height !== current.height) resize(width, height);
       const dt = current.lastTime === null ? 1 / 60 : (time - current.lastTime) / 1000;
-      const step = deformation.step(dt);
       const colorStep = coating.step(dt);
+      if (restorePose && colorStep.progress !== undefined) {
+        const progress = colorStep.progress, blend = 1 - (1 - progress) ** 3;
+        deformation.applyRestore(progress);
+        pivot.quaternion.slerpQuaternions(restorePose.orientation, initialOrientation, blend);
+        floor.position.y = restorePose.floor + (-.908 - restorePose.floor) * blend;
+        if (progress === 1) { pivot.quaternion.copy(initialOrientation); floor.position.y = -.908; }
+        updateBounds();
+        if (progress === 1) restorePose = undefined;
+      }
+      const step = deformation.step(dt);
       const needsFrame = step.needsFrame || colorStep.needsFrame;
       current.lastTime = needsFrame ? time : null;
       if (colorStep.changed || step.changed) {
@@ -207,11 +223,12 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     function invalidate() {
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
     }
-    current.input = bindOrbInput({ surface, hitTest, deformation, invalidate });
+    current.input = bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin: interruptRestore });
     const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
     const turn = new THREE.Quaternion(), worldPoint = new THREE.Vector3();
     current.rotation = bindOrbRotation({ isSqueezing: current.input.isActive, rotate(dx, dy) {
+      interruptRestore();
       pivot.quaternion.premultiply(turn.setFromAxisAngle(up, dx));
       pivot.quaternion.premultiply(turn.setFromAxisAngle(right, dy));
       updateBounds();
@@ -230,11 +247,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       selectedColor = next;
       // A different color starts a fresh toy, without rebuilding the scene.
       // End captured gestures first so a held key/pointer cannot reapply a dent.
-      current.input.cancel();
+      current.input.cancel({ preserveShape: true });
       current.rotation.cancel();
-      deformation.reset();
-      pivot.quaternion.identity();
-      floor.position.y = -.908;
+      beginRestore();
       current.lastTime = null;
       geometry.computeBoundingSphere();
       updateBounds();
@@ -251,6 +266,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     };
     motionPreference.addEventListener('change', event => {
       deformation.setReducedMotion(event.matches); coating.setReducedMotion(event.matches); invalidate();
+      if (restorePose) beginRestore();
     }, { signal: events.signal });
     current.resize = new ResizeObserver(invalidate);
     current.resize.observe(mount);

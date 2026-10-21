@@ -156,7 +156,7 @@ test('30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定�
   d.setReducedMotion(true); d.begin(front(-.8)); d.move(front(.8), 1); advance(d, .4);
   d.setReducedMotion(false); d.cancel(); advance(d, 2); assert.deepEqual(positions, retained);
   d.begin(front(.4)); advance(d, .3);
-  d.reset(); assert.deepEqual(positions, rest, 'Reset immediately restores the CPU geometry for collision and color changes');
+  d.reset(); assert.deepEqual(positions, rest, 'Hard reset immediately restores the CPU geometry');
   d.step(1 / 60); assert.ok(positions.every((v, i) => v === rest[i]));
   assert.equal(d.getState().active, false); assert.equal(d.getState().retainedDepth, 0);
   assert.equal(d.step(1 / 60).atRest, true);
@@ -187,4 +187,79 @@ test('下一stroke从永久base继续，异处按压不擦除旧路径', async (
   const firstDepth = displacement(f, front(1));
   d.begin(front(1)); advance(d, 3.6); d.release(); advance(d, 2);
   assert.ok(displacement(f, front(1)) > firstDepth && displacement(f, front(1)) < .92);
+});
+
+function assertRestoreProgress(rest, snapshot, positions, progress) {
+  const remaining = (1 - progress) ** 3;
+  for (let i = 0; i < positions.length; i++) {
+    const expected = rest[i] + (snapshot[i] - rest[i]) * remaining;
+    assert.ok(Math.abs(positions[i] - expected) < .000001, `Vertex coordinate ${i} follows the shared color progress ${progress}`);
+  }
+}
+
+for (const reduced of [false, true]) test(`颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=${reduced}`, async () => {
+  const { rest, positions, deformation: d } = await fixture(reduced);
+  d.begin(front(-.4)); advance(d, 3.6);
+  const snapshot = positions.slice();
+  d.beginRestore();
+  assert.deepEqual(positions, snapshot, 'Beginning restoration cannot instantly reset the visible dent');
+  assert.equal(d.getState().restoring, true); assert.equal(d.getState().active, false);
+  assert.equal(d.getState().retainedDepth, 0);
+  advance(d, .5); assert.deepEqual(positions, snapshot, 'Elapsed simulation time alone cannot advance the shared color clock');
+  let previous = snapshot.slice();
+  for (const progress of [0, .25, .5, .75]) {
+    d.applyRestore(progress); d.step(1 / 120);
+    assertRestoreProgress(rest, snapshot, positions, progress);
+    assert.ok(d.getState().depth > 0 && d.getState().restoring, 'The dent remains during the color transition');
+    for (let i = 0; i < positions.length; i++) assert.ok(Math.abs(positions[i] - rest[i]) <= Math.abs(previous[i] - rest[i]) + .000001);
+    previous = positions.slice(); advance(d, .5);
+    assert.deepEqual(positions, previous, 'No extra spring or recovery runs between supplied progress updates');
+  }
+  d.applyRestore(1); const finalStep = d.step(1 / 120);
+  assert.ok(positions.every((v, i) => v === rest[i]), 'Color completion restores every coordinate exactly, allowing equivalent signed zeros');
+  assert.equal(d.getState().restoring, false); assert.equal(d.getState().depth, 0);
+  assert.equal(finalStep.atRest, true); assert.equal(finalStep.needsFrame, false);
+  const frozen = positions.slice(); advance(d, .5); assert.deepEqual(positions, frozen);
+});
+
+test('快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零', async () => {
+  const { rest, positions, deformation: d } = await fixture();
+  d.begin(front(.2)); advance(d, 3.6); d.release(); advance(d, 2);
+  d.beginRestore(); d.applyRestore(.25); d.step(1 / 120);
+  const current = positions.slice();
+  d.beginRestore(); assert.deepEqual(positions, current);
+  d.applyRestore(0); d.step(1 / 120); assert.deepEqual(positions, current);
+  d.applyRestore(.5); d.step(1 / 120); assertRestoreProgress(rest, current, positions, .5);
+  const beforeCancel = positions.slice();
+  d.cancel(); assert.deepEqual(positions, beforeCancel, 'Cancelling input must not clear an in-progress color restoration');
+  d.step(1 / 120); assert.deepEqual(positions, beforeCancel);
+  assert.ok(d.getState().depth > 0);
+  d.reset(); assert.deepEqual(positions, rest);
+});
+
+test('恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效', async () => {
+  const { positions, deformation: d } = await fixture();
+  d.begin(front(-.3)); advance(d, 3.6); d.release(); advance(d, 2);
+  d.beginRestore(); d.applyRestore(.3); d.step(1 / 120);
+  const current = positions.slice();
+  d.begin(front(.6));
+  assert.deepEqual(positions, current, 'A new press interrupts restoration without a visible jump');
+  assert.equal(d.getState().restoring, false); assert.equal(d.getState().active, true);
+  assert.ok(d.getState().retainedDepth > 0);
+  d.applyRestore(1); assert.deepEqual(positions, current, 'A stale color progress update cannot erase the new press baseline');
+  advance(d, .5); assert.notDeepEqual(positions, current);
+  d.cancel(); d.step(1 / 120); assert.deepEqual(positions, current);
+  assert.equal(d.getState().restoring, false); assert.equal(d.step(1 / 60).needsFrame, false);
+});
+
+test('显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压', async () => {
+  const { positions, deformation: d } = await fixture();
+  d.begin(front(.3)); advance(d, 3.6);
+  d.beginRestore(); d.applyRestore(.5); d.step(1 / 120);
+  const current = positions.slice();
+  d.interruptRestore(); assert.deepEqual(positions, current);
+  assert.equal(d.getState().restoring, false); assert.ok(d.getState().retainedDepth > 0);
+  d.applyRestore(1); advance(d, 1); assert.deepEqual(positions, current);
+  d.begin(front(-.6)); advance(d, .5); assert.notDeepEqual(positions, current);
+  d.cancel(); d.step(1 / 120); assert.deepEqual(positions, current);
 });
