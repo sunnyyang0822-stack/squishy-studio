@@ -20,7 +20,8 @@ export function createOrbColor(colors, initial, { reducedMotion = false } = {}) 
     step(dt) {
       if (!active) return { changed: false, needsFrame: false };
       elapsed += Math.max(0, dt);
-      const progress = Math.min(1, elapsed / (reducedMotion ? .12 : .65));
+      const duration = reducedMotion ? .12 : .65;
+      const progress = elapsed >= duration - 1e-9 ? 1 : elapsed / duration;
       for (let i = 0; i < colors.length; i += 3) {
         // A soft front traverses the current world's top to bottom. Height is
         // captured at selection, so the coating remains attached during orbit.
@@ -29,7 +30,7 @@ export function createOrbColor(colors, initial, { reducedMotion = false } = {}) 
         for (let k = 0; k < 3; k++) colors[i + k] = from[i + k] + (target[k] - from[i + k]) * blend;
       }
       if (progress === 1) { fill(); active = false; }
-      return { changed: true, needsFrame: active };
+      return { changed: true, needsFrame: active, progress };
     },
   };
 }

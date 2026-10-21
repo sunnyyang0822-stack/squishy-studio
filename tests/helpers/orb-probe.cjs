@@ -48,7 +48,25 @@ async function installOrbProbe(page, { pixels = false } = {}) {
               gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, rgba);
               return Array.from(rgba);
             };
-            probe.pixelFrames.push({ time: performance.now(), top: sample(.25), middle: sample(.5), bottom: sample(.75) });
+            let maxDepth = 0;
+            for (let i = 0; i < rest.length; i += 3) maxDepth = Math.max(maxDepth, Math.hypot(...[0, 1, 2].map(k => probe.positions[i + k] - rest[i + k])));
+            // Read the active color attribute from the actual GPU buffer. A
+            // normalized RGB sum separates hue change from scalar cavity AO.
+            const colorIndex = gl.getAttribLocation(gl.getParameter(gl.CURRENT_PROGRAM), 'color');
+            let hue = null;
+            if (colorIndex >= 0) {
+              const previous = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
+              const buffer = gl.getVertexAttrib(colorIndex, gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING);
+              if (buffer) {
+                const data = new Float32Array(rest.length), sum = [0, 0, 0];
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.getBufferSubData(gl.ARRAY_BUFFER, 0, data);
+                gl.bindBuffer(gl.ARRAY_BUFFER, previous);
+                for (let i = 0; i < data.length; i++) sum[i % 3] += data[i];
+                const total = sum.reduce((a, b) => a + b, 0);
+                hue = sum.map(value => value / total);
+              }
+            }
+            probe.pixelFrames.push({ time: performance.now(), top: sample(.25), middle: sample(.5), bottom: sample(.75), maxDepth, matrix: probe.modelViewMatrix?.slice(), hue });
             if (probe.pixelFrames.length > 1000) probe.pixelFrames.shift();
           }
         }

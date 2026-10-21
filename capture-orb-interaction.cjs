@@ -4,7 +4,7 @@ const os = require('node:os');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const { installOrbProbe, meshStats, settled } = require('./tests/helpers/orb-probe.cjs');
-const folder = 'artifacts/issue-16-solid';
+const folder = 'artifacts/issue-16-pressure-reset';
 const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4190';
 const sizes = [['desktop',1440,900],['mobile',390,844],['compact',375,667],['short',320,568],['landscape',844,390]];
 const ready = page => page.waitForFunction(() => window.orbMeshProbe?.positions && document.querySelector('.toy-stage').dataset.state === 'ready');
@@ -26,8 +26,8 @@ async function point(page,x=.5,y=.5) {const b=await page.locator('.orb-input').b
       const geometry=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,stage:document.querySelector('.toy-stage').getBoundingClientRect().toJSON(),input:document.querySelector('.orb-input').getBoundingClientRect().toJSON(),settings:document.querySelector('.customization').getBoundingClientRect().toJSON(),canvas:[document.querySelector('canvas').width,document.querySelector('canvas').height]}));
       assert.equal(geometry.overflow,false);
       if(name==='desktop'||name==='mobile'){
-        const p=await point(page,.35,.4);await page.mouse.move(p.x,p.y);await page.mouse.down();await page.waitForTimeout(800);
-        const pressed=await meshStats(page);assert.ok(pressed.maximum>.18&&pressed.changed<700);
+        const p=await point(page,.35,.4);await page.mouse.move(p.x,p.y);await page.mouse.down();await page.waitForTimeout(3000);
+        const pressed=await meshStats(page);assert.ok(pressed.maximum>.30&&pressed.changed<700);
         await shot(page,`${name}-${theme}-pressed`);await page.mouse.up();await restored(page);
         await shot(page,`${name}-${theme}-retained`);
         geometry.pressed=pressed;geometry.retained=await meshStats(page);
@@ -55,13 +55,15 @@ async function point(page,x=.5,y=.5) {const b=await page.locator('.orb-input').b
       const page=await context.newPage();const video=page.video();await installOrbProbe(page);
       page.on('pageerror',e=>report.errors.push(e.message));
       await page.goto(base+'/squishy/cloud/');await ready(page);await page.waitForTimeout(500);
+      const initialMatrix=await page.evaluate(()=>window.orbMeshProbe.modelViewMatrix.slice());
       const session=touch?await context.newCDPSession(page):null;
       const observations=[];
       for(const [label,x,y] of [['left',.26,.48],['upper',.5,.25],['right',.72,.5]]){
         const p=await point(page,x,y);
         if(touch)await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...p,id:0}]});
         else{await page.mouse.move(p.x,p.y);await page.mouse.down();}
-        await page.waitForTimeout(900);observations.push({label,held:await meshStats(page)});
+        await page.waitForTimeout(100);observations.push({label:`${label}-light-touch`,held:await meshStats(page)});
+        await page.waitForTimeout(2900);observations.push({label,held:await meshStats(page)});
         if(label==='left'){
           const target=await point(page,.7,.5);
           for(let step=1;step<=20;step++){
@@ -75,14 +77,6 @@ async function point(page,x=.5,y=.5) {const b=await page.locator('.orb-input').b
         await restored(page);await page.waitForTimeout(300);observations.push({label:`${label}-retained`,rest:await meshStats(page)});
       }
       await shot(page,`${name}-continuous-trail`);
-      // Native selection handlers drive the real top-to-bottom color buffer.
-      await page.locator('[name=color][value=mint]').check();
-      await page.waitForTimeout(180); await shot(page,`${name}-color-start`);
-      await page.waitForTimeout(180); await shot(page,`${name}-color-middle`);
-      await page.waitForTimeout(400); await shot(page,`${name}-color-complete`);
-      await page.locator('[name=color][value=lavender]').check(); await page.waitForTimeout(130);
-      await page.locator('[name=color][value=peach]').check(); await page.waitForTimeout(800);
-      observations.push({label:'color-retargeted',mesh:await meshStats(page),color:await page.locator('.toy-mount').getAttribute('data-color')});
       if (!touch) {
         // Native mouse drag on page whitespace rotates the retained dents.
         await page.mouse.move(80, 250); await page.mouse.down();
@@ -95,11 +89,23 @@ async function point(page,x=.5,y=.5) {const b=await page.locator('.orb-input').b
         await page.waitForTimeout(500); await shot(page,'desktop-retained-rotated');
         observations.push({label:'retained-rotated',mesh:await meshStats(page),matrix:await page.evaluate(()=>window.orbMeshProbe.modelViewMatrix)});
       }
+      // A new color first restores shape/orientation, then coats the fresh toy.
+      await page.locator('[name=color][value=mint]').check();
+      await page.waitForTimeout(180); await shot(page,`${name}-color-start`);
+      await page.waitForTimeout(180); await shot(page,`${name}-color-middle`);
+      await page.waitForTimeout(400); await shot(page,`${name}-color-complete`);
+      assert.equal((await meshStats(page)).maximum,0);
+      const resetMatrix=await page.evaluate(()=>window.orbMeshProbe.modelViewMatrix.slice());
+      assert.deepEqual(resetMatrix,initialMatrix);
+      observations.push({label:'color-reset',mesh:await meshStats(page),initialMatrix,resetMatrix});
+      await page.locator('[name=color][value=lavender]').check(); await page.waitForTimeout(130);
+      await page.locator('[name=color][value=peach]').check(); await page.waitForTimeout(800);
+      observations.push({label:'color-retargeted-fresh',mesh:await meshStats(page),color:await page.locator('.toy-mount').getAttribute('data-color')});
       // Real continuous interaction remains available after a theme change.
       await page.evaluate(()=>document.documentElement.dataset.theme='night');
       const p=await point(page,.5,.5);
       if(touch)await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...p,id:0}]});else{await page.mouse.move(p.x,p.y);await page.mouse.down();}
-      await page.waitForTimeout(600);
+      await page.waitForTimeout(1800);
       if(touch)await session.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});else{await page.mouse.move(8,8,{steps:8});await page.mouse.up();}
       await restored(page);await page.waitForTimeout(500);
       const renderer=await page.evaluate(()=>{const gl=window.orbMeshProbe.contexts.at(-1);const debug=gl.getExtension('WEBGL_debug_renderer_info');return debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);});

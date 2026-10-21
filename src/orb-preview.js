@@ -139,6 +139,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       return mesh.worldToLocal(hit.point).toArray();
     }
     const current = { renderer, scene, environment, camera, events, restSurface, surface, frame: 0, count: 0, lastTime: null, width: 0, height: 0 };
+    let restorePose;
+    let daylight = document.documentElement.dataset.theme !== 'night', colorLightingDirty = true;
+    const initialOrientation = new THREE.Quaternion();
+    function beginRestore() {
+      deformation.beginRestore();
+      restorePose = { orientation: pivot.quaternion.clone(), floor: floor.position.y };
+    }
+    function interruptRestore() { deformation.interruptRestore(); restorePose = undefined; }
     function resize(width, height) {
       current.width = width; current.height = height;
       const halfHeight = Math.max(1.43, 1.25 * height / width);
@@ -172,20 +180,48 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       const { width, height } = mount.getBoundingClientRect();
       if (width < 1 || height < 1) return;
       if (width !== current.width || height !== current.height) resize(width, height);
+      if (colorLightingDirty) {
+        // A neutral daylight response keeps pastel pigment clear; the broad
+        // pale fill lifts the grey underside without flattening the side key.
+        // Night restores its original filmic response and warm/purple lights.
+        renderer.toneMapping = daylight ? THREE.NeutralToneMapping : THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = daylight ? 1.15 : .95;
+        fill.intensity = daylight ? .85 : .42;
+        fill.color.set(daylight ? 0xffffff : 0xfff7ef);
+        fill.groundColor.set(daylight ? 0xe4e6ed : 0x8a8293);
+        key.color.set(daylight ? 0xffffff : 0xfff5ed);
+      }
       const dt = current.lastTime === null ? 1 / 60 : (time - current.lastTime) / 1000;
-      const step = deformation.step(dt);
       const colorStep = coating.step(dt);
+      if (restorePose && colorStep.progress !== undefined) {
+        const progress = colorStep.progress, blend = 1 - (1 - progress) ** 3;
+        deformation.applyRestore(progress);
+        pivot.quaternion.slerpQuaternions(restorePose.orientation, initialOrientation, blend);
+        floor.position.y = restorePose.floor + (-.908 - restorePose.floor) * blend;
+        if (progress === 1) { pivot.quaternion.copy(initialOrientation); floor.position.y = -.908; }
+        updateBounds();
+        if (progress === 1) restorePose = undefined;
+      }
+      const step = deformation.step(dt);
       const needsFrame = step.needsFrame || colorStep.needsFrame;
       current.lastTime = needsFrame ? time : null;
-      if (colorStep.changed || step.changed) {
+      if (colorStep.changed || step.changed || colorLightingDirty) {
         const positions = geometry.attributes.position.array;
         // Gentle cavity shading keeps retained impressions legible under the
         // broad fill. It is a bounded visual approximation, not a shadow pass.
         for (let i = 0; i < colors.length; i += 3) {
           const depth = Math.hypot(restPositions[i] - positions[i], restPositions[i + 1] - positions[i + 1], restPositions[i + 2] - positions[i + 2]);
           const visibility = 1 - Math.min(.24, depth);
-          for (let k = 0; k < 3; k++) colors[i + k] = coatingColors[i + k] * visibility;
+          // Daylight compensation preserves pastel chroma through the soft
+          // studio lighting/tone mapping. The palette and coating clock stay
+          // in their original color space; night uses the unmodified color.
+          const luminance = .2126 * coatingColors[i] + .7152 * coatingColors[i + 1] + .0722 * coatingColors[i + 2];
+          for (let k = 0; k < 3; k++) {
+            const pigment = daylight ? Math.max(0, Math.min(1, (luminance + (coatingColors[i + k] - luminance) * 1.3) * 1.06)) : coatingColors[i + k];
+            colors[i + k] = pigment * visibility;
+          }
         }
+        colorLightingDirty = false;
         geometry.attributes.color.needsUpdate = true;
       }
       if (step.changed) {
@@ -207,11 +243,12 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     function invalidate() {
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
     }
-    current.input = bindOrbInput({ surface, hitTest, deformation, invalidate });
+    current.input = bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin: interruptRestore });
     const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
     const turn = new THREE.Quaternion(), worldPoint = new THREE.Vector3();
     current.rotation = bindOrbRotation({ isSqueezing: current.input.isActive, rotate(dx, dy) {
+      interruptRestore();
       pivot.quaternion.premultiply(turn.setFromAxisAngle(up, dx));
       pivot.quaternion.premultiply(turn.setFromAxisAngle(right, dy));
       updateBounds();
@@ -228,6 +265,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
       const next = orbColors.find(color => color.id === id) || orbColors[0];
       if (next.id === selectedColor.id) return;
       selectedColor = next;
+      // A different color starts a fresh toy, without rebuilding the scene.
+      // End captured gestures first so a held key/pointer cannot reapply a dent.
+      current.input.cancel({ preserveShape: true });
+      current.rotation.cancel();
+      beginRestore();
+      current.lastTime = null;
+      geometry.computeBoundingSphere();
+      updateBounds();
       pivot.updateMatrixWorld(true);
       const heights = new Float32Array(geometry.attributes.position.count);
       let low = Infinity, high = -Infinity;
@@ -241,10 +286,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     };
     motionPreference.addEventListener('change', event => {
       deformation.setReducedMotion(event.matches); coating.setReducedMotion(event.matches); invalidate();
+      if (restorePose) beginRestore();
     }, { signal: events.signal });
     current.resize = new ResizeObserver(invalidate);
     current.resize.observe(mount);
-    current.theme = new MutationObserver(invalidate);
+    current.theme = new MutationObserver(() => {
+      daylight = document.documentElement.dataset.theme !== 'night';
+      colorLightingDirty = true; invalidate();
+    });
     current.theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     document.addEventListener('visibilitychange', invalidate, { signal: events.signal });
     renderer.domElement.addEventListener('webglcontextlost', event => {

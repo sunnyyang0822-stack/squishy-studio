@@ -1,16 +1,16 @@
 // Pointer ownership is independent of rendering and the deformation kernel.
-export function bindOrbInput({ surface, hitTest, deformation, invalidate }) {
+export function bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin = () => {} }) {
   const events = new AbortController();
   let owner = null, keyboardKey = null, start, last;
   const on = (target, type, listener) => target.addEventListener(type, listener, { signal: events.signal });
   const setPressed = value => surface.setAttribute('aria-pressed', String(value));
-  function finish({ immediate = false } = {}) {
+  function finish({ immediate = false, preserveShape = false } = {}) {
     const previous = owner;
     owner = null;
     keyboardKey = null;
     if (typeof previous === 'number' && surface.hasPointerCapture(previous)) surface.releasePointerCapture(previous);
     setPressed(false);
-    if (immediate) deformation.cancel(); else deformation.release();
+    if (!preserveShape) { if (immediate) deformation.cancel(); else deformation.release(); }
     invalidate();
   }
   function update(clientX, clientY) {
@@ -28,7 +28,7 @@ export function bindOrbInput({ surface, hitTest, deformation, invalidate }) {
     event.preventDefault();
     owner = event.pointerId; start = last = [event.clientX, event.clientY];
     surface.setPointerCapture(event.pointerId);
-    setPressed(true); deformation.begin(point); invalidate();
+    onBegin(); setPressed(true); deformation.begin(point); invalidate();
   });
   on(window, 'pointermove', event => { if (event.pointerId === owner) update(event.clientX, event.clientY); });
   on(window, 'pointerup', event => { if (event.pointerId === owner) finish(); });
@@ -42,7 +42,7 @@ export function bindOrbInput({ surface, hitTest, deformation, invalidate }) {
     const box = surface.getBoundingClientRect();
     const point = hitTest(box.x + box.width / 2, box.y + box.height / 2, true);
     if (!point) return;
-    owner = 'keyboard'; keyboardKey = event.key; setPressed(true); deformation.begin(point); invalidate();
+    onBegin(); owner = 'keyboard'; keyboardKey = event.key; setPressed(true); deformation.begin(point); invalidate();
   });
   on(surface, 'keyup', event => { if (owner === 'keyboard' && event.key === keyboardKey) { event.preventDefault(); finish(); } });
   on(surface, 'blur', () => { if (owner === 'keyboard') finish({ immediate: true }); });
@@ -50,6 +50,7 @@ export function bindOrbInput({ surface, hitTest, deformation, invalidate }) {
   on(document, 'visibilitychange', () => { if (document.hidden) finish({ immediate: true }); });
   return {
     isActive() { return owner !== null; },
+    cancel({ preserveShape = false } = {}) { finish({ immediate: true, preserveShape }); },
     resize() { if (typeof owner === 'number' && last) update(...last); },
     dispose() { finish({ immediate: true }); events.abort(); },
   };

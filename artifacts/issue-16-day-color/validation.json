@@ -1,0 +1,262 @@
+{
+  "date": "2026-10-21",
+  "baseline": "9a9480e",
+  "browser": "155.0.4283.62",
+  "host": "win32 10.0.26200 x64",
+  "mobile": "Chromium emulation, no physical phone",
+  "modelBytes": 124324,
+  "engineBytes": 640251,
+  "errors": [],
+  "comparisons": [
+    {
+      "theme": "day",
+      "id": "rose",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 44,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "coral",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 47,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "peach",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 44,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "lemon",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 48,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "pistachio",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 36,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "mint",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 36,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "aqua",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 37,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "sky",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 44,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "lavender",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 44,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "day",
+      "id": "cream",
+      "changedPixels": 67625,
+      "significantPixels": 67625,
+      "maximumChannelDelta": 37,
+      "bounds": {
+        "left": 16,
+        "top": 16,
+        "right": 317,
+        "bottom": 298
+      },
+      "totalPixels": 104876,
+      "ratio": 0.6448091078988519
+    },
+    {
+      "theme": "night",
+      "id": "rose",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "coral",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "peach",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "lemon",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "pistachio",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "mint",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "aqua",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "sky",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "lavender",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    },
+    {
+      "theme": "night",
+      "id": "cream",
+      "changedPixels": 0,
+      "significantPixels": 0,
+      "maximumChannelDelta": 0,
+      "bounds": null,
+      "totalPixels": 104876,
+      "ratio": 0
+    }
+  ]
+}
