@@ -120,7 +120,7 @@ test('HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重
   await bundle.locator('.retry-button').click(); await ready(bundle); await bundle.close();
 });
 
-test('手机模拟可从圆球之外的留白滚动页面', async () => {
+test('手机单屏中留白触摸不引发滚页，颜色仍可直接点击', async () => {
   const page = await browser.newPage({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
   await page.goto(base + path); await ready(page);
   const session = await page.context().newCDPSession(page);
@@ -130,7 +130,8 @@ test('手机模拟可从圆球之外的留白滚动页面', async () => {
     await page.waitForTimeout(16);
   }
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await page.waitForFunction(() => scrollY > 40);
+  assert.equal(await page.evaluate(() => scrollY), 0);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight), true);
   assert.equal(await page.locator('.toy-mount canvas').evaluate(el => getComputedStyle(el).touchAction), 'auto');
   await page.locator('[name=color]').nth(3).check();
   assert.equal(await page.locator('[name=color]').nth(3).isChecked(), true);

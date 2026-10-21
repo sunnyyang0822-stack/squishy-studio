@@ -122,12 +122,14 @@ test('旋转后实际命中对应屏幕侧；取消捏压保持旧痕，旋转�
   await page.close();
 });
 
-test('触屏留白拖动继续滚页并保持模型方向', async () => {
+test('触屏单屏留白拖动不滚页并保持模型方向', async () => {
   const page = await open({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true });
   const original = await matrix(page), session = await page.context().newCDPSession(page);
   await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 12, y: 430, id: 0 }] });
   for (let y = 410; y >= 180; y -= 20) { await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 12, y, id: 0 }] }); await page.waitForTimeout(16); }
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await page.waitForFunction(() => scrollY > 40); assert.deepEqual(await matrix(page), original);
+  assert.equal(await page.evaluate(() => scrollY), 0);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight), true);
+  assert.deepEqual(await matrix(page), original);
   await session.detach(); await page.close();
 });
