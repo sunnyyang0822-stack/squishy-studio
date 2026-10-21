@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { createOrbDeformation } from './orb-deformation.mjs';
+import { getOrbFeel } from './orb-feels.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
@@ -20,7 +20,8 @@ function releaseObject(root) {
 
 // One renderer per page. Frames run only while deformation is changing or the
 // viewport needs redrawing. Audio and shell fracture are outside this adapter.
-export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
+export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'clay' } = {}) {
+  const feel = getOrbFeel(feelId);
   let view;
   let disposed = false;
   let broken = false;
@@ -117,7 +118,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {} } = {}) {
     colors.set(coatingColors);
     const restPositions = geometry.attributes.position.array.slice();
     renderer.domElement.setAttribute('aria-label', `${selectedColor.name}圆球，可按压留痕`);
-    const deformation = createOrbDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
+    const deformation = feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
     surface.setAttribute('aria-label', '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
