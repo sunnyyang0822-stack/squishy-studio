@@ -12,7 +12,7 @@ export const styleNames = Object.freeze({ orb: '奶油圆球' });
 export const defaultRecipe = Object.freeze({ styleId: 'orb', coreMaterial: 'clay', coreColor: 'rose', filling: 'none', shellMaterial: 'wax', shellColor: 'rose', waxThickness: 'medium', decoration: 'one' });
 const groups = Object.freeze({ coreMaterial: coreNames, coreColor: colorNames, filling: fillingNames, shellMaterial: materialNames, shellColor: colorNames, waxThickness: thicknessNames, decoration: decorationNames });
 export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shellMaterial === 'wax' ? recipe.waxThickness : null });
-export const previewFor = (step, recipe) => ({ mode: step === 'core' ? 'core' : step === 'making' ? 'hidden' : 'shell', feelId: recipe.coreMaterial === 'butter' ? 'slow-rebound' : 'clay', appearanceId: recipe.coreMaterial === 'butter' ? 'full-matte' : 'matte', color: step === 'core' ? recipe.coreColor : recipe.shellColor, styleId: recipe.styleId });
+export const previewFor = (step, recipe) => ({ mode: step === 'core' ? 'core' : step === 'making' ? 'hidden' : 'shell', feelId: recipe.coreMaterial === 'butter' ? 'slow-rebound' : recipe.coreMaterial === 'marshmallow' ? 'marshmallow' : 'clay', appearanceId: recipe.coreMaterial === 'butter' ? 'full-matte' : 'matte', color: step === 'core' ? recipe.coreColor : recipe.shellColor, styleId: recipe.styleId });
 
 // Renderer handles are private until commit. A revision rejects late work.
 export function createDetailController({ renderer, audio, onChange = () => {}, styleId = 'orb' }) {

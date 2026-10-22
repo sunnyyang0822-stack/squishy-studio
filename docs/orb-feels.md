@@ -1,4 +1,6 @@
-# 可复用内陷质感：黏土
+# 可复用圆球质感
+
+新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。快速塑性塌陷，释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
 
 已确认的内陷行为正式命名为 **黏土**，稳定调用标识为 **`clay`**。命名的是按压行为，不是光学材质或颜色。默认圆球与后续调用它的样式共享同一实现。2026-10-22 按用户要求整体提高交互阻尼，见 [当前阻尼与实测](issue-16-clay-damping.md)。
 
@@ -21,7 +23,7 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 // 复用 orb-input.js / orb-rotation.js 和 orb-preview.js 的协调流程。
 ```
 
-换颜色、材质、外观时保留 `feelId: 'clay'`，直接复用当前算法。无需复制/重写捏压、路径采样、留痕、恢复或输入中断逻辑。独立慢回弹采用 `feelId: 'slow-rebound'`，见下文；默认仍是 `clay`。
+仅换颜色、材质、外观并复用黏土时保留 `feelId: 'clay'`。无需复制/重写捏压、路径采样、留痕、恢复或输入中断逻辑。制作流程棉花糖选项使用独立 `marshmallow`，慢回弹使用独立 `slow-rebound`；默认黏土不变。
 
 ## 黏土行为约定
 
@@ -43,9 +45,11 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 工厂为 `src/orb-slow-rebound.mjs` 的 `createSlowReboundDeformation`，参数集中在同文件 `slowReboundParameters`。通过 `getOrbFeel('slow-rebound')` 或 `createOrbPreview(mount, { feelId: 'slow-rebound' })` 调用，统一接口不变，每次调用独立分配原始网格快照、压痕、当地接触时间与显式恢复状态。它缓慢压入、缓慢完整回弹，不保留黏土的永久压痕。
 
-实际入口：`/squishy/cloud/` → 内芯材质 → **慢回弹**（配方稳定标识 `butter`）。复用制作页色卡与页面控制器，沿用同一场景、命中检测、输入、旋转、颜色、资源释放及哑光灯光。默认仍是黏土，棉花糖仍映射 `clay`。离开页面会销毁实例，再进入不携带旧形变。
+实际入口：`/squishy/cloud/` → 内芯材质 → **慢回弹**（配方稳定标识 `butter`）。复用制作页色卡与页面控制器，沿用同一场景、命中检测、输入、旋转、颜色、资源释放及哑光灯光。默认仍是黏土，棉花糖保留最新主线的独立 `marshmallow`。离开页面会销毁实例，再进入不携带旧形变。
 
 开始时基线 `4f4ebfe` 中 #22 尚未合并；实施中发现 PR #24 已合并，已通过合并最新 `origin/main` `959a719` 接入正式流程，移除临时独立入口。`detail/state.mjs` 仅将 `butter` 的实际 `feelId` 映射为 `slow-rebound`，用户材质选择与行为 ID 继续分离。`detail/adapters.js` 在行为 ID 改变时通过现有 `dispose` 清理旧场景，再以新 `feelId` 创建独立实例；换颜色继续在同一实例中 `prepare/commit`，不需要重建。后续步骤与最终体验沿用所选内芯的实际手感。
+
+等待CI期间 PR #28 合入棉花糖，已继续合并 `origin/main` `3154a07`。保留其 `src/orb-marshmallow.mjs`、`src/orb-optics.mjs` 及回归测试；`marshmallow` 映射和光学材质不被本预设覆盖。三种内芯现在各自独立登记。
 
 自动回弹只在没有显式恢复时推进；`beginRestore/applyRestore` 交给现有换色时钟独占网格。`interruptRestore` 或新输入从当下形态接管，随后旧痕、新痕都继续自动恢复。取消结束施力但不瞬间清空形状。后台结束输入并暂停模拟，回到前台从当前网格继续；不会将后台墙钟时间作为一帧压入或回弹。减少动态效果保留缓慢按压，将释放恢复系数提高到5/s。
 

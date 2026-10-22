@@ -158,14 +158,14 @@ test('手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复�
   await client.detach(); await page.close();
 });
 
-test('连续切换质感最后选择生效；棉花糖继续clay且所有旧上下文释放', async () => {
+test('连续切换质感最后选择生效；保留独立棉花糖且所有旧上下文释放', async () => {
   const page = await open();
   for (const material of ['clay', 'butter', 'marshmallow', 'butter']) await page.locator(`[name=coreMaterial][value=${material}]`).check();
   await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"][data-render-count] canvas');
   await page.waitForFunction(() => window.orbMeshProbe.contexts.filter(gl => !gl.isContextLost()).length === 1);
   assert.equal((await meshStats(page)).maximum, 0);
   await page.locator('[name=coreMaterial][value=marshmallow]').check();
-  await page.waitForSelector('.toy-mount[data-feel-id=clay][data-render-count] canvas');
+  await page.waitForSelector('.toy-mount[data-feel-id=marshmallow][data-render-count] canvas');
   assert.equal(await page.locator('[name=coreMaterial][value=marshmallow]').isChecked(), true);
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
   await page.close();

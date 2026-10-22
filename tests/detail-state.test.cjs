@@ -21,7 +21,7 @@ function harness(createDetailController, renderer) {
     get disposed() { return disposed; } };
 }
 
-test('五步、默认配方；仅慢回弹映射独立质感，制作步骤结束输入', async () => {
+test('五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入', async () => {
   const { createDetailController, steps, defaultRecipe } = await stateModule;
   assert.deepEqual(steps, ['core', 'shell', 'decoration', 'making', 'play']);
   const h = harness(createDetailController), c = h.controller;
@@ -31,10 +31,12 @@ test('五步、默认配方；仅慢回弹映射独立质感，制作步骤结�
   for (const material of ['clay', 'marshmallow', 'butter']) {
     await c.select('coreMaterial', material);
     assert.equal(c.getState().recipe.coreMaterial, material);
-    assert.equal(c.getState().preview.feelId, material === 'butter' ? 'slow-rebound' : 'clay');
+    assert.equal(c.getState().preview.feelId, material === 'butter' ? 'slow-rebound' : material === 'marshmallow' ? 'marshmallow' : 'clay');
     assert.equal(c.getState().preview.appearanceId, material === 'butter' ? 'full-matte' : 'matte');
+    assert.equal(h.prepared.at(-1).feelId, c.getState().preview.feelId);
   }
-  assert.deepEqual(h.prepared.map(config => config.feelId), ['clay', 'slow-rebound']);
+  assert.deepEqual(h.prepared.map(config => config.feelId), ['clay', 'marshmallow', 'slow-rebound']);
+  assert.ok(h.prepared.some(config => config.feelId === 'marshmallow'));
   c.next(); assert.equal(c.getState().step, 'shell');
   c.next(); assert.equal(c.getState().step, 'decoration');
   c.next(); assert.equal(c.getState().step, 'making');

@@ -10,7 +10,7 @@ const folder = 'artifacts/issue-25', base = 'http://127.0.0.1:4206';
 (async () => {
   fs.mkdirSync(folder, { recursive: true });
   const report = { baseline: '4f4ebfe2f4afbfa29af38fd82662637ebc3de915', host: `${os.platform()} ${os.release()} ${os.arch()}`, browser: null, phone: 'CDP native touch emulation, 390x844; no physical device tested', modelBytes: fs.statSync('assets/models/squishy-orb.glb').size, bundleBytes: fs.statSync('assets/orb-preview.js').size, parameters: (await import('./src/orb-slow-rebound.mjs')).slowReboundParameters, geometry: [], recordings: [], errors: [] };
-  report.integrationBaseline = '959a719';
+  report.integrationBaseline = '3154a07';
   report.appearance = (await import('./src/orb-appearance.mjs')).getOrbAppearance('full-matte');
   const { getOrbFeel } = await import('./src/orb-feels.mjs');
   for (const id of ['clay', 'slow-rebound']) {
@@ -157,7 +157,7 @@ const folder = 'artifacts/issue-25', base = 'http://127.0.0.1:4206';
       await page.waitForSelector('.toy-mount[data-feel-id=clay][data-render-count] canvas');
       await send('down', point(.5)); await page.waitForTimeout(1000); await send('up'); await page.waitForTimeout(1000);
       await page.locator('[name=coreMaterial][value=marshmallow]').check();
-      assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'clay');
+      await page.waitForSelector('.toy-mount[data-feel-id=marshmallow][data-render-count] canvas');
       await page.locator('[name=coreMaterial][value=butter]').check();
       await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"][data-render-count] canvas');
       assert.equal((await meshStats(page)).maximum, 0);
