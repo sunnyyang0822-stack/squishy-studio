@@ -148,7 +148,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     const coating = createOrbColor(coatingColors, new THREE.Color(selectedColor.hex).toArray(), { reducedMotion: motionPreference.matches });
     colors.set(coatingColors);
     const restPositions = geometry.attributes.position.array.slice();
-    renderer.domElement.setAttribute('aria-label', `${selectedColor.name}${style.name}，${interactionLabel}`);
+    renderer.domElement.setAttribute('aria-label', `${selectedColor.name}${isSurface ? style.name : '圆球'}，${interactionLabel}`);
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
     surface.setAttribute('aria-label', feel.id === 'slow-rebound' ? '按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车' : '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
@@ -349,7 +349,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       }
       for (let i = 0; i < heights.length; i++) heights[i] = (heights[i] - low) / Math.max(.001, high - low);
       coating.select(new THREE.Color(next.hex).toArray(), heights, { restart: restore });
-      renderer.domElement.setAttribute('aria-label', `${next.name}${style.name}，${interactionLabel}`);
+      renderer.domElement.setAttribute('aria-label', `${next.name}${isSurface ? style.name : '圆球'}，${interactionLabel}`);
     };
     current.restore = () => current.selectColor(selectedColor.id, { restore: true });
     motionPreference.addEventListener('change', event => {
