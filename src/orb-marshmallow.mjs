@@ -14,7 +14,7 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     const index = i * 3;
     const radial = origin.map((value, k) => rest[index + k] - value);
     const radius = Math.hypot(...radial);
-    limits[i] = radius * .42;
+    limits[i] = radius * .76;
     for (let k = 0; k < 3; k++) directions[index + k] = radial[k] / Math.max(.001, radius);
   }
   let active = false, held = 0, drag = 0, dirty = false, restoring = false;
@@ -81,11 +81,11 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     step(elapsed) {
       const dt = Math.max(0, Number.isFinite(elapsed) ? elapsed : 0);
       if (active) held += dt;
-      const blend = -Math.expm1(-180 * dt);
+      const blend = -Math.expm1(-360 * dt);
       let changed = dirty, moving = false, atRest = true;
       for (let i = 0; i < count; i++) {
         // An absolute, saturating envelope never adds depth on retracing or new strokes.
-        const target = Math.max(retained[i], Math.min(.28, limits[i]) * envelope[i]);
+        const target = Math.max(retained[i], Math.min(.70, limits[i]) * envelope[i]);
         if (active) {
           const next = offsets[i] + (target - offsets[i]) * blend;
           const value = Math.abs(target - next) < .00001 ? target : next;

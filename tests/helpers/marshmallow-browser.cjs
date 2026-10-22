@@ -5,8 +5,8 @@ const { join } = require('node:path');
 const { spawn } = require('node:child_process');
 const assert = require('node:assert/strict');
 const { installOrbProbe, meshStats, settled } = require('./orb-probe.cjs');
-module.exports = async function run({ capture = false } = {}) {
-  const folder = 'artifacts/issue-26', base = 'http://127.0.0.1:4216';
+module.exports = async function run({ capture = false, folder = 'artifacts/issue-26' } = {}) {
+  const base = 'http://127.0.0.1:4216';
   if (capture) mkdirSync(folder, { recursive: true });
   const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4216' }, stdio: 'ignore' });
   let browser;
