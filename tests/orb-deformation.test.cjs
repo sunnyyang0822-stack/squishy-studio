@@ -20,6 +20,31 @@ function displacement(f, point) {
 }
 const front = theta => [Math.sin(theta), .0175, Math.cos(theta)];
 
+for (const reduced of [false, true]) test(`黏土快速划过和长按后移到新位置均渐进内陷；减少动态=${reduced}`, async () => {
+  const quick = await fixture(reduced), held = await fixture(reduced);
+  const start = front(-.9), end = front(.9);
+  quick.deformation.begin(start);
+  for (let i = 1; i <= 12; i++) {
+    quick.deformation.move(front(-.9 + 1.8 * i / 12), i / 12);
+    quick.deformation.step(1 / 120);
+  }
+  assert.ok(quick.deformation.getState().depth > .003 && quick.deformation.getState().depth < .016, 'A 100ms swipe responds without punching in');
+  held.deformation.begin(start); advance(held.deformation, 3);
+  assert.equal(displacement(held, end), 0);
+  held.deformation.move(end, 1);
+  held.deformation.step(1 / 60);
+  const first = displacement(held, end);
+  assert.ok(first > .015 && first < .035, `Fresh contact first-frame depth ${first}`);
+  advance(held.deformation, 1 / 12);
+  const early = displacement(held, end);
+  assert.ok(early > first && early < .17, `Fresh contact at 100ms ${early}`);
+  advance(held.deformation, .4);
+  assert.ok(displacement(held, end) > early && displacement(held, end) < .38);
+  held.deformation.release(); const pressed = held.positions.slice(); advance(held.deformation, 3);
+  for (let i = 0; i < pressed.length; i++) assert.ok(Math.abs(held.positions[i] - (held.rest[i] + (pressed[i] - held.rest[i]) * .85)) < .000001);
+  assert.equal(held.deformation.step(1 / 60).needsFrame, false);
+});
+
 test('黏土稳定命名、默认解析与未知质感拒绝，实例互不污染', async () => {
   const { getOrbFeel, orbFeels } = await modulePromise;
   assert.equal(getOrbFeel().id, 'clay'); assert.equal(getOrbFeel().name, '黏土');
