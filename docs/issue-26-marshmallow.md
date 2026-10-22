@@ -66,7 +66,7 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 | `npm test`（包含构建） | 最终89/89，失败0，跳过0 | 0 |
 | `git diff --check` | 无空白错误 | 0 |
 
-首轮旧范围86/86通过；扩展全套后88/89，已有响应式测试在setViewportSize后立即检查分类栏可见性失败。为媒体查询更新增加明确 `waitFor({state:'visible'})`，仍断言分类、选择及布局全部正确，未改页面逻辑或黏土约束。保留 [失败日志](../artifacts/issue-26/tests-initial-full.txt) 与最终 [89/89日志](../artifacts/issue-26/tests.txt)。这次修改不是删除、跳过或减弱既有回归。
+首轮旧范围86/86通过；扩展全套后88/89，已有响应式测试在setViewportSize后立即检查分类栏可见性失败。为媒体查询更新增加明确 `waitFor({state:'visible'})`，仍断言分类、选择及布局全部正确，未改页面逻辑或黏土约束。保留 [失败日志](../artifacts/issue-26/tests-initial-full.txt) 与最终 [89/89日志](../artifacts/issue-26/tests.txt)。这次修改不是删除、跳过或减弱既有回归。再次并发测试发现45ms名义短按可先于宿主机首个rAF结束；保留 [首帧延迟日志](../artifacts/issue-26/tests-concurrent-first-frame.txt)。浏览器短按改为名义等待45ms后确认首个实际压陷帧并记录真实输入时长，固定时间响应仍由独立GLB测试约束；产品代码不改。桌面取消明确聚焦交互面后发Escape并断言已结束施力，触屏使用原生CDP touchCancel。
 
 ## 独立光学与制作流程
 
@@ -80,7 +80,7 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 Windows、Edge/Chromium 155.0.4283.62，桌面1440×900，手机390×844（CDP原生触摸模拟，**无真机验证**）。实际 GPU buffer 观察确认短按、长按、起点驻留→滑动→终点驻留、快划、长划、折返、取消/失焦/后台、换色恢复和中断接管；释放等待后每个顶点完全一致。保留着色/颜色独立完成的帧，完成后检查 renderCount 停止。切换质感丢失旧WebGL上下文，换色保持上下文计数，跨步骤最终仍是棉花糖，离页释放全部上下文。0 pageerror/着色器错误。
 
-- 正常速度、未剪去松手等待：[桌面25.80s](../artifacts/issue-26/desktop.webm)、[手机触摸24.16s](../artifacts/issue-26/mobile-touch.webm)。包含约45ms短按、1.2s长按后2.2s等待、两端各350ms驻留、快划/长划/折返以及取消与显式换色。自动化调度会影响实际事件时间，录屏不作为严格等时曲线。
+- 正常速度、未剪去松手等待：[桌面25.32s](../artifacts/issue-26/desktop.webm)、[手机触摸24.00s](../artifacts/issue-26/mobile-touch.webm)。包含实际77ms桌面/82ms触摸短按、1.2s长按后2.2s等待、两端各350ms驻留、快划/长划/折返以及取消与显式换色。自动化调度会影响实际事件时间，录屏不作为严格等时曲线。
 - 桌面同条件：白天 [黏土](../artifacts/issue-26/desktop-clay-day.png) / [棉花糖](../artifacts/issue-26/desktop-marshmallow-day.png)，夜间 [黏土](../artifacts/issue-26/desktop-clay-night.png) / [棉花糖](../artifacts/issue-26/desktop-marshmallow-night.png)。
 - 手机同条件：白天 [黏土](../artifacts/issue-26/mobile-touch-clay-day.png) / [棉花糖](../artifacts/issue-26/mobile-touch-marshmallow-day.png)，夜间 [黏土](../artifacts/issue-26/mobile-touch-clay-night.png) / [棉花糖](../artifacts/issue-26/mobile-touch-marshmallow-night.png)。
 - 留痕：桌面 [昼](../artifacts/issue-26/desktop-dents-day.png) / [夜](../artifacts/issue-26/desktop-dents-night.png)，手机 [昼](../artifacts/issue-26/mobile-touch-dents-day.png) / [夜](../artifacts/issue-26/mobile-touch-dents-night.png)。另实际抽查两段视频8秒帧，并非用截图替代释放后的几何检查。
