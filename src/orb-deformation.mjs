@@ -101,14 +101,16 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
       if (active) held += Math.max(0, elapsed);
       // A light touch is shallow. Deliberate holding gradually yields further,
       // rather than dropping immediately into a nearly full-strength dent.
-      const strength = .025 + .45 * Math.min(Math.max(held - .12, 0) / 2.4, 1) + .04 * Math.min(drag / .5, 1);
+      const strength = .025 + .45 * Math.min(Math.max(held - .12, 0) / 2.4, 1) + .02 * Math.min(drag / .5, 1);
       let centerDelta = 0;
       for (let k = 0; k < 3; k++) {
         const delta = targetCenter[k] - center[k]; centerDelta += delta * delta;
         center[k] += delta * (1 - Math.exp(-24 * dt));
       }
       // Monotone first-order response has no overshoot, recoil, or outward lip.
-      const blend = 1 - Math.exp(-(reducedMotion ? 16 : active ? 7 : 10) * dt);
+      // Clay yields progressively under both held and dragged input. Reduced
+      // motion changes recovery, not the physical resistance while pressing.
+      const blend = 1 - Math.exp(-(active ? 5 : reducedMotion ? 16 : 10) * dt);
       let moving = false, changed = dirty, atRest = true;
       for (let i = 0; i < count; i++) {
         // Compression stiffens continuously as material approaches its center.

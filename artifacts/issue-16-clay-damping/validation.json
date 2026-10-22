@@ -1,0 +1,229 @@
+{
+  "baseline": "56c90894ea0448d13416d6cc4e292b4645a3574e",
+  "browser": "155.0.4283.62",
+  "host": "win32 10.0.26200 x64",
+  "phone": "Chromium/CDP touch emulation; no physical device",
+  "modelBytes": 124324,
+  "engineBytes": 640446,
+  "comparisons": [
+    {
+      "reducedMotion": false,
+      "hz": 60,
+      "before": {
+        "quickSwipe": 0.02913971059024334,
+        "held": 0.3681570291519165,
+        "firstNewContact": 0.04338380895865413,
+        "newContact100ms": 0.19833252562649792
+      },
+      "after": {
+        "quickSwipe": 0.016218585893511772,
+        "held": 0.3666727840900421,
+        "firstNewContact": 0.03057731321248575,
+        "newContact100ms": 0.1504741186031619
+      }
+    },
+    {
+      "reducedMotion": false,
+      "hz": 120,
+      "before": {
+        "quickSwipe": 0.028502250090241432,
+        "held": 0.368141233921051,
+        "firstNewContact": 0.02232438503912113,
+        "newContact100ms": 0.19833252562649792
+      },
+      "after": {
+        "quickSwipe": 0.01594890095293522,
+        "held": 0.366630494594574,
+        "firstNewContact": 0.015607117948352763,
+        "newContact100ms": 0.1504741186031619
+      }
+    },
+    {
+      "reducedMotion": true,
+      "hz": 60,
+      "before": {
+        "quickSwipe": 0.04745832085609436,
+        "held": 0.3686945140361786,
+        "firstNewContact": 0.09221827509136138,
+        "newContact100ms": 0.31443242399156257
+      },
+      "after": {
+        "quickSwipe": 0.016218585893511772,
+        "held": 0.3666727840900421,
+        "firstNewContact": 0.03057731321248575,
+        "newContact100ms": 0.1504741186031619
+      }
+    },
+    {
+      "reducedMotion": true,
+      "hz": 120,
+      "before": {
+        "quickSwipe": 0.04673062264919281,
+        "held": 0.3686945140361786,
+        "firstNewContact": 0.049178503830734493,
+        "newContact100ms": 0.3144324045745116
+      },
+      "after": {
+        "quickSwipe": 0.01594890095293522,
+        "held": 0.366630494594574,
+        "firstNewContact": 0.015607117948352763,
+        "newContact100ms": 0.1504741186031619
+      }
+    }
+  ],
+  "recordings": [
+    {
+      "name": "before-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "label": "quick-swipe",
+          "pressed": {
+            "maximum": 0.10156310430916704,
+            "changed": 526,
+            "center": [
+              -0.05289456286469614,
+              0.35549419366212387,
+              0.7841324173054434
+            ],
+            "uploads": 97,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "held-drag",
+          "pressed": {
+            "maximum": 0.3187133183952129,
+            "changed": 528,
+            "center": [
+              -0.0781529501943204,
+              0.35453608716612744,
+              0.7825309779595677
+            ],
+            "uploads": 705,
+            "contexts": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "before-mobile-touch",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "Native CDP touch events",
+      "observations": [
+        {
+          "label": "quick-swipe",
+          "pressed": {
+            "maximum": 0.09080477653936594,
+            "changed": 522,
+            "center": [
+              -0.06826821568204423,
+              0.3564185182281657,
+              0.786232952818256
+            ],
+            "uploads": 89,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "held-drag",
+          "pressed": {
+            "maximum": 0.3090950059501489,
+            "changed": 527,
+            "center": [
+              -0.09489286146249407,
+              0.35496211423404067,
+              0.782997733356183
+            ],
+            "uploads": 687,
+            "contexts": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "after-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "label": "quick-swipe",
+          "pressed": {
+            "maximum": 0.07614503483038876,
+            "changed": 523,
+            "center": [
+              -0.0687255955697371,
+              0.35622507441586937,
+              0.7857359470598436
+            ],
+            "uploads": 95,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "held-drag",
+          "pressed": {
+            "maximum": 0.3287173466094153,
+            "changed": 528,
+            "center": [
+              -0.07630010968997955,
+              0.3543978066228459,
+              0.7823139373311045
+            ],
+            "uploads": 709,
+            "contexts": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "after-mobile-touch",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "Native CDP touch events",
+      "observations": [
+        {
+          "label": "quick-swipe",
+          "pressed": {
+            "maximum": 0.12200966463509409,
+            "changed": 525,
+            "center": [
+              -0.06986667164098742,
+              0.35632610561218275,
+              0.7861985989093643
+            ],
+            "uploads": 86,
+            "contexts": 1
+          }
+        },
+        {
+          "label": "held-drag",
+          "pressed": {
+            "maximum": 0.35734972472719395,
+            "changed": 528,
+            "center": [
+              -0.07711355979714597,
+              0.35479086576098584,
+              0.7836732234505095
+            ],
+            "uploads": 493,
+            "contexts": 1
+          }
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
