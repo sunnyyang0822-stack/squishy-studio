@@ -60,7 +60,7 @@ async function open(options = {}, theme = 'day') {
   await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.dayColorProbe.colors && window.orbMeshProbe.modelViewMatrix);
   await idle(page);
-  await page.locator('[data-category=coreColor]').click();
+  if (await page.locator('[data-category=coreColor]').isVisible()) await page.locator('[data-category=coreColor]').click();
   return page;
 }
 

@@ -124,7 +124,7 @@ test('独立面板fixture响应减少动态并收束正在执行的动画，首�
 test('颜色卡片选中与键盘即时反馈，减少动态下无位移动画且色块遵循共享色表', async () => {
   const { orbColors } = await import('../detail/orb-colors.mjs');
   const page = await browser.newPage(); await page.goto(base+'/squishy/cloud/'); await page.waitForSelector('[data-state=ready]');
-  await page.locator('[data-category=coreColor]').click();
+  if (await page.locator('[data-category=coreColor]').isVisible()) await page.locator('[data-category=coreColor]').click();
   for (const theme of ['day','night']) {
     await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
     for (const color of orbColors) {

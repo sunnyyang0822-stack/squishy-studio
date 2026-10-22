@@ -6,6 +6,10 @@ const { join } = require('node:path');
 const folder = join(__dirname, 'artifacts', 'issue-22');
 const base = 'http://127.0.0.1:4194';
 const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
+async function showCategory(page,id) {
+  const button=page.locator(`[data-category="${id}"]`);
+  if (await button.isVisible()) await button.click();
+}
 async function main() {
   mkdirSync(folder, { recursive: true });
   const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4194' } });
@@ -24,8 +28,8 @@ async function main() {
         await page.goto(base + '/squishy/cloud/?style=orb');
         await page.waitForSelector('.toy-stage[data-state=ready]');
         await page.evaluate(() => document.fonts.ready);
-        if (name === 'desktop' || name === 'mobile') await page.screenshot({ path: join(folder, `${name}-material-${theme}.png`), fullPage: true });
-        await page.locator('[data-category=coreColor]').click();
+        if (name === 'mobile') await page.screenshot({ path: join(folder, `${name}-material-${theme}.png`), fullPage: true });
+        await showCategory(page,'coreColor');
         viewports.push({ name, theme, ...await page.evaluate(() => ({
           viewport: [innerWidth,innerHeight],
           document: [document.documentElement.scrollWidth,document.documentElement.scrollHeight],
@@ -40,7 +44,7 @@ async function main() {
     const trialPage = await trial.newPage(), trialVideo = trialPage.video();
     await trialPage.goto(base + '/squishy/cloud/');
     await trialPage.waitForSelector('.toy-stage[data-state=ready]');
-    await trialPage.locator('[data-category=coreColor]').click();
+    await showCategory(trialPage,'coreColor');
     const trialBox = await trialPage.locator('.orb-input').boundingBox();
     await trialPage.mouse.move(trialBox.x + trialBox.width * .4, trialBox.y + trialBox.height * .5);
     await trialPage.mouse.down(); await trialPage.waitForTimeout(700);
@@ -63,16 +67,16 @@ async function main() {
     const box = await surface.boundingBox();
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await page.mouse.down(); await page.waitForTimeout(600); await page.mouse.move(box.x + box.width * .55, box.y + box.height * .5, { steps: 8 }); await page.mouse.up();
-    await page.locator('[data-category=coreColor]').click();
+    await showCategory(page,'coreColor');
     await page.locator('[name=color][value=mint]').check();
     await page.waitForTimeout(900);
-    await page.locator('[data-category=coreMaterial]').click();
+    await showCategory(page,'coreMaterial');
     await page.locator('[name=coreMaterial][value=marshmallow]').check();
-    await page.locator('[data-category=filling]').click();
+    await showCategory(page,'filling');
     await page.locator('[name=filling][value=rice]').check();
     await page.getByRole('button', { name: '下一步' }).click();
     await page.locator('[name=shellColor][value=shell-sky]').check();
-    await page.locator('[data-category=shellMaterial]').click();
+    await showCategory(page,'shellMaterial');
     await page.locator('[name=shellMaterial][value=polish]').check();
     await page.waitForTimeout(800);
     await page.screenshot({ path: join(folder,'desktop-shell.png'), fullPage: true });

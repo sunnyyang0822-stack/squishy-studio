@@ -17,7 +17,7 @@ async function open(options = {}) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, ...options });
   await installOrbProbe(page); await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.orbMeshProbe?.modelViewMatrix);
-  await page.locator('[data-category=coreColor]').click();
+  if (await page.locator('[data-category=coreColor]').isVisible()) await page.locator('[data-category=coreColor]').click();
   return page;
 }
 const matrix = page => page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice());

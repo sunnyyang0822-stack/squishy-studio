@@ -21,8 +21,17 @@ const ready = page => page.waitForSelector('.toy-stage[data-state="ready"]');
 const group = (page, name) => page.getByRole('group', { name });
 const choice = (page, groupName, name) => group(page, groupName).getByRole('radio', { name, exact: true });
 const next = page => page.getByRole('button', { name: '下一步' }).click();
-const show = (page, id) => page.locator(`[data-category="${id}"]`).click();
+async function show(page, id) {
+  const button = page.locator(`[data-category="${id}"]`);
+  if (await button.isVisible()) await button.click();
+}
 const current = (page, id) => page.locator(`.workflow-progress li[data-step="${id}"]`).getAttribute('aria-current');
+async function assertThreeAcross(page, name) {
+  const boxes = await group(page, name).getByRole('radio').evaluateAll(inputs => inputs.map(input => input.getBoundingClientRect().toJSON()));
+  assert.equal(boxes.length, 3, name);
+  assert.ok(Math.max(...boxes.map(box => box.y)) - Math.min(...boxes.map(box => box.y)) <= 1, name + ' 同排');
+  assert.ok(boxes.every(box => box.width >= 44 && box.height >= 44), name + ' 触控目标至少 44px');
+}
 async function progress(page, index) {
   const values = await page.locator('.workflow-progress li').evaluateAll(items => items.map(item => ({ status: item.dataset.status, current: item.getAttribute('aria-current') })));
   assert.deepEqual(await page.locator('.workflow-progress .progress-label').allTextContents(), ['内芯','外壳','装饰','制作','试捏']);
@@ -221,6 +230,42 @@ test('分类一次只显示一组；切换分类不改配方、不重建场景�
   await page.close();
 });
 
+test('桌面同显当前步骤全部可用组；手机切回分类仍保留选择', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(base + path); await ready(page);
+  const visibleGroups = () => page.locator('.choice-group:visible').evaluateAll(items => items.map(item => item.dataset.group));
+  assert.equal(await page.locator('.category-tabs').isVisible(), false);
+  assert.deepEqual(await visibleGroups(), ['coreMaterial', 'coreColor', 'filling']);
+  assert.equal(await page.locator('.color-name:visible').count(), 0);
+  assert.equal(await choice(page, '内芯颜色', '奶油粉').count(), 1, '圆点保留中文辅助名称');
+  const coreGroupBoxes = await page.locator('.choice-group:visible').evaluateAll(items => items.map(item => item.getBoundingClientRect().toJSON()));
+  const firstGap = coreGroupBoxes[1].top - coreGroupBoxes[0].bottom;
+  const secondGap = coreGroupBoxes[2].top - coreGroupBoxes[1].bottom;
+  assert.ok(firstGap > 0 && secondGap > 0 && Math.abs(firstGap - secondGap) <= 2, JSON.stringify({ firstGap, secondGap }));
+  for (const name of ['内芯材质', '内芯颜色', '填充物']) assert.equal(await group(page, name).isVisible(), true);
+  await choice(page, '内芯材质', '棉花糖').check();
+  await choice(page, '内芯颜色', '薄荷绿').check();
+  await next(page);
+  assert.deepEqual(await visibleGroups(), ['shellColor', 'shellMaterial', 'waxThickness']);
+  await assertThreeAcross(page, '外壳材质');
+  await assertThreeAcross(page, '蜡的厚度');
+  await choice(page, '外壳材质', '糖').check();
+  assert.deepEqual(await visibleGroups(), ['shellColor', 'shellMaterial']);
+  await page.getByRole('button', { name: '上一步' }).click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.locator('.category-tabs').isVisible(), true);
+  assert.deepEqual(await visibleGroups(), ['coreMaterial']);
+  assert.equal(await choice(page, '内芯材质', '棉花糖').isChecked(), true);
+  await show(page, 'coreColor');
+  assert.deepEqual(await visibleGroups(), ['coreColor']);
+  assert.equal(await choice(page, '内芯颜色', '薄荷绿').isChecked(), true);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.waitForFunction(() => document.querySelectorAll('.choice-group:not([hidden])').length === 3);
+  assert.deepEqual(await visibleGroups(), ['coreMaterial', 'coreColor', 'filling']);
+  assert.equal(await page.locator('.toy-mount canvas').count(), 1);
+  await page.close();
+});
+
 test('桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主体可滚动触达', async () => {
   for (const viewport of [
     { width: 1440, height: 900 }, { width: 390, height: 844 }, { width: 375, height: 667 },
@@ -257,6 +302,10 @@ test('桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主�
     }
     await next(page);
     assert.equal(await group(page, '外壳颜色').getByRole('radio').count(), 10);
+    await show(page, 'shellMaterial');
+    await assertThreeAcross(page, '外壳材质');
+    await show(page, 'waxThickness');
+    await assertThreeAcross(page, '蜡的厚度');
     await context.close();
   }
 });
@@ -269,6 +318,7 @@ test('动态高度、横竖屏与安全留白变化复用同一画布，配方�
   await choice(page,'内芯颜色','柠檬黄').check();
   for (const viewport of [{width:390,height:600},{width:390,height:744},{width:844,height:390},{width:390,height:844},{width:320,height:568}]) {
     await page.setViewportSize(viewport);
+    await page.waitForFunction(expected => document.querySelectorAll('.choice-group:not([hidden])').length === expected, viewport.width > 760 ? 3 : 1);
     await page.locator('.toy-stage').scrollIntoViewIfNeeded();
     await page.waitForFunction(() => {
       const stage = document.querySelector('.toy-stage').getBoundingClientRect();
@@ -277,6 +327,8 @@ test('动态高度、横竖屏与安全留白变化复用同一画布，配方�
     });
     assert.equal(await canvas.evaluate(el=>el===document.querySelector('.toy-mount canvas')),true);
     assert.equal(await choice(page,'内芯颜色','柠檬黄').isChecked(),true);
+    assert.deepEqual(await page.locator('.choice-group:visible').evaluateAll(items => items.map(item => item.dataset.group)),
+      viewport.width > 760 ? ['coreMaterial','coreColor','filling'] : ['coreColor']);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
     await page.locator('.step-next').scrollIntoViewIfNeeded();
     const button = await page.locator('.step-next').boundingBox();

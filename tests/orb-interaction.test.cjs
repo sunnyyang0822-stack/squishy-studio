@@ -19,7 +19,7 @@ async function open(options = {}) {
   await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.orbMeshProbe?.positions);
   await page.evaluate(() => document.fonts.ready);
-  await page.locator('[data-category=coreColor]').click();
+  if (await page.locator('[data-category=coreColor]').isVisible()) await page.locator('[data-category=coreColor]').click();
   return page;
 }
 async function point(page, x = .5, y = .5) {

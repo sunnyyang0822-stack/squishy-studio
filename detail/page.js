@@ -23,18 +23,21 @@ const panels = new Map();
 const categoryButtons = new Map();
 const selectedGroups = { core: 'coreMaterial', shell: 'shellColor', decoration: 'decoration' };
 const categoryTabs = document.querySelector('.category-tabs');
+const desktopLayout = matchMedia('(min-width: 761px)');
+const categoryLabels = { coreMaterial: '材质', coreColor: '颜色', shellColor: '颜色', shellMaterial: '材质', waxThickness: '厚度' };
 let controller;
 for (const group of groups) {
   const fieldset = document.createElement('fieldset');
   fieldset.id = `group-${group.id}`;
   fieldset.className = `choice-group ${group.colors ? 'color-picker' : ''}`;
   fieldset.dataset.group = group.id;
-  const legend = document.createElement('legend'); legend.textContent = group.label;
+  fieldset.setAttribute('aria-label',group.label);
+  const legend = document.createElement('legend'); legend.textContent = categoryLabels[group.id] || group.label;
   legend.className = 'sr-only';
   if (group.step !== 'decoration') {
     const button = document.createElement('button');
     button.type = 'button'; button.className = 'category-button'; button.dataset.category = group.id;
-    button.textContent = ({ coreMaterial: '材质', coreColor: '颜色', shellColor: '颜色', shellMaterial: '材质', waxThickness: '厚度' })[group.id] || group.label;
+    button.textContent = categoryLabels[group.id] || group.label;
     button.setAttribute('aria-controls', fieldset.id);
     categoryTabs.append(button); categoryButtons.set(group.id, button);
     on(button, 'click', () => { selectedGroups[group.step] = group.id; showGroups(controller.getState()); });
@@ -63,10 +66,11 @@ for (const group of groups) {
 function showGroups(state) {
   const { step, recipe } = state;
   if (selectedGroups.shell === 'waxThickness' && recipe.shellMaterial !== 'wax') selectedGroups.shell = 'shellMaterial';
-  categoryTabs.hidden = !['core','shell'].includes(step);
+  categoryTabs.hidden = desktopLayout.matches || !['core','shell'].includes(step);
   for (const [id, panel] of panels) {
     const available = panel.step === step && (id !== 'waxThickness' || recipe.shellMaterial === 'wax');
-    const visible = available && selectedGroups[step] === id;
+    const visible = available && (desktopLayout.matches || selectedGroups[step] === id);
+    panel.fieldset.querySelector('legend').classList.toggle('sr-only',!desktopLayout.matches);
     const button = categoryButtons.get(id);
     if (button) {
       if (!available && document.activeElement === button) button.blur();
@@ -126,6 +130,7 @@ function navigate(step, replace = false) {
 on(back, 'click', () => navigate(controller.getState().step === 'play' ? 'decoration' : steps[steps.indexOf(controller.getState().step) - 1]));
 on(next, 'click', () => navigate(steps[steps.indexOf(controller.getState().step) + 1]));
 on(retry, 'click', () => void controller.retry());
+on(desktopLayout, 'change', () => showGroups(controller.getState()));
 on(window, 'popstate', event => controller.setStep(steps.includes(event.state?.squishyStep) ? event.state.squishyStep : 'core'));
 on(window, 'pagehide', () => { controller.dispose(); listeners.abort(); });
 window.addEventListener('pageshow', event => { if (event.persisted) location.reload(); });
