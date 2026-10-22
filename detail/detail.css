@@ -120,3 +120,10 @@
   .step-navigation { margin-top: 8px; }
 }
 @media (prefers-reduced-motion: no-preference) { .step-navigation button, .retry-button { transition: transform 140ms cubic-bezier(.23,1,.32,1); } .step-navigation button:active, .retry-button:active { transform: scale(.97); } }
+
+.style-picker { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--subtle); font-size: 13px; }
+.style-picker select { min-width: 0; max-width: 150px; min-height: 44px; padding: 6px 10px; border: 1px solid var(--detail-border); border-radius: 12px; color: var(--ink); background: var(--detail-panel); font: inherit; }
+.style-notice { margin: 8px 0 0; color: var(--subtle); font-size: 12px; line-height: 1.5; }
+.text-choice:has(input:disabled) { opacity: .45; cursor: default; }
+.text-choice input:disabled { cursor: default; }
+@media (max-width: 480px) { .style-picker { gap: 4px; } .style-picker > span { display: none; } .style-picker select { max-width: 108px; padding: 4px; } .detail-topbar { gap: 8px; } .detail-brand { font-size: 13px; } }

@@ -4,11 +4,12 @@ const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
 
-const base = 'http://127.0.0.1:4180';
+const port = process.env.DETAIL_TEST_PORT || '4180';
+const base = `http://127.0.0.1:${port}`;
 const path = '/squishy/cloud/';
 let browser, server;
 before(async () => {
-  server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4180' } });
+  server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: port } });
   for (let i = 0; i < 60; i++) {
     try { if ((await fetch(base)).ok) break; } catch {}
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -147,6 +148,7 @@ test('十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史�
   await choice(page, '内芯颜色', '薄荷绿').focus();
   await page.keyboard.press('ArrowRight');
   assert.equal(await group(page, '内芯颜色').getByRole('radio', { checked: true }).count(), 1);
+  const selectedCoreColor = await group(page, '内芯颜色').getByRole('radio', { checked: true }).inputValue();
   await next(page);
   assert.equal(await group(page, '外壳颜色').getByRole('radio').count(), 10);
   await choice(page, '外壳颜色', '奶油粉').check();
@@ -162,16 +164,21 @@ test('十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史�
   await show(page, 'waxThickness');
   assert.equal(await choice(page, '蜡的厚度', '厚').isChecked(), true);
   await page.goBack();
+  await page.waitForFunction(() => document.querySelector('[data-step=core]').getAttribute('aria-current') === 'step');
   assert.equal(await current(page, 'core'), 'step');
   await page.goForward();
+  await page.waitForFunction(() => document.querySelector('[data-step=shell]').getAttribute('aria-current') === 'step');
   assert.equal(await current(page, 'shell'), 'step');
   await show(page, 'waxThickness');
   assert.equal(await choice(page, '蜡的厚度', '厚').isChecked(), true);
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
   await page.reload(); await ready(page);
-  await progress(page,0);
+  await progress(page,1);
+  await show(page, 'waxThickness');
+  assert.equal(await choice(page, '蜡的厚度', '厚').isChecked(), true, '刷新保留外壳配方与步骤');
+  await page.getByRole('button', { name: '上一步' }).click();
   await show(page, 'coreColor');
-  assert.equal(await choice(page,'内芯颜色','奶油粉').isChecked(),true,'刷新开始新的默认配方');
+  assert.equal(await group(page, '内芯颜色').getByRole('radio', { checked: true }).inputValue(), selectedCoreColor, '刷新保留内芯配方');
   assert.equal(await current(page, 'core'), 'step');
   await page.goto(base + path + '?style=missing&step=invalid'); await ready(page);
   assert.equal(page.url(),base + path + '?style=orb');
@@ -339,5 +346,43 @@ test('动态高度、横竖屏与安全留白变化复用同一画布，配方�
   await page.locator('.step-next').scrollIntoViewIfNeeded();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   assert.equal(await canvas.evaluate(el=>el===document.querySelector('.toy-mount canvas')),true);
+  await page.close();
+});
+
+
+test('详情样式和配方直达刷新、五步及浏览器返回保持', async () => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  const errors = []; page.on('pageerror', error => errors.push(error.message));
+  await page.goto(base + path + '?style=donut');
+  await ready(page);
+  assert.equal(await page.getByRole('combobox', { name: '捏捏样式' }).inputValue(), 'donut');
+  assert.equal(await choice(page, '内芯材质', '棉花糖').isDisabled(), true);
+  assert.equal(await choice(page, '内芯材质', '慢回弹').isDisabled(), true);
+  assert.match(await page.locator('.style-notice').textContent(), /仅支持黏土/);
+  await show(page, 'coreColor'); await choice(page, '内芯颜色', '薄荷绿').check();
+  await next(page); await choice(page, '外壳颜色', '雾蓝').check();
+  await page.reload(); await ready(page);
+  assert.equal(await current(page, 'shell'), 'step');
+  assert.equal(await choice(page, '外壳颜色', '雾蓝').isChecked(), true);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'donut');
+  await next(page); await choice(page, '装饰', '3').check();
+  await next(page);
+  await page.reload();
+  await page.locator('.making-blank').waitFor({ state: 'visible' });
+  assert.equal(await current(page, 'making'), 'step');
+  await page.getByRole('button', { name: '开始捏捏' }).click(); await ready(page);
+  assert.equal(await current(page, 'play'), 'step');
+  await page.getByRole('button', { name: '返回修改' }).click();
+  assert.equal(await choice(page, '装饰', '3').isChecked(), true);
+  await page.goBack(); await ready(page);
+  assert.equal(await current(page, 'play'), 'step');
+  await page.getByRole('combobox', { name: '捏捏样式' }).selectOption('star'); await ready(page);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'star');
+  await page.reload(); await ready(page);
+  assert.equal(await current(page, 'play'), 'step');
+  assert.match(await page.title(), /五角星/);
+  assert.equal(new URL(page.url()).searchParams.get('decoration'), 'three');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  assert.deepEqual(errors, []);
   await page.close();
 });

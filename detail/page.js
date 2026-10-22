@@ -1,6 +1,18 @@
-import { createDetailController, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames } from './state.mjs';
+import { createDetailController, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames, styleNames, defaultRecipe } from './state.mjs';
 import { orbColors } from './orb-colors.mjs';
 import { createModelPreview, createSilentAudio } from './adapters.js';
+
+const stylePicker = document.createElement('label');
+stylePicker.className = 'style-picker';
+const styleLabel = document.createElement('span'); styleLabel.textContent = '样式';
+const styleSelect = document.createElement('select'); styleSelect.name = 'styleId'; styleSelect.setAttribute('aria-label', '捏捏样式');
+for (const [id, name] of Object.entries(styleNames)) {
+  const option = document.createElement('option'); option.value = id; option.textContent = name; styleSelect.append(option);
+}
+stylePicker.append(styleLabel, styleSelect);
+document.querySelector('.detail-topbar').insertBefore(stylePicker, document.querySelector('.detail-brand'));
+const styleNotice = document.createElement('p'); styleNotice.className = 'style-notice'; styleNotice.setAttribute('role', 'status');
+document.querySelector('.step-navigation').before(styleNotice);
 
 const stage = document.querySelector('.toy-stage');
 const mount = document.querySelector('.toy-mount');
@@ -84,17 +96,38 @@ function showGroups(state) {
     for (const input of panel.fieldset.querySelectorAll('input')) input.checked = input.dataset.choice === recipe[id];
   }
 }
-const url = new URL(location.href);
-const styleId = url.searchParams.get('style') || 'orb';
-const initialUrl = new URL(location.href);
-initialUrl.searchParams.set('style', 'orb');
-initialUrl.searchParams.delete('step');
-history.replaceState({ squishyStep: 'core' }, '', initialUrl);
+const recipeKeys = Object.keys(defaultRecipe).filter(key => key !== 'styleId');
+function readLocation() {
+  const url = new URL(location.href);
+  return { styleId: url.searchParams.get('style') || 'orb', step: url.searchParams.get('step') || 'core',
+    recipe: Object.fromEntries(recipeKeys.filter(key => url.searchParams.has(key)).map(key => [key, url.searchParams.get(key)])) };
+}
+function saveLocation(state) {
+  const target = new URL(location.href);
+  target.searchParams.set('style', state.recipe.styleId);
+  if (state.step === 'core') target.searchParams.delete('step'); else target.searchParams.set('step', state.step);
+  for (const key of recipeKeys) {
+    if (state.recipe[key] === defaultRecipe[key]) target.searchParams.delete(key);
+    else target.searchParams.set(key, state.recipe[key]);
+  }
+  history.replaceState({ squishyStep: state.step }, '', target);
+}
+const initial = readLocation();
 controller = createDetailController({
   renderer: createModelPreview(mount, { feelId: 'clay', onUnavailable: () => controller.rendererUnavailable() }),
-  audio: createSilentAudio(), styleId,
+  audio: createSilentAudio(), ...initial,
   onChange(state) {
     const { step, recipe, resource } = state;
+    const styleName = styleNames[recipe.styleId];
+    styleSelect.value = recipe.styleId;
+    for (const option of styleSelect.options) option.disabled = option.value !== 'orb' && recipe.coreMaterial !== 'clay';
+    for (const input of document.querySelectorAll('input[name="coreMaterial"]')) input.disabled = recipe.styleId !== 'orb' && input.value !== 'clay';
+    styleNotice.textContent = state.selectionNotice || (recipe.styleId !== 'orb' ? '新样式目前仅支持黏土质感。' : recipe.coreMaterial !== 'clay' ? '切换新样式前，请先选择黏土内芯。' : '');
+    styleNotice.hidden = !styleNotice.textContent;
+    document.title = `制作${styleName}｜Squishy Studio`;
+    stage.setAttribute('aria-label', `${styleName}展示区`);
+    document.querySelector('.toy-area').setAttribute('aria-label', styleName);
+    saveLocation(state);
     document.querySelector('.step-panel').dataset.step = step;
     const making = step === 'making';
     stage.hidden = making;
@@ -102,7 +135,7 @@ controller = createDetailController({
     stage.dataset.state = resource;
     stage.setAttribute('aria-busy', String(resource === 'loading'));
     document.querySelector('.resource-message').hidden = resource === 'ready' && !state.configError;
-    document.querySelector('.resource-status').textContent = { loading: '加载中…', ready: state.configError ? '颜色更新失败' : '', error: '加载失败', unavailable: '无法显示圆球' }[resource];
+    document.querySelector('.resource-status').textContent = { loading: '加载中…', ready: state.configError ? '设置更新失败' : '', error: '加载失败', unavailable: '无法显示模型' }[resource];
     retry.hidden = !state.configError && (resource === 'ready' || resource === 'loading');
     for (const item of document.querySelectorAll('.workflow-progress li')) {
       const itemIndex = steps.indexOf(item.dataset.step), currentIndex = steps.indexOf(step);
@@ -118,22 +151,26 @@ controller = createDetailController({
     back.textContent = step === 'making' || step === 'play' ? '返回修改' : '上一步';
     next.hidden = step === 'play';
     next.textContent = step === 'making' ? '开始捏捏' : '下一步';
-    document.querySelector('.configuration-summary').textContent = `当前${stepNames[step]}：内芯${coreNames[recipe.coreMaterial]}、${colorNames[recipe.coreColor]}，填充${fillingNames[recipe.filling]}；外壳${materialNames[recipe.shellMaterial]}、${colorNames[recipe.shellColor]}；装饰${decorationNames[recipe.decoration]}`;
+    document.querySelector('.configuration-summary').textContent = `当前${stepNames[step]}，${styleNames[recipe.styleId]}：内芯${coreNames[recipe.coreMaterial]}、${colorNames[recipe.coreColor]}，填充${fillingNames[recipe.filling]}；外壳${materialNames[recipe.shellMaterial]}、${colorNames[recipe.shellColor]}；装饰${decorationNames[recipe.decoration]}`;
     document.querySelector('.configuration-error').hidden = !state.configError;
   },
 });
-function navigate(step, replace = false) {
+function navigate(step) {
   if (!steps.includes(step) || controller.getState().step === step) return;
+  const currentUrl = location.href;
   controller.setStep(step);
-  const target = new URL(location.href);
-  target.searchParams.set('step', step);
-  history[replace ? 'replaceState' : 'pushState']({ squishyStep: step }, '', target);
+  const targetUrl = location.href;
+  history.replaceState({ squishyStep: new URL(currentUrl).searchParams.get('step') || 'core' }, '', currentUrl);
+  history.pushState({ squishyStep: step }, '', targetUrl);
 }
+on(styleSelect, 'change', () => void controller.select('styleId', styleSelect.value));
 on(back, 'click', () => navigate(controller.getState().step === 'play' ? 'decoration' : steps[steps.indexOf(controller.getState().step) - 1]));
 on(next, 'click', () => navigate(steps[steps.indexOf(controller.getState().step) + 1]));
 on(retry, 'click', () => void controller.retry());
 on(desktopLayout, 'change', () => showGroups(controller.getState()));
-on(window, 'popstate', event => controller.setStep(steps.includes(event.state?.squishyStep) ? event.state.squishyStep : 'core'));
+on(window, 'popstate', () => {
+  void controller.restoreLocation(readLocation());
+});
 on(window, 'pagehide', () => { controller.dispose(); listeners.abort(); });
 window.addEventListener('pageshow', event => { if (event.persisted) location.reload(); });
 void controller.load();
