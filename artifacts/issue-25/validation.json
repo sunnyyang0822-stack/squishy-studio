@@ -1,0 +1,576 @@
+{
+  "baseline": "4f4ebfe2f4afbfa29af38fd82662637ebc3de915",
+  "host": "win32 10.0.26200 x64",
+  "browser": "155.0.4283.62",
+  "phone": "CDP native touch emulation, 390x844; no physical device tested",
+  "modelBytes": 124324,
+  "bundleBytes": 644320,
+  "parameters": {
+    "radius": 0.6,
+    "maximumDepth": 0.34,
+    "radialLimit": 0.4,
+    "pressRate": 0.45,
+    "initialResponse": 0.1,
+    "contactRampSeconds": 0.75,
+    "contactMemoryDecay": 4,
+    "recoveryRate": 0.8,
+    "reducedRecoveryRate": 5,
+    "convergence": 0.00001,
+    "pathSpacing": 0.035,
+    "maximumContactStep": 0.1
+  },
+  "geometry": [
+    {
+      "id": "clay",
+      "held0.016666666666666666s": 0.001969244796782732,
+      "held0.1s": 0.009690848179161549,
+      "held1s": 0.1406349092721939,
+      "held3s": 0.36855924129486084,
+      "released0.5s": 0.3136478364467621,
+      "released2s": 0.31327536702156067,
+      "released5s": 0.31327536702156067,
+      "released14s": 0.31327536702156067,
+      "exactRest": false
+    },
+    {
+      "id": "slow-rebound",
+      "held0.016666666666666666s": 0.0002922778658103198,
+      "held0.1s": 0.0025059208273887634,
+      "held1s": 0.08765463531017303,
+      "held3s": 0.23688946664333344,
+      "released0.5s": 0.15879178047180176,
+      "released2s": 0.04782718047499657,
+      "released5s": 0.0043387869372963905,
+      "released14s": 0,
+      "exactRest": true
+    }
+  ],
+  "recordings": [
+    {
+      "name": "desktop-short-long",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "stage": "短按200ms",
+          "time": 1042.2000000001863,
+          "maximum": 0.007875297718342892,
+          "changed": 206,
+          "center": [
+            0.018612220839977055,
+            0.34468640768977626,
+            0.8969083411081988
+          ],
+          "uploads": 40,
+          "contexts": 2
+        },
+        {
+          "stage": "release",
+          "time": 1067.5,
+          "maximum": 0.008039752764510232,
+          "changed": 206,
+          "center": [
+            0.018582709272556428,
+            0.3447171050528111,
+            0.8969916526162285
+          ],
+          "uploads": 45,
+          "contexts": 2
+        },
+        {
+          "stage": "recovered",
+          "time": 9521.30000000028,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 1544,
+          "contexts": 2
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 8821
+        },
+        {
+          "stage": "长按3s",
+          "time": 12909,
+          "maximum": 0.23664246583525353,
+          "changed": 229,
+          "center": [
+            0.016856822433303685,
+            0.3465304545764354,
+            0.9020005603433124
+          ],
+          "uploads": 2086,
+          "contexts": 2
+        },
+        {
+          "stage": "release",
+          "time": 12931.100000000093,
+          "maximum": 0.233748278540464,
+          "changed": 229,
+          "center": [
+            0.0168589009475785,
+            0.3465289472168502,
+            0.9019963600234749
+          ],
+          "uploads": 2090,
+          "contexts": 2
+        },
+        {
+          "stage": "recovered",
+          "time": 25554.400000000373,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 4256,
+          "contexts": 2
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 12994
+        }
+      ]
+    },
+    {
+      "name": "clay-short-long",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "stage": "短按200ms",
+          "time": 431.79999999981374,
+          "maximum": 0.021415250559207722,
+          "changed": 287,
+          "center": [
+            0.021565229930328732,
+            0.3346301008658477,
+            0.8742169556029207
+          ],
+          "uploads": 36,
+          "contexts": 1
+        },
+        {
+          "stage": "release",
+          "time": 447.20000000018626,
+          "maximum": 0.02170202942171105,
+          "changed": 287,
+          "center": [
+            0.021563913395135102,
+            0.33463085456807573,
+            0.8742290830765233
+          ],
+          "uploads": 38,
+          "contexts": 1
+        },
+        {
+          "stage": "recovered",
+          "time": 14468.899999999907,
+          "maximum": 0.018744626753935133,
+          "changed": 287,
+          "center": [
+            0.021565324031395418,
+            0.334628094857831,
+            0.8742134140892539
+          ],
+          "uploads": 118,
+          "contexts": 1
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 14380
+        },
+        {
+          "stage": "长按3s",
+          "time": 17847.399999999907,
+          "maximum": 0.37788016747875963,
+          "changed": 289,
+          "center": [
+            0.021718651067338023,
+            0.3332458665142252,
+            0.8718813148185098
+          ],
+          "uploads": 660,
+          "contexts": 1
+        },
+        {
+          "stage": "release",
+          "time": 17861.299999999814,
+          "maximum": 0.37217228271667907,
+          "changed": 289,
+          "center": [
+            0.021718733051669836,
+            0.33324701119797906,
+            0.8718830246908591
+          ],
+          "uploads": 662,
+          "contexts": 1
+        },
+        {
+          "stage": "recovered",
+          "time": 31869.299999999814,
+          "maximum": 0.32400984645295167,
+          "changed": 289,
+          "center": [
+            0.021717417252180692,
+            0.33325678587489604,
+            0.8718997638632413
+          ],
+          "uploads": 803,
+          "contexts": 1
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 14376
+        }
+      ]
+    },
+    {
+      "name": "desktop-dwell-slide",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "stage": "endpoint-held",
+          "time": 5319.300000000279,
+          "maximum": 0.15854958238153574,
+          "changed": 452,
+          "center": [
+            0.2625065279677851,
+            0.31512604638488456,
+            0.8007808966887144
+          ],
+          "uploads": 902,
+          "contexts": 2
+        },
+        {
+          "stage": "release",
+          "time": 6068.800000000279,
+          "maximum": 0.20632128883134151,
+          "changed": 449,
+          "center": [
+            0.3642493301487631,
+            0.31354029293941577,
+            0.7968953086181447
+          ],
+          "uploads": 1024,
+          "contexts": 2
+        },
+        {
+          "stage": "recovered",
+          "time": 18490.200000000186,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 3255,
+          "contexts": 2
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 12782
+        }
+      ]
+    },
+    {
+      "name": "desktop-long-retrace-cross",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "stage": "kneaded",
+          "time": 7329,
+          "maximum": 0.07129515016527137,
+          "changed": 603,
+          "center": [
+            0.087201563926174,
+            0.37124388814770254,
+            0.8455814893846079
+          ],
+          "uploads": 1264,
+          "contexts": 2
+        },
+        {
+          "stage": "release",
+          "time": 7343,
+          "maximum": 0.07071013502141459,
+          "changed": 607,
+          "center": [
+            0.08745053284034482,
+            0.370235716941224,
+            0.8458603871286063
+          ],
+          "uploads": 1266,
+          "contexts": 2
+        },
+        {
+          "stage": "recovered",
+          "time": 18532.299999999814,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 2928,
+          "contexts": 2
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 11550
+        }
+      ]
+    },
+    {
+      "name": "desktop-repress",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "stage": "old-dent",
+          "time": 3337.7000000001863,
+          "maximum": 0.0793616861116342,
+          "changed": 219,
+          "center": [
+            -0.3554814630496531,
+            0.32670827249081,
+            0.8375202779930376
+          ],
+          "uploads": 429,
+          "contexts": 2
+        },
+        {
+          "stage": "old-and-new-dents",
+          "time": 5353.700000000186,
+          "maximum": 0.17954124124749238,
+          "changed": 375,
+          "center": [
+            0.292180833087315,
+            0.33123585164206526,
+            0.8443291101219227
+          ],
+          "uploads": 792,
+          "contexts": 2
+        },
+        {
+          "stage": "release",
+          "time": 5369.0999999996275,
+          "maximum": 0.1783538043339678,
+          "changed": 375,
+          "center": [
+            0.2924935999877762,
+            0.331237451746964,
+            0.8443281153054573
+          ],
+          "uploads": 795,
+          "contexts": 2
+        },
+        {
+          "stage": "recovered",
+          "time": 17693.39999999944,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 2576,
+          "contexts": 2
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 12698
+        }
+      ]
+    },
+    {
+      "name": "desktop-color-interrupt",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "stage": "release",
+          "time": 3805.2999999998137,
+          "maximum": 0.11891704428902267,
+          "changed": 305,
+          "center": [
+            0.11282192959953463,
+            0.3437437805266191,
+            0.8855825797097847
+          ],
+          "uploads": 420,
+          "contexts": 2
+        },
+        {
+          "stage": "recovered",
+          "time": 15538.799999999814,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 2363,
+          "contexts": 2
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 12114
+        },
+        {
+          "stage": "color-restored",
+          "time": 18199.799999999814,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 2680,
+          "contexts": 2
+        }
+      ]
+    },
+    {
+      "name": "mobile-touch-dwell-slide",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "CDP native touch",
+      "observations": [
+        {
+          "stage": "touch-held",
+          "time": 4823.899999999441,
+          "maximum": 0.1623925030933212,
+          "changed": 425,
+          "center": [
+            0.2488290849999933,
+            0.32451376699265216,
+            0.8268030648929476
+          ],
+          "uploads": 814,
+          "contexts": 2
+        },
+        {
+          "stage": "release",
+          "time": 5300.299999999814,
+          "maximum": 0.19457239019265204,
+          "changed": 420,
+          "center": [
+            0.30707037733542186,
+            0.3236827319017842,
+            0.824288194412229
+          ],
+          "uploads": 900,
+          "contexts": 2
+        },
+        {
+          "stage": "recovered",
+          "time": 17744.5,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 3123,
+          "contexts": 2
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 12817
+        }
+      ]
+    },
+    {
+      "name": "desktop-feel-switch-final-play",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "Mouse",
+      "observations": [
+        {
+          "stage": "final-play-held",
+          "time": 7651.5,
+          "maximum": 0.1639210729994072,
+          "changed": 224,
+          "center": [
+            0.016497635764231577,
+            0.3468503041842095,
+            0.9027050554315335
+          ],
+          "uploads": 1026,
+          "contexts": 4
+        },
+        {
+          "stage": "release",
+          "time": 7662.800000000745,
+          "maximum": 0.16247193118158978,
+          "changed": 223,
+          "center": [
+            0.01649837781517252,
+            0.3468508476552939,
+            0.9027050665315338
+          ],
+          "uploads": 1028,
+          "contexts": 4
+        },
+        {
+          "stage": "recovered",
+          "time": 19839.300000000745,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 3210,
+          "contexts": 4
+        },
+        {
+          "stage": "recovery-duration",
+          "milliseconds": 12536
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "integrationBaseline": "959a719",
+  "comparison": "clay-vs-slow-rebound.webm: left clay, right slow rebound; same short/long press sequence at original wall time; natural recovery waits differ, so later actions are not synchronized. Geometry replay is the equal-time comparison."
+}

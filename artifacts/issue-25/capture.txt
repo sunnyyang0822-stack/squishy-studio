@@ -1,0 +1,24 @@
+desktop-short-long: 短按200ms
+desktop-short-long: 松开 → 等待完整恢复
+desktop-short-long: 长按3s
+desktop-short-long: 松开 → 等待完整恢复
+clay-short-long: 短按200ms
+clay-short-long: 松开 → 等待完整恢复
+clay-short-long: 长按3s
+clay-short-long: 松开 → 等待完整恢复
+desktop-dwell-slide: 起点驻留2.5s → 滑动 → 终点驻留1.5s
+desktop-dwell-slide: 松开 → 等待完整恢复
+desktop-long-retrace-cross: 长划 → 折返 → 交叉与重复揉压
+desktop-long-retrace-cross: 松开 → 等待完整恢复
+desktop-repress: 按压2s → 松开1s → 恢复中异处再按
+desktop-repress: 松开 → 等待完整恢复
+desktop-color-interrupt: 换色恢复 → 新输入连续接管
+desktop-color-interrupt: 松开 → 等待完整恢复
+desktop-color-interrupt: 换色完成同时恢复形态与姿态
+mobile-touch-dwell-slide: 触屏：起点驻留 → 滑动 → 终点驻留
+mobile-touch-dwell-slide: 松开 → 等待完整恢复
+desktop-feel-switch-final-play: 质感切换：慢回弹 → 黏土 → 棉花糖 → 慢回弹
+desktop-feel-switch-final-play: 所选慢回弹贯穿制作步骤与最终体验
+desktop-feel-switch-final-play: 松开 → 等待完整恢复
+{"recordings":8,"errors":[],"browser":"155.0.4283.62"}
+exit_code=0

@@ -21,7 +21,7 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 // 复用 orb-input.js / orb-rotation.js 和 orb-preview.js 的协调流程。
 ```
 
-换颜色、材质、外观时保留 `feelId: 'clay'`，直接复用当前算法。无需复制/重写捏压、路径采样、留痕、恢复或输入中断逻辑。不新增面向用户的切换控件；当前只有已确认的一种质感，不假装其他质感已经实现。
+换颜色、材质、外观时保留 `feelId: 'clay'`，直接复用当前算法。无需复制/重写捏压、路径采样、留痕、恢复或输入中断逻辑。独立慢回弹采用 `feelId: 'slow-rebound'`，见下文；默认仍是 `clay`。
 
 ## 黏土行为约定
 
@@ -38,6 +38,18 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 新增质感只增加独立工厂和登记项，采用同一接口：`begin(point)`、`move(point, distance)`、`release()`、`cancel()`、`reset()`、`beginRestore()`、`applyRestore(progress)`、`interruptRestore()`、`setReducedMotion(value)`、`getState()`、`step(elapsed)`。`step` 返回 `{ changed, atRest, needsFrame }`。这样保留同一输入、生命周期及同步换色流程；不要修改已确认的黏土来冒充新质感，也不要复制整套场景。
 
 网格需有可写 POSITION/NORMAL、均匀连续表面；黏土的局部半径/采样距离按当前模型单位设定，适合归一化、近圆/椭球的外表面。换外观可直接复用；全新凹形、多部件或比例悬殊的模型需先验证坐标、尺度与接触，不能仅靠名称保证任何网格都获得相同效果。光泽和昼夜灯光由场景负责，不是黏土算法的依赖。
+
+## 独立慢回弹 `slow-rebound`
+
+工厂为 `src/orb-slow-rebound.mjs` 的 `createSlowReboundDeformation`，参数集中在同文件 `slowReboundParameters`。通过 `getOrbFeel('slow-rebound')` 或 `createOrbPreview(mount, { feelId: 'slow-rebound' })` 调用，统一接口不变，每次调用独立分配原始网格快照、压痕、当地接触时间与显式恢复状态。它缓慢压入、缓慢完整回弹，不保留黏土的永久压痕。
+
+实际入口：`/squishy/cloud/` → 内芯材质 → **慢回弹**（配方稳定标识 `butter`）。复用制作页色卡与页面控制器，沿用同一场景、命中检测、输入、旋转、颜色、资源释放及哑光灯光。默认仍是黏土，棉花糖仍映射 `clay`。离开页面会销毁实例，再进入不携带旧形变。
+
+开始时基线 `4f4ebfe` 中 #22 尚未合并；实施中发现 PR #24 已合并，已通过合并最新 `origin/main` `959a719` 接入正式流程，移除临时独立入口。`detail/state.mjs` 仅将 `butter` 的实际 `feelId` 映射为 `slow-rebound`，用户材质选择与行为 ID 继续分离。`detail/adapters.js` 在行为 ID 改变时通过现有 `dispose` 清理旧场景，再以新 `feelId` 创建独立实例；换颜色继续在同一实例中 `prepare/commit`，不需要重建。后续步骤与最终体验沿用所选内芯的实际手感。
+
+自动回弹只在没有显式恢复时推进；`beginRestore/applyRestore` 交给现有换色时钟独占网格。`interruptRestore` 或新输入从当下形态接管，随后旧痕、新痕都继续自动恢复。取消结束施力但不瞬间清空形状。后台结束输入并暂停模拟，回到前台从当前网格继续；不会将后台墙钟时间作为一帧压入或回弹。减少动态效果保留缓慢按压，将释放恢复系数提高到5/s。
+
+参数、几何量测、实际录屏、测试与回滚见 [Issue #25 交付记录](issue-25-slow-rebound.md)。这是适用于现有归一化圆球的受控视觉近似，不代表经过物性校准的真实记忆海绵。
 
 ## 验证与回滚
 

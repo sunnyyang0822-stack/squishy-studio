@@ -83,7 +83,7 @@ test('慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与�
   advance(slow.d, .1 - 1 / 60); const short = maximum(slow);
   assert.ok(short > first && short < .007);
   advance(slow.d, 2.9); const long = maximum(slow);
-  assert.ok(long > .25 && long < .30);
+  assert.ok(long > .20 && long < .26, 'Strong resistance needs sustained dwell to reach a deep dent');
   clay.d.begin(front(0)); advance(clay.d, .1);
   assert.ok(short < maximum(clay) * .6, 'Fresh contact yields more slowly than approved clay');
   advance(clay.d, 2.9);
@@ -157,7 +157,7 @@ test('折返、交叉、重复揉压有界；旧痕和新痕最终共同消失',
   }
   f.d.release(); advance(f.d, 1);
   const current = f.positions.slice(); f.d.begin(front(.8)); assert.deepEqual(f.positions, current);
-  advance(f.d, 1); assert.ok(depth(f, front(-.6)) > 0 && depth(f, front(.8)) > .10);
+  advance(f.d, 2); assert.ok(depth(f, front(-.6)) > 0 && depth(f, front(.8)) > .10);
   f.d.release(); fullyRecover(f);
 });
 

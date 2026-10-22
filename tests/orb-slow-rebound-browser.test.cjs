@@ -18,7 +18,7 @@ async function open(options = {}) {
   await page.goto(base + '/squishy/cloud/');
   await page.waitForSelector('.toy-stage[data-state=ready] canvas');
   await page.locator('[name=coreMaterial][value=butter]').check();
-  await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"] canvas');
+  await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"][data-render-count] canvas');
   await page.waitForFunction(() => window.orbMeshProbe.positions);
   return page;
 }
@@ -45,13 +45,18 @@ test('慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏�
   await page.mouse.up(); await page.waitForTimeout(300);
   assert.ok((await meshStats(page)).maximum > held * .55);
   await recovered(page);
-  await page.locator('[name=coreMaterial][value=clay]').check(); await page.waitForSelector('.toy-mount[data-feel-id=clay] canvas');
+  await page.locator('[name=coreMaterial][value=clay]').check(); await page.waitForSelector('.toy-mount[data-feel-id=clay][data-render-count] canvas');
   await press(page, 1000); await page.mouse.up(); await page.waitForTimeout(1800);
   assert.ok((await meshStats(page)).maximum > .07);
-  await page.locator('[name=coreMaterial][value=butter]').check(); await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"] canvas');
+  await page.locator('[name=coreMaterial][value=butter]').check(); await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"][data-render-count] canvas');
   assert.equal((await meshStats(page)).maximum, 0);
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
   assert.equal(await page.evaluate(() => window.orbMeshProbe.contexts.filter(gl => !gl.isContextLost()).length), 1);
+  for (let i = 0; i < 4; i++) await page.locator('.step-next').click();
+  await page.waitForTimeout(900);
+  assert.equal(await page.locator('.step-panel').getAttribute('data-step'), 'play');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'slow-rebound');
+  await press(page, 1000); await page.mouse.up(); await recovered(page);
   assert.deepEqual(errors, []); await page.close();
 });
 
@@ -60,7 +65,7 @@ test('新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管�
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
   await page.locator('[name=color]').nth(4).check(); await page.waitForTimeout(110);
   assert.ok((await meshStats(page)).maximum > .005);
-  await press(page, 600); await page.mouse.up();
+  await press(page, 1000); await page.mouse.up();
   assert.ok((await meshStats(page)).maximum > .04);
   await recovered(page);
   assert.equal(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')), true);
@@ -101,11 +106,11 @@ test('pointercancel、失焦、后台结束施力；后台暂停且前台连续�
 test('手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复加速，色卡和页面可用', async () => {
   const page = await open({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const client = await page.context().newCDPSession(page), a = await point(page, .28), b = await point(page, .72);
-  await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [a] }); await page.waitForTimeout(1000);
+  await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [a] }); await page.waitForTimeout(1500);
   for (let i = 1; i <= 15; i++) {
     await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: a.x + (b.x - a.x) * i / 15, y: a.y }] }); await page.waitForTimeout(25);
   }
-  await page.waitForTimeout(800); await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await page.waitForTimeout(1200); await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   assert.ok((await meshStats(page)).maximum > .08); assert.equal(await page.evaluate(() => scrollY), 0);
   await page.evaluate(() => document.documentElement.dataset.theme = 'night');
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
@@ -114,4 +119,17 @@ test('手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复�
   await page.locator('[name=color]').nth(3).check(); await page.waitForTimeout(250);
   assert.equal(await page.locator('[name=color]').nth(3).isChecked(), true);
   await client.detach(); await page.close();
+});
+
+test('连续切换质感最后选择生效；棉花糖继续clay且所有旧上下文释放', async () => {
+  const page = await open();
+  for (const material of ['clay', 'butter', 'marshmallow', 'butter']) await page.locator(`[name=coreMaterial][value=${material}]`).check();
+  await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"][data-render-count] canvas');
+  await page.waitForFunction(() => window.orbMeshProbe.contexts.filter(gl => !gl.isContextLost()).length === 1);
+  assert.equal((await meshStats(page)).maximum, 0);
+  await page.locator('[name=coreMaterial][value=marshmallow]').check();
+  await page.waitForSelector('.toy-mount[data-feel-id=clay][data-render-count] canvas');
+  assert.equal(await page.locator('[name=coreMaterial][value=marshmallow]').isChecked(), true);
+  assert.equal(await page.locator('.toy-mount canvas').count(), 1);
+  await page.close();
 });
