@@ -150,7 +150,8 @@ test('样例图片失败时占位尺寸稳定，仍能进入大厅', async () =>
   assert.deepEqual(after, before);
   assert.equal(await page.locator('.sample-fallback:visible').count(), 4);
   await page.getByRole('link', { name: '去合集大厅挑选' }).click();
-  assert.equal(await page.getByRole('heading', { name: '合集大厅', exact: true }).isVisible(), true);
+  // Navigation can commit before the new heading has been parsed/painted.
+  await page.getByRole('heading', { name: '合集大厅', exact: true }).waitFor({ state: 'visible' });
   await page.close();
 });
 

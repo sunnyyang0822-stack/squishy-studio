@@ -2,11 +2,11 @@ const { readFileSync } = require('node:fs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { modelAttribute } = require('./helpers/orb-probe.cjs');
-const modulePromise = import('../src/orb-deformation.mjs');
+const modulePromise = import('../src/orb-feels.mjs');
 async function fixture(reducedMotion = false) {
-  const { createOrbDeformation } = await modulePromise;
+  const { getOrbFeel } = await modulePromise;
   const rest = modelAttribute('POSITION'), positions = rest.slice();
-  const deformation = createOrbDeformation(positions, modelAttribute('NORMAL'), { reducedMotion });
+  const deformation = getOrbFeel('clay').createDeformation(positions, modelAttribute('NORMAL'), { reducedMotion });
   return { rest, positions, deformation };
 }
 function advance(d, seconds) { for (let t = 0; t < seconds; t += 1 / 120) d.step(1 / 120); }
@@ -19,6 +19,19 @@ function displacement(f, point) {
   return Math.hypot(...[0, 1, 2].map(k => f.positions[nearest + k] - f.rest[nearest + k]));
 }
 const front = theta => [Math.sin(theta), .0175, Math.cos(theta)];
+
+test('黏土稳定命名、默认解析与未知质感拒绝，实例互不污染', async () => {
+  const { getOrbFeel, orbFeels } = await modulePromise;
+  assert.equal(getOrbFeel().id, 'clay'); assert.equal(getOrbFeel().name, '黏土');
+  assert.equal(getOrbFeel(), orbFeels.clay);
+  assert.ok(Object.isFrozen(orbFeels) && Object.isFrozen(orbFeels.clay));
+  for (const id of ['missing', 'toString', '__proto__', 'constructor']) assert.throws(() => getOrbFeel(id), RangeError);
+  const first = await fixture(), second = await fixture();
+  first.deformation.begin(front(.3)); advance(first.deformation, 3); first.deformation.release(); advance(first.deformation, 2);
+  assert.ok(first.deformation.getState().retainedDepth > .05);
+  assert.deepEqual(second.positions, second.rest);
+  assert.equal(second.deformation.getState().retainedDepth, 0);
+});
 
 test('轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变', async () => {
   const f = await fixture(), { rest, positions, deformation: d } = f;
