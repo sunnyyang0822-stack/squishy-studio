@@ -169,7 +169,7 @@ test('pointercancel、丢失捕获、窗口失焦、后台和离页均释放输�
   await page.close();
 });
 
-test('真实模拟触摸：圆球内拖动不滚页，第二触点不夺取输入，外部留白可以滚动', async () => {
+test('真实模拟触摸：圆球内拖动不滚页，第二触点不夺取输入，单屏留白不滚页', async () => {
   const page = await open({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true });
   const session = await page.context().newCDPSession(page);
   const p = await point(page, .4, .45);
@@ -190,7 +190,8 @@ test('真实模拟触摸：圆球内拖动不滚页，第二触点不夺取输�
   await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 12, y: 430, id: 2 }] });
   for (let y = 410; y >= 180; y -= 20) { await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 12, y, id: 2 }] }); await page.waitForTimeout(16); }
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await page.waitForFunction(() => scrollY > 40);
+  assert.equal(await page.evaluate(() => scrollY), 0);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight), true);
   await session.detach(); await page.close();
 });
 

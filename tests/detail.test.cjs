@@ -84,7 +84,7 @@ test('模型失败、加载中及WebGL不可用时仍可换色，重试应用最
   await unavailable.close();
 });
 
-test('五种尺寸昼夜：手机5×2、桌面10×1、44px触控与导航主题连续', async () => {
+test('五种尺寸昼夜单屏：手机5×2、桌面10×1、44px触控与导航主题连续', async () => {
   for (const [width,height] of [[1440,900],[390,844],[375,667],[320,568],[844,390]]) {
     const context = await browser.newContext({ viewport: { width,height }, hasTouch: width < 600, reducedMotion: 'reduce' });
     for (const theme of ['day','night']) {
@@ -93,13 +93,17 @@ test('五种尺寸昼夜：手机5×2、桌面10×1、44px触控与导航主题�
       await page.goto(base + path); await ready(page);
       assert.equal(await page.locator('html').getAttribute('data-theme'), theme);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${width} ${theme} overflow`);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight), true, `${width}×${height} ${theme} must fit one screen`);
       for (const item of await page.locator('.detail-back,.detail-brand,.color-choice input').all()) {
         const box = await item.boundingBox(); assert.ok(box.width >= 44 && box.height >= 44, JSON.stringify(box));
+        assert.ok(box.y >= 0 && box.y + box.height <= height + 1, '所有导航及颜色项都在屏内：' + JSON.stringify(box));
       }
       const toy = await page.locator('.toy-stage').boundingBox(), settings = await page.locator('.customization').boundingBox();
       const image = await page.locator('.toy-mount canvas').boundingBox();
       assert.ok(image.y >= toy.y && image.y + image.height <= toy.y + toy.height + 1);
-      assert.ok(settings.y >= toy.y + toy.height + 35);
+      assert.ok(settings.y >= toy.y + toy.height + 7, '紧凑单屏仍保留主体与选择区间隔');
+      assert.ok(settings.y + settings.height <= height);
+      assert.ok(toy.height >= 150, '最短视口仍有清楚可用的主体展示空间');
       const boxes = await page.locator('.color-choice').evaluateAll(items => items.map(el => el.getBoundingClientRect().toJSON()));
       const rows = new Map(); for (const box of boxes) rows.set(box.y, (rows.get(box.y) || 0) + 1);
       assert.deepEqual([...rows.values()], width <= 600 ? [5,5] : [10]);
@@ -110,4 +114,29 @@ test('五种尺寸昼夜：手机5×2、桌面10×1、44px触控与导航主题�
     }
     await context.close();
   }
+});
+
+test('动态高度、横竖屏与安全留白变化：页面不滚动、画布复用且颜色不丢失', async () => {
+  const page = await browser.newPage({viewport:{width:390,height:844},hasTouch:true});
+  await page.goto(base+path); await ready(page);
+  const canvas = await page.locator('.toy-mount canvas').elementHandle();
+  await page.locator('[value=lemon]').check();
+  for (const viewport of [{width:390,height:600},{width:390,height:744},{width:844,height:390},{width:390,height:844},{width:320,height:568}]) {
+    await page.setViewportSize(viewport);
+    await page.waitForFunction(() => {
+      const stage = document.querySelector('.toy-stage').getBoundingClientRect();
+      const canvas = document.querySelector('.toy-mount canvas');
+      return Math.abs(canvas.width/canvas.height-stage.width/stage.height) < .02;
+    });
+    assert.equal(await canvas.evaluate(el=>el===document.querySelector('.toy-mount canvas')),true);
+    assert.equal(await page.locator('[value=lemon]').isChecked(),true);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollHeight <= innerHeight && document.documentElement.scrollWidth <= innerWidth),true);
+    await page.evaluate(()=>scrollTo(0,1000));
+    assert.equal(await page.evaluate(()=>scrollY),0);
+  }
+  await page.addStyleTag({content:'.detail-topbar{padding-top:32px}.detail-main{padding-bottom:34px}'});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollHeight <= innerHeight),true);
+  const items = await page.locator('.color-choice').evaluateAll(elements=>elements.map(el=>el.getBoundingClientRect().toJSON()));
+  assert.ok(items.every(box=>box.y>=0 && box.bottom<=568));
+  await page.close();
 });
