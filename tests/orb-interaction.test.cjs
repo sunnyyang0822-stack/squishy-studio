@@ -19,6 +19,7 @@ async function open(options = {}) {
   await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.orbMeshProbe?.positions);
   await page.evaluate(() => document.fonts.ready);
+  if (await page.locator('[data-category=coreColor]').isVisible()) await page.locator('[data-category=coreColor]').click();
   return page;
 }
 async function point(page, x = .5, y = .5) {
@@ -169,10 +170,11 @@ test('pointercancel、丢失捕获、窗口失焦、后台和离页均释放输�
   await page.close();
 });
 
-test('真实模拟触摸：圆球内拖动不滚页，第二触点不夺取输入，单屏留白不滚页', async () => {
-  const page = await open({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true });
+test('真实模拟触摸：圆球拖动不滚页，第二触点不夺取输入，设置面板可滚动', async () => {
+  const page = await open({ viewport: { width: 390, height: 450 }, isMobile: true, hasTouch: true });
   const session = await page.context().newCDPSession(page);
   const p = await point(page, .4, .45);
+  const scrollBeforeToy = await page.evaluate(() => scrollY);
   const first = { x: p.x, y: p.y, id: 0 };
   await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [first] });
   await page.waitForTimeout(300);
@@ -184,14 +186,17 @@ test('真实模拟触摸：圆球内拖动不滚页，第二触点不夺取输�
   assert.ok(Math.abs((await meshStats(page)).center[0] - before.center[0]) < .03, 'Extra finger does not move the anchor');
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [first] });
   for (let i = 1; i <= 8; i++) await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ ...first, x: first.x + i * 6 }] });
-  assert.equal(await page.evaluate(() => scrollY), 0);
+  assert.equal(await page.evaluate(() => scrollY), scrollBeforeToy);
   await session.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] }); await restored(page);
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 12, y: 430, id: 2 }] });
-  for (let y = 410; y >= 180; y -= 20) { await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 12, y, id: 2 }] }); await page.waitForTimeout(16); }
+  const blank = await page.locator('.toy-stage').boundingBox();
+  const scrollBeforeBlank = await page.evaluate(() => scrollY);
+  await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: blank.x + 6, y: blank.y + blank.height / 2, id: 2 }] });
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  assert.equal(await page.evaluate(() => scrollY), 0);
-  assert.equal(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight), true);
+  assert.equal(await page.evaluate(() => scrollY), scrollBeforeBlank);
+  assert.ok(await page.evaluate(() => document.documentElement.scrollHeight > innerHeight));
+  await page.mouse.wheel(0, 400);
+  await page.waitForFunction(before => scrollY > before, scrollBeforeBlank);
   await session.detach(); await page.close();
 });
 

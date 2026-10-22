@@ -1,74 +1,85 @@
 import { colorNames } from './orb-colors.mjs';
 export { colorNames } from './orb-colors.mjs';
-export const thicknessNames = Object.freeze({ thin: '薄', medium: '中', thick: '厚' });
-export const materialNames = Object.freeze({ wax: '蜡', polish: '指甲油', sugar: '糖' });
 
-// Rendering and audio are independent, injected adapters. No AudioContext or GLB is
-// created by the UI. Async render work must prepare privately and commit only
-// through its returned handle once this controller accepts its revision.
-export function createDetailController({ renderer, audio, onChange = () => {} }) {
-  let disposed = false;
-  let revision = 0;
-  let pending;
-  let current;
+export const steps = Object.freeze(['core', 'shell', 'decoration', 'making', 'play']);
+export const stepNames = Object.freeze({ core: '内芯设置', shell: '外壳设置', decoration: '装饰选择', making: '制作准备', play: '开始捏捏' });
+export const coreNames = Object.freeze({ clay: '黏土', marshmallow: '棉花糖', butter: '慢回弹' });
+export const fillingNames = Object.freeze({ none: '不加', perlite: '珍珠岩', rice: '仿真米粒', burst: '爆浆' });
+export const materialNames = Object.freeze({ wax: '蜡', polish: '指甲油', sugar: '糖' });
+export const thicknessNames = Object.freeze({ thin: '薄', medium: '中', thick: '厚' });
+export const decorationNames = Object.freeze({ one: '1', two: '2', three: '3' });
+export const styleNames = Object.freeze({ orb: '奶油圆球' });
+export const defaultRecipe = Object.freeze({ styleId: 'orb', coreMaterial: 'clay', coreColor: 'rose', filling: 'none', shellMaterial: 'wax', shellColor: 'rose', waxThickness: 'medium', decoration: 'one' });
+const groups = Object.freeze({ coreMaterial: coreNames, coreColor: colorNames, filling: fillingNames, shellMaterial: materialNames, shellColor: colorNames, waxThickness: thicknessNames, decoration: decorationNames });
+export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shellMaterial === 'wax' ? recipe.waxThickness : null });
+export const previewFor = (step, recipe) => ({ mode: step === 'core' ? 'core' : step === 'making' ? 'hidden' : 'shell', feelId: 'clay', color: step === 'core' ? recipe.coreColor : recipe.shellColor, styleId: recipe.styleId });
+
+// Renderer handles are private until commit. A revision rejects late work.
+export function createDetailController({ renderer, audio, onChange = () => {}, styleId = 'orb' }) {
+  let disposed = false, revision = 0, pending, current, applied;
   let state = {
-    resource: 'loading', configStatus: 'idle', configError: false,
-    config: { thickness: 'medium', material: 'wax', color: 'rose' },
+    step: 'core', resource: 'loading', configStatus: 'idle', configError: false,
+    recipe: { ...defaultRecipe, styleId: Object.hasOwn(styleNames, styleId) ? styleId : 'orb' },
+    effectiveRecipe: null, preview: null,
     audio: { volume: 0, muted: true, lastNonZero: 50, ready: Boolean(audio.ready) },
   };
+  const refreshDerived = () => { state.effectiveRecipe = effectiveRecipe(state.recipe); state.preview = previewFor(state.step, state.recipe); };
+  refreshDerived();
   const snapshot = () => structuredClone(state);
   const emit = () => { if (!disposed) onChange(snapshot()); };
-  const outputAudio = () => audio.setVolume({ volume: state.audio.volume / 100, muted: state.audio.muted });
-  outputAudio();
+  audio.setVolume({ volume: 0, muted: true });
 
-  async function prepare() {
-    if (disposed) return;
+  async function prepare(force = false) {
+    if (disposed || state.step === 'making') return;
+    const target = { ...state.preview, recipe: structuredClone(state.effectiveRecipe) };
+    if (!force && !pending && !state.configError && applied && applied.color === target.color && applied.styleId === target.styleId && state.resource === 'ready') { emit(); return; }
     const ownRevision = ++revision;
     pending?.abort();
-    const request = new AbortController();
-    pending = request;
-    state = { ...state, resource: current ? 'ready' : 'loading', configStatus: 'updating', configError: false };
-    emit();
+    const request = new AbortController(); pending = request;
+    state = { ...state, resource: current ? 'ready' : 'loading', configStatus: 'updating', configError: false }; emit();
     try {
-      const handle = await renderer.prepare({ ...state.config }, { signal: request.signal });
+      const handle = await renderer.prepare(target, { signal: request.signal });
       if (disposed || ownRevision !== revision) { handle?.dispose(); return; }
+      pending = undefined;
       if (!handle) { state = { ...state, resource: 'unavailable', configStatus: 'idle' }; emit(); return; }
-      handle.commit();
-      current?.dispose();
-      current = handle;
+      handle.commit(); current?.dispose(); current = handle; applied = target;
       state = { ...state, resource: 'ready', configStatus: 'applied' };
     } catch (error) {
       if (disposed || ownRevision !== revision) return;
+      pending = undefined;
       state = { ...state, resource: current ? 'ready' : error.code === 'UNAVAILABLE' ? 'unavailable' : 'error', configStatus: 'error', configError: Boolean(current) };
     }
     emit();
   }
+  function setStep(step) {
+    if (disposed || !steps.includes(step) || state.step === step) return;
+    const wasMaking = state.step === 'making';
+    state = { ...state, step }; refreshDerived();
+    if (step === 'making') { ++revision; pending?.abort(); pending = undefined; renderer.stopInput?.(); emit(); return; }
+    if (wasMaking && step === 'play') renderer.restore?.();
+    void prepare(step === 'play');
+  }
   return {
-    getState: snapshot,
-    load: prepare,
-    retry: prepare,
+    getState: snapshot, load: () => prepare(true), retry: () => prepare(true), setStep,
+    next() { const index = steps.indexOf(state.step); if (index < steps.length - 1) setStep(steps[index + 1]); },
+    previous() { const index = steps.indexOf(state.step); if (index > 0) setStep(steps[index - 1]); },
+    select(group, value) {
+      if (disposed || !Object.hasOwn(groups[group] || {}, value) || state.recipe[group] === value) return Promise.resolve();
+      state = { ...state, recipe: { ...state.recipe, [group]: value } }; refreshDerived();
+      return prepare();
+    },
     rendererUnavailable() {
       if (disposed) return;
-      ++revision; pending?.abort(); current?.dispose(); current = undefined;
-      state = { ...state, resource: 'unavailable', configStatus: 'idle', configError: false };
-      emit();
-    },
-    select(group, value) {
-      if (disposed || !Object.hasOwn(group === 'color' ? colorNames : group === 'thickness' ? thicknessNames : group === 'material' ? materialNames : {}, value)) return Promise.resolve();
-      if (state.config[group] === value) return Promise.resolve();
-      state = { ...state, config: { ...state.config, [group]: value } };
-      return prepare();
+      ++revision; pending?.abort(); current?.dispose(); current = undefined; applied = undefined;
+      state = { ...state, resource: 'unavailable', configStatus: 'idle', configError: false }; emit();
     },
     setVolume(value) {
       if (disposed || !Number.isFinite(Number(value))) return;
       const volume = Math.round(Math.max(0, Math.min(100, Number(value))));
       state.audio = { ...state.audio, volume, muted: volume === 0, lastNonZero: volume || state.audio.lastNonZero };
-      outputAudio(); emit();
+      audio.setVolume({ volume: volume / 100, muted: volume === 0 }); emit();
     },
     toggleMute() { if (!disposed) this.setVolume(state.audio.muted ? state.audio.lastNonZero : 0); },
-    dispose() {
-      if (disposed) return;
-      disposed = true; ++revision; pending?.abort(); current?.dispose(); renderer.dispose?.(); audio.dispose();
-    },
+    dispose() { if (disposed) return; disposed = true; ++revision; pending?.abort(); current?.dispose(); renderer.dispose?.(); audio.dispose(); },
   };
 }

@@ -15,6 +15,8 @@ export function createModelPreview(mount, options) {
       }
       return renderer.prepare(config, context);
     },
+    stopInput() { renderer?.stopInput?.(); },
+    restore() { renderer?.restore?.(); },
     dispose() { disposed = true; renderer?.dispose(); },
   };
 }

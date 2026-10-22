@@ -2,128 +2,224 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const stateModule = import('../detail/state.mjs');
 
-function harness(create, renderer) {
-  const calls = [];
-  let disposed = 0;
-  const configurations = [];
-  const controller = create({ renderer: renderer || { async prepare(config) { configurations.push(config); return { commit() {}, dispose() {} }; } }, audio: { ready: false, setVolume(value) { calls.push(value); }, dispose() { disposed++; } } });
-  return { controller, calls, configurations, get disposed() { return disposed; } };
+function harness(createDetailController, renderer) {
+  const prepared = [], committed = [], released = [], sound = [];
+  let stopped = 0, restored = 0, disposed = 0;
+  const preview = renderer || {
+    async prepare(config) {
+      prepared.push(config);
+      return { commit() { committed.push(config); }, dispose() { released.push(config); } };
+    },
+    stopInput() { stopped++; }, restore() { restored++; }, dispose() {},
+  };
+  const controller = createDetailController({
+    renderer: preview,
+    audio: { ready: false, setVolume(value) { sound.push(value); }, dispose() { disposed++; } },
+  });
+  return { controller, prepared, committed, released, sound,
+    get stopped() { return stopped; }, get restored() { return restored; },
+    get disposed() { return disposed; } };
 }
 
-test('九种完整配置、独立分组及同值不重新初始化', async () => {
-  const { createDetailController } = await stateModule;
-  const { controller: c, configurations } = harness(createDetailController);
+test('五步、完整默认配方、三种内芯均映射 clay，制作步骤结束输入', async () => {
+  const { createDetailController, steps, defaultRecipe } = await stateModule;
+  assert.deepEqual(steps, ['core', 'shell', 'decoration', 'making', 'play']);
+  const h = harness(createDetailController), c = h.controller;
+  assert.deepEqual(c.getState().recipe, defaultRecipe);
+  assert.deepEqual(c.getState().effectiveRecipe, defaultRecipe);
   await c.load();
-  assert.deepEqual(c.getState().config, { thickness: 'medium', material: 'wax', color: 'rose' });
-  for (const thickness of ['thin', 'medium', 'thick']) for (const material of ['wax', 'polish', 'sugar']) {
-    await c.select('thickness', thickness); await c.select('material', material);
-    assert.deepEqual(c.getState().config, { thickness, material, color: 'rose' });
-    assert.deepEqual(configurations.at(-1), { thickness, material, color: 'rose' });
+  for (const material of ['clay', 'marshmallow', 'butter']) {
+    await c.select('coreMaterial', material);
+    assert.equal(c.getState().recipe.coreMaterial, material);
+    assert.equal(c.getState().preview.feelId, 'clay');
   }
-  const count = configurations.length;
-  await c.select('material', 'sugar'); await c.select('thickness', 'thick'); await c.select('unknown', 'wax');
-  assert.equal(configurations.length, count);
+  assert.equal(h.prepared.every(config => config.feelId === 'clay'), true);
+  c.next(); assert.equal(c.getState().step, 'shell');
+  c.next(); assert.equal(c.getState().step, 'decoration');
+  c.next(); assert.equal(c.getState().step, 'making');
+  assert.equal(c.getState().preview.mode, 'hidden');
+  assert.equal(h.stopped, 1);
+  c.next(); assert.equal(c.getState().step, 'play');
+  assert.equal(h.restored, 1);
+  c.previous(); assert.equal(c.getState().step, 'making');
+  c.setStep('invalid'); assert.equal(c.getState().step, 'making');
   c.dispose();
 });
 
-test('快速连续选择只提交最后一次；旧失败不覆盖新状态；离页取消并释放', async () => {
+test('填充物与装饰单选，内外颜色独立，往返和最终体验保留配方', async () => {
   const { createDetailController } = await stateModule;
-  const pending = []; const commits = []; const releases = [];
-  const h = harness(createDetailController, { prepare(config, { signal }) { return new Promise((resolve, reject) => pending.push({ config, signal, reject, resolve: () => resolve({ commit() { commits.push(config); }, dispose() { releases.push(config); } }) })); } });
-  const c = h.controller;
-  const first = c.load(); const second = c.select('material', 'sugar'); const third = c.select('thickness', 'thick');
-  assert.equal(pending[0].signal.aborted, true);
-  pending[2].resolve(); await third;
-  pending[0].resolve(); await first;
-  pending[1].reject(new Error('old failure')); await second;
-  assert.deepEqual(commits, [{ thickness: 'thick', material: 'sugar', color: 'rose' }]);
-  assert.equal(releases.length, 1); assert.equal(c.getState().resource, 'ready');
-  const late = c.select('material', 'wax'); c.dispose(); c.dispose();
-  assert.equal(pending[3].signal.aborted, true); pending[3].resolve(); await late;
-  assert.equal(commits.length, 1); assert.equal(releases.length, 3); assert.equal(h.disposed, 1);
-});
-
-test('真实资源失败、重试、不可用与配置状态独立', async () => {
-  const { createDetailController } = await stateModule;
-  let mode = 'error';
-  const { controller: c } = harness(createDetailController, { async prepare() { if (mode === 'error') throw new Error('failed'); if (mode === 'unavailable') return null; return { commit() {}, dispose() {} }; } });
-  await c.load(); assert.equal(c.getState().resource, 'error');
-  mode = 'unavailable'; await c.select('material', 'polish');
-  assert.equal(c.getState().resource, 'unavailable'); assert.equal(c.getState().config.material, 'polish');
-  mode = 'ready'; await c.retry(); assert.equal(c.getState().resource, 'ready');
-  mode = 'error'; await c.select('thickness', 'thin');
-  assert.equal(c.getState().resource, 'ready'); assert.equal(c.getState().configError, true);
-  c.setVolume(33); assert.equal(c.getState().audio.volume, 33); c.dispose();
-});
-
-test('音量接口：初始静音、首次50%、0静音、最近值恢复、边界及清理', async () => {
-  const { createDetailController } = await stateModule;
-  const h = harness(createDetailController); const c = h.controller;
-  assert.deepEqual(h.calls, [{ volume: 0, muted: true }]); assert.equal(c.getState().audio.ready, false);
-  c.toggleMute(); assert.deepEqual(h.calls.at(-1), { volume: .5, muted: false });
-  c.setVolume(73); c.toggleMute(); assert.equal(c.getState().audio.volume, 0);
-  c.toggleMute(); assert.deepEqual(h.calls.at(-1), { volume: .73, muted: false });
-  c.setVolume(0); assert.equal(c.getState().audio.muted, true);
-  c.setVolume(19); assert.equal(c.getState().audio.muted, false);
-  c.setVolume(150); assert.equal(c.getState().audio.volume, 100);
-  c.setVolume(-3); assert.equal(c.getState().audio.volume, 0);
-  c.setVolume(NaN); assert.equal(c.getState().audio.volume, 0);
-  const count = h.calls.length;
-  await c.load(); await c.select('material', 'sugar'); assert.equal(h.calls.length, count);
-  c.dispose(); c.toggleMute(); c.setVolume(99); assert.equal(h.calls.length, count); assert.equal(h.disposed, 1);
-});
-
-test('渲染上下文中断清除当前资源状态，重试恢复且晚到加载不能覆盖中断', async () => {
-  const { createDetailController } = await stateModule;
-  let resolve;
-  let delayed = false;
-  let released = 0;
-  const handle = () => ({ commit() {}, dispose() { released++; } });
-  const { controller: c } = harness(createDetailController, { prepare() { return delayed ? new Promise(r => resolve = r) : Promise.resolve(handle()); } });
+  const h = harness(createDetailController), c = h.controller;
   await c.load();
-  c.rendererUnavailable();
-  assert.equal(c.getState().resource, 'unavailable'); assert.equal(released, 1);
-  await c.retry(); assert.equal(c.getState().resource, 'ready');
-  delayed = true;
-  const pending = c.select('material', 'sugar');
-  c.rendererUnavailable(); resolve(handle()); await pending;
-  assert.equal(c.getState().resource, 'unavailable');
-  assert.equal(released, 3);
-  c.dispose(); c.rendererUnavailable();
-  assert.equal(released, 3);
+  assert.equal(c.getState().recipe.filling, 'none');
+  assert.equal(c.getState().recipe.decoration, 'one');
+  for (const filling of ['perlite', 'rice', 'burst', 'none']) await c.select('filling', filling);
+  await c.select('filling', 'rice');
+  await c.select('coreColor', 'mint');
+  assert.equal(c.getState().preview.color, 'mint');
+  c.next(); await c.select('shellColor', 'sky');
+  assert.equal(c.getState().preview.color, 'sky');
+  for (const decoration of ['two', 'three', 'one']) await c.select('decoration', decoration);
+  await c.select('decoration', 'three');
+  c.next(); c.next(); c.next();
+  assert.equal(c.getState().step, 'play');
+  assert.equal(c.getState().recipe.filling, 'rice');
+  assert.equal(c.getState().recipe.decoration, 'three');
+  assert.equal(c.getState().preview.color, 'sky');
+  c.setStep('core');
+  assert.equal(c.getState().preview.color, 'mint');
+  assert.equal(c.getState().recipe.shellColor, 'sky');
+  assert.equal(c.getState().recipe.decoration, 'three');
+  await c.select('decoration', 'invalid');
+  assert.equal(c.getState().recipe.decoration, 'three');
+  c.dispose();
 });
 
-
-test('十色共享色表、默认粉色、完整配置及非法颜色不产生渲染', async () => {
+test('共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复', async () => {
   const { createDetailController, colorNames } = await stateModule;
   const { orbColors } = await import('../detail/orb-colors.mjs');
   assert.equal(orbColors.length, 10);
-  assert.equal(new Set(orbColors.map(c => c.hex)).size, 10);
-  const { controller: c, configurations } = harness(createDetailController);
-  await c.load(); assert.equal(c.getState().config.color, 'rose');
+  assert.equal(new Set(orbColors.map(color => color.hex)).size, 10);
+  const h = harness(createDetailController), c = h.controller;
+  await c.load();
   for (const color of orbColors) {
     assert.equal(colorNames[color.id], color.name);
-    await c.select('color', color.id);
-    assert.equal(configurations.at(-1).color, color.id);
+    await c.select('coreColor', color.id);
+    assert.equal(c.getState().recipe.coreColor, color.id);
   }
-  const count = configurations.length;
-  await c.select('color', 'cream'); await c.select('color', 'invalid');
-  assert.equal(configurations.length, count); c.dispose();
+  await c.select('waxThickness', 'thick');
+  await c.select('shellMaterial', 'polish');
+  assert.equal(c.getState().recipe.waxThickness, 'thick');
+  assert.equal(c.getState().effectiveRecipe.waxThickness, null);
+  await c.select('shellMaterial', 'sugar');
+  assert.equal(c.getState().effectiveRecipe.waxThickness, null);
+  await c.select('shellMaterial', 'wax');
+  assert.equal(c.getState().effectiveRecipe.waxThickness, 'thick');
+  const count = h.prepared.length;
+  await c.select('coreColor', 'invalid');
+  await c.select('shellMaterial', 'wax');
+  assert.equal(h.prepared.length, count);
+  c.dispose();
 });
 
-test('加载中快速换色只提交最后颜色，错误后重试保留选择且不触发声音', async () => {
+test('快速换色只提交最后请求；过期失败不覆盖，离页释放', async () => {
   const { createDetailController } = await stateModule;
-  const pending = [], commits = [];
-  const { controller: c, calls } = harness(createDetailController, {
-    prepare(config, { signal }) { return new Promise((resolve, reject) => pending.push({ config, signal, reject, resolve: () => resolve({ commit() { commits.push(config.color); }, dispose() {} }) })); },
+  const pending = [], committed = [], released = [];
+  const h = harness(createDetailController, {
+    prepare(config, { signal }) {
+      return new Promise((resolve, reject) => pending.push({ config, signal, reject,
+        resolve: () => resolve({ commit() { committed.push(config); }, dispose() { released.push(config); } }) }));
+    }, dispose() {},
   });
-  const first = c.load(), second = c.select('color', 'sky'), last = c.select('color', 'mint');
+  const c = h.controller;
+  const first = c.load(), second = c.select('coreColor', 'mint'), third = c.select('coreColor', 'sky');
   assert.equal(pending[0].signal.aborted, true);
-  pending[1].resolve(); await second; pending[0].reject(new Error('old')); await first;
-  pending[2].reject(new Error('load failed')); await last;
-  assert.equal(c.getState().resource, 'error'); assert.equal(c.getState().config.color, 'mint');
-  const retry = c.retry(); assert.equal(pending[3].config.color, 'mint');
-  pending[3].resolve(); await retry;
-  assert.deepEqual(commits, ['mint']);
-  assert.deepEqual(calls, [{ volume: 0, muted: true }]); c.dispose();
+  assert.equal(pending[1].signal.aborted, true);
+  pending[2].resolve(); await third;
+  pending[0].resolve(); await first;
+  pending[1].reject(new Error('old failure')); await second;
+  assert.deepEqual(committed.map(item => item.color), ['sky']);
+  assert.equal(c.getState().resource, 'ready');
+  assert.equal(released.length, 1);
+  const late = c.select('coreColor', 'lemon');
+  c.dispose(); c.dispose();
+  assert.equal(pending[3].signal.aborted, true);
+  pending[3].resolve(); await late;
+  assert.equal(committed.length, 1);
+  assert.equal(released.length, 3);
+  assert.equal(h.disposed, 1);
+});
+
+test('已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色', async () => {
+  const { createDetailController } = await stateModule;
+  const pending = [], commits = [], releases = [];
+  const h = harness(createDetailController, {
+    prepare(config, { signal }) {
+      return new Promise(resolve => pending.push({
+        config, signal,
+        resolve: () => resolve({ commit() { commits.push(config.color); }, dispose() { releases.push(config.color); } }),
+      }));
+    }, dispose() {},
+  });
+  const c = h.controller;
+  const initial = c.load(); pending[0].resolve(); await initial;
+  const mint = c.select('coreColor', 'mint');
+  const rose = c.select('coreColor', 'rose');
+  assert.equal(pending[1].signal.aborted, true);
+  assert.equal(pending[2].config.color, 'rose');
+  pending[2].resolve(); await rose;
+  pending[1].resolve(); await mint;
+  assert.deepEqual(commits, ['rose', 'rose']);
+  assert.equal(c.getState().recipe.coreColor, 'rose');
+  assert.equal(c.getState().resource, 'ready');
+  assert.deepEqual(releases, ['rose', 'mint']);
+  c.dispose();
+});
+
+test('最终体验向渲染器传入当前完整有效配方，非蜡厚度无效', async () => {
+  const { createDetailController } = await stateModule;
+  const h = harness(createDetailController), c = h.controller;
+  await c.load();
+  await c.select('coreMaterial', 'butter');
+  await c.select('coreColor', 'mint');
+  await c.select('filling', 'burst');
+  await c.select('shellMaterial', 'sugar');
+  await c.select('shellColor', 'sky');
+  await c.select('waxThickness', 'thick');
+  await c.select('decoration', 'three');
+  c.setStep('making');
+  c.setStep('play');
+  await new Promise(resolve => setImmediate(resolve));
+  const final = h.prepared.at(-1);
+  assert.equal(final.mode, 'shell');
+  assert.equal(final.feelId, 'clay');
+  assert.equal(final.color, 'sky');
+  assert.deepEqual(final.recipe, {
+    styleId: 'orb', coreMaterial: 'butter', coreColor: 'mint', filling: 'burst',
+    shellMaterial: 'sugar', shellColor: 'sky', waxThickness: null, decoration: 'three',
+  });
+  assert.deepEqual(final.recipe, c.getState().effectiveRecipe);
+  assert.equal(c.getState().recipe.waxThickness, 'thick');
+  c.dispose();
+});
+
+test('模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源', async () => {
+  const { createDetailController } = await stateModule;
+  let mode = 'error', resolveLate, releases = 0;
+  const handle = () => ({ commit() {}, dispose() { releases++; } });
+  const h = harness(createDetailController, { prepare() {
+    if (mode === 'error') throw new Error('failed');
+    if (mode === 'unavailable') return null;
+    if (mode === 'late') return new Promise(resolve => resolveLate = resolve);
+    return handle();
+  }, dispose() {} });
+  const c = h.controller;
+  await c.load(); assert.equal(c.getState().resource, 'error');
+  mode = 'unavailable'; await c.select('coreColor', 'mint');
+  assert.equal(c.getState().resource, 'unavailable');
+  c.next(); c.next(); c.next(); c.next();
+  assert.equal(c.getState().step, 'play');
+  assert.equal(c.getState().recipe.coreColor, 'mint');
+  mode = 'ready'; await c.retry(); assert.equal(c.getState().resource, 'ready');
+  mode = 'late'; const pending = c.select('shellColor', 'sky');
+  c.rendererUnavailable(); resolveLate(handle()); await pending;
+  assert.equal(c.getState().resource, 'unavailable');
+  assert.equal(releases, 2);
+  c.dispose();
+});
+
+test('音量初始静音、上次音量恢复、边界与清理', async () => {
+  const { createDetailController } = await stateModule;
+  const h = harness(createDetailController), c = h.controller;
+  assert.deepEqual(h.sound, [{ volume: 0, muted: true }]);
+  c.toggleMute(); assert.deepEqual(h.sound.at(-1), { volume: .5, muted: false });
+  c.setVolume(73); c.toggleMute(); c.toggleMute();
+  assert.deepEqual(h.sound.at(-1), { volume: .73, muted: false });
+  c.setVolume(150); assert.equal(c.getState().audio.volume, 100);
+  c.setVolume(-3); assert.equal(c.getState().audio.volume, 0);
+  c.setVolume(NaN); assert.equal(c.getState().audio.volume, 0);
+  const count = h.sound.length;
+  await c.load(); await c.select('coreColor', 'mint');
+  assert.equal(h.sound.length, count);
+  c.dispose(); c.toggleMute();
+  assert.equal(h.sound.length, count);
 });
