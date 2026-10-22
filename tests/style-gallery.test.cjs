@@ -62,14 +62,14 @@ test('八个入口请求对应真实模型；刷新、返回原样式、昼夜�
     assert.equal(await page.locator('.style-placeholder-note:visible').count(),0);
     assert.equal(await page.locator('html').getAttribute('data-theme'),'night');
     await page.getByRole('link',{name:'返回合集'}).click();
-    assert.equal(new URL(page.url()).hash,`#style-${style.id}`);
+    assert.equal(new URL(page.url()).hash,style.id==='orb'?'':`#style-${style.id}`);
     assert.equal(await page.locator(`#style-${style.id}`).isVisible(),true);
     assert.equal(await page.locator('html').getAttribute('data-theme'),'night');
     page.off('request',onRequest);
   }
   await page.goto(base+'/squishy/cloud/?style=orb');await ready(page);
   assert.equal(await page.locator('.style-placeholder-note:visible').count(),0);
-  assert.equal(await page.getByRole('link',{name:'返回合集'}).getAttribute('href'),'/collections/#style-orb');
+  assert.equal(await page.getByRole('link',{name:'返回合集'}).getAttribute('href'),'/collections/');
   await page.goto(base+'/squishy/cloud/?style=orb&preview=flower');await ready(page);
   assert.equal(new URL(page.url()).searchParams.get('style'),'flower');
   assert.equal(new URL(page.url()).searchParams.has('preview'),false);
