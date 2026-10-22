@@ -49,6 +49,8 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 自动回弹只在没有显式恢复时推进；`beginRestore/applyRestore` 交给现有换色时钟独占网格。`interruptRestore` 或新输入从当下形态接管，随后旧痕、新痕都继续自动恢复。取消结束施力但不瞬间清空形状。后台结束输入并暂停模拟，回到前台从当前网格继续；不会将后台墙钟时间作为一帧压入或回弹。减少动态效果保留缓慢按压，将释放恢复系数提高到5/s。
 
+外观与行为独立：`src/orb-appearance.mjs` 的 `full-matte` 将模型展示缩放为 `[1, 1.06, 1.10]`，使高度和前后厚度更饱满；十种颜色的线性着色统一乘 `.94`，保持色相、色卡标识及哑光参数。制作页仅给 `butter` 组合 `{ feelId: 'slow-rebound', appearanceId: 'full-matte' }`；`clay`、棉花糖使用原样的 `matte`（缩放 `[1,1,1]`、着色增益1）。直接调用 `getOrbFeel` 不会隐式修改模型或颜色。场景外观变化同样重建独立实例，颜色变化不重建。
+
 参数、几何量测、实际录屏、测试与回滚见 [Issue #25 交付记录](issue-25-slow-rebound.md)。这是适用于现有归一化圆球的受控视觉近似，不代表经过物性校准的真实记忆海绵。
 
 ## 验证与回滚

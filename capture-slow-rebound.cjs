@@ -11,6 +11,7 @@ const folder = 'artifacts/issue-25', base = 'http://127.0.0.1:4206';
   fs.mkdirSync(folder, { recursive: true });
   const report = { baseline: '4f4ebfe2f4afbfa29af38fd82662637ebc3de915', host: `${os.platform()} ${os.release()} ${os.arch()}`, browser: null, phone: 'CDP native touch emulation, 390x844; no physical device tested', modelBytes: fs.statSync('assets/models/squishy-orb.glb').size, bundleBytes: fs.statSync('assets/orb-preview.js').size, parameters: (await import('./src/orb-slow-rebound.mjs')).slowReboundParameters, geometry: [], recordings: [], errors: [] };
   report.integrationBaseline = '959a719';
+  report.appearance = (await import('./src/orb-appearance.mjs')).getOrbAppearance('full-matte');
   const { getOrbFeel } = await import('./src/orb-feels.mjs');
   for (const id of ['clay', 'slow-rebound']) {
     const rest = modelAttribute('POSITION'), positions = rest.slice(), d = getOrbFeel(id).createDeformation(positions, modelAttribute('NORMAL'));
@@ -70,7 +71,7 @@ const folder = 'artifacts/issue-25', base = 'http://127.0.0.1:4206';
         console.log(`${name}: ${text}`);
         await page.locator('#capture-label').evaluate((el, text) => el.textContent = text + ' · 正常速度', `${clay ? '黏土' : '慢回弹'} · ${text}`);
       };
-      const measure = async stage => observations.push({ stage, time: await page.evaluate(() => performance.now()), ...await meshStats(page) });
+      const measure = async stage => observations.push({ stage, time: await page.evaluate(() => performance.now()), ...await meshStats(page), modelViewMatrix: await page.evaluate(() => window.orbMeshProbe.modelViewMatrix) });
       const recover = async () => {
         await label('松开 → 等待完整恢复'); const started = Date.now();
         await measure('release');

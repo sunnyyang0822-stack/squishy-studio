@@ -13,8 +13,8 @@ before(async () => {
   browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (existsSync(edge) ? edge : undefined) });
 });
 after(async () => { await browser?.close(); server?.kill(); });
-async function open(options = {}) {
-  const page = await browser.newPage(options); await installOrbProbe(page);
+async function open(options = {}, probeOptions = {}) {
+  const page = await browser.newPage(options); await installOrbProbe(page, probeOptions);
   await page.goto(base + '/squishy/cloud/');
   await page.waitForSelector('.toy-stage[data-state=ready] canvas');
   await page.locator('[name=coreMaterial][value=butter]').check();
@@ -131,5 +131,45 @@ test('连续切换质感最后选择生效；棉花糖继续clay且所有旧上�
   await page.waitForSelector('.toy-mount[data-feel-id=clay][data-render-count] canvas');
   assert.equal(await page.locator('[name=coreMaterial][value=marshmallow]').isChecked(), true);
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
+  await page.close();
+});
+
+test('厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，黏土与棉花糖保持原外观', async () => {
+  const page = await open({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' }, { pixels: true });
+  const { orbColors } = await import('../detail/orb-colors.mjs');
+  async function idle() {
+    await page.evaluate(() => { window.appearanceIdle = { draws: -1, at: performance.now() }; });
+    await page.waitForFunction(() => {
+      const sample = window.appearanceIdle, draws = window.orbMeshProbe.orbDraws;
+      if (sample.draws !== draws) { sample.draws = draws; sample.at = performance.now(); }
+      return performance.now() - sample.at >= 220;
+    });
+  }
+  const sample = async () => {
+    await idle(); return page.evaluate(() => window.orbMeshProbe.pixelFrames.at(-1));
+  };
+  const scaled = await sample();
+  for (const [k, expected] of [1, 1.06, 1.10].entries()) assert.ok(Math.abs(Math.hypot(...scaled.matrix.slice(k * 4, k * 4 + 3)) - expected) < 1e-5);
+  for (const theme of ['day', 'night']) {
+    await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
+    const standard = new Map();
+    await page.locator('[name=coreMaterial][value=clay]').check();
+    await page.waitForSelector('.toy-mount[data-appearance-id=matte][data-render-count] canvas');
+    for (const color of orbColors) {
+      await page.locator(`[name=color][value=${color.id}]`).check(); standard.set(color.id, await sample());
+    }
+    await page.locator('[name=coreMaterial][value=butter]').check();
+    await page.waitForSelector('.toy-mount[data-appearance-id="full-matte"][data-render-count] canvas');
+    for (const color of orbColors) {
+      await page.locator(`[name=color][value=${color.id}]`).check(); const full = await sample(), base = standard.get(color.id);
+      assert.ok(Math.abs(full.pigmentTotal / base.pigmentTotal - .94) < .000001, `${theme}/${color.id} pigment gain`);
+      for (let k = 0; k < 3; k++) assert.ok(Math.abs(full.hue[k] - base.hue[k]) < .000001, 'Deepening preserves hue');
+    }
+    await page.locator('[name=coreMaterial][value=marshmallow]').check();
+    await page.waitForSelector('.toy-mount[data-appearance-id=matte][data-render-count] canvas');
+    const marshmallow = await sample(), base = standard.get('cream');
+    assert.ok(Math.abs(marshmallow.pigmentTotal - base.pigmentTotal) < .001);
+    for (let k = 0; k < 3; k++) assert.ok(Math.abs(Math.hypot(...marshmallow.matrix.slice(k * 4, k * 4 + 3)) - 1) < 1e-5);
+  }
   await page.close();
 });

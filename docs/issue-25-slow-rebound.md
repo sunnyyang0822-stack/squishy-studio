@@ -8,6 +8,8 @@
 
 `src/orb-slow-rebound.mjs` 提供独立工厂，`src/orb-feels.mjs` 登记 `slow-rebound`。`clay` 的默认映射、工厂源码、参数和回归约束保持。现有模型仍为124,324字节的 `squishy-orb.glb`，未新增依赖、模型或纹理。手感 ID 不包含光学参数；场景继续使用 roughness .82、metalness 0、既有色卡与昼夜灯光。
 
+按用户追加要求，慢回弹搭配独立外观 `full-matte`：模型展示缩放 `[1,1.06,1.10]`，高度增加6%、前后厚度增加10%；原始几何和形变坐标不变，命中检测与法线沿用正确的模型变换，接触阴影及姿态恢复使用对应静止高度。十色线性着色增益统一 `.94`，实际sRGB观感小幅加深，色相及色卡标识保持。配置集中于 `src/orb-appearance.mjs`，与手感工厂分离。黏土和棉花糖仍是 `matte`，缩放 `[1,1,1]`、增益1，未顺带改色。
+
 每个顶点独立记录向内位移和当地接触时间。接触核为局部半径内的 `(1-q²)³`，输入路径按归一化静止椭球插值，按路径长度加权分配当前时间步的接触量。压入响应随当地驻留逐渐屈服，不将整次按住时长传播到新位置。反复经过受有限目标深度约束，不叠加永久基底；不会在松开时补造终点凹坑。恢复中的再次按压保留当前位移，旧、新区域最终都归零。
 
 全部可调参数集中于 `slowReboundParameters`：
@@ -71,9 +73,11 @@
 
 环境与各阶段 GPU 误差、正常录屏等待时长见 [validation.json](../artifacts/issue-25/validation.json)；命令及退出码见 [capture.txt](../artifacts/issue-25/capture.txt) 与 [完整测试日志](../artifacts/issue-25/tests.txt)。桌面1440×900、手机390×844，Edge/Chromium155，Windows10.0.26200 x64。**手机为浏览器模拟，未做真机验证**，不声称测得帧率或真实材料物性。
 
-`npm ci` 退出0、审计0漏洞；`node capture-slow-rebound.cjs` 退出0，共8段原始操作视频、1段正常速度并排合成、4张昼夜截图，0 pageerror。构建包644,320字节，较整合基线 `959a719` 的640,700字节增加3,620字节。视频抽帧也已目视核对，见 [每2秒抽取的帧](../artifacts/issue-25/normal-speed-frames.png)。
+`npm ci` 退出0、审计0漏洞；`node capture-slow-rebound.cjs` 退出0，共8段原始操作视频、1段正常速度并排合成、4张昼夜截图，0 pageerror。构建包644,771字节，较整合基线 `959a719` 的640,700字节增加4,071字节。视频抽帧也已目视核对，见 [每2秒抽取的帧](../artifacts/issue-25/normal-speed-frames.png)。
 
-完整测试首次 [99/100日志](../artifacts/issue-25/tests-first-run.txt) 暴露旧响应式测试的时序问题：`setViewportSize` 后立即 `isVisible()` 先于媒体查询监听器更新。只补上分类栏可见的条件等待，保留原布局、配方和画布断言；未修改产品布局或放宽形变容差。`npm test` 完整重跑最终 **100/100通过，0失败/跳过，退出码0**，包含原有82项和新增13项独立几何测试、5项新质感浏览器测试。
+完整测试首次 [99/100日志](../artifacts/issue-25/tests-first-run.txt) 暴露旧响应式测试的时序问题：`setViewportSize` 后立即 `isVisible()` 先于媒体查询监听器更新。只补上分类栏可见的条件等待，保留原布局、配方和画布断言；未修改产品布局或放宽形变容差。补充厚实外观与十色GPU测试后，`npm test` 最终 **102/102通过，0失败/跳过，退出码0**，包含原有82项和新增14项几何/独立配置测试、6项新质感浏览器测试。GPU测试确认 `[1,1.06,1.10]` 实际矩阵缩放、昼夜全部十色增益 `.94`、色相误差小于 `.000001`，并确认黏土与棉花糖恢复原始外观。
+
+外观修订后一次构建遇到 Windows 输出文件短暂被映射占用，见 [真实失败日志](../artifacts/issue-25/tests-build-lock.txt)；原命令重试即成功，未修改构建脚本或跳过构建。Impeccable 机械检查 `detect --json src/orb-preview.js src/orb-appearance.mjs detail/adapters.js detail/state.mjs` 返回 `[]`，最终桌面/手机昼夜截图与录屏抽帧均已目视核对。
 
 复现命令：`npm ci`、`npm test`；设置指向完整FFmpeg可执行文件的 `FFMPEG_PATH` 后运行 `node capture-slow-rebound.cjs`，即可额外生成并排对比。FFmpeg仅用于离线证据处理，没有加入项目运行依赖；未提供该环境变量时仍生成所有独立录屏和JSON报告。全套测试与最终退出码按实际执行写入以上日志。
 

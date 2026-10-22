@@ -1,13 +1,14 @@
 // Lazy import keeps settings and retry usable if the engine bundle fails.
 export function createModelPreview(mount, options) {
   let renderer;
-  let rendererFeelId;
+  let rendererFeelId, rendererAppearanceId;
   let disposed = false;
   let attempt = 0;
   return {
     async prepare(config, context) {
       const feelId = config.feelId || options?.feelId || 'clay';
-      if (renderer && rendererFeelId !== feelId) {
+      const appearanceId = config.appearanceId || options?.appearanceId || 'matte';
+      if (renderer && (rendererFeelId !== feelId || rendererAppearanceId !== appearanceId)) {
         renderer.dispose(); renderer = undefined;
       }
       if (!renderer) {
@@ -16,11 +17,11 @@ export function createModelPreview(mount, options) {
         attempt++;
         const module = await import(url);
         if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-        renderer ||= module.createOrbPreview(mount, { ...options, feelId });
-        rendererFeelId = feelId;
+        renderer ||= module.createOrbPreview(mount, { ...options, feelId, appearanceId });
+        rendererFeelId = feelId; rendererAppearanceId = appearanceId;
       }
       const handle = await renderer.prepare(config, context);
-      return { ...handle, commit() { handle.commit(); mount.dataset.feelId = feelId; } };
+      return { ...handle, commit() { handle.commit(); mount.dataset.feelId = feelId; mount.dataset.appearanceId = appearanceId; } };
     },
     stopInput() { renderer?.stopInput?.(); },
     restore() { renderer?.restore?.(); },

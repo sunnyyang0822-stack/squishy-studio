@@ -53,7 +53,7 @@ async function installOrbProbe(page, { pixels = false } = {}) {
             // Read the active color attribute from the actual GPU buffer. A
             // normalized RGB sum separates hue change from scalar cavity AO.
             const colorIndex = gl.getAttribLocation(gl.getParameter(gl.CURRENT_PROGRAM), 'color');
-            let hue = null;
+            let hue = null, pigmentTotal = null;
             if (colorIndex >= 0) {
               const previous = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
               const buffer = gl.getVertexAttrib(colorIndex, gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING);
@@ -63,10 +63,11 @@ async function installOrbProbe(page, { pixels = false } = {}) {
                 gl.bindBuffer(gl.ARRAY_BUFFER, previous);
                 for (let i = 0; i < data.length; i++) sum[i % 3] += data[i];
                 const total = sum.reduce((a, b) => a + b, 0);
+                pigmentTotal = total;
                 hue = sum.map(value => value / total);
               }
             }
-            probe.pixelFrames.push({ time: performance.now(), top: sample(.25), middle: sample(.5), bottom: sample(.75), maxDepth, matrix: probe.modelViewMatrix?.slice(), hue });
+            probe.pixelFrames.push({ time: performance.now(), top: sample(.25), middle: sample(.5), bottom: sample(.75), maxDepth, matrix: probe.modelViewMatrix?.slice(), hue, pigmentTotal });
             if (probe.pixelFrames.length > 1000) probe.pixelFrames.shift();
           }
         }

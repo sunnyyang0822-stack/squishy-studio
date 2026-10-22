@@ -32,6 +32,7 @@ test('五步、默认配方；仅慢回弹映射独立质感，制作步骤结�
     await c.select('coreMaterial', material);
     assert.equal(c.getState().recipe.coreMaterial, material);
     assert.equal(c.getState().preview.feelId, material === 'butter' ? 'slow-rebound' : 'clay');
+    assert.equal(c.getState().preview.appearanceId, material === 'butter' ? 'full-matte' : 'matte');
   }
   assert.deepEqual(h.prepared.map(config => config.feelId), ['clay', 'slow-rebound']);
   c.next(); assert.equal(c.getState().step, 'shell');
@@ -172,6 +173,7 @@ test('最终体验向渲染器传入当前完整有效配方，非蜡厚度无�
   const final = h.prepared.at(-1);
   assert.equal(final.mode, 'shell');
   assert.equal(final.feelId, 'slow-rebound');
+  assert.equal(final.appearanceId, 'full-matte');
   assert.equal(final.color, 'sky');
   assert.deepEqual(final.recipe, {
     styleId: 'orb', coreMaterial: 'butter', coreColor: 'mint', filling: 'burst',

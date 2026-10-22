@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { getOrbFeel } from './orb-feels.mjs';
+import { getOrbAppearance } from './orb-appearance.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
@@ -20,8 +21,10 @@ function releaseObject(root) {
 
 // One renderer per page. Frames run only while deformation is changing or the
 // viewport needs redrawing. Audio and shell fracture are outside this adapter.
-export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'clay' } = {}) {
+export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'clay', appearanceId = 'matte' } = {}) {
   const feel = getOrbFeel(feelId);
+  const appearance = getOrbAppearance(appearanceId);
+  const restingFloor = -.908 * appearance.scale[1];
   const interactionLabel = feel.id === 'slow-rebound' ? '缓慢按下，松开后缓慢完整回弹' : '可按压留痕';
   let view;
   let disposed = false;
@@ -55,6 +58,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       releaseObject(root);
       throw Object.assign(error, { code: 'UNAVAILABLE' });
     }
+    root.getObjectByName('Orb_Surface').scale.multiply(new THREE.Vector3(...appearance.scale));
     const scene = new THREE.Scene();
     const pivot = new THREE.Group();
     const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
@@ -92,7 +96,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     shadowTexture.colorSpace = THREE.SRGBColorSpace;
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(2.9, 2.9), new THREE.MeshBasicMaterial({ map: shadowTexture, transparent: true, depthWrite: false, toneMapped: false }));
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -.908;
+    floor.position.y = restingFloor;
     scene.add(floor);
 
     const camera = new THREE.OrthographicCamera(-2, 2, 1.6, -1.6, .1, 30);
@@ -199,8 +203,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
         const progress = colorStep.progress, blend = 1 - (1 - progress) ** 3;
         deformation.applyRestore(progress);
         pivot.quaternion.slerpQuaternions(restorePose.orientation, initialOrientation, blend);
-        floor.position.y = restorePose.floor + (-.908 - restorePose.floor) * blend;
-        if (progress === 1) { pivot.quaternion.copy(initialOrientation); floor.position.y = -.908; }
+        floor.position.y = restorePose.floor + (restingFloor - restorePose.floor) * blend;
+        if (progress === 1) { pivot.quaternion.copy(initialOrientation); floor.position.y = restingFloor; }
         updateBounds();
         if (progress === 1) restorePose = undefined;
       }
@@ -220,7 +224,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
           const luminance = .2126 * coatingColors[i] + .7152 * coatingColors[i + 1] + .0722 * coatingColors[i + 2];
           for (let k = 0; k < 3; k++) {
             const pigment = daylight ? Math.max(0, Math.min(1, (luminance + (coatingColors[i + k] - luminance) * 1.3) * 1.06)) : coatingColors[i + k];
-            colors[i + k] = pigment * visibility;
+            colors[i + k] = pigment * visibility * appearance.pigmentGain;
           }
         }
         colorLightingDirty = false;

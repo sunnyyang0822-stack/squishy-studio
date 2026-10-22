@@ -94,6 +94,14 @@ test('慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与�
   fullyRecover(slow);
 });
 
+test('厚实哑光外观独立于手感：仅full-matte增厚和加深，默认外观完全保留', async () => {
+  const { getOrbAppearance, orbAppearances } = await import('../src/orb-appearance.mjs');
+  assert.deepEqual(getOrbAppearance(), { id: 'matte', scale: [1, 1, 1], pigmentGain: 1 });
+  assert.deepEqual(getOrbAppearance('full-matte'), { id: 'full-matte', scale: [1, 1.06, 1.1], pigmentGain: .94 });
+  assert.ok(Object.isFrozen(orbAppearances) && Object.isFrozen(orbAppearances['full-matte'].scale));
+  for (const id of ['slow-rebound', 'missing', 'constructor']) assert.throws(() => getOrbAppearance(id), RangeError);
+});
+
 for (const reduced of [false, true]) test(`松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=${reduced}`, async t => {
   const f = await fixture(reduced); f.d.begin(front(-.4)); advance(f.d, 4);
   const pressed = f.positions.slice(), initial = maximum(f); f.d.release();
