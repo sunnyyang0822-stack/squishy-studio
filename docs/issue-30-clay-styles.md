@@ -41,10 +41,20 @@
 
 ## 验证与交付记录
 
-最终逐组合表、录屏、昼夜桌面/触摸手机截图、各朝向灯光像素、性能观察和限制见 [独立验证](issue-30-validation.md)。全量命令与真实结果将在收尾记录中补齐；未经实际运行的结果不计通过。
+最终逐组合表、录屏、昼夜桌面/触摸手机截图、各朝向灯光像素、性能观察和限制见 [独立验证](issue-30-validation.md)。七款 × 黏土常规流程全部通过，猫爪连接处安全限深另列，不声称原始21种组合完成。
+
+- `npm run build`：退出0。
+- `node scripts/test-port-isolated.cjs --check`：22个原测试文件与隔离helper语法、端口映射检查通过。
+- `node scripts/test-port-isolated.cjs`：最终 **152/152通过，0失败、0跳过**，429.245秒，见 [最终日志](../artifacts/issue-30/final-tests.txt)。本地仅隔离服务端口，全部原断言保留；CI运行普通 `npm test`，测试文件串行以避免GPU争用。
+- 首轮141/152暴露旧大厅单入口定位、返回URL兼容及新增测试多点一次隐藏返回按钮的问题，修正后重新执行整套。保留 [首轮日志](../artifacts/issue-30/full-tests.txt)，未删除或弱化断言。
+- `node scripts/check-orb-baseline.cjs`：原圆球GLB字节未变，普通/减少动态两种模式共3054次操作的位置、状态、返回值与固定基线逐项严格相同。
+- `PREVIEW_URL=http://127.0.0.1:4199 node capture-styles.cjs`：七款最终捕获退出0，七份实际操作录屏、桌面/模拟手机昼夜与多角度截图及GLB/运行包SHA见 [验证数据](../artifacts/issue-30/browser/validation.json)。
+- `PREVIEW_URL=http://127.0.0.1:4199 node scripts/observe-styles-performance.cjs`：独立触摸观察退出0。无WebGL探针/录屏，以真实render-count变化计时；完整间隔保留在 [性能数据](../artifacts/issue-30/browser/performance.json)，同步测试负载与浏览器调度会影响结果，不视作手机FPS。
+
+交付分支为 `codex/issue-30-clay-styles`；[PR #34](https://github.com/sunnyyang0822-stack/squishy-studio/pull/34) 指向main并关联Issue #30，保持Issue开放。远端检查与最终合并状态以该PR记录为准。
 
 手机范围为开发机 Edge/Chromium 触屏模拟，未使用真机。CPU 形变和原生触摸模拟证明功能路径，不能代表低端手机 GPU、温升或硬件触感。几何厚度安全界限让猫爪局部薄垫比大体积区域压得浅，这是几何保护，不是重新调节黏土手感。
 
 ## 回滚
 
-按 PR 的交付提交执行正常 `git revert` 并重新构建。源 `.blend` 与对应 GLB 成对回滚，样式登记、详情配方与场景适配一起回滚；无数据迁移。不要强推或改写共享历史。若大厅随后依赖本登记，应先协调它的链接降级，避免指向已移除资产。原球 GLB 和已确认黏土阻力参数不需要资产迁移。
+按 PR 的交付提交执行正常 `git revert` 并重新构建。源 `.blend` 与对应 GLB 成对回滚，样式登记、详情配方与场景适配一起回滚；无数据迁移。不要强推或改写共享历史。本PR中的大厅接入与模型一起撤销，会恢复PR #31的圆球代体验链接；若有后续依赖，需一并协调。原球 GLB 和已确认黏土阻力参数不需要资产迁移。
