@@ -2,26 +2,47 @@
 export function createModelPreview(mount, options) {
   let renderer;
   let disposed = false;
-  let rendererFeel;
+  let rendererKey;
   let attempt = 0;
+  let revision = 0;
+  const preparing = new Set();
   return {
     async prepare(config, context) {
       const nextFeel = config.feelId || options?.feelId || 'clay';
-      if (renderer && rendererFeel !== nextFeel) { renderer.dispose(); renderer = undefined; }
-      if (!renderer) {
+      const styleId = config.styleId || options?.styleId || 'orb';
+      const key = `${styleId}:${nextFeel}`;
+      const ownRevision = ++revision;
+      let candidate = key === rendererKey ? renderer : undefined;
+      let owned = false, committed = false;
+      if (!candidate) {
         // Failed module fetches are cached by browsers; a retry needs a fresh URL.
         const url = '/assets/orb-preview.js' + (attempt ? `?retry=${attempt}` : '');
         attempt++;
         const module = await import(url);
         if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-        renderer ||= module.createOrbPreview(mount, { ...options, feelId: nextFeel });
-        rendererFeel = nextFeel;
+        if (ownRevision !== revision) throw new DOMException('Aborted', 'AbortError');
+        candidate = module.createOrbPreview(mount, { ...options, feelId: nextFeel, styleId });
+        owned = true; preparing.add(candidate);
       }
-      return renderer.prepare(config, context);
+      try {
+        const handle = await candidate.prepare(config, context);
+        if (disposed || context.signal.aborted || ownRevision !== revision) throw new DOMException('Aborted', 'AbortError');
+        return {
+          commit() {
+            if (disposed || context.signal.aborted || ownRevision !== revision) return;
+            if (candidate !== renderer) { renderer?.dispose(); renderer = candidate; rendererKey = key; }
+            preparing.delete(candidate); committed = true; handle.commit();
+          },
+          dispose() { handle.dispose(); if (owned && !committed) { preparing.delete(candidate); candidate.dispose(); } },
+        };
+      } catch (error) {
+        if (owned) { preparing.delete(candidate); candidate.dispose(); }
+        throw error;
+      }
     },
     stopInput() { renderer?.stopInput?.(); },
     restore() { renderer?.restore?.(); },
-    dispose() { disposed = true; renderer?.dispose(); },
+    dispose() { disposed = true; revision++; renderer?.dispose(); for (const candidate of preparing) candidate.dispose(); preparing.clear(); },
   };
 }
 

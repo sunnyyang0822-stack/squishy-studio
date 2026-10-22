@@ -1,5 +1,5 @@
 // Pointer ownership is independent of rendering and the deformation kernel.
-export function bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin = () => {} }) {
+export function bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin = () => {}, keyboardPoint }) {
   const events = new AbortController();
   let owner = null, keyboardKey = null, start, last;
   const on = (target, type, listener) => target.addEventListener(type, listener, { signal: events.signal });
@@ -40,7 +40,7 @@ export function bindOrbInput({ surface, hitTest, deformation, invalidate, onBegi
     if (event.key === 'Escape') { finish({ immediate: true }); return; }
     if (owner !== null || event.repeat) return;
     const box = surface.getBoundingClientRect();
-    const point = hitTest(box.x + box.width / 2, box.y + box.height / 2, true);
+    const point = keyboardPoint ? keyboardPoint(box) : hitTest(box.x + box.width / 2, box.y + box.height / 2, true);
     if (!point) return;
     onBegin(); owner = 'keyboard'; keyboardKey = event.key; setPressed(true); deformation.begin(point); invalidate();
   });
