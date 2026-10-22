@@ -92,11 +92,24 @@ def make(style):
         for x,z,rx,rz in [(-.76,.36,.36,.47),(-.29,.70,.37,.50),(.29,.70,.37,.50),(.76,.36,.36,.47)]:
             parts.append(ellipsoid((x,0,z),(rx,.39,rz)))
             parts.append(ellipsoid((x,-.34,z+.015),(rx*.68,.18,rz*.62)))
-        # Upside-down heart: rounded tip points up, two lobes face down.
-        def inverted_heart(t):
-            return .56*math.sin(t)**3,-.45*(13*math.cos(t)-5*math.cos(2*t)-2*math.cos(3*t)-math.cos(4*t))/17
-        parts.append(inflated_outline('Raised_Inverted_Heart_Pad',inverted_heart,.255,(0,-.47,-.40)))
-        return fuse(parts, .043, 7)
+        obj=fuse(parts,.043,9)
+        # The raised inverted-heart palm is a C-infinity geometric heightfield
+        # in the original continuous front surface. Unlike a closed heart cap
+        # union, it has NO undercut, knife tip, narrow seam or deep notch.
+        # Two lower round lobes and a shorter rounded upper lobe give the
+        # requested tip-up/twin-lobes-down outline with broad soft transitions.
+        for vertex in obj.data.vertices:
+            p=obj.matrix_world @ vertex.co
+            if p.y>=0: continue
+            keep=1.0
+            for cx,cz,rx,rz in [(-.22,-.53,.32,.27),(.22,-.53,.32,.27),(0,-.27,.22,.30)]:
+                q=((p.x-cx)/rx)**2+((p.z-cz)/rz)**2
+                h=math.exp(-1.35*q)
+                keep*=1-h
+            w=min(1,max(0,-p.y/.24)); w=w*w*(3-2*w)
+            vertex.co.y -= .235*(1-keep)*w
+        modifier(obj,'SMOOTH',factor=.35,iterations=2)
+        return obj
     if style == 'flower':
         # Product review supersedes the original six-petal ring: five petal
         # balls plus ONE raised center ball, six total, one fused surface.

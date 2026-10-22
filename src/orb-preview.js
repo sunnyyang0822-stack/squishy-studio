@@ -65,7 +65,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     let deformation;
     try {
       deformation = isSurface
-        ? createSurfaceClay(geometry.attributes.position.array, geometry.attributes.normal.array, { indices: geometry.index.array, reducedMotion: motionPreference.matches })
+        ? createSurfaceClay(geometry.attributes.position.array, geometry.attributes.normal.array, { indices: geometry.index.array, geometryOptions: style.geometryOptions, reducedMotion: motionPreference.matches })
         : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
     } catch (error) { releaseObject(root); throw error; }
     let renderer;

@@ -32,7 +32,7 @@ for (const id of ids) test(`${id}：真实导出几何的局部形变保持黏�
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   const { createSurfaceClay } = await import('../src/surface-clay.mjs');
   const mesh = readMesh(`.${getSquishyStyle(id).modelUrl}`), rest = Float32Array.from(mesh.positions), positions = rest.slice(), normals = Float32Array.from(mesh.normals);
-  const d = createSurfaceClay(positions, normals, { indices: mesh.indices });
+  const d = createSurfaceClay(positions, normals, { indices: mesh.indices, geometryOptions: getSquishyStyle(id).geometryOptions });
   // Choose an actual frontmost exported vertex, avoiding guessed sphere hits.
   let target = 0; for (let i = 0; i < rest.length; i += 3) if (rest[i + 2] > rest[target + 2]) target = i;
   const hit = Array.from(rest.slice(target, target + 3)); d.begin(hit); advance(d);
@@ -56,7 +56,7 @@ for (const id of ids) test(`${id}：中心、侧缘、连接区域反复深压�
   const { createSurfaceGeometry } = await import('../src/surface-clay.mjs');
   const { getOrbFeel } = await import('../src/orb-feels.mjs');
   const mesh = readMesh(`.${getSquishyStyle(id).modelUrl}`), rest = Float32Array.from(mesh.positions), positions = rest.slice();
-  const geometry = createSurfaceGeometry(positions, Float32Array.from(mesh.normals), mesh.indices);
+  const geometry = createSurfaceGeometry(positions, Float32Array.from(mesh.normals), mesh.indices, getSquishyStyle(id).geometryOptions);
   if (geometry.parameterization === 'star-convex') {
     const t = topology(mesh); assert.equal(t.components, 1); assert.equal(t.boundaryOrNonmanifold, 0); assert.equal(t.euler, 2);
   }

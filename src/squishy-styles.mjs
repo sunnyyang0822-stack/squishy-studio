@@ -6,6 +6,7 @@ export const squishyStyles = Object.freeze(Object.fromEntries(Object.entries(nam
   previewUrl: id === 'orb' ? '/assets/samples/cloud-preview.svg' : `/assets-source/squishy-${id}/preview.png`,
   meshName: id === 'orb' ? 'Orb_Surface' : 'Squishy_Surface',
   geometryAdapter: id === 'orb' ? 'radial' : 'surface',
+  geometryOptions: Object.freeze(id === 'paw' ? { depthAxis: 2 } : {}),
   camera: Object.freeze(id === 'orb' ? [0, 1.6, 5] : [0, .9, 5]),
   supportedFeels: Object.freeze(id === 'orb' ? ['clay', 'marshmallow', 'slow-rebound'] : ['clay']),
 })])));

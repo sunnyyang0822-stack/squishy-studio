@@ -4,23 +4,23 @@
   "blender": "4.4.0",
   "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
   "bboxMin": [
-    -1.1166660785675049,
-    -1.1437351703643799,
-    -0.5732683539390564
+    -1.1155600547790527,
+    -1.141923189163208,
+    -0.5418279767036438
   ],
   "bboxMax": [
-    1.1166660785675049,
-    1.1437351703643799,
-    0.5732683539390564
+    1.1155600547790527,
+    1.141923189163208,
+    0.5418279767036438
   ],
-  "vertices": 9780,
-  "triangles": 19556,
-  "glbBytes": 353376,
+  "vertices": 9166,
+  "triangles": 18328,
+  "glbBytes": 331264,
   "meshes": 1,
   "primitives": 1,
   "materials": 1,
   "closedManifold": true,
   "externalTextures": false,
   "feelId": "clay",
-  "reviewStatus": "review revision: four toes + raised inverted heart palm (tip up, twin lobes down)"
+  "reviewStatus": "review revision: four toes + inverted heart palm; approved tetrahedron; five petals + one center"
 }

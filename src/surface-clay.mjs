@@ -2,9 +2,9 @@ import { getOrbFeel } from './orb-feels.mjs';
 
 // Only spatial queries belong here. All pressure, timing, retention, cancellation
 // and restoration still run in the registered, shared clay factory.
-export function createSurfaceClay(positions, normals, { indices, reducedMotion = false } = {}) {
+export function createSurfaceClay(positions, normals, { indices, geometryOptions, reducedMotion = false } = {}) {
   return getOrbFeel('clay').createDeformation(positions, normals, {
-    reducedMotion, surfaceGeometry: createSurfaceGeometry(positions, normals, indices),
+    reducedMotion, surfaceGeometry: createSurfaceGeometry(positions, normals, indices, geometryOptions),
   });
 }
 
@@ -21,7 +21,7 @@ class Heap {
   }
 }
 
-export function createSurfaceGeometry(source, sourceNormals, indices) {
+export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis } = {}) {
   const rest = source.slice(), count = rest.length / 3;
   if (!indices?.length || sourceNormals.length !== rest.length) throw new TypeError('Surface clay requires indexed positions and normals');
   const directions = sourceNormals.slice(), radii = new Float32Array(count);
@@ -47,6 +47,32 @@ export function createSurfaceGeometry(source, sourceNormals, indices) {
   if (starConvex) {
     for (let i = 0; i < count; i++) { const radius = Math.hypot(...radialVectors[i]); radii[i] = radius; for (let k = 0; k < 3; k++) directions[i * 3 + k] = radialVectors[i][k] / radius; }
   } else {
+    // Use a continuous inward field across raised pads. Exported surface
+    // normals describe the decorative pad curvature; following their rapidly
+    // converging rays directly pinches a broad press into a narrow crease.
+    // Diffusion regularizes only spatial directions; clay response is unchanged.
+    for (let pass = 0; pass < 32; pass++) {
+      const next = directions.slice();
+      for (let i = 0; i < count; i++) {
+        const sum = Array.from(directions.slice(i * 3, i * 3 + 3));
+        for (const [j] of adjacency[i]) for (let k = 0; k < 3; k++) sum[k] += directions[j * 3 + k];
+        const length = Math.hypot(...sum);
+        for (let k = 0; k < 3; k++) next[i * 3 + k] = sum[k] / length;
+      }
+      directions.set(next);
+    }
+    if (depthAxis !== undefined) {
+      // A padded front/back heightfield descends along its depth axis rather
+      // than toward the centers of the decorative raised pads. Near the rim
+      // the body-space radial components provide a continuous closed field.
+      for (let i = 0; i < count; i++) {
+        const p = point(i), depth = p[depthAxis] - center[depthAxis];
+        const v = p.map((x, k) => k === depthAxis ? depth * 12 : (x - center[k]) * Math.exp(-((depth / .12) ** 2)));
+        if (Math.abs(depth) >= .2) for (let k = 0; k < 3; k++) v[k] = k === depthAxis ? Math.sign(depth) : 0;
+        const length = Math.hypot(...v);
+        for (let k = 0; k < 3; k++) directions[i * 3 + k] = v[k] / length;
+      }
+    }
     // A small triangle BVH makes inward thickness queries O(log triangles).
     function build(ids) {
       const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
@@ -86,15 +112,15 @@ export function createSurfaceGeometry(source, sourceNormals, indices) {
       const p = point(i), normal = Array.from(directions.slice(i * 3, i * 3 + 3)), length = Math.hypot(...normal);
       if (length < .5) throw new RangeError('Invalid surface normal');
       for (let k = 0; k < 3; k++) directions[i * 3 + k] = normal[k] /= length;
-      let radius = thickness(p, normal.map(v => -v)) / 2;
+      let radius = depthAxis === undefined ? thickness(p, normal.map(v => -v)) / 2 : Math.abs(p[depthAxis] - center[depthAxis]) >= .2 ? Math.abs(p[depthAxis] - center[depthAxis]) : thickness(p, normal.map(v => -v)) / 2;
       // Convex curvature is a second geometric bound: normals must not pass
       // through their local center of curvature, including rounded star tips.
-      for (const [j, edgeLength] of adjacency[i]) {
+      for (const [j, edgeLength] of (depthAxis === undefined || Math.abs(p[depthAxis] - center[depthAxis]) < .2 ? adjacency[i] : [])) {
         const edge = point(j).map((v, k) => v - p[k]);
-        const divergence = edge.reduce((sum, v, k) => sum + v * (sourceNormals[j * 3 + k] - normal[k]), 0);
+        const divergence = edge.reduce((sum, v, k) => sum + v * (directions[j * 3 + k] - normal[k]), 0);
         if (divergence > 1e-6) radius = Math.min(radius, edgeLength ** 2 / divergence);
       }
-      if (!Number.isFinite(radius) || radius <= 0) throw new RangeError('Surface must be closed with outward normals');
+      if (!Number.isFinite(radius) || radius < 0) throw new RangeError('Surface must be closed with outward normals');
       radii[i] = radius;
     }
     // Bound the whole admissible displacement box for each triangle, not just
@@ -130,7 +156,7 @@ export function createSurfaceGeometry(source, sourceNormals, indices) {
     while (boundsQueue.items.length) {
       const [r, i] = boundsQueue.pop(); if (r > radii[i] + 1e-7) continue;
       for (const [j, length] of adjacency[i]) {
-        const bound = r + length * .5;
+        const bound = r + length * (depthAxis === undefined ? .5 : 1);
         if (radii[j] > bound + 1e-7) { radii[j] = bound; boundsQueue.push([radii[j], j]); }
       }
     }
