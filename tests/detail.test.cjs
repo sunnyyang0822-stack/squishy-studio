@@ -50,7 +50,7 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   await page.goto(base + '/collections/');
   assert.equal(await page.locator('.collection-ready a[href*="style=orb"]').count(),1);
   assert.equal(await page.locator('.collection-pending').count(),0,'旧合集占位卡片已移除');
-  await page.getByRole('link', { name: '开始制作' }).click();
+  await page.getByRole('link', { name: '开始制作' }).and(page.locator('.collection-ready a[href*="style=orb"]')).click();
   await ready(page);
   assert.match(page.url(), /\/squishy\/cloud\//);
   assert.equal(await page.locator('.step-head').evaluate(el => el.classList.contains('sr-only')), true);
