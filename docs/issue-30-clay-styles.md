@@ -2,7 +2,7 @@
 
 本轮从明确的 `origin/main` `1976819` 建立 `codex/issue-30-clay-styles`，独立工作树 `D:/squishy-studio-issue-30`。原工作区 `D:/squishy-studio` 及其中慢回弹执行者的未交接成果未移动或提交。仓库保持 Private。
 
-产品在执行中明确将本轮缩为七款新增样式 × `clay`；棉花糖和慢回弹的新模型组合不在本轮验收范围。样式选择大厅由另一位执行者负责，本次没有修改 `collections/`、首页 Hero 或新增商城。详情预览和统一登记可供其后续接入；Issue #30 不自动关闭。
+产品在执行中明确将本轮缩为七款新增样式 × `clay`；棉花糖和慢回弹的新模型组合不在本轮验收范围。样式选择大厅由另一位执行者完成 PR #31，产品确认交接后，本分支合并 `origin/main aa78cc1` 并将八个大厅入口接入真实模型；保留大厅布局，不修改首页 Hero 或新增商城。Issue #30 不自动关闭。
 
 ## 已确认造型
 
@@ -27,7 +27,7 @@
 - 样式登记：`src/squishy-styles.mjs`；几何适配：`src/surface-clay.mjs`；共用场景、灯光：`src/orb-preview.js`；事务加载：`detail/adapters.js`。
 - 配方和五步控制器：`detail/state.mjs`、`detail/page.js`。直接预览 `/squishy/cloud/?style=<id>`，未指定样式的旧链接仍为圆球。
 
-大厅后续只需读取 `squishyStyles` 中的 `id/name/modelUrl/previewUrl`，并链接 `/squishy/cloud/?style=<id>`。不要复制场景或给每个模型另建黏土实现。新款明确仅允许黏土；不兼容内芯的切换被禁用并说明，非法组合直达会明确说明采用黏土。已有圆球的主线内芯行为保留，未移入尚未合并的慢回弹 PR。
+大厅读取 `squishyStyles` 中的 `id/name/modelUrl/previewUrl`，并链接 `/squishy/cloud/?style=<id>`。不要复制场景或给每个模型另建黏土实现。新款明确仅允许黏土；不兼容内芯的切换被禁用并说明，非法组合直达会明确说明采用黏土。已有圆球的三种主线内芯行为保留；已合并的 PR #27 慢回弹及其独立外观预设原样接入。旧大厅 `preview=<id>` 链接迁移到真实模型，刷新与返回锚点保留样式。
 
 ## 几何、旋转和灯光
 

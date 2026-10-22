@@ -1,0 +1,167 @@
+{
+  "baseline": "1976819",
+  "sourceCommit": "879f223",
+  "command": "node --test tests/*.test.cjs",
+  "comparison": "Normalize CRLF to LF; product text and test assertions identical, only test URL/PORT strings remapped",
+  "portOffset": 10000,
+  "remapped": [
+    "tests/detail.test.cjs",
+    "tests/helpers/marshmallow-browser.cjs",
+    "tests/hero.test.cjs",
+    "tests/orb-browser.test.cjs",
+    "tests/orb-color.test.cjs",
+    "tests/orb-day-color.test.cjs",
+    "tests/orb-interaction.test.cjs",
+    "tests/orb-rotation.test.cjs",
+    "tests/orb-slow-rebound-browser.test.cjs",
+    "tests/showcase.test.cjs",
+    "tests/toy-colors-motion.test.cjs"
+  ],
+  "identical": [
+    {
+      "file": "assets/brand3d.js",
+      "sha256NormalizedLF": "b05ca82706169655bd4ee96363f66e4e4b5b484b297e0cb8588622ac90b27d97"
+    },
+    {
+      "file": "assets/orb-preview.js",
+      "sha256NormalizedLF": "dd0259a19247000986a714f6a623190e13030f6b39e2de7a41a213830347c27f"
+    },
+    {
+      "file": "detail/adapters.js",
+      "sha256NormalizedLF": "67ae673db0596c07dbcd192ecf564fa5b9e977475ec13623fa8a77b1be09e732"
+    },
+    {
+      "file": "detail/detail.css",
+      "sha256NormalizedLF": "43940ffbc724a29968c3507b316c360b561f68362e22b1d1bb9bbc9cf02ef6d2"
+    },
+    {
+      "file": "detail/orb-colors.mjs",
+      "sha256NormalizedLF": "5e1c0e4773f6aca73fe2b1f57f16c89ccaaf8ffb203b7cbced01de87503ca032"
+    },
+    {
+      "file": "detail/page.js",
+      "sha256NormalizedLF": "7a411f94b25c48c43fb7493d9e21046d39a45ff5509041d268c6c1206c4733b3"
+    },
+    {
+      "file": "detail/panel-motion.js",
+      "sha256NormalizedLF": "50cd95e66b9e8685ea3cbbf5ec3152f596a00b279389745280a7dad7ddeefe61"
+    },
+    {
+      "file": "detail/state.mjs",
+      "sha256NormalizedLF": "beadbff8c3d18555b8dbbd3c3bd0f7a2f0bd05270d578d70f56b2427ab9feb18"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256NormalizedLF": "ba33674eb73bb5ec59d793fceb1b2fe29ea92ad0838cfc47b0d18504671c4dec"
+    },
+    {
+      "file": "package.json",
+      "sha256NormalizedLF": "fdacad9e2090d57c7df01cb25bc5b76349ad12a74001c1a34d3b8d2b918445ce"
+    },
+    {
+      "file": "scripts/build-brand.cjs",
+      "sha256NormalizedLF": "b9a61937871fe62fcd75f94ab3ffebdadaf0fe5e7c6ae6e0f4d3bfcaeaa149c4"
+    },
+    {
+      "file": "scripts/build-orb.cjs",
+      "sha256NormalizedLF": "5f1b98f79cef29349cdd8e9f6434f08c5d8a2cbf32f96109710a165fc19c5d0a"
+    },
+    {
+      "file": "scripts/png-comparison.cjs",
+      "sha256NormalizedLF": "e0d162003191852d9602a579d8b779fc683b78577d7e6ffbfccd734ac4c175d1"
+    },
+    {
+      "file": "server.mjs",
+      "sha256NormalizedLF": "0d1d4c2ebce49ed17f00f68aab5699adea096ed585c360b53da20035a8c294ab"
+    },
+    {
+      "file": "src/brand3d.js",
+      "sha256NormalizedLF": "2cd86dc6938f0bd76fc5b7a4071c43924bbdaff35af0eadb635df7817e868e24"
+    },
+    {
+      "file": "src/orb-appearance.mjs",
+      "sha256NormalizedLF": "083d7ca24f5611e580b660cafa7a127dcf791c7bc58e220793111278858d430b"
+    },
+    {
+      "file": "src/orb-color.mjs",
+      "sha256NormalizedLF": "3187eb09c7da3fd15010f45dddef8af46c6df88ca7076def5c605df82aaa4268"
+    },
+    {
+      "file": "src/orb-deformation.mjs",
+      "sha256NormalizedLF": "39180be07311e750927f0a25f28d9e61090fd3016cf07c5bc2ff23669014a067"
+    },
+    {
+      "file": "src/orb-feels.mjs",
+      "sha256NormalizedLF": "a1591db8672e0ccb9054aecb7eae9471dabebce9a05c366c65acd07e10df544a"
+    },
+    {
+      "file": "src/orb-input.js",
+      "sha256NormalizedLF": "ec2621305b8a466394b1b87050e6d5f263f2bbb368883d82af0e8cd4b844a390"
+    },
+    {
+      "file": "src/orb-marshmallow.mjs",
+      "sha256NormalizedLF": "92643eca1d576d7e4b417e740fdc45616c2bfa2714ef012578cdb7728cbc52f1"
+    },
+    {
+      "file": "src/orb-optics.mjs",
+      "sha256NormalizedLF": "b96723e807215692cff66fff898dbede0f2b683d91f314846882db9afad8ae4c"
+    },
+    {
+      "file": "src/orb-preview.js",
+      "sha256NormalizedLF": "d5977b4d4b320f6c9bd13d8cf23a416a48d5d6b250b8ddd524f9b7858eaabd82"
+    },
+    {
+      "file": "src/orb-rotation.js",
+      "sha256NormalizedLF": "b5c3e05bef607c11f3a26823d8d2365429d75d69388a0a940630bee9de8ea31d"
+    },
+    {
+      "file": "src/orb-slow-rebound.mjs",
+      "sha256NormalizedLF": "0b45546441557eb14821581d7c36c64d0ca02267e6c83a93ec2b38300ca3ac06"
+    },
+    {
+      "file": "tests/detail-state.test.cjs",
+      "sha256NormalizedLF": "459f7b31020186f82d444d377149b95f441612b5d89b500bfc82514dbb804119"
+    },
+    {
+      "file": "tests/helpers/marshmallow-metrics.cjs",
+      "sha256NormalizedLF": "38a27ba56466f8f308b0396b2085039b99ae5ede4ea0c6e7906d906bef1916a5"
+    },
+    {
+      "file": "tests/helpers/orb-probe.cjs",
+      "sha256NormalizedLF": "fefacd4b8788c35fc90ebc43043a59b727486b40db0366183c2cffe9a7605aeb"
+    },
+    {
+      "file": "tests/orb-asset.test.cjs",
+      "sha256NormalizedLF": "b245d75fefe9693b47daf10658ffe7bf03c328e3f8d346179ad91b04dabb3bd2"
+    },
+    {
+      "file": "tests/orb-color-kernel.test.cjs",
+      "sha256NormalizedLF": "870f8596b80836fb58838f5e8bebbd1e04ef01d547a894eee9d100a31f76e606"
+    },
+    {
+      "file": "tests/orb-deformation.test.cjs",
+      "sha256NormalizedLF": "f25d8db74276431f75c7f7d7c0f39b8824fd3920cce6a60740887ebc676723c5"
+    },
+    {
+      "file": "tests/orb-marshmallow-browser.test.cjs",
+      "sha256NormalizedLF": "e369d8af647758a4f1bb31d6febe4351f6f537bea4c0d0b4df7954027af0a21d"
+    },
+    {
+      "file": "tests/orb-marshmallow.test.cjs",
+      "sha256NormalizedLF": "218f805f5742b59098bb7af03e27b5c97c3c4699cf18bc0587bbb787c33e7720"
+    },
+    {
+      "file": "tests/orb-slow-rebound.test.cjs",
+      "sha256NormalizedLF": "5cf562b36a7c3dfceab0cb14a50b0412244f2ab823a68e1c666f93392cd8de8e"
+    },
+    {
+      "file": "tests/repository.test.cjs",
+      "sha256NormalizedLF": "5b16540267c555e77117320cfb86879b51268c0afff497e89139013173c8faf9"
+    }
+  ],
+  "mismatches": [],
+  "tests": 110,
+  "passed": 110,
+  "skipped": 0,
+  "exitCode": 0
+}

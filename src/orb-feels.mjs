@@ -1,4 +1,5 @@
 import { createOrbDeformation } from './orb-deformation.mjs';
+import { createSlowReboundDeformation } from './orb-slow-rebound.mjs';
 import { createMarshmallowDeformation } from './orb-marshmallow.mjs';
 
 // Stable behavior IDs are independent of the model, color and optical material.
@@ -9,6 +10,11 @@ export const orbFeels = Object.freeze({
     id: 'clay',
     name: '黏土',
     createDeformation: createOrbDeformation,
+  }),
+  'slow-rebound': Object.freeze({
+    id: 'slow-rebound',
+    name: '慢回弹',
+    createDeformation: createSlowReboundDeformation,
   }),
 });
 

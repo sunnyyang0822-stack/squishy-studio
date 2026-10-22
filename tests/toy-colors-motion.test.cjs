@@ -17,7 +17,7 @@ after(async () => { await browser?.close(); server?.kill(); });
 test('详情白天色彩校正可逆，四只样例与大厅玩具在昼夜仍保留原色', async () => {
   for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     const page = await browser.newPage({ viewport });
-    for (const [path,selector] of [['/squishy/cloud/','.toy-mount canvas'],['/#samples','.sample-art img'],['/collections/','.collection-pending img']]) {
+    for (const [path,selector] of [['/squishy/cloud/','.toy-mount canvas'],['/#samples','.sample-art img'],['/collections/','.style-art img']]) {
       await page.goto(base + path);
       await page.locator(selector).first().waitFor();
       if (selector.includes('canvas')) await page.waitForSelector('.toy-mount[data-render-count]');

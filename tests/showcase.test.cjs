@@ -53,8 +53,9 @@ test('Hero 后通过原生滚动到达四只独立样例和真实大厅链接', 
   assert.equal(await entry.evaluate(el => getComputedStyle(el).outlineStyle), 'solid');
   await Promise.all([page.waitForURL('**/collections/'), page.keyboard.press('Enter')]);
   assert.equal(await page.getByRole('heading', { name: '合集大厅', exact: true }).isVisible(), true);
-  assert.equal(await page.locator('article').count(), 1);
-  assert.equal(await page.getByText('制作中', { exact: true }).count(), 1);
+  assert.equal(await page.locator('.style-card').count(), 8);
+  assert.equal(await page.locator('.collection-pending').count(), 0, '按用户要求移除合集制作中占位');
+  assert.equal(await page.getByText('柔软的一刻', { exact: true }).count(), 0);
   assert.equal(await page.getByRole('button').count(), 0);
   assert.equal(await page.getByRole('dialog').count(), 0);
   await page.reload();
@@ -129,7 +130,8 @@ test('手机、短屏和横屏：样例未裁切，主入口可触达，没有�
     const box = await link.boundingBox();
     assert.ok(box.width >= 44 && box.height >= 44 && box.y >= 0 && box.y + box.height <= viewport.height);
     await Promise.all([page.waitForURL('**/collections/'), viewport.width === 390 ? link.tap() : link.click()]);
-    assert.equal(await page.getByText('制作中', { exact: true }).isVisible(), true);
+    assert.equal(await page.getByRole('heading', { name: '奶油圆球', exact: true }).isVisible(), true);
+    assert.equal(await page.locator('.style-card').count(), 8);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     const back = await page.getByRole('link', { name: '返回首页样例' }).boundingBox();
     assert.ok(back.height >= 44);

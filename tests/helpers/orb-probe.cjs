@@ -12,9 +12,13 @@ function modelAttribute(name) {
 
 // Observe real vertex uploads instead of adding a test-only deformation API to
 // the product. The position buffer is identified by the actual GLB rest data.
-async function installOrbProbe(page, { pixels = false } = {}) {
-  await page.addInitScript(({ rest, pixels }) => {
-    window.orbMeshProbe = { rest, positions: null, uploads: 0, contexts: [], modelViewMatrix: null, orbDraws: 0, pixelFrames: [] };
+async function installOrbProbe(page, { pixels = false, frames = false } = {}) {
+  await page.addInitScript(({ rest, pixels, frames }) => {
+    window.orbMeshProbe = { rest, positions: null, uploads: 0, contexts: [], modelViewMatrix: null, orbDraws: 0, pixelFrames: [], positionFrames: [] };
+    if (frames) {
+      const request = window.requestAnimationFrame;
+      window.requestAnimationFrame = callback => request(time => { window.orbMeshProbe.frameTime = time; callback(time); });
+    }
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, ...args) {
       const gl = original.call(this, type, ...args);
@@ -53,7 +57,7 @@ async function installOrbProbe(page, { pixels = false } = {}) {
             // Read the active color attribute from the actual GPU buffer. A
             // normalized RGB sum separates hue change from scalar cavity AO.
             const colorIndex = gl.getAttribLocation(gl.getParameter(gl.CURRENT_PROGRAM), 'color');
-            let hue = null;
+            let hue = null, pigmentTotal = null;
             if (colorIndex >= 0) {
               const previous = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
               const buffer = gl.getVertexAttrib(colorIndex, gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING);
@@ -63,10 +67,11 @@ async function installOrbProbe(page, { pixels = false } = {}) {
                 gl.bindBuffer(gl.ARRAY_BUFFER, previous);
                 for (let i = 0; i < data.length; i++) sum[i % 3] += data[i];
                 const total = sum.reduce((a, b) => a + b, 0);
+                pigmentTotal = total;
                 hue = sum.map(value => value / total);
               }
             }
-            probe.pixelFrames.push({ time: performance.now(), top: sample(.25), middle: sample(.5), bottom: sample(.75), maxDepth, matrix: probe.modelViewMatrix?.slice(), hue });
+            probe.pixelFrames.push({ time: performance.now(), top: sample(.25), middle: sample(.5), bottom: sample(.75), maxDepth, matrix: probe.modelViewMatrix?.slice(), hue, pigmentTotal });
             if (probe.pixelFrames.length > 1000) probe.pixelFrames.shift();
           }
         }
@@ -90,12 +95,20 @@ async function installOrbProbe(page, { pixels = false } = {}) {
           const length = other[1] || data.length - sourceOffset;
           probe.positions.set(data.subarray(sourceOffset, sourceOffset + length), offset / 4);
           probe.uploads++;
+          if (frames) {
+            let maximum = 0;
+            for (let i = 0; i < rest.length; i += 3) maximum = Math.max(maximum, Math.hypot(probe.positions[i] - rest[i], probe.positions[i + 1] - rest[i + 1], probe.positions[i + 2] - rest[i + 2]));
+            const frame = { time: probe.frameTime, maximum, pressed: document.querySelector('.orb-input')?.getAttribute('aria-pressed') === 'true' };
+            probe.positionFrames.push(frame);
+            if (probe.positionFrames.length > 1000) probe.positionFrames.shift();
+            document.dispatchEvent(new CustomEvent('orb-probe-position', { detail: frame }));
+          }
         }
         return result;
       };
       return gl;
     };
-  }, { rest: Array.from(modelAttribute('POSITION')), pixels });
+  }, { rest: Array.from(modelAttribute('POSITION')), pixels, frames });
 }
 
 async function meshStats(page, baseline) {

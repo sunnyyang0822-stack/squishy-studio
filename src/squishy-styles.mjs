@@ -7,7 +7,7 @@ export const squishyStyles = Object.freeze(Object.fromEntries(Object.entries(nam
   meshName: id === 'orb' ? 'Orb_Surface' : 'Squishy_Surface',
   geometryAdapter: id === 'orb' ? 'radial' : 'surface',
   camera: Object.freeze(id === 'orb' ? [0, 1.6, 5] : [0, .9, 5]),
-  supportedFeels: Object.freeze(id === 'orb' ? ['clay', 'marshmallow'] : ['clay']),
+  supportedFeels: Object.freeze(id === 'orb' ? ['clay', 'marshmallow', 'slow-rebound'] : ['clay']),
 })])));
 export function getSquishyStyle(id = 'orb') {
   if (!Object.hasOwn(squishyStyles, id)) throw new RangeError(`Unknown squishy style: ${id}`);

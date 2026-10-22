@@ -13,7 +13,7 @@ export const styleNames = Object.freeze(Object.fromEntries(Object.entries(squish
 export const defaultRecipe = Object.freeze({ styleId: 'orb', coreMaterial: 'clay', coreColor: 'rose', filling: 'none', shellMaterial: 'wax', shellColor: 'rose', waxThickness: 'medium', decoration: 'one' });
 const groups = Object.freeze({ styleId: styleNames, coreMaterial: coreNames, coreColor: colorNames, filling: fillingNames, shellMaterial: materialNames, shellColor: colorNames, waxThickness: thicknessNames, decoration: decorationNames });
 export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shellMaterial === 'wax' ? recipe.waxThickness : null });
-export const previewFor = (step, recipe) => ({ mode: step === 'core' ? 'core' : step === 'making' ? 'hidden' : 'shell', feelId: recipe.coreMaterial === 'marshmallow' ? 'marshmallow' : 'clay', color: step === 'core' ? recipe.coreColor : recipe.shellColor, styleId: recipe.styleId });
+export const previewFor = (step, recipe) => ({ mode: step === 'core' ? 'core' : step === 'making' ? 'hidden' : 'shell', feelId: recipe.coreMaterial === 'butter' ? 'slow-rebound' : recipe.coreMaterial === 'marshmallow' ? 'marshmallow' : 'clay', appearanceId: recipe.coreMaterial === 'butter' ? 'full-matte' : 'matte', color: step === 'core' ? recipe.coreColor : recipe.shellColor, styleId: recipe.styleId });
 
 // Renderer handles are private until commit. A revision rejects late work.
 export function createDetailController({ renderer, audio, onChange = () => {}, styleId = 'orb', recipe: initialRecipe = {}, step = 'core' }) {
@@ -40,7 +40,7 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
     if (disposed) return;
     if (state.step === 'making') { emit(); return; }
     const target = { ...state.preview, recipe: structuredClone(state.effectiveRecipe) };
-    if (!force && !pending && !state.configError && applied && applied.feelId === target.feelId && applied.color === target.color && applied.styleId === target.styleId && state.resource === 'ready') { emit(); return; }
+    if (!force && !pending && !state.configError && applied && applied.color === target.color && applied.styleId === target.styleId && applied.feelId === target.feelId && applied.appearanceId === target.appearanceId && state.resource === 'ready') { emit(); return; }
     const ownRevision = ++revision;
     pending?.abort();
     const request = new AbortController(); pending = request;

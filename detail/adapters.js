@@ -10,7 +10,8 @@ export function createModelPreview(mount, options) {
     async prepare(config, context) {
       const nextFeel = config.feelId || options?.feelId || 'clay';
       const styleId = config.styleId || options?.styleId || 'orb';
-      const key = `${styleId}:${nextFeel}`;
+      const appearanceId = config.appearanceId || options?.appearanceId || 'matte';
+      const key = `${styleId}:${nextFeel}:${appearanceId}`;
       const ownRevision = ++revision;
       let candidate = key === rendererKey ? renderer : undefined;
       let owned = false, committed = false;
@@ -21,7 +22,7 @@ export function createModelPreview(mount, options) {
         const module = await import(url);
         if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
         if (ownRevision !== revision) throw new DOMException('Aborted', 'AbortError');
-        candidate = module.createOrbPreview(mount, { ...options, feelId: nextFeel, styleId });
+        candidate = module.createOrbPreview(mount, { ...options, feelId: nextFeel, styleId, appearanceId });
         owned = true; preparing.add(candidate);
       }
       try {
@@ -31,7 +32,7 @@ export function createModelPreview(mount, options) {
           commit() {
             if (disposed || context.signal.aborted || ownRevision !== revision) return;
             if (candidate !== renderer) { renderer?.dispose(); renderer = candidate; rendererKey = key; }
-            preparing.delete(candidate); committed = true; handle.commit();
+            preparing.delete(candidate); committed = true; handle.commit(); mount.dataset.appearanceId = appearanceId;
           },
           dispose() { handle.dispose(); if (owned && !committed) { preparing.delete(candidate); candidate.dispose(); } },
         };

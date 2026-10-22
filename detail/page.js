@@ -99,12 +99,13 @@ function showGroups(state) {
 const recipeKeys = Object.keys(defaultRecipe).filter(key => key !== 'styleId');
 function readLocation() {
   const url = new URL(location.href);
-  return { styleId: url.searchParams.get('style') || 'orb', step: url.searchParams.get('step') || 'core',
+  return { styleId: Object.hasOwn(styleNames, url.searchParams.get('preview')) ? url.searchParams.get('preview') : url.searchParams.get('style') || 'orb', step: url.searchParams.get('step') || 'core',
     recipe: Object.fromEntries(recipeKeys.filter(key => url.searchParams.has(key)).map(key => [key, url.searchParams.get(key)])) };
 }
 function saveLocation(state) {
   const target = new URL(location.href);
   target.searchParams.set('style', state.recipe.styleId);
+  target.searchParams.delete('preview');
   if (state.step === 'core') target.searchParams.delete('step'); else target.searchParams.set('step', state.step);
   for (const key of recipeKeys) {
     if (state.recipe[key] === defaultRecipe[key]) target.searchParams.delete(key);
@@ -119,6 +120,7 @@ controller = createDetailController({
   onChange(state) {
     const { step, recipe, resource } = state;
     const styleName = styleNames[recipe.styleId];
+    document.querySelector('.detail-back').href = `/collections/#style-${recipe.styleId}`;
     styleSelect.value = recipe.styleId;
     for (const option of styleSelect.options) option.disabled = option.value !== 'orb' && recipe.coreMaterial !== 'clay';
     for (const input of document.querySelectorAll('input[name="coreMaterial"]')) input.disabled = recipe.styleId !== 'orb' && input.value !== 'clay';
