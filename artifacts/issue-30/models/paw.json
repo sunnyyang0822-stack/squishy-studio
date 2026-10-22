@@ -6,21 +6,21 @@
   "bboxMin": [
     -1.1166660785675049,
     -1.1437351703643799,
-    -0.5276435613632202
+    -0.5732683539390564
   ],
   "bboxMax": [
     1.1166660785675049,
     1.1437351703643799,
-    0.5276435613632202
+    0.5732683539390564
   ],
-  "vertices": 9572,
-  "triangles": 19140,
-  "glbBytes": 345892,
+  "vertices": 9780,
+  "triangles": 19556,
+  "glbBytes": 353376,
   "meshes": 1,
   "primitives": 1,
   "materials": 1,
   "closedManifold": true,
   "externalTextures": false,
   "feelId": "clay",
-  "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"
+  "reviewStatus": "review revision: four toes + raised inverted heart palm (tip up, twin lobes down)"
 }

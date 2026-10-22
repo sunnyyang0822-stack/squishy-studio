@@ -4,23 +4,23 @@
   "blender": "4.4.0",
   "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
   "bboxMin": [
-    -1.4296462535858154,
-    -0.9374759197235107,
-    -0.6250795125961304
+    -1.4291164875030518,
+    -0.942901074886322,
+    -0.675876259803772
   ],
   "bboxMax": [
-    1.429646372795105,
-    0.9374759197235107,
-    0.6250795125961304
+    1.4291164875030518,
+    0.942901074886322,
+    0.675876259803772
   ],
-  "vertices": 7678,
-  "triangles": 15352,
-  "glbBytes": 277696,
+  "vertices": 7136,
+  "triangles": 14268,
+  "glbBytes": 258188,
   "meshes": 1,
   "primitives": 1,
   "materials": 1,
   "closedManifold": true,
   "externalTextures": false,
   "feelId": "clay",
-  "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"
+  "reviewStatus": "review revision: cloud front/back convex cap; no unintended center pit"
 }

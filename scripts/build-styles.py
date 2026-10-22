@@ -8,7 +8,7 @@ from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[1]
 IDS = ['cylinder', 'donut', 'cloud', 'paw', 'pyramid', 'flower', 'star']
-NAMES = dict(zip(IDS, ['圆柱','甜甜圈','云朵','猫爪','三角锥（初稿）','花朵','五角星']))
+NAMES = dict(zip(IDS, ['圆柱','甜甜圈','云朵','猫爪','三角锥','五瓣花朵','五角星']))
 OUT = ROOT / 'artifacts/issue-30/models'
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -35,6 +35,26 @@ def fuse(objects, voxel=.058, iterations=5):
     modifier(obj, 'SMOOTH', factor=.75, iterations=iterations)
     return obj
 
+def inflated_outline(name, outline, depth, center=(0,0,0)):
+    """One continuous plush surface; center has a convex cap, never a join pit."""
+    n=160; rings=48
+    verts=[(center[0],center[1]-depth,center[2])]
+    for j in range(1,rings):
+        phi=math.pi*j/rings
+        for i in range(n):
+            x,z=outline(math.tau*i/n)
+            verts.append((center[0]+x*math.sin(phi),center[1]-depth*math.cos(phi),center[2]+z*math.sin(phi)))
+    verts.append((center[0],center[1]+depth,center[2])); end=len(verts)-1
+    faces=[(0,1+(i+1)%n,1+i) for i in range(n)]
+    for j in range(rings-2):
+        for i in range(n):
+            a=1+j*n+i; b=1+j*n+(i+1)%n
+            faces.append((a,b,b+n,a+n))
+    faces += [(end,1+(rings-2)*n+i,1+(rings-2)*n+(i+1)%n) for i in range(n)]
+    mesh=bpy.data.meshes.new(name); mesh.from_pydata(verts,[],faces)
+    obj=bpy.data.objects.new(name,mesh); bpy.context.collection.objects.link(obj)
+    return obj
+
 def make(style):
     if style == 'cylinder':
         bpy.ops.mesh.primitive_cylinder_add(vertices=96, radius=1, depth=1.45)
@@ -49,28 +69,41 @@ def make(style):
         bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
         return obj
     if style == 'cloud':
-        return fuse([ellipsoid((x,0,z),(rx,.64,rz)) for x,z,rx,rz in [
+        lobes=[
             (-.82,-.14,.60,.65),(-.35,.32,.67,.73),(.36,.38,.69,.72),(.88,-.12,.59,.62),
-            (0,-.25,.94,.56)]], .052, 24)
+            (0,-.25,.94,.56)]
+        def cloud_outline(angle):
+            dx,dz=math.cos(angle),math.sin(angle)
+            radius=0
+            for x,z,rx,rz in lobes:
+                a=(dx/rx)**2+(dz/rz)**2
+                b=-2*(dx*x/(rx*rx)+dz*z/(rz*rz))
+                c=(x/rx)**2+(z/rz)**2-1
+                discriminant=b*b-4*a*c
+                if discriminant>=0:
+                    radius=max(radius,(-b+math.sqrt(discriminant))/(2*a))
+            return radius*dx,radius*dz
+        # The silhouette retains five cloud lobes, while one convex depth cap
+        # replaces sphere-intersection valleys on both front and back.
+        return fuse([inflated_outline('Cloud_Convex_Cap',cloud_outline,.68)],.052,18)
     if style == 'paw':
         # Four toes and one broad palm. Five raised pads fuse into the body.
         parts = [ellipsoid((0,0,-.35),(.88,.43,.75))]
         for x,z,rx,rz in [(-.76,.36,.36,.47),(-.29,.70,.37,.50),(.29,.70,.37,.50),(.76,.36,.36,.47)]:
             parts.append(ellipsoid((x,0,z),(rx,.39,rz)))
             parts.append(ellipsoid((x,-.34,z+.015),(rx*.68,.18,rz*.62)))
-        parts.append(ellipsoid((0,-.41,-.36),(.57,.22,.43)))
+        # Upside-down heart: rounded tip points up, two lobes face down.
+        def inverted_heart(t):
+            return .56*math.sin(t)**3,-.45*(13*math.cos(t)-5*math.cos(2*t)-2*math.cos(3*t)-math.cos(4*t))/17
+        parts.append(inflated_outline('Raised_Inverted_Heart_Pad',inverted_heart,.255,(0,-.47,-.40)))
         return fuse(parts, .043, 7)
     if style == 'flower':
-        # Exactly six balls. Radius exceeds ring radius, so the center is solid.
-        obj=fuse([ellipsoid((.58*math.cos(a),0,.58*math.sin(a)),(.70,.65,.70))
-            for a in [math.pi/6+i*math.tau/6 for i in range(6)]], .05, 24)
-        # Relax the central meeting valley through the existing surface only.
-        # This adds no center sphere, internal shell, cap, or seventh petal.
-        for vertex in obj.data.vertices:
-            p=obj.matrix_world @ vertex.co
-            vertex.co.y += math.copysign(.18*math.exp(-(p.x*p.x+p.z*p.z)/.18),vertex.co.y)
-        modifier(obj,'SMOOTH',factor=.5,iterations=3)
-        return obj
+        # Product review supersedes the original six-petal ring: five petal
+        # balls plus ONE raised center ball, six total, one fused surface.
+        parts=[ellipsoid((.68*math.cos(a),0,.68*math.sin(a)),(.60,.53,.60))
+            for a in [math.pi/2+i*math.tau/5 for i in range(5)]]
+        parts.append(ellipsoid((0,-.18,0),(.53,.53,.53)))
+        return fuse(parts,.048,22)
     if style == 'pyramid':
         # Rounded tetrahedron: triangular base, three rising edges, apex.
         verts=[(0,0,1.20),(-1,-.64,-.72),(1,-.64,-.72),(0,1.05,-.72)]
@@ -159,7 +192,7 @@ def build(style):
         'vertices':positions['count'],'triangles':gltf['accessors'][primitive['indices']]['count']//3,
         'glbBytes':len(raw),'meshes':1,'primitives':1,'materials':1,
         'closedManifold':True,'externalTextures':False,'feelId':'clay',
-        'reviewStatus':'draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron'}
+        'reviewStatus':'review revision: four toes + inverted heart palm; approved tetrahedron; five petals + one center'}
     (OUT/(style+'.json')).write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf8')
     cam=setup_render(scene)
     for view,loc in [('front',(0,-6,.1)),('side',(6,0,.1)),('back',(0,6,.1)),('bottom',(0,0,-6))]:
@@ -174,9 +207,10 @@ def build(style):
         '坐标：米制、Blender Z-up，导出 glTF Y-up；正面为 glTF +Z。原点为包围盒中心，所有对象变换已应用。浏览器落地与相机按包围盒适配。\n\n'
         '复现：在仓库根目录运行 `blender --background --python scripts/build-styles.py -- '+style+'`。此脚本只用于独立后台进程，会清空当前场景；不要在未保存的交互场景中执行。导出仅选择表面，不含相机或灯光。`.blend` 保留可编辑表面与独立审阅灯光。\n\n'
         '几何统计和包围盒见 `artifacts/issue-30/models/'+style+'.json`；正、侧、背、底图在同目录。浏览器验证另由运行时测试记录，Blender 图不能代替可玩验收。\n\n'
-        +('猫爪布局初稿：4 个趾体、4 个鼓起趾垫，加 1 个宽主肉垫；肉垫全部真实融合。此布局待产品审阅。\n' if style=='paw' else '')
-        +('造型歧义初稿：三角底四面体（3 个底角 + 1 个顶部），默认正面可看到上顶点与下方三角体积；未视为产品确认。\n' if style=='pyramid' else '')
-        +('严格仅 6 个等半径饱满球融合，中心由六球交叠填实，没有第 7 个中心球。\n' if style=='flower' else '')
+        +('按产品评审修订：4 个趾体、4 个鼓起趾垫，加 1 个倒心形主肉垫（尖端朝上、下方双圆瓣）；肉垫全部真实融合。\n' if style=='paw' else '')
+        +('产品已确认三角底四面体（3 个底角 + 1 个顶部），默认视角可略转以展示体积。\n' if style=='pyramid' else '')
+        +('最新产品反馈覆盖最初六瓣环规格：5 个圆球为花瓣，1 个圆球为鼓起花蕊，总计 6 球融合。花蕊通过几何区分，不依赖固定材质或烘色。\n' if style=='flower' else '')
+        +('按产品评审消除正背面的交汇凹点：云瓣外轮廓搭配单一连续凸起厚度曲面，保留自然瓣间轮廓，不在表面留下莫名凹陷。\n' if style=='cloud' else '')
         +'\n网格、法线与封闭性由生成脚本断言；GLB 无外部依赖，单 mesh / primitive / material。回滚时成对恢复源 `.blend` 与运行时 `.glb`，然后重新运行资产测试。\n',encoding='utf8')
     print('STYLE_DONE '+json.dumps(meta,ensure_ascii=False),flush=True)
 
@@ -196,6 +230,6 @@ rows=''.join('<section><h2>'+NAMES[s]+' · '+s+'</h2><div>'+''.join(
     'figure{margin:0;width:194px}img{display:block;width:194px;border-radius:12px}'
     'figcaption{text-align:center;padding:5px}p{line-height:1.7}</style>'
     '<h1>七种黏土样式 · Blender 多视角初稿</h1>'
-    '<p>统一 clay；表面为单一闭合连续网格。猫爪：4 趾 + 1 主肉垫。'
-    '三角锥：圆钝三角底四面体，布局和默认视角待产品审阅。'
-    '花朵：仅六球融合，无第七中心球。此图用于造型审阅，不代表浏览器交互验收。</p>'+rows,encoding='utf8')
+    '<p>统一 clay；表面为单一闭合连续网格。猫爪：4 趾 + 倒心形鼓起主肉垫（尖端朝上）。'
+    '三角锥：产品已确认圆钝三角底四面体。云朵：正背面无交汇凹点。'
+    '花朵：最新规格为五圆球花瓣 + 一圆球花蕊，共六球。此图用于造型审阅，不代表浏览器交互验收。</p>'+rows,encoding='utf8')
