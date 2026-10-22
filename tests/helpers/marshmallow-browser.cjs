@@ -76,12 +76,27 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
       // separately by the real-GLB kernel tests, independent of host scheduling.
       await page.waitForFunction(() => {
         const p = window.orbMeshProbe;
-        return p.positions?.some((v, i) => Math.abs(v - p.rest[i]) > .1);
+        return p.positions?.some((v, i) => Math.abs(v - p.rest[i]) > .003);
       });
       await send('up'); report.observations.push({ name, label: 'short press actual input duration', milliseconds: Date.now() - shortStart });
       await freeze('short press');
-      assert.ok((await meshStats(page)).maximum > .1);
-      await send('down', at(.32)); await page.waitForTimeout(1200); await send('up'); await freeze('long press', 2200);
+      const shortStats = await meshStats(page);
+      assert.ok(shortStats.maximum > .003 && shortStats.maximum < .15,
+        'Short press stays shallow: ' + JSON.stringify({ maximum: shortStats.maximum, duration: report.observations.find(o => o.name === name && o.label === 'short press actual input duration').milliseconds }));
+      await input.evaluate(el => el.addEventListener('pointerdown', () => {
+        window.marshmallowHeldStart = performance.now();
+      }, { once: true, capture: true }));
+      await send('down', at(.32));
+      const stages = [], elapsedMilliseconds = [];
+      for (const wait of [100, 200, 300, 600]) {
+        await page.waitForTimeout(wait); stages.push((await meshStats(page)).maximum);
+        elapsedMilliseconds.push(await page.evaluate(() => performance.now() - window.marshmallowHeldStart));
+        if (capture) await page.screenshot({ path: folder + '/' + name + '-press-stage-' + stages.length + '.png' });
+      }
+      report.observations.push({ name, label: 'progressive held press at nominal 100/300/600/1200ms', depths: stages, elapsedMilliseconds });
+      assert.ok(stages[3] > stages[0] + .01, 'Holding must visibly deepen through several frames');
+      assert.ok(stages[0] < .15 && stages[3] < .5, 'A first press cannot bottom out');
+      await send('up'); await freeze('long press', 2200);
       await send('down', at(.24)); await page.waitForTimeout(350);
       for (let i = 1; i <= 18; i++) { await send('move', at(.24 + .52 * i / 18)); await page.waitForTimeout(16); }
       await page.waitForTimeout(350); await send('up'); await freeze('dwell endpoints and slide', 1400);

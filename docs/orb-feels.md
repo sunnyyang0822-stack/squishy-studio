@@ -1,6 +1,6 @@
 # 可复用圆球质感
 
-新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。走查后加深至 .70 模型单位、保留至少24%安全半径；快速塑性塌陷，释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
+新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。单次按压从浅到深渐进（响应8/s、2秒压力进程），多次按压保留 .70 模型单位/至少24%安全半径的边界；释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
 
 已确认的内陷行为正式命名为 **黏土**，稳定调用标识为 **`clay`**。命名的是按压行为，不是光学材质或颜色。默认圆球与后续调用它的样式共享同一实现。2026-10-22 按用户要求整体提高交互阻尼，见 [当前阻尼与实测](issue-16-clay-damping.md)。
 

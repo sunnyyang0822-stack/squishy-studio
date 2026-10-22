@@ -1,0 +1,138 @@
+✔ 五步、完整默认配方、棉花糖独立映射，制作步骤结束输入 (5.8991ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (1.2895ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (2.0463ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (1.041ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (1.9716ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (6.307ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (1.1713ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (1.1107ms)
+✔ 可用样式入口、旧详情路径、完整五步与返回修改保留选择 (7891.7692ms)
+✔ 十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史有效 (2274.4168ms)
+✔ 加载失败可继续选择、前进及重试，快速换色保持最后颜色 (1331.8035ms)
+✔ 分类一次只显示一组；切换分类不改配方、不重建场景；手机色卡保留辅助名称 (1936.2738ms)
+✔ 桌面同显当前步骤全部可用组；手机切回分类仍保留选择 (2533.3365ms)
+✔ 桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主体可滚动触达 (19366.3642ms)
+✔ 动态高度、横竖屏与安全留白变化复用同一画布，配方保留且全部导航可触达 (1931.0564ms)
+✔ 桌面首屏可读且昼夜切换可连续操作 (4403.5698ms)
+✔ 夜间切回白天时文字快速清晰，连续切换不会重置颜色 (6189.2373ms)
+✔ 字标与主题逻辑保留用户确认的 5b5e8c7 版本 (3.1119ms)
+✔ 昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变 (3286.0382ms)
+✔ 手机和短屏仍能看到主体与切换控件 (4189.0799ms)
+✔ 减少动态效果时仍能切换 (1575.1947ms)
+✔ WebGL 不可用时保留可读的备用字标 (744.2793ms)
+✔ 圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形变输入有效 (14.2806ms)
+✔ 实际静态根返回 GLB 字节与 MIME，不误用 Next public 路径 (1693.3623ms)
+✔ 配置、主题、旋转复用真实 WebGL 场景；静止及后台不持续渲染；离页释放 (4948.5975ms)
+✔ 真实上下文丢失可重试重建，控件与导航在中断后可用 (1066.3963ms)
+✔ HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重试 (1448.7972ms)
+✔ 手机圆球交互不带动页面，面板可滚动且颜色仍可选择 (1311.6701ms)
+✔ 顶部覆盖先于底部，结束精确统一颜色并停止更新 (2.0917ms)
+✔ 快速换色及动态偏好中断从当前每顶点颜色连续接续 (0.35ms)
+✔ 同色恢复复用换色时钟，默认同色选择仍保持闲置 (0.2514ms)
+✔ 同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压 (7091.8049ms)
+✔ 真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制 (2244.4741ms)
+✔ 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作 (6871.459ms)
+✔ 换色取消键盘、鼠标捏压和正在旋转的owner，旧输入后续事件不会再修改重置模型 (4260.7267ms)
+✔ 减少动态时换色正确收束，动态偏好切换后可继续换色并停帧 (3073.2457ms)
+✔ 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：no-preference (5351.1458ms)
+✔ 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：reduce (4090.775ms)
+✔ 新捏压或旋转中断自动复原，快速换色及减少动态切换从当前形态接续 (7458.3923ms)
+✔ 十色真实GPU：白天首帧和night→day→night提升色度与明度，夜间精确恢复 (13671.0011ms)
+✖ 主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景 (73482.8551ms)
+✖ 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：no-preference (112769.3631ms)
+✖ 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：reduce (14752.1952ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false (169.1964ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true (103.6071ms)
+✔ 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染 (89.8302ms)
+✔ 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变 (89.9558ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=false (128.9109ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=true (146.2831ms)
+✔ 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留 (85.3457ms)
+✔ 单次stroke采用最大包络；重复采样与采样密度不会无界叠加 (186.3509ms)
+✔ 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳 (4849.7866ms)
+✔ 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心 (2594.7014ms)
+✔ 下一stroke从永久base继续，异处按压不擦除旧路径 (178.6381ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false (90.0378ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true (83.7971ms)
+✔ 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零 (44.7445ms)
+✔ 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效 (48.6863ms)
+✔ 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压 (47.9237ms)
+✔ 真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；按住时长增强并有界 (27259.3596ms)
+✔ 连续拖动、回弹中再次按压、移出松开和键盘操作；缩放主题不重建控制 (8971.7171ms)
+✔ pointercancel、丢失捕获、窗口失焦、后台和离页均释放输入并保留已完成凹痕 (27517.5191ms)
+✔ 真实模拟触摸：圆球拖动不滚页，第二触点不夺取输入，设置面板可滚动 (9315.1466ms)
+✔ 减少动态仍有局部反馈，偏好可在按住期间切换并恢复 (6968.887ms)
+✔ 轻点明显浅于长按；真实GPU长按和重复按压可以超过旧0.30硬上限 (13227.1355ms)
+✔ marshmallow real GPU: mouse/touch, frozen release/cancel/blur/background, color takeover, lifecycle and workflow (56647.3002ms)
+✔ real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps (139.1418ms)
+✔ real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps (1537.3905ms)
+✔ explicit restore, interruption, reset and instance isolation (9.1936ms)
+✔ measured GLB endpoint/middle curves with and without dwell: density and frame tolerances (1283.6863ms)
+✔ optical material isolation preserves clay defaults and source, with separate soft fibre response (93.5982ms)
+✔ real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport (210.8398ms)
+✔ deep collapse leaves a small bounded core and repeated strokes cannot drill through it (187.8992ms)
+✔ press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously (148.3381ms)
+✔ stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process (47.1481ms)
+✔ 普通移动不转；按住留白以真实模型中心连续整圈旋转，松开立即停止 (5953.9623ms)
+✔ 球体捏压与设置不触发旋转；已有凹痕跟随刚体旋转且不上传新位置 (3738.0806ms)
+✔ 旋转后实际命中对应屏幕侧；取消捏压保持旧痕，旋转中断后可重新拖动 (6082.4017ms)
+✔ 触屏留白轻触不额外滚动且不转模型，设置面板可原生滚动 (842.8147ms)
+✔ PR 检查安装依赖和浏览器并执行完整测试 (2.2323ms)
+✔ PR 模板要求范围、验证和回滚信息 (1.951ms)
+✔ 原有 Hero 样式文件保持基线原样 (937.7236ms)
+✔ Hero 后通过原生滚动到达四只独立样例和真实大厅链接 (3347.2915ms)
+✔ 大厅直接访问、无尾斜线跳转和浏览器返回均有效 (1595.6637ms)
+✔ 昼夜选择跨导航、刷新和返回保持一致，样例过渡可反向连续操作 (3673.2536ms)
+✔ 手机、短屏和横屏：样例未裁切，主入口可触达，没有水平溢出 (6220.8157ms)
+✔ 样例图片失败时占位尺寸稳定，仍能进入大厅 (1510.9828ms)
+✔ 主题存储被禁用时页面、图片和导航仍可用 (1217.2629ms)
+✔ 详情白天色彩校正可逆，四只样例与大厅玩具在昼夜仍保留原色 (18225.7978ms)
+✔ 独立面板fixture保留180/120ms、连续反转与关闭立即inert契约 (1359.9633ms)
+✔ 独立面板fixture响应减少动态并收束正在执行的动画，首页键盘保持即时反馈 (1292.9144ms)
+✔ 颜色卡片选中与键盘即时反馈，减少动态下无位移动画且色块遵循共享色表 (2173.8141ms)
+ℹ tests 92
+ℹ suites 0
+ℹ pass 89
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 627327.1386
+
+✖ failing tests:
+
+test at tests\orb-day-color.test.cjs:146:1
+✖ 主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景 (73482.8551ms)
+  page.goto: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"[22m
+  
+      at open (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:60:14)
+      at async TestContext.<anonymous> (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:147:16) {
+    name: 'TimeoutError',
+    log: [ '  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"' ]
+  }
+
+test at tests\orb-day-color.test.cjs:179:58
+✖ 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：no-preference (112769.3631ms)
+  page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4217/squishy/cloud/
+  Call log:
+  [2m  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"[22m
+  
+      at open (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:60:14)
+      at async TestContext.<anonymous> (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:180:16) {
+    name: 'Error',
+    log: [ '  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"' ]
+  }
+
+test at tests\orb-day-color.test.cjs:179:58
+✖ 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：reduce (14752.1952ms)
+  page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4217/squishy/cloud/
+  Call log:
+  [2m  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"[22m
+  
+      at open (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:60:14)
+      at async TestContext.<anonymous> (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:180:16) {
+    name: 'Error',
+    log: [ '  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"' ]
+  }

@@ -13,8 +13,8 @@ module.exports = async function measure() {
   };
   const fixture = id => { const p = rest.slice(); return { p, d: getOrbFeel(id).createDeformation(p, normal) }; };
   const advance = (d, duration, hz = 120) => { for (let t = 0; t < duration - 1e-9; t += 1 / hz) d.step(Math.min(1 / hz, duration - t)); };
-  const report = { units: 'model-space radial displacement; nearest original GLB vertex', parameters: { responsePerSecond: 360, maxDepth: .70, radialLimit: .76, footprintRadius: .66, pathSpacing: .04 }, curves: [], paths: [] };
-  for (const seconds of [.004, 1 / 120, 1 / 60, .025, .05, .1, .5, 3]) {
+  const report = { units: 'model-space radial displacement; nearest original GLB vertex', parameters: { pressResponsePerSecond: 8, sweepResponsePerSecond: 240, initialStrength: .03, holdStrength: .58, holdRampSeconds: 2, maxDepth: .70, radialLimit: .76, footprintRadius: .66, pathSpacing: .04 }, curves: [], paths: [] };
+  for (const seconds of [.004, 1 / 120, 1 / 60, .025, .05, .1, .2, .3, .5, 1, 2, 3]) {
     const row = { seconds };
     for (const id of ['clay', 'marshmallow']) { const f = fixture(id); f.d.begin(point(0)); advance(f.d, seconds); row[id] = sample(f.p, 0); }
     report.curves.push(row);

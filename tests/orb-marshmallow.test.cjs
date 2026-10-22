@@ -17,15 +17,15 @@ function depth(f, a) {
   }
   return Math.hypot(...point.map((_, k) => f.positions[index + k] - f.rest[index + k]));
 }
-test('real GLB: fast monotone collapse, faster than clay; release/cancel freezes every vertex and sleeps', async () => {
+test('real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps', async () => {
   for (const end of ['release', 'cancel']) {
     const f = await fixture(), clay = await fixture('clay');
     f.d.begin(front(0)); clay.d.begin(front(0));
     for (const t of [.008333333, .025, .05, .1]) {
       f.d.reset(); clay.d.reset(); f.d.begin(front(0)); clay.d.begin(front(0));
       advance(f.d, t); advance(clay.d, t);
-      assert.ok(depth(f, 0) > depth(clay, 0) * 5);
-      if (t >= .05) assert.ok(depth(f, 0) > .68);
+      assert.ok(depth(f, 0) > depth(clay, 0) * 1.3 && depth(f, 0) < depth(clay, 0) * 3);
+      assert.ok(depth(f, 0) < .04, 'A short press must stay shallow');
     }
     const snapshot = f.positions.slice(); f.d[end]();
     assert.deepEqual(f.positions, snapshot);
@@ -44,7 +44,7 @@ test('real GLB: fast/slow/long/reversed/crossing paths, sparse events, event den
       f.d.step(Math.min(1 / frames, duration));
     }
     const samples = [-1, -.75, -.5, -.25, 0, .25, .5, .75, 1].map(a => depth(f, a));
-    assert.ok(Math.min(...samples) > .12, JSON.stringify({ duration, frames, events, samples }));
+    assert.ok(Math.min(...samples) > .04, JSON.stringify({ duration, frames, events, samples }));
     assert.ok(Math.max(...samples) - Math.min(...samples) < .065, JSON.stringify({ duration, frames, events, samples }));
     f.d.release(); const snapshot = f.positions.slice(); advance(f.d, 2); assert.deepEqual(f.positions, snapshot);
     for (let repeat = 0; repeat < 15; repeat++) {
@@ -114,7 +114,7 @@ test('real GLB triangles retain outward winding after multidirectional crossing 
 test('deep collapse leaves a small bounded core and repeated strokes cannot drill through it', async () => {
   const f = await fixture();
   for (let n = 0; n < 40; n++) {
-    f.d.begin(front(0)); advance(f.d, .1); f.d.release();
+    f.d.begin(front(0)); advance(f.d, .5); f.d.release();
   }
   assert.ok(depth(f, 0) > .68 && depth(f, 0) <= .700001);
   let index = 0;
@@ -124,4 +124,42 @@ test('deep collapse leaves a small bounded core and repeated strokes cannot dril
   const frozen = f.positions.slice();
   advance(f.d, 30);
   assert.deepEqual(f.positions, frozen);
+});
+
+test('press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously', async () => {
+  const f = await fixture();
+  f.d.begin(front(0));
+  assert.equal(f.d.step(0).needsFrame, true, 'pressure ramp must wake even before first elapsed frame');
+  const stages = [];
+  for (let frame = 1; frame <= 180; frame++) {
+    const previous = depth(f, 0); f.d.step(1 / 60);
+    const current = depth(f, 0);
+    assert.ok(current >= previous && current - previous < .007, 'smooth monotone press per frame');
+    if ([1, 6, 18, 30, 60, 120, 180].includes(frame)) stages.push(current);
+  }
+  assert.ok(stages[0] > .002 && stages[0] < .007);
+  assert.ok(stages[1] > .02 && stages[1] < .04);
+  assert.ok(stages[2] > .06 && stages[2] < .10);
+  assert.ok(stages[3] > .11 && stages[3] < .15);
+  assert.ok(stages[4] > .21 && stages[4] < .26);
+  assert.ok(stages[6] > .39 && stages[6] < .43);
+  f.d.release(); const frozen = f.positions.slice(); advance(f.d, 5);
+  assert.deepEqual(f.positions, frozen);
+  f.d.begin(front(0)); assert.deepEqual(f.positions, frozen);
+  f.d.step(1 / 60);
+  assert.ok(depth(f, 0) > stages[6] && depth(f, 0) - stages[6] < .004);
+});
+
+test('stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process', async () => {
+  const reference = await fixture(); reference.d.begin(front(0)); advance(reference.d, .3);
+  for (const hz of [30, 60, 120]) {
+    const f = await fixture(); f.d.setReducedMotion(true); f.d.begin(front(0));
+    for (let frame = 0; frame < hz * .3; frame++) {
+      for (let event = 0; event < 20; event++) f.d.move(front(event % 2 ? .001 : -.001));
+      f.d.step(1 / hz);
+    }
+    assert.ok(Math.abs(depth(f, 0) - depth(reference, 0)) < .005);
+    f.d.cancel(); const frozen = f.positions.slice(); advance(f.d, 2);
+    assert.deepEqual(f.positions, frozen);
+  }
 });

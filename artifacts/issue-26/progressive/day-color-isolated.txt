@@ -1,0 +1,12 @@
+✔ 十色真实GPU：白天首帧和night→day→night提升色度与明度，夜间精确恢复 (13352.9991ms)
+✔ 主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景 (4129.2067ms)
+✔ 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：no-preference (2884.797ms)
+✔ 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：reduce (1985.8935ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 24339.9756
