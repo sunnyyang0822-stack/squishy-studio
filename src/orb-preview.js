@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createOrbMaterial } from './orb-optics.mjs';
 import { getOrbFeel } from './orb-feels.mjs';
+import { getOrbAppearance } from './orb-appearance.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
@@ -21,8 +22,11 @@ function releaseObject(root) {
 
 // One renderer per page. Frames run only while deformation is changing or the
 // viewport needs redrawing. Audio and shell fracture are outside this adapter.
-export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'clay' } = {}) {
+export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'clay', appearanceId = 'matte' } = {}) {
   const feel = getOrbFeel(feelId);
+  const appearance = getOrbAppearance(appearanceId);
+  const restingFloor = -.908 * appearance.scale[1];
+  const interactionLabel = feel.id === 'slow-rebound' ? '缓慢按下，松开后缓慢完整回弹' : '可按压留痕';
   let view;
   let disposed = false;
   let broken = false;
@@ -55,6 +59,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       releaseObject(root);
       throw Object.assign(error, { code: 'UNAVAILABLE' });
     }
+    root.getObjectByName('Orb_Surface').scale.multiply(new THREE.Vector3(...appearance.scale));
     const scene = new THREE.Scene();
     const pivot = new THREE.Group();
     const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
@@ -92,7 +97,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     shadowTexture.colorSpace = THREE.SRGBColorSpace;
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(2.9, 2.9), new THREE.MeshBasicMaterial({ map: shadowTexture, transparent: true, depthWrite: false, toneMapped: false }));
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -.908;
+    floor.position.y = restingFloor;
     scene.add(floor);
 
     const camera = new THREE.OrthographicCamera(-2, 2, 1.6, -1.6, .1, 30);
@@ -118,11 +123,11 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     const coating = createOrbColor(coatingColors, new THREE.Color(selectedColor.hex).toArray(), { reducedMotion: motionPreference.matches });
     colors.set(coatingColors);
     const restPositions = geometry.attributes.position.array.slice();
-    renderer.domElement.setAttribute('aria-label', `${selectedColor.name}圆球，可按压留痕`);
+    renderer.domElement.setAttribute('aria-label', `${selectedColor.name}圆球，${interactionLabel}`);
     const deformation = feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
-    surface.setAttribute('aria-label', '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
+    surface.setAttribute('aria-label', feel.id === 'slow-rebound' ? '按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车' : '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
     if (feelId === 'marshmallow') surface.setAttribute('aria-label', '棉花糖，按住或拖动快速压陷，松开完全保留；空格或回车也可按压，换色可复原');
     surface.setAttribute('aria-pressed', 'false');
     const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
@@ -200,8 +205,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
         const progress = colorStep.progress, blend = 1 - (1 - progress) ** 3;
         deformation.applyRestore(progress);
         pivot.quaternion.slerpQuaternions(restorePose.orientation, initialOrientation, blend);
-        floor.position.y = restorePose.floor + (-.908 - restorePose.floor) * blend;
-        if (progress === 1) { pivot.quaternion.copy(initialOrientation); floor.position.y = -.908; }
+        floor.position.y = restorePose.floor + (restingFloor - restorePose.floor) * blend;
+        if (progress === 1) { pivot.quaternion.copy(initialOrientation); floor.position.y = restingFloor; }
         updateBounds();
         if (progress === 1) restorePose = undefined;
       }
@@ -221,7 +226,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
           const luminance = .2126 * coatingColors[i] + .7152 * coatingColors[i + 1] + .0722 * coatingColors[i + 2];
           for (let k = 0; k < 3; k++) {
             const pigment = daylight ? Math.max(0, Math.min(1, (luminance + (coatingColors[i + k] - luminance) * 1.3) * 1.06)) : coatingColors[i + k];
-            colors[i + k] = pigment * visibility;
+            colors[i + k] = pigment * visibility * appearance.pigmentGain;
           }
         }
         colorLightingDirty = false;
@@ -285,7 +290,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       }
       for (let i = 0; i < heights.length; i++) heights[i] = (heights[i] - low) / Math.max(.001, high - low);
       coating.select(new THREE.Color(next.hex).toArray(), heights, { restart: restore });
-      renderer.domElement.setAttribute('aria-label', `${next.name}圆球，可按压留痕`);
+      renderer.domElement.setAttribute('aria-label', `${next.name}圆球，${interactionLabel}`);
     };
     current.restore = () => current.selectColor(selectedColor.id, { restore: true });
     motionPreference.addEventListener('change', event => {
@@ -299,7 +304,12 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       colorLightingDirty = true; invalidate();
     });
     current.theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    document.addEventListener('visibilitychange', invalidate, { signal: events.signal });
+    document.addEventListener('visibilitychange', () => {
+      // Slow rebound pauses offscreen after input cancellation. Resume from the
+      // current mesh, without integrating hidden wall time into a visible jump.
+      if (feel.id === 'slow-rebound') current.lastTime = null;
+      invalidate();
+    }, { signal: events.signal });
     renderer.domElement.addEventListener('webglcontextlost', event => {
       event.preventDefault();
       broken = true;

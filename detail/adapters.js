@@ -1,23 +1,27 @@
 // Lazy import keeps settings and retry usable if the engine bundle fails.
 export function createModelPreview(mount, options) {
   let renderer;
+  let rendererFeelId, rendererAppearanceId;
   let disposed = false;
-  let rendererFeel;
   let attempt = 0;
   return {
     async prepare(config, context) {
-      const nextFeel = config.feelId || options?.feelId || 'clay';
-      if (renderer && rendererFeel !== nextFeel) { renderer.dispose(); renderer = undefined; }
+      const feelId = config.feelId || options?.feelId || 'clay';
+      const appearanceId = config.appearanceId || options?.appearanceId || 'matte';
+      if (renderer && (rendererFeelId !== feelId || rendererAppearanceId !== appearanceId)) {
+        renderer.dispose(); renderer = undefined;
+      }
       if (!renderer) {
         // Failed module fetches are cached by browsers; a retry needs a fresh URL.
         const url = '/assets/orb-preview.js' + (attempt ? `?retry=${attempt}` : '');
         attempt++;
         const module = await import(url);
         if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-        renderer ||= module.createOrbPreview(mount, { ...options, feelId: nextFeel });
-        rendererFeel = nextFeel;
+        renderer ||= module.createOrbPreview(mount, { ...options, feelId, appearanceId });
+        rendererFeelId = feelId; rendererAppearanceId = appearanceId;
       }
-      return renderer.prepare(config, context);
+      const handle = await renderer.prepare(config, context);
+      return { ...handle, commit() { handle.commit(); mount.dataset.feelId = feelId; mount.dataset.appearanceId = appearanceId; } };
     },
     stopInput() { renderer?.stopInput?.(); },
     restore() { renderer?.restore?.(); },
