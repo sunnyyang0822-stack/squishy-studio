@@ -22,6 +22,7 @@ function releaseObject(root) {
 // viewport needs redrawing. Audio and shell fracture are outside this adapter.
 export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'clay' } = {}) {
   const feel = getOrbFeel(feelId);
+  const interactionLabel = feel.id === 'slow-rebound' ? '缓慢按下，松开后缓慢完整回弹' : '可按压留痕';
   let view;
   let disposed = false;
   let broken = false;
@@ -117,11 +118,11 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     const coating = createOrbColor(coatingColors, new THREE.Color(selectedColor.hex).toArray(), { reducedMotion: motionPreference.matches });
     colors.set(coatingColors);
     const restPositions = geometry.attributes.position.array.slice();
-    renderer.domElement.setAttribute('aria-label', `${selectedColor.name}圆球，可按压留痕`);
+    renderer.domElement.setAttribute('aria-label', `${selectedColor.name}圆球，${interactionLabel}`);
     const deformation = feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
-    surface.setAttribute('aria-label', '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
+    surface.setAttribute('aria-label', feel.id === 'slow-rebound' ? '按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车' : '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
     surface.setAttribute('aria-pressed', 'false');
     const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
     root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
@@ -283,7 +284,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       }
       for (let i = 0; i < heights.length; i++) heights[i] = (heights[i] - low) / Math.max(.001, high - low);
       coating.select(new THREE.Color(next.hex).toArray(), heights);
-      renderer.domElement.setAttribute('aria-label', `${next.name}圆球，可按压留痕`);
+      renderer.domElement.setAttribute('aria-label', `${next.name}圆球，${interactionLabel}`);
     };
     motionPreference.addEventListener('change', event => {
       deformation.setReducedMotion(event.matches); coating.setReducedMotion(event.matches); invalidate();
@@ -296,7 +297,12 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       colorLightingDirty = true; invalidate();
     });
     current.theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    document.addEventListener('visibilitychange', invalidate, { signal: events.signal });
+    document.addEventListener('visibilitychange', () => {
+      // Slow rebound pauses offscreen after input cancellation. Resume from the
+      // current mesh, without integrating hidden wall time into a visible jump.
+      if (feel.id === 'slow-rebound') current.lastTime = null;
+      invalidate();
+    }, { signal: events.signal });
     renderer.domElement.addEventListener('webglcontextlost', event => {
       event.preventDefault();
       broken = true;

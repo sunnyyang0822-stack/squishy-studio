@@ -21,7 +21,7 @@ for (const color of orbColors) {
   face.append(swatch, name); label.append(input, face); palette.append(label);
 }
 const controller = createDetailController({
-  renderer: createModelPreview(document.querySelector('.toy-mount'), { onUnavailable: () => controller.rendererUnavailable() }),
+  renderer: createModelPreview(document.querySelector('.toy-mount'), { feelId: document.querySelector('.toy-mount').dataset.feelId || 'clay', onUnavailable: () => controller.rendererUnavailable() }),
   audio: createSilentAudio(),
   onChange(state) {
     stage.dataset.state = state.resource;
