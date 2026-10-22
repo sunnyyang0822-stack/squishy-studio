@@ -12,9 +12,13 @@ function modelAttribute(name) {
 
 // Observe real vertex uploads instead of adding a test-only deformation API to
 // the product. The position buffer is identified by the actual GLB rest data.
-async function installOrbProbe(page, { pixels = false } = {}) {
-  await page.addInitScript(({ rest, pixels }) => {
-    window.orbMeshProbe = { rest, positions: null, uploads: 0, contexts: [], modelViewMatrix: null, orbDraws: 0, pixelFrames: [] };
+async function installOrbProbe(page, { pixels = false, frames = false } = {}) {
+  await page.addInitScript(({ rest, pixels, frames }) => {
+    window.orbMeshProbe = { rest, positions: null, uploads: 0, contexts: [], modelViewMatrix: null, orbDraws: 0, pixelFrames: [], positionFrames: [] };
+    if (frames) {
+      const request = window.requestAnimationFrame;
+      window.requestAnimationFrame = callback => request(time => { window.orbMeshProbe.frameTime = time; callback(time); });
+    }
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, ...args) {
       const gl = original.call(this, type, ...args);
@@ -91,12 +95,20 @@ async function installOrbProbe(page, { pixels = false } = {}) {
           const length = other[1] || data.length - sourceOffset;
           probe.positions.set(data.subarray(sourceOffset, sourceOffset + length), offset / 4);
           probe.uploads++;
+          if (frames) {
+            let maximum = 0;
+            for (let i = 0; i < rest.length; i += 3) maximum = Math.max(maximum, Math.hypot(probe.positions[i] - rest[i], probe.positions[i + 1] - rest[i + 1], probe.positions[i + 2] - rest[i + 2]));
+            const frame = { time: probe.frameTime, maximum, pressed: document.querySelector('.orb-input')?.getAttribute('aria-pressed') === 'true' };
+            probe.positionFrames.push(frame);
+            if (probe.positionFrames.length > 1000) probe.positionFrames.shift();
+            document.dispatchEvent(new CustomEvent('orb-probe-position', { detail: frame }));
+          }
         }
         return result;
       };
       return gl;
     };
-  }, { rest: Array.from(modelAttribute('POSITION')), pixels });
+  }, { rest: Array.from(modelAttribute('POSITION')), pixels, frames });
 }
 
 async function meshStats(page, baseline) {

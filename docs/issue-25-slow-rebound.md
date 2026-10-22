@@ -79,6 +79,10 @@
 
 外观修订后一次构建遇到 Windows 输出文件短暂被映射占用，见 [真实失败日志](../artifacts/issue-25/tests-build-lock.txt)；原命令重试即成功，未修改构建脚本或跳过构建。Impeccable 机械检查 `detect --json src/orb-preview.js src/orb-appearance.mjs detail/adapters.js detail/state.mjs` 返回 `[]`，最终桌面/手机昼夜截图与录屏抽帧均已目视核对。
 
+首轮 Linux CI 为100/102，见 [CI真实输出](../artifacts/issue-25/ci-first-run.txt)。两项浏览器测试使用“鼠标后等待120ms读取”和“换色后等待110ms读取”的墙钟取样，受到低速渲染/自动化往返影响，未可靠落在期望帧。修订只涉及测试观察方式：记录真正 POSITION 上传的首帧与rAF时间戳，首帧仍要求 `.0002–.0015`，释放深度与实际帧间隔的指数衰减误差要求小于 `.000002`；换色测试在首次恢复GPU上传后通过浏览器内微任务触发既有键盘输入，检查接管前后坐标逐项相等、继续压深及自然完整归零。不写入网格、不强制reset，不改变100ms几何响应或14s自然恢复上限。正常速度的鼠标/触屏证据仍为实际输入录屏。
+
+修订后 `SLOW_REBOUND_CPU_RATE=6 node --test tests/orb-slow-rebound-browser.test.cjs` **6/6通过、0跳过、退出0**，见 [降速模拟日志](../artifacts/issue-25/tests-throttled.txt)。这是CDP CPU降速模拟，不代表真机或实测帧率。随后普通 `npm test` 再次 **102/102通过、0跳过、退出0**；未改变产品算法、参数、外观或录屏速度。
+
 复现命令：`npm ci`、`npm test`；设置指向完整FFmpeg可执行文件的 `FFMPEG_PATH` 后运行 `node capture-slow-rebound.cjs`，即可额外生成并排对比。FFmpeg仅用于离线证据处理，没有加入项目运行依赖；未提供该环境变量时仍生成所有独立录屏和JSON报告。全套测试与最终退出码按实际执行写入以上日志。
 
 ## 局限与回滚

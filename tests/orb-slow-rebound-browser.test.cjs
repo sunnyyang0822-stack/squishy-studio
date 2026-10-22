@@ -14,7 +14,12 @@ before(async () => {
 });
 after(async () => { await browser?.close(); server?.kill(); });
 async function open(options = {}, probeOptions = {}) {
-  const page = await browser.newPage(options); await installOrbProbe(page, probeOptions);
+  const page = await browser.newPage(options);
+  if (process.env.SLOW_REBOUND_CPU_RATE) {
+    const client = await page.context().newCDPSession(page);
+    await client.send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.SLOW_REBOUND_CPU_RATE) });
+  }
+  await installOrbProbe(page, probeOptions);
   await page.goto(base + '/squishy/cloud/');
   await page.waitForSelector('.toy-stage[data-state=ready] canvas');
   await page.locator('[name=coreMaterial][value=butter]').check();
@@ -26,6 +31,13 @@ async function point(page, x = .5, y = .5) {
   const b = await page.locator('.orb-input').boundingBox(); return { x: b.x + b.width * x, y: b.y + b.height * y };
 }
 async function press(page, ms = 700) { const p = await point(page); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(ms); }
+async function reachesDepth(page, minimum) {
+  await page.waitForFunction(minimum => {
+    const p = window.orbMeshProbe;
+    for (let i = 0; i < p.rest.length; i += 3) if (Math.hypot(p.positions[i] - p.rest[i], p.positions[i + 1] - p.rest[i + 1], p.positions[i + 2] - p.rest[i + 2]) > minimum) return true;
+    return false;
+  }, minimum, { timeout: 30000 });
+}
 async function recovered(page) {
   await page.waitForFunction(() => {
     const p = window.orbMeshProbe; return p.positions?.every((v, i) => v === p.rest[i]);
@@ -35,18 +47,27 @@ async function recovered(page) {
   assert.equal((await meshStats(page)).maximum, 0);
 }
 
-test('慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离', async () => {
-  const page = await open({ viewport: { width: 1440, height: 900 } }); const errors = [];
+test('慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离', async t => {
+  const page = await open({ viewport: { width: 1440, height: 900 } }, { frames: true }); const errors = [];
   page.on('pageerror', e => errors.push(e.message));
-  await press(page, 120); const early = (await meshStats(page)).maximum;
-  assert.ok(early > .002 && early < .06);
-  await page.waitForTimeout(1800); const held = (await meshStats(page)).maximum;
-  assert.ok(held > early * 3 && held < .34);
-  await page.mouse.up(); await page.waitForTimeout(300);
-  assert.ok((await meshStats(page)).maximum > held * .55);
+  await press(page, 120); await reachesDepth(page, .10);
+  const early = await page.evaluate(() => window.orbMeshProbe.positionFrames.find(frame => frame.maximum > 0));
+  assert.ok(early.maximum > .0002 && early.maximum < .0015, `Actual first GPU frame: ${JSON.stringify(early)}`);
+  const held = (await meshStats(page)).maximum;
+  assert.ok(held > .10 && held < .34);
+  await page.mouse.up();
+  await page.waitForFunction(() => window.orbMeshProbe.positionFrames.some(frame => !frame.pressed));
+  const release = await page.evaluate(() => {
+    const frames = window.orbMeshProbe.positionFrames, index = frames.findIndex(frame => !frame.pressed);
+    return { before: frames[index - 1], after: frames[index] };
+  });
+  const expected = release.before.maximum * Math.exp(-.8 * (release.after.time - release.before.time) / 1000);
+  assert.ok(release.after.maximum > 0 && release.after.maximum < release.before.maximum);
+  assert.ok(Math.abs(release.after.maximum - expected) < .000002, `Actual GPU release follows elapsed frame time: ${JSON.stringify(release)}`);
+  t.diagnostic(JSON.stringify({ firstGpuFrame: early, release, expectedReleaseDepth: expected }));
   await recovered(page);
   await page.locator('[name=coreMaterial][value=clay]').check(); await page.waitForSelector('.toy-mount[data-feel-id=clay][data-render-count] canvas');
-  await press(page, 1000); await page.mouse.up(); await page.waitForTimeout(1800);
+  await press(page, 0); await reachesDepth(page, .12); await page.mouse.up(); await page.waitForTimeout(1800);
   assert.ok((await meshStats(page)).maximum > .07);
   await page.locator('[name=coreMaterial][value=butter]').check(); await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"][data-render-count] canvas');
   assert.equal((await meshStats(page)).maximum, 0);
@@ -60,18 +81,34 @@ test('慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏�
   assert.deepEqual(errors, []); await page.close();
 });
 
-test('新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管后全网格自然归零', async () => {
-  const page = await open(); await press(page, 1500); await page.mouse.up();
+test('新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管后全网格自然归零', async t => {
+  const page = await open({}, { frames: true }); await press(page, 0); await reachesDepth(page, .12);
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
-  await page.locator('[name=color]').nth(4).check(); await page.waitForTimeout(110);
-  assert.ok((await meshStats(page)).maximum > .005);
-  await press(page, 1000); await page.mouse.up();
-  assert.ok((await meshStats(page)).maximum > .04);
+  // Run the interruption after the first real restoration upload, inside the
+  // browser. Remote automation latency cannot skip the 650ms transition.
+  await page.evaluate(() => {
+    document.addEventListener('orb-probe-position', event => {
+      const depth = event.detail.maximum;
+      queueMicrotask(() => {
+        const probe = window.orbMeshProbe, before = Array.from(probe.positions), surface = document.querySelector('.orb-input');
+        surface.focus(); surface.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+        window.restoreInterruption = { depth, before, after: Array.from(probe.positions), pressed: surface.getAttribute('aria-pressed') };
+      });
+    }, { once: true });
+    document.querySelectorAll('[name=color]')[4].click();
+  });
+  await page.waitForFunction(() => window.restoreInterruption);
+  const interruption = await page.evaluate(() => window.restoreInterruption);
+  assert.ok(interruption.depth > .005); assert.equal(interruption.pressed, 'true');
+  assert.deepEqual(interruption.before, interruption.after, 'Input takes over the actual current GPU shape without a reset');
+  t.diagnostic(JSON.stringify({ interruptedGpuDepth: interruption.depth, inputAccepted: interruption.pressed, immediatePositionError: 0 }));
+  await page.mouse.up(); await reachesDepth(page, interruption.depth + .02); await page.keyboard.up('Space');
   await recovered(page);
   assert.equal(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')), true);
   assert.equal((await meshStats(page)).contexts, 2);
-  await press(page, 1000); await page.mouse.up(); await page.locator('[name=color]').nth(7).check();
-  await page.waitForTimeout(1000); assert.equal((await meshStats(page)).maximum, 0);
+  await press(page, 0); await reachesDepth(page, .06);
+  await page.evaluate(() => document.querySelectorAll('[name=color]')[7].click()); await page.mouse.up();
+  await recovered(page);
   assert.match(await page.locator('canvas').getAttribute('aria-label'), /完整回弹/);
   await page.close();
 });
