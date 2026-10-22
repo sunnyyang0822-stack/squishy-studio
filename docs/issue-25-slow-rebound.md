@@ -83,6 +83,8 @@
 
 修订后 `SLOW_REBOUND_CPU_RATE=6 node --test tests/orb-slow-rebound-browser.test.cjs` **6/6通过、0跳过、退出0**，见 [降速模拟日志](../artifacts/issue-25/tests-throttled.txt)。这是CDP CPU降速模拟，不代表真机或实测帧率。随后普通 `npm test` 再次 **102/102通过、0跳过、退出0**；未改变产品算法、参数、外观或录屏速度。
 
+合并最新主线 `3154a07` 后再次 `npm test`：**109/109通过，0失败/跳过，退出0**，含完整棉花糖回归。其工厂、光学材质及测试文件与主线完全一致；本次仅合并共享登记、配方映射、场景与适配器，并更新慢回弹测试对棉花糖映射的预期。最终录屏基于此次整合构建重新生成。
+
 复现命令：`npm ci`、`npm test`；设置指向完整FFmpeg可执行文件的 `FFMPEG_PATH` 后运行 `node capture-slow-rebound.cjs`，即可额外生成并排对比。FFmpeg仅用于离线证据处理，没有加入项目运行依赖；未提供该环境变量时仍生成所有独立录屏和JSON报告。全套测试与最终退出码按实际执行写入以上日志。
 
 ## 局限与回滚
