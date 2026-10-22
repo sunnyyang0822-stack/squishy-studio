@@ -1,6 +1,6 @@
 # 可复用圆球质感
 
-新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。快速塑性塌陷，释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
+新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。走查后加深至 .70 模型单位、保留至少24%安全半径；快速塑性塌陷，释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
 
 已确认的内陷行为正式命名为 **黏土**，稳定调用标识为 **`clay`**。命名的是按压行为，不是光学材质或颜色。默认圆球与后续调用它的样式共享同一实现。2026-10-22 按用户要求整体提高交互阻尼，见 [当前阻尼与实测](issue-16-clay-damping.md)。
 
@@ -50,6 +50,8 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 开始时基线 `4f4ebfe` 中 #22 尚未合并；实施中发现 PR #24 已合并，已通过合并最新 `origin/main` `959a719` 接入正式流程，移除临时独立入口。`detail/state.mjs` 仅将 `butter` 的实际 `feelId` 映射为 `slow-rebound`，用户材质选择与行为 ID 继续分离。`detail/adapters.js` 在行为 ID 改变时通过现有 `dispose` 清理旧场景，再以新 `feelId` 创建独立实例；换颜色继续在同一实例中 `prepare/commit`，不需要重建。后续步骤与最终体验沿用所选内芯的实际手感。
 
 等待CI期间 PR #28 合入棉花糖，已继续合并 `origin/main` `3154a07`。保留其 `src/orb-marshmallow.mjs`、`src/orb-optics.mjs` 及回归测试；`marshmallow` 映射和光学材质不被本预设覆盖。三种内芯现在各自独立登记。
+
+最终检查期间 PR #29 又合入棉花糖加深修订，已合并 `origin/main` `1976819`，保留其全部参数、测试和证据；共享构建产物由两种独立工厂的最新源码重新生成。
 
 自动回弹只在没有显式恢复时推进；`beginRestore/applyRestore` 交给现有换色时钟独占网格。`interruptRestore` 或新输入从当下形态接管，随后旧痕、新痕都继续自动恢复。取消结束施力但不瞬间清空形状。后台结束输入并暂停模拟，回到前台从当前网格继续；不会将后台墙钟时间作为一帧压入或回弹。减少动态效果保留缓慢按压，将释放恢复系数提高到5/s。
 

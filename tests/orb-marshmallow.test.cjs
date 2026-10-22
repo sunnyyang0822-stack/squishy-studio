@@ -25,7 +25,7 @@ test('real GLB: fast monotone collapse, faster than clay; release/cancel freezes
       f.d.reset(); clay.d.reset(); f.d.begin(front(0)); clay.d.begin(front(0));
       advance(f.d, t); advance(clay.d, t);
       assert.ok(depth(f, 0) > depth(clay, 0) * 5);
-      if (t >= .05) assert.ok(depth(f, 0) > .25);
+      if (t >= .05) assert.ok(depth(f, 0) > .68);
     }
     const snapshot = f.positions.slice(); f.d[end]();
     assert.deepEqual(f.positions, snapshot);
@@ -51,11 +51,11 @@ test('real GLB: fast/slow/long/reversed/crossing paths, sparse events, event den
       f.d.begin(front(1)); f.d.move(front(-1), 1); f.d.move([0, .94, 0], 1); f.d.move(front(1), 1);
       advance(f.d, .1); f.d.release();
     }
-    assert.ok(f.positions.every(Number.isFinite)); assert.ok(f.d.getState().depth <= .280001);
+    assert.ok(f.positions.every(Number.isFinite)); assert.ok(f.d.getState().depth <= .700001);
     for (let i = 0; i < f.rest.length; i += 3) {
       const r = Math.hypot(f.rest[i], f.rest[i + 1] - .0175, f.rest[i + 2]);
       const current = Math.hypot(f.positions[i], f.positions[i + 1] - .0175, f.positions[i + 2]);
-      assert.ok(current >= r * .57);
+      assert.ok(current >= r * .239);
     }
   }
 });
@@ -109,4 +109,19 @@ test('real GLB triangles retain outward winding after multidirectional crossing 
       assert.ok(n.reduce((sum, v, k) => sum + v * p[0][k], 0) > 0, 'No inverted triangle ' + i / 3);
     }
   }
+});
+
+test('deep collapse leaves a small bounded core and repeated strokes cannot drill through it', async () => {
+  const f = await fixture();
+  for (let n = 0; n < 40; n++) {
+    f.d.begin(front(0)); advance(f.d, .1); f.d.release();
+  }
+  assert.ok(depth(f, 0) > .68 && depth(f, 0) <= .700001);
+  let index = 0;
+  for (let i = 3; i < f.rest.length; i += 3) if (f.rest[i + 2] > f.rest[index + 2]) index = i;
+  const radius = Math.hypot(f.positions[index], f.positions[index + 1] - .0175, f.positions[index + 2]);
+  assert.ok(radius > .23 && radius < .33, 'remaining front core radius: ' + radius);
+  const frozen = f.positions.slice();
+  advance(f.d, 30);
+  assert.deepEqual(f.positions, frozen);
 });

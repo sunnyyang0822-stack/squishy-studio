@@ -1,0 +1,167 @@
+
+> squishy-studio@1.0.0 build
+> npm run build:brand && npm run build:orb
+
+
+> squishy-studio@1.0.0 build:brand
+> node scripts/build-brand.cjs
+
+
+> squishy-studio@1.0.0 build:orb
+> node scripts/build-orb.cjs
+
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (5.0199ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (1.0696ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (1.5718ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (1.8495ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.6336ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (5.8982ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (0.892ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.5417ms)
+✔ 可用样式入口、旧详情路径、完整五步与返回修改保留选择 (5112.5184ms)
+✔ 十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史有效 (1607.4365ms)
+✔ 加载失败可继续选择、前进及重试，快速换色保持最后颜色 (731.0987ms)
+✔ 分类一次只显示一组；切换分类不改配方、不重建场景；手机色卡保留辅助名称 (683.5146ms)
+✔ 桌面同显当前步骤全部可用组；手机切回分类仍保留选择 (1069.4009ms)
+✔ 桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主体可滚动触达 (16504.8071ms)
+✔ 动态高度、横竖屏与安全留白变化复用同一画布，配方保留且全部导航可触达 (1617.5827ms)
+✔ 桌面首屏可读且昼夜切换可连续操作 (4360.6648ms)
+✔ 夜间切回白天时文字快速清晰，连续切换不会重置颜色 (5894.3054ms)
+✔ 字标与主题逻辑保留用户确认的 5b5e8c7 版本 (4.8145ms)
+✔ 昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变 (4339.7561ms)
+✔ 手机和短屏仍能看到主体与切换控件 (5147.0529ms)
+✔ 减少动态效果时仍能切换 (2244.551ms)
+✔ WebGL 不可用时保留可读的备用字标 (1311.6539ms)
+✔ 圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形变输入有效 (10.9278ms)
+✔ 实际静态根返回 GLB 字节与 MIME，不误用 Next public 路径 (1702.4805ms)
+✔ 配置、主题、旋转复用真实 WebGL 场景；静止及后台不持续渲染；离页释放 (6188.1613ms)
+✔ 真实上下文丢失可重试重建，控件与导航在中断后可用 (898.6905ms)
+✔ HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重试 (1255.4437ms)
+✔ 手机圆球交互不带动页面，面板可滚动且颜色仍可选择 (1009.6329ms)
+✔ 顶部覆盖先于底部，结束精确统一颜色并停止更新 (1.9984ms)
+✔ 快速换色及动态偏好中断从当前每顶点颜色连续接续 (0.2087ms)
+✔ 同色恢复复用换色时钟，默认同色选择仍保持闲置 (0.195ms)
+✔ 同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压 (5891.842ms)
+✔ 真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制 (1883.8265ms)
+✔ 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作 (6705.7601ms)
+✔ 换色取消键盘、鼠标捏压和正在旋转的owner，旧输入后续事件不会再修改重置模型 (4229.9617ms)
+✔ 减少动态时换色正确收束，动态偏好切换后可继续换色并停帧 (2351.5251ms)
+✔ 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：no-preference (4502.6953ms)
+✔ 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：reduce (3670.2686ms)
+✔ 新捏压或旋转中断自动复原，快速换色及减少动态切换从当前形态接续 (7441.1627ms)
+✔ 十色真实GPU：白天首帧和night→day→night提升色度与明度，夜间精确恢复 (11377.8125ms)
+✔ 主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景 (3765.3256ms)
+✔ 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：no-preference (2277.9161ms)
+✔ 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：reduce (2045.7993ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false (61.3545ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true (28.7166ms)
+✔ 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染 (30.4497ms)
+✔ 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变 (27.2682ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=false (47.2208ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=true (46.4167ms)
+✔ 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留 (29.8688ms)
+✔ 单次stroke采用最大包络；重复采样与采样密度不会无界叠加 (54.2009ms)
+✔ 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳 (1878.1585ms)
+✔ 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心 (1078.4357ms)
+✔ 下一stroke从永久base继续，异处按压不擦除旧路径 (77.0034ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false (40.6407ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true (32.3846ms)
+✔ 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零 (25.7238ms)
+✔ 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效 (26.1494ms)
+✔ 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压 (23.6018ms)
+✔ 真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；按住时长增强并有界 (24144.3958ms)
+✔ 连续拖动、回弹中再次按压、移出松开和键盘操作；缩放主题不重建控制 (9447.6816ms)
+✔ pointercancel、丢失捕获、窗口失焦、后台和离页均释放输入并保留已完成凹痕 (18292.4301ms)
+✔ 真实模拟触摸：圆球拖动不滚页，第二触点不夺取输入，设置面板可滚动 (2702.9214ms)
+✔ 减少动态仍有局部反馈，偏好可在按住期间切换并恢复 (6095.8276ms)
+✖ 轻点明显浅于长按；真实GPU长按和重复按压可以超过旧0.30硬上限 (18569.6657ms)
+✖ marshmallow real GPU: mouse/touch, frozen release/cancel/blur/background, color takeover, lifecycle and workflow (9757.6271ms)
+✔ real GLB: fast monotone collapse, faster than clay; release/cancel freezes every vertex and sleeps (180.5932ms)
+✔ real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps (2277.3018ms)
+✔ explicit restore, interruption, reset and instance isolation (9.6048ms)
+✔ measured GLB endpoint/middle curves with and without dwell: density and frame tolerances (1090.476ms)
+✔ optical material isolation preserves clay defaults and source, with separate soft fibre response (90.8439ms)
+✔ real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport (234.9065ms)
+✔ deep collapse leaves a small bounded core and repeated strokes cannot drill through it (86.8387ms)
+✔ 普通移动不转；按住留白以真实模型中心连续整圈旋转，松开立即停止 (6766.6155ms)
+✔ 球体捏压与设置不触发旋转；已有凹痕跟随刚体旋转且不上传新位置 (5057.7251ms)
+✔ 旋转后实际命中对应屏幕侧；取消捏压保持旧痕，旋转中断后可重新拖动 (6289.6517ms)
+✔ 触屏留白轻触不额外滚动且不转模型，设置面板可原生滚动 (1265.4085ms)
+✔ 慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离 (45668.6443ms)
+ℹ {"firstGpuFrame":{"time":3980.6,"maximum":0.0003043681154702239,"pressed":true},"release":{"before":{"time":5102.7,"maximum":0.10304823055633149,"pressed":true},"after":{"time":5113.9,"maximum":0.10212905562512485,"pressed":false}},"expectedReleaseDepth":0.10212904252242096}
+✔ 新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管后全网格自然归零 (19567.4764ms)
+ℹ {"interruptedGpuDepth":0.11511638398194146,"inputAccepted":"true","immediatePositionError":0}
+✔ pointercancel、失焦、后台结束施力；后台暂停且前台连续恢复，离页释放 (18111.8684ms)
+✔ 手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复加速，色卡和页面可用 (8132.3117ms)
+✔ 连续切换质感最后选择生效；保留独立棉花糖且所有旧上下文释放 (2914.1687ms)
+✔ 厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，黏土与棉花糖保持原外观 (21947.6725ms)
+✔ 慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与黏土可量测区分 (396.2458ms)
+ℹ {"firstFrame":0.00030492444779649274,"at100ms":0.0025814551329477217,"at3s":0.2370615528352492,"slowAfter2s":0.04786186994405008,"clayAfter2s":0.3133114409563414}
+✔ 厚实哑光外观独立于手感：仅full-matte增厚和加深，默认外观完全保留 (5.1853ms)
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=false (480.4063ms)
+ℹ {"reduced":false,"stoppedAt":12.783333333333333,"maxFinalStep":0.000009298324584960938,"finalError":0}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=true (152.7123ms)
+ℹ {"reduced":true,"stoppedAt":2.05,"maxFinalStep":0.000009715557098388672,"finalError":0}
+✔ 驻留起点→滑动→驻留终点：中段浅、松手不造坑，整条路径恢复 (293.5132ms)
+ℹ {"angles":[-1,0,1],"depths":[0.04708233330886725,0.0019350630149811568,0.12722356308360602]}
+✔ 长按后移到新位置，当地首帧与100ms仍缓慢压入，不继承整次按住时长 (404.9271ms)
+✔ 连续滑动0.12s无驻留：无均匀深沟、路径连通且完全恢复 (198.2265ms)
+✔ 连续滑动0.8s无驻留：无均匀深沟、路径连通且完全恢复 (226.7025ms)
+✔ 连续滑动4s无驻留：无均匀深沟、路径连通且完全恢复 (356.7904ms)
+✔ 折返、交叉、重复揉压有界；旧痕和新痕最终共同消失 (664.4978ms)
+✔ 深按、长按及多轮多方向按压无残差、不外翻、不越界 (3093.5982ms)
+✔ 稀疏跨越、同帧重复move不加深；不同刷新与事件密度处于有限误差内 (845.3921ms)
+ℹ {"configurations":[{"dt":0.03333333333333333,"hz":30},{"dt":0.016666666666666666,"hz":60},{"dt":0.008333333333333333,"hz":120},{"dt":0.016666666666666666,"hz":10}],"maxCoordinateErrors":[0.0006073713302612305,0,0.0003052949905395508,0.0025894641876220703]}
+✔ 显式换色恢复独占时钟；快速重启、取消与输入中断连续接管 (211.6925ms)
+✔ 取消缓慢恢复；reset清空计时和旧路径；减少动态切换、实例和资产隔离 (314.7882ms)
+✔ PR 检查安装依赖和浏览器并执行完整测试 (2.5451ms)
+✔ PR 模板要求范围、验证和回滚信息 (2.0064ms)
+✔ 原有 Hero 样式文件保持基线原样 (1246.0798ms)
+✔ Hero 后通过原生滚动到达四只独立样例和真实大厅链接 (5309.8562ms)
+✔ 大厅直接访问、无尾斜线跳转和浏览器返回均有效 (3207.1658ms)
+✔ 昼夜选择跨导航、刷新和返回保持一致，样例过渡可反向连续操作 (5186.1746ms)
+✔ 手机、短屏和横屏：样例未裁切，主入口可触达，没有水平溢出 (8592.6833ms)
+✔ 样例图片失败时占位尺寸稳定，仍能进入大厅 (2156.1869ms)
+✔ 主题存储被禁用时页面、图片和导航仍可用 (1830.9536ms)
+✔ 详情白天色彩校正可逆，四只样例与大厅玩具在昼夜仍保留原色 (19480.7804ms)
+✔ 独立面板fixture保留180/120ms、连续反转与关闭立即inert契约 (1452.0184ms)
+✔ 独立面板fixture响应减少动态并收束正在执行的动画，首页键盘保持即时反馈 (1133.1802ms)
+✔ 颜色卡片选中与键盘即时反馈，减少动态下无位移动画且色块遵循共享色表 (2646.1229ms)
+ℹ tests 110
+ℹ suites 0
+ℹ pass 108
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 511662.5208
+
+✖ failing tests:
+
+test at tests\orb-interaction.test.cjs:216:1
+✖ 轻点明显浅于长按；真实GPU长按和重复按压可以超过旧0.30硬上限 (18569.6657ms)
+  AssertionError [ERR_ASSERTION]: {"long":0.31396367768455863,"repeated":0.38325338976177364}
+      at TestContext.<anonymous> (D:\squishy-studio\tests\orb-interaction.test.cjs:228:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests\orb-marshmallow-browser.test.cjs:4:1
+✖ marshmallow real GPU: mouse/touch, frozen release/cancel/blur/background, color takeover, lifecycle and workflow (9757.6271ms)
+  page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4216/squishy/cloud/
+  Call log:
+  [2m  - navigating to "http://127.0.0.1:4216/squishy/cloud/", waiting until "load"[22m
+
+      at run (D:\squishy-studio\tests\helpers\marshmallow-browser.cjs:28:18)
+      at async TestContext.<anonymous> (D:\squishy-studio\tests\orb-marshmallow-browser.test.cjs:5:3) {
+    name: 'Error',
+    log: [ '  - navigating to "http://127.0.0.1:4216/squishy/cloud/", waiting until "load"' ]
+  }
+
+EXIT_CODE=1
