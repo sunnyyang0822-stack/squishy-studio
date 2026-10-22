@@ -11,9 +11,12 @@ const hash = data => createHash('sha256').update(data).digest('hex');
 (async () => {
   fs.mkdirSync(folder, { recursive: true });
   const { getSquishyStyle } = await import('./src/squishy-styles.mjs');
+  const servedBundle = await fetch(`${base}/assets/orb-preview.js`);
+  assert.ok(servedBundle.ok, 'Evidence server must serve runtime bundle');
+  assert.equal(hash(Buffer.from(await servedBundle.arrayBuffer())), hash(fs.readFileSync('assets/orb-preview.js')), 'Evidence server must serve this checkout runtime');
   const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
   const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (fs.existsSync(edge) ? edge : undefined) });
-  const report = { date: new Date().toISOString(), environment: { bundleSHA256: hash(fs.readFileSync('assets/orb-preview.js')), browser: await browser.version(), mobile: 'Playwright 390×844 viewport, touch emulation; no physical device', performance: 'Observed render intervals during active input; not device FPS' }, combinations: [] };
+  const report = { date: new Date().toISOString(), environment: { bundleSHA256: hash(fs.readFileSync('assets/orb-preview.js')), browser: await browser.version(), mobile: 'Playwright 390×844 viewport, touch emulation; no physical device', performance: 'GPU target-mesh draw-call intervals; not renderer frames or FPS' }, combinations: [] };
   if (process.argv.includes('--resume')) {
     const previous = JSON.parse(fs.readFileSync(`${folder}/validation.json`, 'utf8'));
     assert.equal(previous.environment.bundleSHA256, report.environment.bundleSHA256, 'Resume requires identical runtime');
