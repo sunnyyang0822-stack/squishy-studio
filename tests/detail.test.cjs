@@ -48,7 +48,7 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(base + '/collections/');
   assert.equal(await page.locator('.collection-ready a[href*="style=orb"]').count(),1);
-  assert.equal(await page.locator('.collection-pending a').count(),0,'无模型样例没有制作入口');
+  assert.equal(await page.locator('.collection-pending').count(),0,'旧合集占位卡片已移除');
   await page.getByRole('link', { name: '开始制作' }).click();
   await ready(page);
   assert.match(page.url(), /\/squishy\/cloud\//);

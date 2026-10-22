@@ -1,6 +1,7 @@
 import { createDetailController, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames } from './state.mjs';
 import { orbColors } from './orb-colors.mjs';
 import { createModelPreview, createSilentAudio } from './adapters.js';
+import { previewStyle } from '../collections/styles.mjs';
 
 const stage = document.querySelector('.toy-stage');
 const mount = document.querySelector('.toy-mount');
@@ -87,6 +88,16 @@ function showGroups(state) {
 const url = new URL(location.href);
 const styleId = url.searchParams.get('style') || 'orb';
 const initialUrl = new URL(location.href);
+const galleryPreview = previewStyle(initialUrl.searchParams.get('preview'));
+if (galleryPreview) {
+  const note = document.querySelector('.style-placeholder-note');
+  note.textContent = `${galleryPreview.name}造型准备中 · 当前使用圆球体验`;
+  note.hidden = false;
+  document.title = `${galleryPreview.name} · 圆球代体验｜Squishy Studio`;
+  document.querySelector('.detail-back').href = `/collections/#style-${galleryPreview.id}`;
+} else {
+  initialUrl.searchParams.delete('preview');
+}
 initialUrl.searchParams.set('style', 'orb');
 initialUrl.searchParams.delete('step');
 history.replaceState({ squishyStep: 'core' }, '', initialUrl);
