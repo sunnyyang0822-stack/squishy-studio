@@ -64,7 +64,7 @@ def make(style):
     if style == 'donut':
         # Torus lies in X/Z; front opening faces Blender -Y / glTF +Z.
         bpy.ops.mesh.primitive_torus_add(major_segments=128, minor_segments=48,
-            major_radius=.75, minor_radius=.36, rotation=(math.pi/2,0,0))
+            major_radius=.72, minor_radius=.44, rotation=(math.pi/2,0,0))
         obj = bpy.context.object
         bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
         return obj
@@ -211,6 +211,7 @@ def build(style):
         +('产品已确认三角底四面体（3 个底角 + 1 个顶部），默认视角可略转以展示体积。\n' if style=='pyramid' else '')
         +('最新产品反馈覆盖最初六瓣环规格：5 个圆球为花瓣，1 个圆球为鼓起花蕊，总计 6 球融合。花蕊通过几何区分，不依赖固定材质或烘色。\n' if style=='flower' else '')
         +('按产品评审消除正背面的交汇凹点：云瓣外轮廓搭配单一连续凸起厚度曲面，保留自然瓣间轮廓，不在表面留下莫名凹陷。\n' if style=='cloud' else '')
+        +('按最新产品评审加厚环体：主半径 0.72、管半径 0.44，管径由 0.72 增至 0.88（约 22%），外径 2.32，中孔直径 0.56 仍清楚贯通。仅改变几何，不改黏土参数。\n' if style=='donut' else '')
         +'\n网格、法线与封闭性由生成脚本断言；GLB 无外部依赖，单 mesh / primitive / material。回滚时成对恢复源 `.blend` 与运行时 `.glb`，然后重新运行资产测试。\n',encoding='utf8')
     print('STYLE_DONE '+json.dumps(meta,ensure_ascii=False),flush=True)
 

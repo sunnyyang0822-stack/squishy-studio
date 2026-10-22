@@ -4,23 +4,23 @@
   "blender": "4.4.0",
   "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
   "bboxMin": [
-    -1.1100000143051147,
-    -1.1100000143051147,
-    -0.3600000739097595
+    -1.1600000858306885,
+    -1.1600000858306885,
+    -0.440000057220459
   ],
   "bboxMax": [
-    1.1100000143051147,
-    1.1100000143051147,
-    0.3600000739097595
+    1.1600000858306885,
+    1.1600000858306885,
+    0.440000057220459
   ],
   "vertices": 6144,
   "triangles": 12288,
-  "glbBytes": 222504,
+  "glbBytes": 222496,
   "meshes": 1,
   "primitives": 1,
   "materials": 1,
   "closedManifold": true,
   "externalTextures": false,
   "feelId": "clay",
-  "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"
+  "reviewStatus": "review revision: fuller donut; major radius 0.72; tube radius 0.44; through-hole diameter 0.56"
 }
