@@ -29,7 +29,7 @@ test('原有 Hero 样式文件保持基线原样', () => {
   assert.equal(createHash('sha256').update(css).digest('hex'), '3b957aaa4eb763352cc8d964fbb6a779b9d7005d0a7f0733831dd296feaa56c4');
 });
 
-test('Hero 后通过原生滚动到达四只独立样例和真实大厅链接', async () => {
+test('Hero 后通过原生滚动到达四只可进入制作的样例和真实大厅链接', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -43,8 +43,8 @@ test('Hero 后通过原生滚动到达四只独立样例和真实大厅链接', 
   assert.equal(await page.getByRole('heading', { name: '先看看，想捏哪一个' }).isVisible(), true);
   assert.equal(await page.locator('.sample').count(), 4);
   for (const sample of await page.locator('.sample').all()) {
-    assert.equal(await sample.evaluate(el => el.closest('a,button') === null), true);
-    assert.notEqual(await sample.evaluate(el => getComputedStyle(el).cursor), 'pointer');
+    assert.equal(await sample.locator('a').count(), 1);
+    assert.match(await sample.locator('a').getAttribute('href'), /^\/squishy\/cloud\/\?style=orb&preview=(cloud|paw|donut|flower)$/);
     assert.equal(await sample.locator('img').getAttribute('loading'), 'lazy');
   }
   const entry = page.getByRole('link', { name: '去合集大厅挑选' });
@@ -139,18 +139,23 @@ test('手机、短屏和横屏：样例未裁切，主入口可触达，没有�
   }
 });
 
-test('样例图片失败时占位尺寸稳定，仍能进入大厅', async () => {
+test('样例图片失败时占位尺寸稳定，样例及大厅入口仍可用', async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await page.goto(`${base}/#samples`);
   await page.evaluate(() => document.fonts.ready);
   const before = await page.locator('.sample-art').evaluateAll(elements => elements.map(el => ({ width: el.offsetWidth, height: el.offsetHeight })));
-  await page.route('**/assets/samples/*.svg', route => route.abort());
+  await page.route('**/assets/style-thumbnails/*.svg', route => route.abort());
   await page.reload();
   await scrollSamples(page);
   await page.waitForFunction(() => [...document.querySelectorAll('.sample-fallback')].every(el => !el.hidden));
   const after = await page.locator('.sample-art').evaluateAll(elements => elements.map(el => ({ width: el.offsetWidth, height: el.offsetHeight })));
   assert.deepEqual(after, before);
   assert.equal(await page.locator('.sample-fallback:visible').count(), 4);
+  await page.getByRole('link', { name: '甜甜圈：进入制作流程', exact: true }).click();
+  await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
+  assert.match(await page.locator('.style-placeholder-note').innerText(), /甜甜圈造型准备中.*圆球/);
+  await page.goBack();
+  await scrollSamples(page);
   await page.getByRole('link', { name: '去合集大厅挑选' }).click();
   // Navigation can commit before the new heading has been parsed/painted.
   await page.getByRole('heading', { name: '合集大厅', exact: true }).waitFor({ state: 'visible' });
@@ -169,4 +174,68 @@ test('主题存储被禁用时页面、图片和导航仍可用', async () => {
   assert.equal(await page.getByRole('heading', { name: '合集大厅', exact: true }).isVisible(), true);
   assert.deepEqual(errors, []);
   await page.close();
+});
+
+
+const homeStyles = [
+  { id: 'cloud', name: '云朵' },
+  { id: 'paw', name: '猫爪' },
+  { id: 'donut', name: '甜甜圈' },
+  { id: 'flower', name: '花朵' },
+];
+
+test('四个非圆球样例复用大厅资产，点击进入对应圆球代体验并可刷新返回', async () => {
+  const page = await browser.newPage({ reducedMotion: 'reduce' });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => localStorage.setItem('squishy-studio-theme', 'night'));
+  for (const style of homeStyles) {
+    await page.goto(base + '/#samples');
+    await scrollSamples(page);
+    const entry = page.getByRole('link', { name: `${style.name}：进入制作流程`, exact: true });
+    const figure = page.locator('.sample').filter({ has: entry });
+    assert.equal(await figure.locator('img').getAttribute('src'), `/assets/style-thumbnails/${style.id}.svg`);
+    assert.match(await figure.locator('figcaption').innerText(), new RegExp(`^${style.name}`));
+    await entry.click();
+    await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
+    assert.equal(new URL(page.url()).searchParams.get('style'), 'orb');
+    assert.equal(new URL(page.url()).searchParams.get('preview'), style.id);
+    assert.equal(await page.locator('.workflow-progress [data-step=core]').getAttribute('aria-current'), 'step');
+    assert.match(await page.locator('.style-placeholder-note').innerText(), new RegExp(`${style.name}造型准备中.*圆球`));
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
+    await page.reload();
+    await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
+    assert.match(await page.locator('.style-placeholder-note').innerText(), new RegExp(style.name));
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
+    await page.goBack();
+    await scrollSamples(page);
+    assert.equal(await page.getByRole('heading', { name: '先看看，想捏哪一个' }).isVisible(), true);
+    assert.equal(await page.getByRole('button', { name: '切换到白天' }).getAttribute('aria-pressed'), 'true');
+  }
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('首页样例支持键盘、触屏及减少动态效果，触控目标至少44像素', async () => {
+  for (const touch of [false, true]) {
+    const page = await browser.newPage({ viewport: { width: touch ? 390 : 1440, height: touch ? 844 : 900 }, hasTouch: touch, reducedMotion: 'reduce' });
+    await page.goto(base + '/#samples');
+    await scrollSamples(page);
+    for (const style of homeStyles) {
+      const entry = page.getByRole('link', { name: `${style.name}：进入制作流程`, exact: true });
+      const box = await entry.boundingBox();
+      assert.ok(box.width >= 44 && box.height >= 44, JSON.stringify(box));
+    }
+    const entry = page.getByRole('link', { name: '猫爪：进入制作流程', exact: true });
+    if (touch) await entry.tap();
+    else {
+      await entry.focus();
+      const focusVisible = await entry.evaluate(el => getComputedStyle(el).outlineStyle === 'solid' || getComputedStyle(el.closest('.sample')).outlineStyle === 'solid');
+      assert.equal(focusVisible, true);
+      await page.keyboard.press('Enter');
+    }
+    await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
+    assert.equal(new URL(page.url()).searchParams.get('preview'), 'paw');
+    await page.close();
+  }
 });
