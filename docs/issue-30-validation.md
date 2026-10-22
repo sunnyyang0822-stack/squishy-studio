@@ -16,7 +16,7 @@ node capture-styles.cjs
 node scripts/observe-styles-performance.cjs
 ```
 
-`npm test` 的全量结果另见主交付说明。本页只声称下面实际执行的检查。捕获脚本遇到真实形变、恢复、触摸滚页、资源错误或灯光阈值失败时退出非零，不把静态截图当成交互验收。
+最终 `npm test`（22 个测试文件）**152/152 通过、退出码 0，耗时 429.245 秒**，原始日志见 [final-tests.txt](../artifacts/issue-30/final-tests.txt)。首轮 141/152 的失败日志保留于 [full-tests.txt](../artifacts/issue-30/full-tests.txt)：扩展大厅后的链接定位歧义、旧圆球返回 URL/辅助文字兼容，以及测试错误地在返回内芯后再点击隐藏返回按钮，均已修复；原有行为断言保留。本页只声称下面实际执行的检查。捕获脚本遇到真实形变、恢复、触摸滚页、资源错误或灯光阈值失败时退出非零，不把静态截图当成交互验收。
 
 ## 检查方法
 
