@@ -1,0 +1,267 @@
+{
+  "phone": "CDP native touch emulation; no physical phone tested",
+  "observations": [
+    {
+      "name": "desktop",
+      "label": "short press",
+      "maximum": 0.2789231384511706,
+      "changed": 289,
+      "center": [
+        0.02153726235508984,
+        0.3347439553902478,
+        0.8744000083139627
+      ],
+      "uploads": 7,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "long press",
+      "maximum": 0.2789231384511706,
+      "changed": 393,
+      "center": [
+        -0.15518575491844358,
+        0.32074161016162883,
+        0.8324126329712536
+      ],
+      "uploads": 15,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "dwell endpoints and slide",
+      "maximum": 0.27999725245677703,
+      "changed": 576,
+      "center": [
+        -0.004863123359288987,
+        0.30260396609016427,
+        0.7761714525275192
+      ],
+      "uploads": 113,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "fast swipe",
+      "maximum": 0.27999725245677703,
+      "changed": 721,
+      "center": [
+        -0.003483188881621222,
+        0.18489188210710264,
+        0.7812249011941148
+      ],
+      "uploads": 158,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "long swipe",
+      "maximum": 0.27999725245677703,
+      "changed": 721,
+      "center": [
+        -0.002109572076213209,
+        0.1843631961899832,
+        0.7808919305093891
+      ],
+      "uploads": 173,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "retrace kneading",
+      "maximum": 0.27999725245677703,
+      "changed": 721,
+      "center": [
+        -0.002109572076213209,
+        0.1843631961899832,
+        0.7808919305093891
+      ],
+      "uploads": 221,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "cancel",
+      "maximum": 0.27999725245677703,
+      "changed": 768,
+      "center": [
+        -0.0012971494009035385,
+        0.23134707926958123,
+        0.761850745998528
+      ],
+      "uploads": 229,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "blur",
+      "maximum": 0.27999725245677703,
+      "changed": 768,
+      "center": [
+        -0.0012971494009035385,
+        0.23134707926958123,
+        0.761850745998528
+      ],
+      "uploads": 230,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "hidden",
+      "maximum": 0.27999725245677703,
+      "changed": 768,
+      "center": [
+        -0.0012971494009035385,
+        0.23134707926958123,
+        0.761850745998528
+      ],
+      "uploads": 231,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "interrupt explicit color restoration",
+      "maximum": 0.2789231384511706,
+      "changed": 768,
+      "center": [
+        0.0007247335398530562,
+        0.2449310274794829,
+        0.7763488705730806
+      ],
+      "uploads": 258,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "short press",
+      "maximum": 0.27892569602245176,
+      "changed": 289,
+      "center": [
+        0.021515573181856814,
+        0.334816164580133,
+        0.874369676124554
+      ],
+      "uploads": 11,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "long press",
+      "maximum": 0.27892569602245176,
+      "changed": 393,
+      "center": [
+        -0.15520715730608872,
+        0.3208140173936448,
+        0.8323778378161397
+      ],
+      "uploads": 19,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "dwell endpoints and slide",
+      "maximum": 0.2799969292020992,
+      "changed": 576,
+      "center": [
+        -0.004889666466754583,
+        0.30267723372772465,
+        0.7761441054535789
+      ],
+      "uploads": 115,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "fast swipe",
+      "maximum": 0.2799969292020992,
+      "changed": 721,
+      "center": [
+        -0.005983816461875991,
+        0.18593678515028753,
+        0.7818004449746163
+      ],
+      "uploads": 154,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "long swipe",
+      "maximum": 0.2799969292020992,
+      "changed": 721,
+      "center": [
+        -0.0021378066261603765,
+        0.18444818050022815,
+        0.7808777545189646
+      ],
+      "uploads": 172,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "retrace kneading",
+      "maximum": 0.2799969292020992,
+      "changed": 721,
+      "center": [
+        -0.0021378066261603765,
+        0.18444818050022815,
+        0.7808777545189646
+      ],
+      "uploads": 221,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "cancel",
+      "maximum": 0.2799969292020992,
+      "changed": 768,
+      "center": [
+        -0.0013250530809040542,
+        0.23142933140530972,
+        0.7618311614471163
+      ],
+      "uploads": 229,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "blur",
+      "maximum": 0.2799969292020992,
+      "changed": 768,
+      "center": [
+        -0.0013250530809040542,
+        0.23142933140530972,
+        0.7618311614471163
+      ],
+      "uploads": 230,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "hidden",
+      "maximum": 0.2799969292020992,
+      "changed": 768,
+      "center": [
+        -0.0013250530809040542,
+        0.23142933140530972,
+        0.7618311614471163
+      ],
+      "uploads": 231,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "interrupt explicit color restoration",
+      "maximum": 0.27892569602245176,
+      "changed": 768,
+      "center": [
+        -0.000041449070306334657,
+        0.24101643523509741,
+        0.7719601381659091
+      ],
+      "uploads": 269,
+      "contexts": 2
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.4283.62"
+}

@@ -1,4 +1,6 @@
-# 可复用内陷质感：黏土
+# 可复用圆球质感
+
+新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。快速塑性塌陷，释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
 
 已确认的内陷行为正式命名为 **黏土**，稳定调用标识为 **`clay`**。命名的是按压行为，不是光学材质或颜色。默认圆球与后续调用它的样式共享同一实现。2026-10-22 按用户要求整体提高交互阻尼，见 [当前阻尼与实测](issue-16-clay-damping.md)。
 
@@ -21,7 +23,7 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 // 复用 orb-input.js / orb-rotation.js 和 orb-preview.js 的协调流程。
 ```
 
-换颜色、材质、外观时保留 `feelId: 'clay'`，直接复用当前算法。无需复制/重写捏压、路径采样、留痕、恢复或输入中断逻辑。不新增面向用户的切换控件；当前只有已确认的一种质感，不假装其他质感已经实现。
+仅换颜色、材质、外观并复用黏土时保留 `feelId: 'clay'`。无需复制/重写捏压、路径采样、留痕、恢复或输入中断逻辑。制作流程棉花糖选项使用独立 `marshmallow`；默认黏土不变。此远端基线未登记 `slow-rebound`，不从其他执行者未提交工作中移入实现。
 
 ## 黏土行为约定
 

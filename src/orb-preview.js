@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { createOrbMaterial } from './orb-optics.mjs';
 import { getOrbFeel } from './orb-feels.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
@@ -102,9 +103,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     const geometry = mesh.geometry;
     // Diffuse, solid surface. Colors share the existing geometry and material;
     // no new GLBs, textures, transparent shells or layered draw calls.
-    mesh.material.color.set(0xffffff);
-    mesh.material.roughness = .82;
-    mesh.material.metalness = 0;
+    const sourceMaterial = mesh.material;
+    mesh.material = createOrbMaterial(sourceMaterial, feelId);
+    sourceMaterial.dispose();
     const colors = new Float32Array(geometry.attributes.position.count * 3);
     const coatingColors = new Float32Array(colors.length);
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3).setUsage(THREE.DynamicDrawUsage));
@@ -122,6 +123,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
     surface.setAttribute('aria-label', '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
+    if (feelId === 'marshmallow') surface.setAttribute('aria-label', '棉花糖，按住或拖动快速压陷，松开完全保留；空格或回车也可按压，换色可复原');
     surface.setAttribute('aria-pressed', 'false');
     const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
     root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
