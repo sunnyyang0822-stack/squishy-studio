@@ -1,0 +1,26 @@
+{
+  "id": "cylinder",
+  "name": "圆柱",
+  "blender": "4.4.0",
+  "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
+  "bboxMin": [
+    -0.9983342885971069,
+    -0.7250000834465027,
+    -0.9983342885971069
+  ],
+  "bboxMax": [
+    0.9983342885971069,
+    0.7250000834465027,
+    0.9983342885971069
+  ],
+  "vertices": 6424,
+  "triangles": 12844,
+  "glbBytes": 232560,
+  "meshes": 1,
+  "primitives": 1,
+  "materials": 1,
+  "closedManifold": true,
+  "externalTextures": false,
+  "feelId": "clay",
+  "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"
+}

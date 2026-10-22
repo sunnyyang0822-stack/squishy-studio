@@ -1,0 +1,26 @@
+{
+  "id": "flower",
+  "name": "花朵",
+  "blender": "4.4.0",
+  "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
+  "bboxMin": [
+    -1.1890532970428467,
+    -1.2613691091537476,
+    -0.6930740475654602
+  ],
+  "bboxMax": [
+    1.1890532970428467,
+    1.2613691091537476,
+    0.6930740475654602
+  ],
+  "vertices": 8814,
+  "triangles": 17624,
+  "glbBytes": 318600,
+  "meshes": 1,
+  "primitives": 1,
+  "materials": 1,
+  "closedManifold": true,
+  "externalTextures": false,
+  "feelId": "clay",
+  "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"
+}
