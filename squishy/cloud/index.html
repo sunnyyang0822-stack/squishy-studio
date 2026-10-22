@@ -18,16 +18,15 @@
   </header>
   <nav class="workflow-progress" aria-label="制作步骤">
     <ol>
-      <li data-step="core"><span class="progress-label">内芯设置</span><span class="progress-track" aria-hidden="true"></span></li>
-      <li data-step="shell"><span class="progress-label">外壳设置</span><span class="progress-track" aria-hidden="true"></span></li>
-      <li data-step="decoration"><span class="progress-label">装饰选择</span><span class="progress-track" aria-hidden="true"></span></li>
-      <li data-step="making"><span class="progress-label">制作准备</span><span class="progress-track" aria-hidden="true"></span></li>
-      <li data-step="play"><span class="progress-label">开始捏捏</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="core"><span class="progress-label">内芯</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="shell"><span class="progress-label">外壳</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="decoration"><span class="progress-label">装饰</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="making"><span class="progress-label">制作</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="play"><span class="progress-label">试捏</span><span class="progress-track" aria-hidden="true"></span></li>
     </ol>
   </nav>
   <main class="detail-main">
     <section class="toy-area" aria-label="奶油圆球">
-      <div class="toy-heading"><span class="preview-badge">加载中</span><h1>奶油圆球</h1><p class="toy-hint">按住轻压，拖动留白可旋转。</p></div>
       <div class="toy-stage" id="toy-stage" role="region" aria-label="奶油圆球展示区" aria-busy="true">
         <div class="toy-halo" aria-hidden="true"></div>
         <div class="toy-mount"></div>
@@ -36,10 +35,11 @@
       <div class="making-blank" hidden aria-label="制作动画区域"></div>
     </section>
     <section class="step-panel" aria-label="制作设置">
-      <div class="step-head"><span class="step-counter"></span><h2 class="step-title"></h2><p class="step-intro"></p></div>
+      <div class="step-head sr-only"><h1 class="step-title"></h1></div>
+      <div class="category-tabs" role="group" aria-label="设置分类"></div>
       <div class="step-options"></div>
       <output class="configuration-summary sr-only" aria-live="polite"></output>
-      <p class="configuration-error" role="status" hidden>已保留你的选择。</p>
+      <p class="configuration-error" role="status" hidden>请重试</p>
       <div class="step-navigation"><button class="step-back" type="button">上一步</button><button class="step-next" type="button">下一步</button></div>
     </section>
     <noscript><p class="no-script">请启用 JavaScript 以制作圆球；仍可通过上方导航返回合集。</p></noscript>

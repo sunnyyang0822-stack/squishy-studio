@@ -4,12 +4,12 @@ const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
 const { installOrbProbe, settled } = require('./helpers/orb-probe.cjs');
-const base = 'http://127.0.0.1:4197';
+const base = 'http://127.0.0.1:4217';
 let browser, server, Color;
 
 before(async () => {
   ({ Color } = await import('three'));
-  server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4197' } });
+  server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4217' } });
   for (let i = 0; i < 60; i++) {
     try { if ((await fetch(base)).ok) break; } catch {}
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -60,6 +60,7 @@ async function open(options = {}, theme = 'day') {
   await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.dayColorProbe.colors && window.orbMeshProbe.modelViewMatrix);
   await idle(page);
+  await page.locator('[data-category=coreColor]').click();
   return page;
 }
 

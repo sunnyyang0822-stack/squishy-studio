@@ -17,6 +17,7 @@ async function open(options = {}) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, ...options });
   await installOrbProbe(page); await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.orbMeshProbe?.modelViewMatrix);
+  await page.locator('[data-category=coreColor]').click();
   return page;
 }
 const matrix = page => page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice());
@@ -123,7 +124,7 @@ test('旋转后实际命中对应屏幕侧；取消捏压保持旧痕，旋转�
 });
 
 test('触屏留白轻触不额外滚动且不转模型，设置面板可原生滚动', async () => {
-  const page = await open({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true });
+  const page = await open({ viewport: { width: 390, height: 450 }, isMobile: true, hasTouch: true });
   const original = await matrix(page), session = await page.context().newCDPSession(page);
   const blank = await page.locator('.toy-stage').boundingBox();
   const before = await page.evaluate(() => scrollY);

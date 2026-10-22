@@ -43,6 +43,7 @@ test('配置、主题、旋转复用真实 WebGL 场景；静止及后台不持�
   let loads = 0;
   page.on('request', request => { if (request.url().includes('squishy-orb.glb')) loads++; });
   await page.goto(base + path); await ready(page);
+  await page.locator('[data-category=coreColor]').click();
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
   const settledFrames = await page.evaluate(() => window.orbProbe.frames);
   await page.waitForTimeout(180);
@@ -80,7 +81,7 @@ test('配置、主题、旋转复用真实 WebGL 场景；静止及后台不持�
   assert.equal(await page.evaluate(() => window.orbProbe.frames), disposedFrames, 'Observers and pending frames removed');
   for (let i = 0; i < 3; i++) {
     await page.goto(base + '/collections/');
-    await page.getByRole('link', { name: '选择奶油圆球开始制作' }).click(); await ready(page);
+    await page.getByRole('link', { name: '开始制作' }).click(); await ready(page);
     assert.equal(await page.locator('.toy-mount canvas').count(), 1);
     assert.equal(await page.evaluate(() => window.orbProbe.contexts.length), 1);
   }
@@ -90,6 +91,7 @@ test('配置、主题、旋转复用真实 WebGL 场景；静止及后台不持�
 test('真实上下文丢失可重试重建，控件与导航在中断后可用', async () => {
   const page = await browser.newPage(); await instrument(page);
   await page.goto(base + path); await ready(page);
+  await page.locator('[data-category=coreColor]').click();
   await page.evaluate(() => window.orbProbe.contexts[0].getExtension('WEBGL_lose_context').loseContext());
   await page.waitForSelector('[data-state=unavailable]');
   await page.locator('[name=color]').nth(3).check();
@@ -113,6 +115,7 @@ test('HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重
   const bundle = await browser.newPage();
   await bundle.route('**/orb-preview.js*', route => route.abort());
   await bundle.goto(base + path); await bundle.waitForSelector('[data-state=error]');
+  await bundle.locator('[data-category=coreColor]').click();
   await bundle.locator('[name=color]').nth(2).check();
   assert.equal(await bundle.locator('[name=color]').nth(2).isChecked(), true);
   assert.equal(await bundle.getByRole('link', { name: '返回合集' }).isVisible(), true);
@@ -121,8 +124,9 @@ test('HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重
 });
 
 test('手机圆球交互不带动页面，面板可滚动且颜色仍可选择', async () => {
-  const page = await browser.newPage({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
+  const page = await browser.newPage({ viewport: { width: 390, height: 450 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
   await page.goto(base + path); await ready(page);
+  await page.locator('[data-category=coreColor]').click();
   const session = await page.context().newCDPSession(page);
   const box = await page.locator('.orb-input').boundingBox();
   const baseline = await page.evaluate(() => scrollY);

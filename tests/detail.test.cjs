@@ -21,8 +21,13 @@ const ready = page => page.waitForSelector('.toy-stage[data-state="ready"]');
 const group = (page, name) => page.getByRole('group', { name });
 const choice = (page, groupName, name) => group(page, groupName).getByRole('radio', { name, exact: true });
 const next = page => page.getByRole('button', { name: '下一步' }).click();
+const show = (page, id) => page.locator(`[data-category="${id}"]`).click();
+const current = (page, id) => page.locator(`.workflow-progress li[data-step="${id}"]`).getAttribute('aria-current');
 async function progress(page, index) {
   const values = await page.locator('.workflow-progress li').evaluateAll(items => items.map(item => ({ status: item.dataset.status, current: item.getAttribute('aria-current') })));
+  assert.deepEqual(await page.locator('.workflow-progress .progress-label').allTextContents(), ['内芯','外壳','装饰','制作','试捏']);
+  assert.equal(await page.locator('.step-head').evaluate(el => el.classList.contains('sr-only')), true);
+  assert.equal(await page.locator('.step-counter,.step-intro').count(), 0);
   assert.deepEqual(values.map(item => item.status), values.map((_,i) => i < index ? 'complete' : i === index ? 'current' : 'upcoming'));
   assert.equal(values.filter(item => item.current === 'step').length,1);
   assert.equal(values[index].current,'step');
@@ -35,13 +40,20 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   await page.goto(base + '/collections/');
   assert.equal(await page.locator('.collection-ready a[href*="style=orb"]').count(),1);
   assert.equal(await page.locator('.collection-pending a').count(),0,'无模型样例没有制作入口');
-  await page.getByRole('link', { name: /圆球/ }).click();
+  await page.getByRole('link', { name: '开始制作' }).click();
   await ready(page);
   assert.match(page.url(), /\/squishy\/cloud\//);
-  assert.equal(await page.getByRole('heading', { name: '内芯设置' }).isVisible(), true);
+  assert.equal(await page.locator('.step-head').evaluate(el => el.classList.contains('sr-only')), true);
+  assert.deepEqual(await page.locator('.step-head').evaluate(el => [el.getBoundingClientRect().width, el.getBoundingClientRect().height]), [1,1]);
+  assert.equal(await page.locator('.step-title').textContent(), '内芯设置');
+  assert.equal(await page.locator('[data-category=coreMaterial]').textContent(), '材质');
+  assert.equal(await page.locator('[data-category=coreColor]').textContent(), '颜色');
+  assert.equal(await page.locator('[data-category=filling]').textContent(), '填充物');
   await progress(page,0);
   await choice(page, '内芯材质', '棉花糖').check();
+  await show(page, 'filling');
   await choice(page, '填充物', '仿真米粒').check();
+  await show(page, 'coreColor');
   await choice(page, '内芯颜色', '薄荷绿').check();
   await page.locator('.orb-input').focus();
   await page.keyboard.down('Space');
@@ -49,12 +61,17 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   await page.keyboard.up('Space');
   assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'false');
   await next(page);
-  assert.equal(await page.getByRole('heading', { name: '外壳设置' }).isVisible(), true);
+  assert.equal(await current(page, 'shell'), 'step');
+  assert.equal(await page.locator('.step-title').textContent(), '外壳设置');
+  assert.equal(await page.locator('[data-category=shellColor]').textContent(), '颜色');
+  assert.equal(await page.locator('[data-category=shellMaterial]').textContent(), '材质');
+  assert.equal(await page.locator('[data-category=waxThickness]').textContent(), '厚度');
   await progress(page,1);
   await choice(page, '外壳颜色', '雾蓝').check();
+  await show(page, 'shellMaterial');
   await choice(page, '外壳材质', '糖').check();
   await next(page);
-  assert.equal(await page.getByRole('heading', { name: '装饰选择' }).isVisible(), true);
+  assert.equal(await current(page, 'decoration'), 'step');
   await progress(page,2);
   await choice(page, '装饰', '3').check();
   await page.locator('.orb-input').focus();
@@ -63,14 +80,14 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   await next(page);
   assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'false');
   await page.keyboard.up('Space');
-  assert.equal(await page.getByRole('heading', { name: /制作/ }).isVisible(), true);
+  assert.equal(await current(page, 'making'), 'step');
   assert.equal(await page.locator('.making-blank').isVisible(), true);
   await progress(page,3);
   assert.equal(await page.getByRole('button', { name: '开始捏捏' }).isVisible(), true);
   assert.doesNotMatch(await page.locator('.step-panel').innerText(), /\d+%|请等待|倒计时/);
   await page.getByRole('button', { name: '开始捏捏' }).click();
   await ready(page);
-  assert.equal(await page.getByRole('heading', { name: '开始捏捏' }).isVisible(), true);
+  assert.equal(await current(page, 'play'), 'step');
   await progress(page,4);
   assert.equal(await page.locator('.toy-mount').getAttribute('data-color'), 'sky');
   await page.locator('.orb-input').focus();
@@ -82,11 +99,16 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   await progress(page,2);
   assert.equal(await choice(page, '装饰', '3').isChecked(), true);
   await page.getByRole('button', { name: '上一步' }).click();
+  await show(page, 'shellColor');
   assert.equal(await choice(page, '外壳颜色', '雾蓝').isChecked(), true);
+  await show(page, 'shellMaterial');
   assert.equal(await choice(page, '外壳材质', '糖').isChecked(), true);
   await page.getByRole('button', { name: '上一步' }).click();
+  await show(page, 'coreMaterial');
   assert.equal(await choice(page, '内芯材质', '棉花糖').isChecked(), true);
+  await show(page, 'filling');
   assert.equal(await choice(page, '填充物', '仿真米粒').isChecked(), true);
+  await show(page, 'coreColor');
   assert.equal(await choice(page, '内芯颜色', '薄荷绿').isChecked(), true);
   assert.equal(await page.locator('.toy-mount').getAttribute('data-color'), 'mint');
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
@@ -97,9 +119,9 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   await direct.goto(base + '/squishy/cloud');
   await ready(direct);
   assert.equal(direct.url(), base + path + '?style=orb');
-  assert.equal(await direct.getByRole('heading', { name: '内芯设置' }).isVisible(), true);
+  assert.equal(await current(direct, 'core'), 'step');
   await direct.reload(); await ready(direct);
-  assert.equal(await direct.getByRole('heading', { name: '内芯设置' }).isVisible(), true);
+  assert.equal(await current(direct, 'core'), 'step');
   await direct.close();
 });
 
@@ -107,6 +129,7 @@ test('十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史�
   const { orbColors } = await import('../detail/orb-colors.mjs');
   const page = await browser.newPage();
   await page.goto(base + path); await ready(page);
+  await show(page, 'coreColor');
   assert.equal(await group(page, '内芯颜色').getByRole('radio').count(), 10);
   for (const { id, name } of orbColors) {
     await choice(page, '内芯颜色', name).check();
@@ -118,23 +141,29 @@ test('十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史�
   await next(page);
   assert.equal(await group(page, '外壳颜色').getByRole('radio').count(), 10);
   await choice(page, '外壳颜色', '奶油粉').check();
+  await show(page, 'waxThickness');
   await choice(page, '蜡的厚度', '厚').focus();
   await choice(page, '蜡的厚度', '厚').check();
+  await show(page, 'shellMaterial');
   await choice(page, '外壳材质', '指甲油').check();
   assert.equal(await group(page, '蜡的厚度').isVisible(), false);
+  assert.equal(await page.locator('[data-category="waxThickness"]').isVisible(), false);
   assert.equal(await page.evaluate(() => document.querySelector('[data-group="waxThickness"]').contains(document.activeElement)), false);
   await choice(page, '外壳材质', '蜡').check();
+  await show(page, 'waxThickness');
   assert.equal(await choice(page, '蜡的厚度', '厚').isChecked(), true);
   await page.goBack();
-  assert.equal(await page.getByRole('heading', { name: '内芯设置' }).isVisible(), true);
+  assert.equal(await current(page, 'core'), 'step');
   await page.goForward();
-  assert.equal(await page.getByRole('heading', { name: '外壳设置' }).isVisible(), true);
+  assert.equal(await current(page, 'shell'), 'step');
+  await show(page, 'waxThickness');
   assert.equal(await choice(page, '蜡的厚度', '厚').isChecked(), true);
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
   await page.reload(); await ready(page);
   await progress(page,0);
+  await show(page, 'coreColor');
   assert.equal(await choice(page,'内芯颜色','奶油粉').isChecked(),true,'刷新开始新的默认配方');
-  assert.equal(await page.getByRole('heading',{name:'内芯设置'}).isVisible(),true);
+  assert.equal(await current(page, 'core'), 'step');
   await page.goto(base + path + '?style=missing&step=invalid'); await ready(page);
   assert.equal(page.url(),base + path + '?style=orb');
   await progress(page,0);
@@ -145,10 +174,12 @@ test('加载失败可继续选择、前进及重试，快速换色保持最后�
   const page = await browser.newPage();
   await page.route('**/squishy-orb.glb', route => route.abort());
   await page.goto(base + path); await page.waitForSelector('.toy-stage[data-state="error"]');
+  await show(page, 'coreColor');
   await choice(page, '内芯颜色', '薄荷绿').check();
   await next(page);
-  assert.equal(await page.getByRole('heading', { name: '外壳设置' }).isVisible(), true);
+  assert.equal(await current(page, 'shell'), 'step');
   await page.getByRole('button', { name: '上一步' }).click();
+  await show(page, 'coreColor');
   assert.equal(await choice(page, '内芯颜色', '薄荷绿').isChecked(), true);
   await page.unroute('**/squishy-orb.glb');
   await page.getByRole('button', { name: '重新加载' }).click();
@@ -161,6 +192,32 @@ test('加载失败可继续选择、前进及重试，快速换色保持最后�
   });
   await page.waitForFunction(() => document.querySelector('.toy-mount').dataset.color === 'sky');
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
+  await page.close();
+});
+
+test('分类一次只显示一组；切换分类不改配方、不重建场景；手机色卡保留辅助名称', async () => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
+  await page.goto(base + path); await ready(page);
+  const canvas = await page.locator('.toy-mount canvas').elementHandle();
+  const initial = await page.locator('.configuration-summary').textContent();
+  const loads = await page.evaluate(() => performance.getEntriesByType('resource').filter(item => item.name.includes('squishy-orb.glb')).length);
+  assert.deepEqual(await page.locator('.choice-group:visible').evaluateAll(items => items.map(item => item.dataset.group)), ['coreMaterial']);
+  await show(page, 'coreColor');
+  assert.deepEqual(await page.locator('.choice-group:visible').evaluateAll(items => items.map(item => item.dataset.group)), ['coreColor']);
+  assert.equal(await group(page, '内芯材质').isVisible(), false);
+  assert.equal(await page.locator('.color-name:visible').count(), 0);
+  assert.equal(await group(page, '内芯颜色').getByRole('radio', { name: '奶油粉' }).count(), 1);
+  const swatch = await choice(page, '内芯颜色', '奶油粉').boundingBox();
+  assert.ok(swatch.width >= 44 && swatch.height >= 44);
+  await show(page, 'filling');
+  assert.deepEqual(await page.locator('.choice-group:visible').evaluateAll(items => items.map(item => item.dataset.group)), ['filling']);
+  assert.equal(await page.locator('.configuration-summary').textContent(), initial);
+  assert.equal(await page.evaluate(() => performance.getEntriesByType('resource').filter(item => item.name.includes('squishy-orb.glb')).length), loads);
+  assert.equal(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')), true);
+  await next(page);
+  assert.deepEqual(await page.locator('.choice-group:visible').evaluateAll(items => items.map(item => item.dataset.group)), ['shellColor']);
+  await show(page, 'shellMaterial');
+  assert.deepEqual(await page.locator('.choice-group:visible').evaluateAll(items => items.map(item => item.dataset.group)), ['shellMaterial']);
   await page.close();
 });
 
@@ -179,6 +236,13 @@ test('桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主�
     assert.equal(new Set(coreButtons.map(box => box.y)).size, 1, '三种内芯材质同排');
     assert.ok(coreButtons.every(box => box.width >= 44 && box.height >= 44), '内芯按钮至少44px');
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, JSON.stringify({ viewport, theme }));
+    if (viewport.width <= 390 && viewport.height >= 568) {
+      for (const category of ['coreMaterial', 'coreColor', 'filling']) {
+        await show(page, category);
+        assert.ok(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1),
+          JSON.stringify({ viewport, theme, category }) + ' should fit one screen');
+      }
+    }
     const toy = await page.locator('.toy-stage').boundingBox();
     const panel = await page.locator('.step-panel').boundingBox();
     assert.ok(toy.width >= 160 && toy.height >= 140, JSON.stringify({ viewport, toy }));
@@ -201,6 +265,7 @@ test('动态高度、横竖屏与安全留白变化复用同一画布，配方�
   const page = await browser.newPage({viewport:{width:390,height:844},hasTouch:true});
   await page.goto(base+path); await ready(page);
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
+  await show(page, 'coreColor');
   await choice(page,'内芯颜色','柠檬黄').check();
   for (const viewport of [{width:390,height:600},{width:390,height:744},{width:844,height:390},{width:390,height:844},{width:320,height:568}]) {
     await page.setViewportSize(viewport);

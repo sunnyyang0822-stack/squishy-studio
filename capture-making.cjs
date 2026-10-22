@@ -1,14 +1,14 @@
 const { chromium } = require('playwright');
 const { spawn } = require('node:child_process');
-const { mkdirSync, unlinkSync } = require('node:fs');
+const { mkdirSync, unlinkSync, writeFileSync } = require('node:fs');
 const { join } = require('node:path');
 
 const folder = join(__dirname, 'artifacts', 'issue-22');
-const base = 'http://127.0.0.1:4192';
+const base = 'http://127.0.0.1:4194';
 const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 async function main() {
   mkdirSync(folder, { recursive: true });
-  const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4192' } });
+  const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4194' } });
   let browser;
   try {
     for (let i = 0; i < 80; i++) {
@@ -16,6 +16,7 @@ async function main() {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || edge, headless: true });
+    const viewports = [];
     for (const [name, width, height] of [['desktop',1440,900],['mobile',390,844],['small',320,568],['landscape',844,390]]) {
       for (const theme of ['day','night']) {
         const page = await browser.newPage({ viewport: { width, height }, hasTouch: width < 600, reducedMotion: 'reduce' });
@@ -23,6 +24,14 @@ async function main() {
         await page.goto(base + '/squishy/cloud/?style=orb');
         await page.waitForSelector('.toy-stage[data-state=ready]');
         await page.evaluate(() => document.fonts.ready);
+        if (name === 'desktop' || name === 'mobile') await page.screenshot({ path: join(folder, `${name}-material-${theme}.png`), fullPage: true });
+        await page.locator('[data-category=coreColor]').click();
+        viewports.push({ name, theme, ...await page.evaluate(() => ({
+          viewport: [innerWidth,innerHeight],
+          document: [document.documentElement.scrollWidth,document.documentElement.scrollHeight],
+          stage: document.querySelector('.toy-stage').getBoundingClientRect().toJSON(),
+          panel: document.querySelector('.step-panel').getBoundingClientRect().toJSON(),
+        })) });
         await page.screenshot({ path: join(folder, `${name}-${theme}.png`), fullPage: true });
         await page.close();
       }
@@ -31,6 +40,7 @@ async function main() {
     const trialPage = await trial.newPage(), trialVideo = trialPage.video();
     await trialPage.goto(base + '/squishy/cloud/');
     await trialPage.waitForSelector('.toy-stage[data-state=ready]');
+    await trialPage.locator('[data-category=coreColor]').click();
     const trialBox = await trialPage.locator('.orb-input').boundingBox();
     await trialPage.mouse.move(trialBox.x + trialBox.width * .4, trialBox.y + trialBox.height * .5);
     await trialPage.mouse.down(); await trialPage.waitForTimeout(700);
@@ -47,18 +57,22 @@ async function main() {
     const page = await context.newPage();
     const video = page.video();
     await page.goto(base + '/collections/');
-    await page.getByRole('link', { name: '选择奶油圆球开始制作' }).click();
+    await page.locator('.collection-ready a').click();
     await page.waitForSelector('.toy-stage[data-state=ready]');
     const surface = page.locator('.orb-input');
     const box = await surface.boundingBox();
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await page.mouse.down(); await page.waitForTimeout(600); await page.mouse.move(box.x + box.width * .55, box.y + box.height * .5, { steps: 8 }); await page.mouse.up();
+    await page.locator('[data-category=coreColor]').click();
     await page.locator('[name=color][value=mint]').check();
     await page.waitForTimeout(900);
+    await page.locator('[data-category=coreMaterial]').click();
     await page.locator('[name=coreMaterial][value=marshmallow]').check();
+    await page.locator('[data-category=filling]').click();
     await page.locator('[name=filling][value=rice]').check();
     await page.getByRole('button', { name: '下一步' }).click();
     await page.locator('[name=shellColor][value=shell-sky]').check();
+    await page.locator('[data-category=shellMaterial]').click();
     await page.locator('[name=shellMaterial][value=polish]').check();
     await page.waitForTimeout(800);
     await page.screenshot({ path: join(folder,'desktop-shell.png'), fullPage: true });
@@ -80,6 +94,7 @@ async function main() {
     await context.close();
     await video.saveAs(join(folder, 'full-flow.webm'));
     unlinkSync(await video.path());
+    writeFileSync(join(folder,'visual-check.json'),JSON.stringify({ browser:await browser.version(), automation:'Playwright / Windows Edge；手机为模拟视口与触屏，未进行真机手机验证', viewports },null,2));
   } finally { await browser?.close(); server.kill(); }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

@@ -17,6 +17,7 @@ async function open(options = {}) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, ...options });
   await installOrbProbe(page, { pixels: true }); await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.orbMeshProbe?.pixelFrames.length);
+  await page.locator('[data-category=coreColor]').click();
   return page;
 }
 const frame = page => page.evaluate(() => structuredClone(window.orbMeshProbe.pixelFrames.at(-1)));

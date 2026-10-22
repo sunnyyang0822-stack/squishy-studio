@@ -20,12 +20,25 @@ const groups = [
   { step: 'decoration', id: 'decoration', label: '装饰', names: decorationNames },
 ];
 const panels = new Map();
+const categoryButtons = new Map();
+const selectedGroups = { core: 'coreMaterial', shell: 'shellColor', decoration: 'decoration' };
+const categoryTabs = document.querySelector('.category-tabs');
 let controller;
 for (const group of groups) {
   const fieldset = document.createElement('fieldset');
+  fieldset.id = `group-${group.id}`;
   fieldset.className = `choice-group ${group.colors ? 'color-picker' : ''}`;
   fieldset.dataset.group = group.id;
   const legend = document.createElement('legend'); legend.textContent = group.label;
+  legend.className = 'sr-only';
+  if (group.step !== 'decoration') {
+    const button = document.createElement('button');
+    button.type = 'button'; button.className = 'category-button'; button.dataset.category = group.id;
+    button.textContent = ({ coreMaterial: '材质', coreColor: '颜色', shellColor: '颜色', shellMaterial: '材质', waxThickness: '厚度' })[group.id] || group.label;
+    button.setAttribute('aria-controls', fieldset.id);
+    categoryTabs.append(button); categoryButtons.set(group.id, button);
+    on(button, 'click', () => { selectedGroups[group.step] = group.id; showGroups(controller.getState()); });
+  }
   const choices = document.createElement('div'); choices.className = group.colors ? 'color-options' : 'text-options';
   for (const [id, name] of Object.entries(group.names)) {
     const label = document.createElement('label'); label.className = group.colors ? 'color-choice' : 'text-choice';
@@ -39,11 +52,31 @@ for (const group of groups) {
       swatch.style.backgroundColor = orbColors.find(color => color.id === id).hex;
       swatch.setAttribute('aria-hidden', 'true'); face.append(swatch);
     }
-    const text = document.createElement('span'); text.textContent = name; face.append(text);
+    const text = document.createElement('span'); text.textContent = name;
+    if (group.colors) { text.className = 'color-name'; input.setAttribute('aria-label',name); }
+    face.append(text);
     label.append(input, face); choices.append(label);
     on(input, 'change', () => { if (input.checked) void controller.select(group.id, id); });
   }
   fieldset.append(legend, choices); options.append(fieldset); panels.set(group.id, { fieldset, step: group.step });
+}
+function showGroups(state) {
+  const { step, recipe } = state;
+  if (selectedGroups.shell === 'waxThickness' && recipe.shellMaterial !== 'wax') selectedGroups.shell = 'shellMaterial';
+  categoryTabs.hidden = !['core','shell'].includes(step);
+  for (const [id, panel] of panels) {
+    const available = panel.step === step && (id !== 'waxThickness' || recipe.shellMaterial === 'wax');
+    const visible = available && selectedGroups[step] === id;
+    const button = categoryButtons.get(id);
+    if (button) {
+      if (!available && document.activeElement === button) button.blur();
+      button.hidden = !available;
+      button.setAttribute('aria-expanded',String(visible));
+    }
+    if (!visible && panel.fieldset.contains(document.activeElement)) document.activeElement.blur();
+    panel.fieldset.hidden = !visible;
+    for (const input of panel.fieldset.querySelectorAll('input')) input.checked = input.dataset.choice === recipe[id];
+  }
 }
 const url = new URL(location.href);
 const styleId = url.searchParams.get('style') || 'orb';
@@ -51,28 +84,20 @@ const initialUrl = new URL(location.href);
 initialUrl.searchParams.set('style', 'orb');
 initialUrl.searchParams.delete('step');
 history.replaceState({ squishyStep: 'core' }, '', initialUrl);
-const intros = {
-  core: '选好内芯，随时试着捏一捏。',
-  shell: '给圆球挑一层喜欢的外壳。',
-  decoration: '为圆球选一份装饰。',
-  making: '你的选择已经准备好。',
-  play: '现在就捏捏你的圆球。',
-};
 controller = createDetailController({
   renderer: createModelPreview(mount, { feelId: 'clay', onUnavailable: () => controller.rendererUnavailable() }),
   audio: createSilentAudio(), styleId,
   onChange(state) {
     const { step, recipe, resource } = state;
+    document.querySelector('.step-panel').dataset.step = step;
     const making = step === 'making';
     stage.hidden = making;
     document.querySelector('.making-blank').hidden = !making;
     stage.dataset.state = resource;
     stage.setAttribute('aria-busy', String(resource === 'loading'));
-    document.querySelector('.preview-badge').textContent = making ? '制作步骤' : resource === 'ready' ? step === 'play' ? '自由试捏' : '随时试捏' : { loading: '加载中', error: '加载失败', unavailable: '暂不可用' }[resource];
     document.querySelector('.resource-message').hidden = resource === 'ready' && !state.configError;
-    document.querySelector('.resource-status').textContent = { loading: '正在加载圆球…', ready: state.configError ? '颜色暂时没能更新，可以重新加载。' : '', error: '圆球暂时没能加载。可以重试，设置仍会保留。', unavailable: '当前环境暂时无法展示圆球。可以重试，设置仍会保留。' }[resource];
+    document.querySelector('.resource-status').textContent = { loading: '加载中…', ready: state.configError ? '颜色更新失败' : '', error: '加载失败', unavailable: '无法显示圆球' }[resource];
     retry.hidden = !state.configError && (resource === 'ready' || resource === 'loading');
-    document.querySelector('.step-counter').textContent = `${steps.indexOf(step) + 1} / ${steps.length}`;
     for (const item of document.querySelectorAll('.workflow-progress li')) {
       const itemIndex = steps.indexOf(item.dataset.step), currentIndex = steps.indexOf(step);
       const status = itemIndex < currentIndex ? 'complete' : itemIndex === currentIndex ? 'current' : 'upcoming';
@@ -82,14 +107,7 @@ controller = createDetailController({
       item.setAttribute('aria-label', `${itemIndex + 1}. ${stepNames[item.dataset.step]}，${status === 'complete' ? '已完成' : status === 'current' ? '当前步骤' : '未开始'}`);
     }
     document.querySelector('.step-title').textContent = stepNames[step];
-    document.querySelector('.step-intro').textContent = intros[step];
-    document.querySelector('.toy-hint').textContent = step === 'play' ? '按住轻压，拖动留白可旋转。' : step === 'core' ? '边选边试，按住轻压。' : '按住轻压，拖动留白可旋转。';
-    for (const [id, panel] of panels) {
-      const visible = panel.step === step && (id !== 'waxThickness' || recipe.shellMaterial === 'wax');
-      if (!visible && panel.fieldset.contains(document.activeElement)) document.activeElement.blur();
-      panel.fieldset.hidden = !visible;
-      for (const input of panel.fieldset.querySelectorAll('input')) input.checked = input.dataset.choice === recipe[id];
-    }
+    showGroups(state);
     back.hidden = step === 'core';
     back.textContent = step === 'making' || step === 'play' ? '返回修改' : '上一步';
     next.hidden = step === 'play';

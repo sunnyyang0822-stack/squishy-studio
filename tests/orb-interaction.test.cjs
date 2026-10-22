@@ -19,6 +19,7 @@ async function open(options = {}) {
   await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.orbMeshProbe?.positions);
   await page.evaluate(() => document.fonts.ready);
+  await page.locator('[data-category=coreColor]').click();
   return page;
 }
 async function point(page, x = .5, y = .5) {
@@ -170,7 +171,7 @@ test('pointercancel、丢失捕获、窗口失焦、后台和离页均释放输�
 });
 
 test('真实模拟触摸：圆球拖动不滚页，第二触点不夺取输入，设置面板可滚动', async () => {
-  const page = await open({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true });
+  const page = await open({ viewport: { width: 390, height: 450 }, isMobile: true, hasTouch: true });
   const session = await page.context().newCDPSession(page);
   const p = await point(page, .4, .45);
   const scrollBeforeToy = await page.evaluate(() => scrollY);
