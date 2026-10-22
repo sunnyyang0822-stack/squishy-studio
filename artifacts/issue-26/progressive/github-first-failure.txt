@@ -1,0 +1,600 @@
+browser-tests	Run npm test	﻿2026-10-22T10:52:40.0530722Z ##[group]Run npm test
+browser-tests	Run npm test	2026-10-22T10:52:40.0531058Z ^[[36;1mnpm test^[[0m
+browser-tests	Run npm test	2026-10-22T10:52:40.0592533Z shell: /usr/bin/bash -e {0}
+browser-tests	Run npm test	2026-10-22T10:52:40.0592824Z ##[endgroup]
+browser-tests	Run npm test	2026-10-22T10:52:40.1825032Z
+browser-tests	Run npm test	2026-10-22T10:52:40.1826046Z > squishy-studio@1.0.0 pretest
+browser-tests	Run npm test	2026-10-22T10:52:40.1827295Z > npm run build
+browser-tests	Run npm test	2026-10-22T10:52:40.1827887Z
+browser-tests	Run npm test	2026-10-22T10:52:40.3267922Z
+browser-tests	Run npm test	2026-10-22T10:52:40.3290721Z > squishy-studio@1.0.0 build
+browser-tests	Run npm test	2026-10-22T10:52:40.3291948Z > npm run build:brand && npm run build:orb
+browser-tests	Run npm test	2026-10-22T10:52:40.3310109Z
+browser-tests	Run npm test	2026-10-22T10:52:40.4527966Z
+browser-tests	Run npm test	2026-10-22T10:52:40.4528970Z > squishy-studio@1.0.0 build:brand
+browser-tests	Run npm test	2026-10-22T10:52:40.4530282Z > node scripts/build-brand.cjs
+browser-tests	Run npm test	2026-10-22T10:52:40.4531401Z
+browser-tests	Run npm test	2026-10-22T10:52:40.9196472Z
+browser-tests	Run npm test	2026-10-22T10:52:40.9197535Z > squishy-studio@1.0.0 build:orb
+browser-tests	Run npm test	2026-10-22T10:52:40.9198812Z > node scripts/build-orb.cjs
+browser-tests	Run npm test	2026-10-22T10:52:40.9199511Z
+browser-tests	Run npm test	2026-10-22T10:52:41.1283583Z
+browser-tests	Run npm test	2026-10-22T10:52:41.1284665Z > squishy-studio@1.0.0 test
+browser-tests	Run npm test	2026-10-22T10:52:41.1285768Z > node --test tests/*.test.cjs
+browser-tests	Run npm test	2026-10-22T10:52:41.1286397Z
+browser-tests	Run npm test	2026-10-22T10:52:41.1830831Z TAP version 13
+browser-tests	Run npm test	2026-10-22T10:52:41.2311394Z # Subtest: 五步、完整默认配方、棉花糖独立映射，制作步骤结束输入
+browser-tests	Run npm test	2026-10-22T10:52:41.2330648Z ok 1 - 五步、完整默认配方、棉花糖独立映射，制作步骤结束输入
+browser-tests	Run npm test	2026-10-22T10:52:41.2344405Z   ---
+browser-tests	Run npm test	2026-10-22T10:52:41.2345100Z   duration_ms: 4.178592
+browser-tests	Run npm test	2026-10-22T10:52:41.2345823Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:52:41.2347062Z   ...
+browser-tests	Run npm test	2026-10-22T10:52:41.2347970Z # Subtest: 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方
+browser-tests	Run npm test	2026-10-22T10:52:41.2348957Z ok 2 - 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方
+browser-tests	Run npm test	2026-10-22T10:52:41.2349972Z   ---
+browser-tests	Run npm test	2026-10-22T10:52:41.2350623Z   duration_ms: 1.103623
+browser-tests	Run npm test	2026-10-22T10:52:41.2351280Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:52:41.2351885Z   ...
+browser-tests	Run npm test	2026-10-22T10:52:41.2352735Z # Subtest: 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复
+browser-tests	Run npm test	2026-10-22T10:52:41.2353680Z ok 3 - 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复
+browser-tests	Run npm test	2026-10-22T10:52:41.2354337Z   ---
+browser-tests	Run npm test	2026-10-22T10:52:41.2354888Z   duration_ms: 1.183402
+browser-tests	Run npm test	2026-10-22T10:52:41.2355601Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:52:41.2356290Z   ...
+browser-tests	Run npm test	2026-10-22T10:52:41.2357183Z # Subtest: 快速换色只提交最后请求；过期失败不覆盖，离页释放
+browser-tests	Run npm test	2026-10-22T10:52:41.2358137Z ok 4 - 快速换色只提交最后请求；过期失败不覆盖，离页释放
+browser-tests	Run npm test	2026-10-22T10:52:41.2358810Z   ---
+browser-tests	Run npm test	2026-10-22T10:52:41.2359369Z   duration_ms: 0.880206
+browser-tests	Run npm test	2026-10-22T10:52:41.2371227Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:52:41.2371913Z   ...
+browser-tests	Run npm test	2026-10-22T10:52:41.2372809Z # Subtest: 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色
+browser-tests	Run npm test	2026-10-22T10:52:41.2375031Z ok 5 - 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色
+browser-tests	Run npm test	2026-10-22T10:52:41.2375835Z   ---
+browser-tests	Run npm test	2026-10-22T10:52:41.2376498Z   duration_ms: 1.327041
+browser-tests	Run npm test	2026-10-22T10:52:41.2377224Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:52:41.2377888Z   ...
+browser-tests	Run npm test	2026-10-22T10:52:41.2378860Z # Subtest: 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效
+browser-tests	Run npm test	2026-10-22T10:52:41.2380180Z ok 6 - 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效
+browser-tests	Run npm test	2026-10-22T10:52:41.2380977Z   ---
+browser-tests	Run npm test	2026-10-22T10:52:41.2381702Z   duration_ms: 8.075537
+browser-tests	Run npm test	2026-10-22T10:52:41.2382411Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:52:41.2383054Z   ...
+browser-tests	Run npm test	2026-10-22T10:52:41.2383986Z # Subtest: 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源
+browser-tests	Run npm test	2026-10-22T10:52:41.2385202Z ok 7 - 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源
+browser-tests	Run npm test	2026-10-22T10:52:41.2385974Z   ---
+browser-tests	Run npm test	2026-10-22T10:52:41.2386667Z   duration_ms: 1.45492
+browser-tests	Run npm test	2026-10-22T10:52:41.2387360Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:52:41.2387996Z   ...
+browser-tests	Run npm test	2026-10-22T10:52:41.2388879Z # Subtest: 音量初始静音、上次音量恢复、边界与清理
+browser-tests	Run npm test	2026-10-22T10:52:41.2401064Z ok 8 - 音量初始静音、上次音量恢复、边界与清理
+browser-tests	Run npm test	2026-10-22T10:52:41.2406110Z   ---
+browser-tests	Run npm test	2026-10-22T10:52:41.2406859Z   duration_ms: 0.795347
+browser-tests	Run npm test	2026-10-22T10:52:41.2407603Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:52:41.2408232Z   ...
+browser-tests	Run npm test	2026-10-22T10:53:29.7398815Z # Subtest: 可用样式入口、旧详情路径、完整五步与返回修改保留选择
+browser-tests	Run npm test	2026-10-22T10:53:29.7431137Z ok 9 - 可用样式入口、旧详情路径、完整五步与返回修改保留选择
+browser-tests	Run npm test	2026-10-22T10:53:29.7431898Z   ---
+browser-tests	Run npm test	2026-10-22T10:53:29.7432525Z   duration_ms: 48109.643913
+browser-tests	Run npm test	2026-10-22T10:53:29.7433192Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:53:29.7433755Z   ...
+browser-tests	Run npm test	2026-10-22T10:54:05.6375233Z # Subtest: 十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史有效
+browser-tests	Run npm test	2026-10-22T10:54:05.6395404Z ok 10 - 十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史有效
+browser-tests	Run npm test	2026-10-22T10:54:05.6422145Z   ---
+browser-tests	Run npm test	2026-10-22T10:54:05.6423831Z   duration_ms: 35895.658396
+browser-tests	Run npm test	2026-10-22T10:54:05.6424423Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:54:05.6424869Z   ...
+browser-tests	Run npm test	2026-10-22T10:54:14.6281525Z # Subtest: 加载失败可继续选择、前进及重试，快速换色保持最后颜色
+browser-tests	Run npm test	2026-10-22T10:54:14.6341112Z ok 11 - 加载失败可继续选择、前进及重试，快速换色保持最后颜色
+browser-tests	Run npm test	2026-10-22T10:54:14.6390453Z   ---
+browser-tests	Run npm test	2026-10-22T10:54:14.6460803Z   duration_ms: 8991.087627
+browser-tests	Run npm test	2026-10-22T10:54:14.6482037Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:54:14.6507977Z   ...
+browser-tests	Run npm test	2026-10-22T10:54:23.7642075Z # Subtest: 分类一次只显示一组；切换分类不改配方、不重建场景；手机色卡保留辅助名称
+browser-tests	Run npm test	2026-10-22T10:54:23.7651193Z ok 12 - 分类一次只显示一组；切换分类不改配方、不重建场景；手机色卡保留辅助名称
+browser-tests	Run npm test	2026-10-22T10:54:23.7683954Z   ---
+browser-tests	Run npm test	2026-10-22T10:54:23.7684620Z   duration_ms: 9142.152038
+browser-tests	Run npm test	2026-10-22T10:54:23.7685439Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:54:23.7685934Z   ...
+browser-tests	Run npm test	2026-10-22T10:54:43.3637473Z # Subtest: 桌面同显当前步骤全部可用组；手机切回分类仍保留选择
+browser-tests	Run npm test	2026-10-22T10:54:43.3664315Z ok 13 - 桌面同显当前步骤全部可用组；手机切回分类仍保留选择
+browser-tests	Run npm test	2026-10-22T10:54:43.3666183Z   ---
+browser-tests	Run npm test	2026-10-22T10:54:43.3666852Z   duration_ms: 19600.573516
+browser-tests	Run npm test	2026-10-22T10:54:43.3693719Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:54:43.3713409Z   ...
+browser-tests	Run npm test	2026-10-22T10:56:10.1789133Z # Subtest: 桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主体可滚动触达
+browser-tests	Run npm test	2026-10-22T10:56:10.1801090Z ok 14 - 桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主体可滚动触达
+browser-tests	Run npm test	2026-10-22T10:56:10.1809925Z   ---
+browser-tests	Run npm test	2026-10-22T10:56:10.1810616Z   duration_ms: 86814.22789
+browser-tests	Run npm test	2026-10-22T10:56:10.1811210Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:56:10.1811694Z   ...
+browser-tests	Run npm test	2026-10-22T10:56:20.2149229Z # Subtest: 动态高度、横竖屏与安全留白变化复用同一画布，配方保留且全部导航可触达
+browser-tests	Run npm test	2026-10-22T10:56:20.2171542Z ok 15 - 动态高度、横竖屏与安全留白变化复用同一画布，配方保留且全部导航可触达
+browser-tests	Run npm test	2026-10-22T10:56:20.2226684Z   ---
+browser-tests	Run npm test	2026-10-22T10:56:20.2227466Z   duration_ms: 10030.743127
+browser-tests	Run npm test	2026-10-22T10:56:20.2228198Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:56:20.2228713Z   ...
+browser-tests	Run npm test	2026-10-22T10:56:30.0829163Z # Subtest: 桌面首屏可读且昼夜切换可连续操作
+browser-tests	Run npm test	2026-10-22T10:56:30.0832979Z ok 16 - 桌面首屏可读且昼夜切换可连续操作
+browser-tests	Run npm test	2026-10-22T10:56:30.0873243Z   ---
+browser-tests	Run npm test	2026-10-22T10:56:30.0924363Z   duration_ms: 9312.568809
+browser-tests	Run npm test	2026-10-22T10:56:30.0974672Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:56:30.1042736Z   ...
+browser-tests	Run npm test	2026-10-22T10:56:53.5206325Z # Subtest: 夜间切回白天时文字快速清晰，连续切换不会重置颜色
+browser-tests	Run npm test	2026-10-22T10:56:53.5211736Z ok 17 - 夜间切回白天时文字快速清晰，连续切换不会重置颜色
+browser-tests	Run npm test	2026-10-22T10:56:53.5215070Z   ---
+browser-tests	Run npm test	2026-10-22T10:56:53.5223509Z   duration_ms: 23434.334328
+browser-tests	Run npm test	2026-10-22T10:56:53.5226536Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:56:53.5232638Z   ...
+browser-tests	Run npm test	2026-10-22T10:56:53.5236040Z # Subtest: 字标与主题逻辑保留用户确认的 5b5e8c7 版本
+browser-tests	Run npm test	2026-10-22T10:56:53.5240824Z ok 18 - 字标与主题逻辑保留用户确认的 5b5e8c7 版本
+browser-tests	Run npm test	2026-10-22T10:56:53.5242690Z   ---
+browser-tests	Run npm test	2026-10-22T10:56:53.5248107Z   duration_ms: 6.48619
+browser-tests	Run npm test	2026-10-22T10:56:53.5252065Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:56:53.5253359Z   ...
+browser-tests	Run npm test	2026-10-22T10:57:04.8269857Z # Subtest: 昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变
+browser-tests	Run npm test	2026-10-22T10:57:04.8320997Z ok 19 - 昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变
+browser-tests	Run npm test	2026-10-22T10:57:04.8368649Z   ---
+browser-tests	Run npm test	2026-10-22T10:57:04.8392685Z   duration_ms: 11306.920832
+browser-tests	Run npm test	2026-10-22T10:57:04.8394146Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:57:04.8394716Z   ...
+browser-tests	Run npm test	2026-10-22T10:57:10.6907637Z # Subtest: 手机和短屏仍能看到主体与切换控件
+browser-tests	Run npm test	2026-10-22T10:57:10.6961822Z ok 20 - 手机和短屏仍能看到主体与切换控件
+browser-tests	Run npm test	2026-10-22T10:57:10.6990617Z   ---
+browser-tests	Run npm test	2026-10-22T10:57:10.7020256Z   duration_ms: 5864.381438
+browser-tests	Run npm test	2026-10-22T10:57:10.7046680Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:57:10.7047226Z   ...
+browser-tests	Run npm test	2026-10-22T10:57:14.1948602Z # Subtest: 减少动态效果时仍能切换
+browser-tests	Run npm test	2026-10-22T10:57:14.1972352Z ok 21 - 减少动态效果时仍能切换
+browser-tests	Run npm test	2026-10-22T10:57:14.2000331Z   ---
+browser-tests	Run npm test	2026-10-22T10:57:14.2018166Z   duration_ms: 3502.633366
+browser-tests	Run npm test	2026-10-22T10:57:14.2059026Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:57:14.2078793Z   ...
+browser-tests	Run npm test	2026-10-22T10:57:14.5621253Z # Subtest: WebGL 不可用时保留可读的备用字标
+browser-tests	Run npm test	2026-10-22T10:57:14.5622328Z ok 22 - WebGL 不可用时保留可读的备用字标
+browser-tests	Run npm test	2026-10-22T10:57:14.5623019Z   ---
+browser-tests	Run npm test	2026-10-22T10:57:14.5624636Z   duration_ms: 365.004235
+browser-tests	Run npm test	2026-10-22T10:57:14.5629028Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:57:14.5629798Z   ...
+browser-tests	Run npm test	2026-10-22T10:57:14.6701822Z # Subtest: 圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形变输入有效
+browser-tests	Run npm test	2026-10-22T10:57:14.6708361Z ok 23 - 圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形变输入有效
+browser-tests	Run npm test	2026-10-22T10:57:14.6709230Z   ---
+browser-tests	Run npm test	2026-10-22T10:57:14.6710216Z   duration_ms: 11.50863
+browser-tests	Run npm test	2026-10-22T10:57:14.6715149Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:57:14.6716048Z   ...
+browser-tests	Run npm test	2026-10-22T10:57:15.2974978Z # Subtest: 实际静态根返回 GLB 字节与 MIME，不误用 Next public 路径
+browser-tests	Run npm test	2026-10-22T10:57:15.3072493Z ok 24 - 实际静态根返回 GLB 字节与 MIME，不误用 Next public 路径
+browser-tests	Run npm test	2026-10-22T10:57:15.3110393Z   ---
+browser-tests	Run npm test	2026-10-22T10:57:15.3170526Z   duration_ms: 229.769889
+browser-tests	Run npm test	2026-10-22T10:57:15.3230418Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:57:15.3270290Z   ...
+browser-tests	Run npm test	2026-10-22T10:57:53.6415739Z # Subtest: 配置、主题、旋转复用真实 WebGL 场景；静止及后台不持续渲染；离页释放
+browser-tests	Run npm test	2026-10-22T10:57:53.6417199Z ok 25 - 配置、主题、旋转复用真实 WebGL 场景；静止及后台不持续渲染；离页释放
+browser-tests	Run npm test	2026-10-22T10:57:53.6439377Z   ---
+browser-tests	Run npm test	2026-10-22T10:57:53.6442478Z   duration_ms: 38350.828052
+browser-tests	Run npm test	2026-10-22T10:57:53.6443194Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:57:53.6443678Z   ...
+browser-tests	Run npm test	2026-10-22T10:58:18.3645421Z # Subtest: 真实上下文丢失可重试重建，控件与导航在中断后可用
+browser-tests	Run npm test	2026-10-22T10:58:18.3718893Z ok 26 - 真实上下文丢失可重试重建，控件与导航在中断后可用
+browser-tests	Run npm test	2026-10-22T10:58:18.3720931Z   ---
+browser-tests	Run npm test	2026-10-22T10:58:18.3721384Z   duration_ms: 24720.979294
+browser-tests	Run npm test	2026-10-22T10:58:18.3721877Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:58:18.3722280Z   ...
+browser-tests	Run npm test	2026-10-22T10:58:35.7742497Z # Subtest: HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重试
+browser-tests	Run npm test	2026-10-22T10:58:35.7750895Z ok 27 - HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重试
+browser-tests	Run npm test	2026-10-22T10:58:35.7751585Z   ---
+browser-tests	Run npm test	2026-10-22T10:58:35.7752186Z   duration_ms: 17409.319687
+browser-tests	Run npm test	2026-10-22T10:58:35.7752878Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:58:35.7753385Z   ...
+browser-tests	Run npm test	2026-10-22T10:58:45.3018087Z # Subtest: 手机圆球交互不带动页面，面板可滚动且颜色仍可选择
+browser-tests	Run npm test	2026-10-22T10:58:45.3048341Z ok 28 - 手机圆球交互不带动页面，面板可滚动且颜色仍可选择
+browser-tests	Run npm test	2026-10-22T10:58:45.3050166Z   ---
+browser-tests	Run npm test	2026-10-22T10:58:45.3050627Z   duration_ms: 9529.507605
+browser-tests	Run npm test	2026-10-22T10:58:45.3051162Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:58:45.3051634Z   ...
+browser-tests	Run npm test	2026-10-22T10:58:45.3975517Z # Subtest: 顶部覆盖先于底部，结束精确统一颜色并停止更新
+browser-tests	Run npm test	2026-10-22T10:58:45.3976730Z ok 29 - 顶部覆盖先于底部，结束精确统一颜色并停止更新
+browser-tests	Run npm test	2026-10-22T10:58:45.3977369Z   ---
+browser-tests	Run npm test	2026-10-22T10:58:45.3977910Z   duration_ms: 1.762979
+browser-tests	Run npm test	2026-10-22T10:58:45.3978538Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:58:45.3979070Z   ...
+browser-tests	Run npm test	2026-10-22T10:58:45.3982682Z # Subtest: 快速换色及动态偏好中断从当前每顶点颜色连续接续
+browser-tests	Run npm test	2026-10-22T10:58:45.3986885Z ok 30 - 快速换色及动态偏好中断从当前每顶点颜色连续接续
+browser-tests	Run npm test	2026-10-22T10:58:45.3987638Z   ---
+browser-tests	Run npm test	2026-10-22T10:58:45.3988235Z   duration_ms: 0.383766
+browser-tests	Run npm test	2026-10-22T10:58:45.3988836Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:58:45.3989380Z   ...
+browser-tests	Run npm test	2026-10-22T10:58:45.3998057Z # Subtest: 同色恢复复用换色时钟，默认同色选择仍保持闲置
+browser-tests	Run npm test	2026-10-22T10:58:45.3999078Z ok 31 - 同色恢复复用换色时钟，默认同色选择仍保持闲置
+browser-tests	Run npm test	2026-10-22T10:58:45.4002721Z   ---
+browser-tests	Run npm test	2026-10-22T10:58:45.4003277Z   duration_ms: 0.329264
+browser-tests	Run npm test	2026-10-22T10:58:45.4003903Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:58:45.4004441Z   ...
+browser-tests	Run npm test	2026-10-22T10:59:04.1035117Z # Subtest: 同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压
+browser-tests	Run npm test	2026-10-22T10:59:04.1095085Z ok 32 - 同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压
+browser-tests	Run npm test	2026-10-22T10:59:04.1118743Z   ---
+browser-tests	Run npm test	2026-10-22T10:59:04.1186190Z   duration_ms: 18326.803449
+browser-tests	Run npm test	2026-10-22T10:59:04.1206194Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:59:04.1207084Z   ...
+browser-tests	Run npm test	2026-10-22T10:59:14.5661408Z # Subtest: 真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制
+browser-tests	Run npm test	2026-10-22T10:59:14.5680639Z ok 33 - 真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制
+browser-tests	Run npm test	2026-10-22T10:59:14.5697303Z   ---
+browser-tests	Run npm test	2026-10-22T10:59:14.5697907Z   duration_ms: 10468.12221
+browser-tests	Run npm test	2026-10-22T10:59:14.5698851Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:59:14.5699427Z   ...
+browser-tests	Run npm test	2026-10-22T10:59:39.2256411Z # Subtest: 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作
+browser-tests	Run npm test	2026-10-22T10:59:39.2288735Z ok 34 - 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作
+browser-tests	Run npm test	2026-10-22T10:59:39.2314556Z   ---
+browser-tests	Run npm test	2026-10-22T10:59:39.2315353Z   duration_ms: 24657.077357
+browser-tests	Run npm test	2026-10-22T10:59:39.2316159Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:59:39.2316687Z   ...
+browser-tests	Run npm test	2026-10-22T10:59:58.0733605Z # Subtest: 换色取消键盘、鼠标捏压和正在旋转的owner，旧输入后续事件不会再修改重置模型
+browser-tests	Run npm test	2026-10-22T10:59:58.0765919Z ok 35 - 换色取消键盘、鼠标捏压和正在旋转的owner，旧输入后续事件不会再修改重置模型
+browser-tests	Run npm test	2026-10-22T10:59:58.0770898Z   ---
+browser-tests	Run npm test	2026-10-22T10:59:58.0771692Z   duration_ms: 18850.009034
+browser-tests	Run npm test	2026-10-22T10:59:58.0772572Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T10:59:58.0773112Z   ...
+browser-tests	Run npm test	2026-10-22T11:00:09.6233077Z # Subtest: 减少动态时换色正确收束，动态偏好切换后可继续换色并停帧
+browser-tests	Run npm test	2026-10-22T11:00:09.6241795Z ok 36 - 减少动态时换色正确收束，动态偏好切换后可继续换色并停帧
+browser-tests	Run npm test	2026-10-22T11:00:09.6270254Z   ---
+browser-tests	Run npm test	2026-10-22T11:00:09.6302702Z   duration_ms: 11550.549154
+browser-tests	Run npm test	2026-10-22T11:00:09.6306909Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:00:09.6343520Z   ...
+browser-tests	Run npm test	2026-10-22T11:00:26.5714397Z # Subtest: 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：no-preference
+browser-tests	Run npm test	2026-10-22T11:00:26.5735493Z ok 37 - 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：no-preference
+browser-tests	Run npm test	2026-10-22T11:00:26.5739190Z   ---
+browser-tests	Run npm test	2026-10-22T11:00:26.5740076Z   duration_ms: 16948.074087
+browser-tests	Run npm test	2026-10-22T11:00:26.5741773Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:00:26.5742327Z   ...
+browser-tests	Run npm test	2026-10-22T11:00:41.6092404Z # Subtest: 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：reduce
+browser-tests	Run npm test	2026-10-22T11:00:41.6121935Z ok 38 - 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：reduce
+browser-tests	Run npm test	2026-10-22T11:00:41.6180560Z   ---
+browser-tests	Run npm test	2026-10-22T11:00:41.6200508Z   duration_ms: 15033.016287
+browser-tests	Run npm test	2026-10-22T11:00:41.6210416Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:00:41.6221277Z   ...
+browser-tests	Run npm test	2026-10-22T11:01:03.4361470Z # Subtest: 新捏压或旋转中断自动复原，快速换色及减少动态切换从当前形态接续
+browser-tests	Run npm test	2026-10-22T11:01:03.4405239Z ok 39 - 新捏压或旋转中断自动复原，快速换色及减少动态切换从当前形态接续
+browser-tests	Run npm test	2026-10-22T11:01:03.4417588Z   ---
+browser-tests	Run npm test	2026-10-22T11:01:03.4418149Z   duration_ms: 21831.204811
+browser-tests	Run npm test	2026-10-22T11:01:03.4418736Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:01:03.4419173Z   ...
+browser-tests	Run npm test	2026-10-22T11:01:30.2141900Z # Subtest: 十色真实GPU：白天首帧和night→day→night提升色度与明度，夜间精确恢复
+browser-tests	Run npm test	2026-10-22T11:01:30.2146080Z ok 40 - 十色真实GPU：白天首帧和night→day→night提升色度与明度，夜间精确恢复
+browser-tests	Run npm test	2026-10-22T11:01:30.2154267Z   ---
+browser-tests	Run npm test	2026-10-22T11:01:30.2157085Z   duration_ms: 26349.453701
+browser-tests	Run npm test	2026-10-22T11:01:30.2157573Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:01:30.2157947Z   ...
+browser-tests	Run npm test	2026-10-22T11:01:47.3448219Z # Subtest: 主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景
+browser-tests	Run npm test	2026-10-22T11:01:47.3470651Z ok 41 - 主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景
+browser-tests	Run npm test	2026-10-22T11:01:47.3490527Z   ---
+browser-tests	Run npm test	2026-10-22T11:01:47.3500356Z   duration_ms: 17133.34961
+browser-tests	Run npm test	2026-10-22T11:01:47.3531755Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:01:47.3543549Z   ...
+browser-tests	Run npm test	2026-10-22T11:01:57.7591843Z # Subtest: 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：no-preference
+browser-tests	Run npm test	2026-10-22T11:01:57.7617605Z ok 42 - 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：no-preference
+browser-tests	Run npm test	2026-10-22T11:01:57.7632856Z   ---
+browser-tests	Run npm test	2026-10-22T11:01:57.7658167Z   duration_ms: 10414.579676
+browser-tests	Run npm test	2026-10-22T11:01:57.7681253Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:01:57.7713093Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:07.5934755Z # Subtest: 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：reduce
+browser-tests	Run npm test	2026-10-22T11:02:07.5957961Z ok 43 - 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：reduce
+browser-tests	Run npm test	2026-10-22T11:02:07.5980684Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:07.5981367Z   duration_ms: 9829.997884
+browser-tests	Run npm test	2026-10-22T11:02:07.5982052Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:07.5982611Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6022321Z # Subtest: 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false
+browser-tests	Run npm test	2026-10-22T11:02:10.6047610Z ok 44 - 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false
+browser-tests	Run npm test	2026-10-22T11:02:10.6060214Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6067015Z   duration_ms: 84.497411
+browser-tests	Run npm test	2026-10-22T11:02:10.6150296Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6170266Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6172536Z # Subtest: 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true
+browser-tests	Run npm test	2026-10-22T11:02:10.6190753Z ok 45 - 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true
+browser-tests	Run npm test	2026-10-22T11:02:10.6210517Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6230523Z   duration_ms: 42.933642
+browser-tests	Run npm test	2026-10-22T11:02:10.6231303Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6251760Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6271895Z # Subtest: 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染
+browser-tests	Run npm test	2026-10-22T11:02:10.6276973Z ok 46 - 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染
+browser-tests	Run npm test	2026-10-22T11:02:10.6279117Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6320107Z   duration_ms: 30.080034
+browser-tests	Run npm test	2026-10-22T11:02:10.6320741Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6321091Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6321750Z # Subtest: 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变
+browser-tests	Run npm test	2026-10-22T11:02:10.6322425Z ok 47 - 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变
+browser-tests	Run npm test	2026-10-22T11:02:10.6322887Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6330851Z   duration_ms: 29.902392
+browser-tests	Run npm test	2026-10-22T11:02:10.6331550Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6332045Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6332783Z # Subtest: 释放只回弹15%，每顶点单调且无跳变；减少动态=false
+browser-tests	Run npm test	2026-10-22T11:02:10.6333598Z ok 48 - 释放只回弹15%，每顶点单调且无跳变；减少动态=false
+browser-tests	Run npm test	2026-10-22T11:02:10.6334198Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6334788Z   duration_ms: 50.593111
+browser-tests	Run npm test	2026-10-22T11:02:10.6335427Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6335927Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6336684Z # Subtest: 释放只回弹15%，每顶点单调且无跳变；减少动态=true
+browser-tests	Run npm test	2026-10-22T11:02:10.6337597Z ok 49 - 释放只回弹15%，每顶点单调且无跳变；减少动态=true
+browser-tests	Run npm test	2026-10-22T11:02:10.6338288Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6338873Z   duration_ms: 55.14896
+browser-tests	Run npm test	2026-10-22T11:02:10.6339482Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6340741Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6341669Z # Subtest: 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留
+browser-tests	Run npm test	2026-10-22T11:02:10.6342728Z ok 50 - 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留
+browser-tests	Run npm test	2026-10-22T11:02:10.6343495Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6344096Z   duration_ms: 33.475858
+browser-tests	Run npm test	2026-10-22T11:02:10.6344772Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6345383Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6346877Z # Subtest: 单次stroke采用最大包络；重复采样与采样密度不会无界叠加
+browser-tests	Run npm test	2026-10-22T11:02:10.6347867Z ok 51 - 单次stroke采用最大包络；重复采样与采样密度不会无界叠加
+browser-tests	Run npm test	2026-10-22T11:02:10.6348585Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6349191Z   duration_ms: 74.589756
+browser-tests	Run npm test	2026-10-22T11:02:10.6350121Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6350846Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6351736Z # Subtest: 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳
+browser-tests	Run npm test	2026-10-22T11:02:10.6353063Z ok 52 - 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳
+browser-tests	Run npm test	2026-10-22T11:02:10.6353752Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6354317Z   duration_ms: 1256.563305
+browser-tests	Run npm test	2026-10-22T11:02:10.6354916Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6355444Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6356235Z # Subtest: 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心
+browser-tests	Run npm test	2026-10-22T11:02:10.6357165Z ok 53 - 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心
+browser-tests	Run npm test	2026-10-22T11:02:10.6357860Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6358404Z   duration_ms: 1004.922102
+browser-tests	Run npm test	2026-10-22T11:02:10.6358996Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6359506Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6360502Z # Subtest: 下一stroke从永久base继续，异处按压不擦除旧路径
+browser-tests	Run npm test	2026-10-22T11:02:10.6361349Z ok 54 - 下一stroke从永久base继续，异处按压不擦除旧路径
+browser-tests	Run npm test	2026-10-22T11:02:10.6362115Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6362639Z   duration_ms: 72.200589
+browser-tests	Run npm test	2026-10-22T11:02:10.6363250Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6363847Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6364879Z # Subtest: 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false
+browser-tests	Run npm test	2026-10-22T11:02:10.6365876Z ok 55 - 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false
+browser-tests	Run npm test	2026-10-22T11:02:10.6366519Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6366953Z   duration_ms: 45.45737
+browser-tests	Run npm test	2026-10-22T11:02:10.6367425Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6367902Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6368670Z # Subtest: 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true
+browser-tests	Run npm test	2026-10-22T11:02:10.6369819Z ok 56 - 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true
+browser-tests	Run npm test	2026-10-22T11:02:10.6370676Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6371196Z   duration_ms: 36.572376
+browser-tests	Run npm test	2026-10-22T11:02:10.6371811Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6372371Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6373272Z # Subtest: 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零
+browser-tests	Run npm test	2026-10-22T11:02:10.6374210Z ok 57 - 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零
+browser-tests	Run npm test	2026-10-22T11:02:10.6385513Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6385893Z   duration_ms: 26.245421
+browser-tests	Run npm test	2026-10-22T11:02:10.6386276Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6386631Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6387422Z # Subtest: 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效
+browser-tests	Run npm test	2026-10-22T11:02:10.6388374Z ok 58 - 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效
+browser-tests	Run npm test	2026-10-22T11:02:10.6388797Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6389125Z   duration_ms: 26.12692
+browser-tests	Run npm test	2026-10-22T11:02:10.6389471Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6390824Z   ...
+browser-tests	Run npm test	2026-10-22T11:02:10.6391496Z # Subtest: 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压
+browser-tests	Run npm test	2026-10-22T11:02:10.6392267Z ok 59 - 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压
+browser-tests	Run npm test	2026-10-22T11:02:10.6392758Z   ---
+browser-tests	Run npm test	2026-10-22T11:02:10.6393086Z   duration_ms: 23.268016
+browser-tests	Run npm test	2026-10-22T11:02:10.6393463Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:02:10.6393771Z   ...
+browser-tests	Run npm test	2026-10-22T11:03:06.8025709Z # Subtest: 真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；按住时长增强并有界
+browser-tests	Run npm test	2026-10-22T11:03:06.8238932Z ok 60 - 真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；按住时长增强并有界
+browser-tests	Run npm test	2026-10-22T11:03:06.8265111Z   ---
+browser-tests	Run npm test	2026-10-22T11:03:06.8286638Z   duration_ms: 55801.441122
+browser-tests	Run npm test	2026-10-22T11:03:06.8288108Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:03:06.8288649Z   ...
+browser-tests	Run npm test	2026-10-22T11:03:31.5478996Z # Subtest: 连续拖动、回弹中再次按压、移出松开和键盘操作；缩放主题不重建控制
+browser-tests	Run npm test	2026-10-22T11:03:31.5494593Z ok 61 - 连续拖动、回弹中再次按压、移出松开和键盘操作；缩放主题不重建控制
+browser-tests	Run npm test	2026-10-22T11:03:31.5531310Z   ---
+browser-tests	Run npm test	2026-10-22T11:03:31.5559345Z   duration_ms: 24745.191136
+browser-tests	Run npm test	2026-10-22T11:03:31.5566493Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:03:31.5567599Z   ...
+browser-tests	Run npm test	2026-10-22T11:04:08.3861654Z # Subtest: pointercancel、丢失捕获、窗口失焦、后台和离页均释放输入并保留已完成凹痕
+browser-tests	Run npm test	2026-10-22T11:04:08.3916842Z ok 62 - pointercancel、丢失捕获、窗口失焦、后台和离页均释放输入并保留已完成凹痕
+browser-tests	Run npm test	2026-10-22T11:04:08.3929358Z   ---
+browser-tests	Run npm test	2026-10-22T11:04:08.3930288Z   duration_ms: 36837.783274
+browser-tests	Run npm test	2026-10-22T11:04:08.3931080Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:04:08.3931737Z   ...
+browser-tests	Run npm test	2026-10-22T11:04:18.2461637Z # Subtest: 真实模拟触摸：圆球拖动不滚页，第二触点不夺取输入，设置面板可滚动
+browser-tests	Run npm test	2026-10-22T11:04:18.2470825Z ok 63 - 真实模拟触摸：圆球拖动不滚页，第二触点不夺取输入，设置面板可滚动
+browser-tests	Run npm test	2026-10-22T11:04:18.2472068Z   ---
+browser-tests	Run npm test	2026-10-22T11:04:18.2472623Z   duration_ms: 9861.336699
+browser-tests	Run npm test	2026-10-22T11:04:18.2473131Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:04:18.2473592Z   ...
+browser-tests	Run npm test	2026-10-22T11:04:30.7172217Z # Subtest: 减少动态仍有局部反馈，偏好可在按住期间切换并恢复
+browser-tests	Run npm test	2026-10-22T11:04:30.7217094Z ok 64 - 减少动态仍有局部反馈，偏好可在按住期间切换并恢复
+browser-tests	Run npm test	2026-10-22T11:04:30.7254542Z   ---
+browser-tests	Run npm test	2026-10-22T11:04:30.7275123Z   duration_ms: 12470.484498
+browser-tests	Run npm test	2026-10-22T11:04:30.7276006Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:04:30.7276676Z   ...
+browser-tests	Run npm test	2026-10-22T11:04:52.9169556Z # Subtest: 轻点明显浅于长按；真实GPU长按和重复按压可以超过旧0.30硬上限
+browser-tests	Run npm test	2026-10-22T11:04:52.9220799Z ok 65 - 轻点明显浅于长按；真实GPU长按和重复按压可以超过旧0.30硬上限
+browser-tests	Run npm test	2026-10-22T11:04:52.9232515Z   ---
+browser-tests	Run npm test	2026-10-22T11:04:52.9233003Z   duration_ms: 22196.97706
+browser-tests	Run npm test	2026-10-22T11:04:52.9233485Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:04:52.9233992Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:14.8372775Z # Subtest: marshmallow real GPU: mouse/touch, frozen release/cancel/blur/background, color takeover, lifecycle and workflow
+browser-tests	Run npm test	2026-10-22T11:05:14.8381276Z not ok 66 - marshmallow real GPU: mouse/touch, frozen release/cancel/blur/background, color takeover, lifecycle and workflow
+browser-tests	Run npm test	2026-10-22T11:05:14.8383915Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:14.8385268Z   duration_ms: 21826.464858
+browser-tests	Run npm test	2026-10-22T11:05:14.8388056Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:14.8389342Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/orb-marshmallow-browser.test.cjs:4:1'
+browser-tests	Run npm test	2026-10-22T11:05:14.8392179Z   failureType: 'testCodeFailure'
+browser-tests	Run npm test	2026-10-22T11:05:14.8394764Z   error: 'Short press stays shallow: {"maximum":0.1517125784003646,"duration":815}'
+browser-tests	Run npm test	2026-10-22T11:05:14.8396728Z   code: 'ERR_ASSERTION'
+browser-tests	Run npm test	2026-10-22T11:05:14.8397427Z   name: 'AssertionError'
+browser-tests	Run npm test	2026-10-22T11:05:14.8398121Z   expected: true
+browser-tests	Run npm test	2026-10-22T11:05:14.8398745Z   actual: false
+browser-tests	Run npm test	2026-10-22T11:05:14.8399341Z   operator: '=='
+browser-tests	Run npm test	2026-10-22T11:05:14.8400335Z   stack: |-
+browser-tests	Run npm test	2026-10-22T11:05:14.8401446Z     run (/home/runner/work/squishy-studio/squishy-studio/tests/helpers/marshmallow-browser.cjs:84:14)
+browser-tests	Run npm test	2026-10-22T11:05:14.8403420Z     async TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/orb-marshmallow-browser.test.cjs:5:3)
+browser-tests	Run npm test	2026-10-22T11:05:14.8406630Z     async Test.run (node:internal/test_runner/test:1054:7)
+browser-tests	Run npm test	2026-10-22T11:05:14.8408558Z     async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+browser-tests	Run npm test	2026-10-22T11:05:14.8409871Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9186637Z # Subtest: real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps
+browser-tests	Run npm test	2026-10-22T11:05:17.9211021Z ok 67 - real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps
+browser-tests	Run npm test	2026-10-22T11:05:17.9233218Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9234567Z   duration_ms: 148.146523
+browser-tests	Run npm test	2026-10-22T11:05:17.9235139Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9235606Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9236713Z # Subtest: real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps
+browser-tests	Run npm test	2026-10-22T11:05:17.9238378Z ok 68 - real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps
+browser-tests	Run npm test	2026-10-22T11:05:17.9239439Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9240219Z   duration_ms: 1238.321663
+browser-tests	Run npm test	2026-10-22T11:05:17.9240734Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9241196Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9242076Z # Subtest: explicit restore, interruption, reset and instance isolation
+browser-tests	Run npm test	2026-10-22T11:05:17.9243227Z ok 69 - explicit restore, interruption, reset and instance isolation
+browser-tests	Run npm test	2026-10-22T11:05:17.9243950Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9244384Z   duration_ms: 6.856199
+browser-tests	Run npm test	2026-10-22T11:05:17.9244863Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9245304Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9246293Z # Subtest: measured GLB endpoint/middle curves with and without dwell: density and frame tolerances
+browser-tests	Run npm test	2026-10-22T11:05:17.9247768Z ok 70 - measured GLB endpoint/middle curves with and without dwell: density and frame tolerances
+browser-tests	Run npm test	2026-10-22T11:05:17.9248669Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9249104Z   duration_ms: 1035.058645
+browser-tests	Run npm test	2026-10-22T11:05:17.9249904Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9250661Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9251733Z # Subtest: optical material isolation preserves clay defaults and source, with separate soft fibre response
+browser-tests	Run npm test	2026-10-22T11:05:17.9253373Z ok 71 - optical material isolation preserves clay defaults and source, with separate soft fibre response
+browser-tests	Run npm test	2026-10-22T11:05:17.9254407Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9254912Z   duration_ms: 39.079073
+browser-tests	Run npm test	2026-10-22T11:05:17.9255471Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9255995Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9257385Z # Subtest: real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport
+browser-tests	Run npm test	2026-10-22T11:05:17.9259470Z ok 72 - real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport
+browser-tests	Run npm test	2026-10-22T11:05:17.9260995Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9261544Z   duration_ms: 214.306064
+browser-tests	Run npm test	2026-10-22T11:05:17.9265002Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9267496Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9270170Z # Subtest: deep collapse leaves a small bounded core and repeated strokes cannot drill through it
+browser-tests	Run npm test	2026-10-22T11:05:17.9271796Z ok 73 - deep collapse leaves a small bounded core and repeated strokes cannot drill through it
+browser-tests	Run npm test	2026-10-22T11:05:17.9272812Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9273314Z   duration_ms: 161.692397
+browser-tests	Run npm test	2026-10-22T11:05:17.9273930Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9274456Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9276534Z # Subtest: press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously
+browser-tests	Run npm test	2026-10-22T11:05:17.9278441Z ok 74 - press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously
+browser-tests	Run npm test	2026-10-22T11:05:17.9279836Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9280529Z   duration_ms: 137.084207
+browser-tests	Run npm test	2026-10-22T11:05:17.9281133Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9281681Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:17.9284377Z # Subtest: stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process
+browser-tests	Run npm test	2026-10-22T11:05:17.9286166Z ok 75 - stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process
+browser-tests	Run npm test	2026-10-22T11:05:17.9287296Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:17.9287836Z   duration_ms: 38.014357
+browser-tests	Run npm test	2026-10-22T11:05:17.9288430Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:17.9288971Z   ...
+browser-tests	Run npm test	2026-10-22T11:05:52.9771366Z # Subtest: 普通移动不转；按住留白以真实模型中心连续整圈旋转，松开立即停止
+browser-tests	Run npm test	2026-10-22T11:05:52.9780416Z ok 76 - 普通移动不转；按住留白以真实模型中心连续整圈旋转，松开立即停止
+browser-tests	Run npm test	2026-10-22T11:05:52.9781325Z   ---
+browser-tests	Run npm test	2026-10-22T11:05:52.9781972Z   duration_ms: 34665.467898
+browser-tests	Run npm test	2026-10-22T11:05:52.9782606Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:05:52.9783166Z   ...
+browser-tests	Run npm test	2026-10-22T11:06:19.2779401Z # Subtest: 球体捏压与设置不触发旋转；已有凹痕跟随刚体旋转且不上传新位置
+browser-tests	Run npm test	2026-10-22T11:06:19.2791034Z ok 77 - 球体捏压与设置不触发旋转；已有凹痕跟随刚体旋转且不上传新位置
+browser-tests	Run npm test	2026-10-22T11:06:19.2791573Z   ---
+browser-tests	Run npm test	2026-10-22T11:06:19.2791911Z   duration_ms: 26293.562218
+browser-tests	Run npm test	2026-10-22T11:06:19.2792282Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:06:19.2792579Z   ...
+browser-tests	Run npm test	2026-10-22T11:06:52.8395811Z # Subtest: 旋转后实际命中对应屏幕侧；取消捏压保持旧痕，旋转中断后可重新拖动
+browser-tests	Run npm test	2026-10-22T11:06:52.8427046Z ok 78 - 旋转后实际命中对应屏幕侧；取消捏压保持旧痕，旋转中断后可重新拖动
+browser-tests	Run npm test	2026-10-22T11:06:52.8458508Z   ---
+browser-tests	Run npm test	2026-10-22T11:06:52.8483168Z   duration_ms: 33566.921691
+browser-tests	Run npm test	2026-10-22T11:06:52.8490581Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:06:52.8508928Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:01.0416387Z # Subtest: 触屏留白轻触不额外滚动且不转模型，设置面板可原生滚动
+browser-tests	Run npm test	2026-10-22T11:07:01.0435297Z ok 79 - 触屏留白轻触不额外滚动且不转模型，设置面板可原生滚动
+browser-tests	Run npm test	2026-10-22T11:07:01.0436182Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:01.0436712Z   duration_ms: 8201.985817
+browser-tests	Run npm test	2026-10-22T11:07:01.0437295Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:01.0437780Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:01.1460721Z # Subtest: PR 检查安装依赖和浏览器并执行完整测试
+browser-tests	Run npm test	2026-10-22T11:07:01.1461866Z ok 80 - PR 检查安装依赖和浏览器并执行完整测试
+browser-tests	Run npm test	2026-10-22T11:07:01.1462731Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:01.1463534Z   duration_ms: 1.2008
+browser-tests	Run npm test	2026-10-22T11:07:01.1464083Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:01.1464633Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:01.1465426Z # Subtest: PR 模板要求范围、验证和回滚信息
+browser-tests	Run npm test	2026-10-22T11:07:01.1466313Z ok 81 - PR 模板要求范围、验证和回滚信息
+browser-tests	Run npm test	2026-10-22T11:07:01.1466987Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:01.1467590Z   duration_ms: 0.264474
+browser-tests	Run npm test	2026-10-22T11:07:01.1468225Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:01.1468825Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:01.7707976Z # Subtest: 原有 Hero 样式文件保持基线原样
+browser-tests	Run npm test	2026-10-22T11:07:01.7750622Z ok 82 - 原有 Hero 样式文件保持基线原样
+browser-tests	Run npm test	2026-10-22T11:07:01.7770511Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:01.7810314Z   duration_ms: 230.364043
+browser-tests	Run npm test	2026-10-22T11:07:01.7850185Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:01.7870072Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:07.7521845Z # Subtest: Hero 后通过原生滚动到达四只独立样例和真实大厅链接
+browser-tests	Run npm test	2026-10-22T11:07:07.7533416Z ok 83 - Hero 后通过原生滚动到达四只独立样例和真实大厅链接
+browser-tests	Run npm test	2026-10-22T11:07:07.7534094Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:07.7534556Z   duration_ms: 5983.736363
+browser-tests	Run npm test	2026-10-22T11:07:07.7535177Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:07.7535623Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:12.9301370Z # Subtest: 大厅直接访问、无尾斜线跳转和浏览器返回均有效
+browser-tests	Run npm test	2026-10-22T11:07:12.9331155Z ok 84 - 大厅直接访问、无尾斜线跳转和浏览器返回均有效
+browser-tests	Run npm test	2026-10-22T11:07:12.9333740Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:12.9343673Z   duration_ms: 5179.693344
+browser-tests	Run npm test	2026-10-22T11:07:12.9344472Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:12.9344984Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:28.4811849Z # Subtest: 昼夜选择跨导航、刷新和返回保持一致，样例过渡可反向连续操作
+browser-tests	Run npm test	2026-10-22T11:07:28.4837842Z ok 85 - 昼夜选择跨导航、刷新和返回保持一致，样例过渡可反向连续操作
+browser-tests	Run npm test	2026-10-22T11:07:28.4877205Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:28.4905914Z   duration_ms: 15548.482067
+browser-tests	Run npm test	2026-10-22T11:07:28.4920857Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:28.4926024Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:40.3441667Z # Subtest: 手机、短屏和横屏：样例未裁切，主入口可触达，没有水平溢出
+browser-tests	Run npm test	2026-10-22T11:07:40.3470553Z ok 86 - 手机、短屏和横屏：样例未裁切，主入口可触达，没有水平溢出
+browser-tests	Run npm test	2026-10-22T11:07:40.3471840Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:40.3490119Z   duration_ms: 11847.740705
+browser-tests	Run npm test	2026-10-22T11:07:40.3510137Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:40.3530067Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:44.3087035Z # Subtest: 样例图片失败时占位尺寸稳定，仍能进入大厅
+browser-tests	Run npm test	2026-10-22T11:07:44.3092261Z ok 87 - 样例图片失败时占位尺寸稳定，仍能进入大厅
+browser-tests	Run npm test	2026-10-22T11:07:44.3093509Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:44.3094021Z   duration_ms: 3973.299857
+browser-tests	Run npm test	2026-10-22T11:07:44.3094568Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:44.3095052Z   ...
+browser-tests	Run npm test	2026-10-22T11:07:50.4649468Z # Subtest: 主题存储被禁用时页面、图片和导航仍可用
+browser-tests	Run npm test	2026-10-22T11:07:50.4662336Z ok 88 - 主题存储被禁用时页面、图片和导航仍可用
+browser-tests	Run npm test	2026-10-22T11:07:50.4690875Z   ---
+browser-tests	Run npm test	2026-10-22T11:07:50.4698556Z   duration_ms: 6155.839019
+browser-tests	Run npm test	2026-10-22T11:07:50.4699248Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:07:50.4700183Z   ...
+browser-tests	Run npm test	2026-10-22T11:08:42.2431649Z # Subtest: 详情白天色彩校正可逆，四只样例与大厅玩具在昼夜仍保留原色
+browser-tests	Run npm test	2026-10-22T11:08:42.2440997Z ok 89 - 详情白天色彩校正可逆，四只样例与大厅玩具在昼夜仍保留原色
+browser-tests	Run npm test	2026-10-22T11:08:42.2457079Z   ---
+browser-tests	Run npm test	2026-10-22T11:08:42.2469461Z   duration_ms: 51337.576066
+browser-tests	Run npm test	2026-10-22T11:08:42.2470411Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:08:42.2470935Z   ...
+browser-tests	Run npm test	2026-10-22T11:08:45.2120350Z # Subtest: 独立面板fixture保留180/120ms、连续反转与关闭立即inert契约
+browser-tests	Run npm test	2026-10-22T11:08:45.2161053Z ok 90 - 独立面板fixture保留180/120ms、连续反转与关闭立即inert契约
+browser-tests	Run npm test	2026-10-22T11:08:45.2192316Z   ---
+browser-tests	Run npm test	2026-10-22T11:08:45.2215580Z   duration_ms: 2967.548158
+browser-tests	Run npm test	2026-10-22T11:08:45.2225082Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:08:45.2225614Z   ...
+browser-tests	Run npm test	2026-10-22T11:08:47.3701731Z # Subtest: 独立面板fixture响应减少动态并收束正在执行的动画，首页键盘保持即时反馈
+browser-tests	Run npm test	2026-10-22T11:08:47.3721418Z ok 91 - 独立面板fixture响应减少动态并收束正在执行的动画，首页键盘保持即时反馈
+browser-tests	Run npm test	2026-10-22T11:08:47.3750192Z   ---
+browser-tests	Run npm test	2026-10-22T11:08:47.3821481Z   duration_ms: 2156.900849
+browser-tests	Run npm test	2026-10-22T11:08:47.3822077Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:08:47.3822335Z   ...
+browser-tests	Run npm test	2026-10-22T11:09:13.8101790Z # Subtest: 颜色卡片选中与键盘即时反馈，减少动态下无位移动画且色块遵循共享色表
+browser-tests	Run npm test	2026-10-22T11:09:13.8122547Z ok 92 - 颜色卡片选中与键盘即时反馈，减少动态下无位移动画且色块遵循共享色表
+browser-tests	Run npm test	2026-10-22T11:09:13.8150172Z   ---
+browser-tests	Run npm test	2026-10-22T11:09:13.8150732Z   duration_ms: 26442.668981
+browser-tests	Run npm test	2026-10-22T11:09:13.8185335Z   type: 'test'
+browser-tests	Run npm test	2026-10-22T11:09:13.8187703Z   ...
+browser-tests	Run npm test	2026-10-22T11:09:13.8725756Z 1..92
+browser-tests	Run npm test	2026-10-22T11:09:13.8729926Z # tests 92
+browser-tests	Run npm test	2026-10-22T11:09:13.8730528Z # suites 0
+browser-tests	Run npm test	2026-10-22T11:09:13.8731092Z # pass 91
+browser-tests	Run npm test	2026-10-22T11:09:13.8731604Z # fail 1
+browser-tests	Run npm test	2026-10-22T11:09:13.8732089Z # cancelled 0
+browser-tests	Run npm test	2026-10-22T11:09:13.8732665Z # skipped 0
+browser-tests	Run npm test	2026-10-22T11:09:13.8733187Z # todo 0
+browser-tests	Run npm test	2026-10-22T11:09:13.8733816Z # duration_ms 992710.67056
+browser-tests	Run npm test	2026-10-22T11:09:13.8875161Z ##[error]Process completed with exit code 1.

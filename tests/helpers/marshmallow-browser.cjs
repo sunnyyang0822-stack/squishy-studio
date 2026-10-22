@@ -69,7 +69,10 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
         assert.equal(await page.locator('.toy-mount').getAttribute('data-render-count'), count, 'Static dents sleep');
         report.observations.push({ name, label, ...await meshStats(page) });
       }
-      const shortStart = Date.now();
+      await input.evaluate(el => {
+        el.addEventListener('pointerdown', () => { window.marshmallowShortStart = performance.now(); }, { once: true, capture: true });
+        el.addEventListener('pointerup', () => { window.marshmallowShortDuration = performance.now() - window.marshmallowShortStart; }, { once: true, capture: true });
+      });
       await send('down', at(.5)); await page.waitForTimeout(45);
       // A concurrent browser suite can delay rAF beyond the nominal 45ms.
       // Observe the first actual loaded frame; fixed-time response is measured
@@ -78,13 +81,29 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
         const p = window.orbMeshProbe;
         return p.positions?.some((v, i) => Math.abs(v - p.rest[i]) > .003);
       });
-      await send('up'); report.observations.push({ name, label: 'short press actual input duration', milliseconds: Date.now() - shortStart });
+      await send('up');
+      const shortDuration = await page.evaluate(() => window.marshmallowShortDuration);
+      assert.ok(Number.isFinite(shortDuration) && shortDuration > 0);
+      report.observations.push({ name, label: 'short press actual input duration', milliseconds: shortDuration });
       await freeze('short press');
       const shortStats = await meshStats(page);
-      assert.ok(shortStats.maximum > .003 && shortStats.maximum < .15,
-        'Short press stays shallow: ' + JSON.stringify({ maximum: shortStats.maximum, duration: report.observations.find(o => o.name === name && o.label === 'short press actual input duration').milliseconds }));
+      // CI may spend hundreds of ms dispatching nominal 45ms input. Check
+      // against its actual held duration; strict 100ms bounds live in GLB tests.
+      const shortBound = .70 * -Math.expm1(-(.03 + .58 * Math.min(shortDuration / 2000, 1)) / .70) + .008;
+      assert.ok(shortStats.maximum > .003 && shortStats.maximum < Math.min(.43, shortBound),
+        'Press depth matches real held time: ' + JSON.stringify({ maximum: shortStats.maximum, shortDuration, shortBound }));
       await input.evaluate(el => el.addEventListener('pointerdown', () => {
         window.marshmallowHeldStart = performance.now();
+        window.marshmallowPressFrames = [];
+        const observe = () => {
+          const p = window.orbMeshProbe;
+          let maximum = 0;
+          for (let i = 0; i < p.rest.length; i += 3)
+            maximum = Math.max(maximum, Math.hypot(...[0, 1, 2].map(k => p.positions[i + k] - p.rest[i + k])));
+          window.marshmallowPressFrames.push({ milliseconds: performance.now() - window.marshmallowHeldStart, maximum });
+          if (el.getAttribute('aria-pressed') === 'true') requestAnimationFrame(observe);
+        };
+        requestAnimationFrame(observe);
       }, { once: true, capture: true }));
       await send('down', at(.32));
       const stages = [], elapsedMilliseconds = [];
@@ -94,8 +113,12 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
         if (capture) await page.screenshot({ path: folder + '/' + name + '-press-stage-' + stages.length + '.png' });
       }
       report.observations.push({ name, label: 'progressive held press at nominal 100/300/600/1200ms', depths: stages, elapsedMilliseconds });
-      assert.ok(stages[3] > stages[0] + .01, 'Holding must visibly deepen through several frames');
-      assert.ok(stages[0] < .15 && stages[3] < .5, 'A first press cannot bottom out');
+      const frames = await page.evaluate(() => window.marshmallowPressFrames);
+      const largestIncrease = Math.max(...frames.slice(1).map((f, i) => f.maximum - frames[i].maximum));
+      assert.ok(frames.length >= 3 && frames.at(-1).maximum > frames[0].maximum + .01, 'Real GPU hold has multiple visible stages');
+      assert.ok(frames[0].maximum < shortStats.maximum + .02 && largestIncrease < .025, 'GPU press cannot jump to full depth in one frame');
+      assert.ok(stages[3] < .5, 'One held press stays below the safety boundary');
+      report.observations.push({ name, label: 'actual GPU progressive frames', count: frames.length, first: frames[0], last: frames.at(-1), largestIncrease });
       await send('up'); await freeze('long press', 2200);
       await send('down', at(.24)); await page.waitForTimeout(350);
       for (let i = 1; i <= 18; i++) { await send('move', at(.24 + .52 * i / 18)); await page.waitForTimeout(16); }
