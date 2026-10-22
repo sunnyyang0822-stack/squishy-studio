@@ -137,9 +137,9 @@
 test at tests\detail.test.cjs:233:1
 ✖ 桌面同显当前步骤全部可用组；手机切回分类仍保留选择 (927.5239ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   false !== true
-  
+
       at TestContext.<anonymous> (D:\squishy-studio\tests\detail.test.cjs:256:10)
       at async Test.run (node:internal/test_runner/test:1409:7)
       at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
