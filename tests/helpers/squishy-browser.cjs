@@ -1,14 +1,14 @@
 const { readMesh } = require('./squishy-mesh.cjs');
 async function installStyleProbe(page, style) {
   const mesh = readMesh(`.${style.modelUrl}`);
-  await page.addInitScript(({ rest, drawCount }) => {
-    const p = window.styleProbe = { rest, positions: null, contexts: [], uploads: 0, draws: 0, matrices: [], intervals: [] };
+  await page.addInitScript(({ rest, restNormals, drawCount }) => {
+    const p = window.styleProbe = { rest, restNormals, positions: null, normals: null, contexts: [], uploads: 0, draws: 0, matrices: [], intervals: [] };
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, ...args) {
       const gl = original.call(this, type, ...args);
       if (type !== 'webgl2' || !gl || p.contexts.includes(gl)) return gl;
       p.contexts.push(gl);
-      let positionBuffer, lastDraw;
+      let positionBuffer, normalBuffer, lastDraw;
       const names = new Map(), matrices = new Map();
       for (const method of ['bufferData', 'bufferSubData', 'getUniformLocation', 'uniformMatrix4fv', 'drawElements']) {
         const native = gl[method].bind(gl);
@@ -19,10 +19,17 @@ async function installStyleProbe(page, style) {
           if (method === 'bufferData' && a[0] === gl.ARRAY_BUFFER && a[1]?.length === rest.length && rest.every((v, i) => Math.abs(a[1][i] - v) < 1e-6)) {
             positionBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING); p.positions = Array.from(a[1]); p.uploads++;
           }
+          if (method === 'bufferData' && a[0] === gl.ARRAY_BUFFER && a[1]?.length === restNormals.length && restNormals.every((v, i) => Math.abs(a[1][i] - v) < 1e-6)) {
+            normalBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING); p.normals = Array.from(a[1]);
+          }
           if (method === 'bufferSubData' && positionBuffer && a[0] === gl.ARRAY_BUFFER && gl.getParameter(gl.ARRAY_BUFFER_BINDING) === positionBuffer) {
             const data = a[2], offset = a[3] || 0, length = a[4] || data.length - offset;
             for (let i = 0; i < length; i++) p.positions[a[1] / 4 + i] = data[offset + i];
             p.uploads++;
+          }
+          if (method === 'bufferSubData' && normalBuffer && a[0] === gl.ARRAY_BUFFER && gl.getParameter(gl.ARRAY_BUFFER_BINDING) === normalBuffer) {
+            const data = a[2], offset = a[3] || 0, length = a[4] || data.length - offset;
+            for (let i = 0; i < length; i++) p.normals[a[1] / 4 + i] = data[offset + i];
           }
           if (method === 'drawElements' && a[1] === drawCount) {
             p.matrix = matrices.get(gl.getParameter(gl.CURRENT_PROGRAM))?.slice();
@@ -48,7 +55,7 @@ async function installStyleProbe(page, style) {
       }
       return gl;
     };
-  }, { rest: mesh.positions, drawCount: mesh.indices.length });
+  }, { rest: mesh.positions, restNormals: mesh.normals, drawCount: mesh.indices.length });
   return mesh;
 }
 async function stats(page) {
@@ -88,4 +95,5 @@ async function rotate(page, dx, dy) {
   await page.mouse.move(b.x + 12, b.y + 45); await page.mouse.down();
   await page.mouse.move(b.x + 12 + dx, b.y + 45 + dy, { steps: 20 }); await page.mouse.up(); await page.waitForTimeout(200);
 }
-module.exports = { installStyleProbe, stats, ready, point, settle, surfaceLight, rotate };
+const contactFor = id => [id === 'donut' ? .76 : .5, id === 'paw' ? .68 : .42];
+module.exports = { installStyleProbe, stats, ready, point, settle, surfaceLight, rotate, contactFor };

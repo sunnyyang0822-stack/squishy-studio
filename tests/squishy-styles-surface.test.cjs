@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { readMesh } = require('./helpers/squishy-mesh.cjs');
+const { readMesh, topology } = require('./helpers/squishy-mesh.cjs');
 const ids = ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star'];
 function displacement(rest, positions) {
   return Array.from({ length: rest.length / 3 }, (_, i) => Math.hypot(...[0, 1, 2].map(k => positions[i * 3 + k] - rest[i * 3 + k])));
@@ -53,9 +53,19 @@ for (const id of ids) test(`${id}：真实导出几何的局部形变保持黏�
 
 for (const id of ids) test(`${id}：中心、侧缘、连接区域反复深压无三角形翻转或塌陷`, async () => {
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
-  const { createSurfaceClay } = await import('../src/surface-clay.mjs');
+  const { createSurfaceGeometry } = await import('../src/surface-clay.mjs');
+  const { getOrbFeel } = await import('../src/orb-feels.mjs');
   const mesh = readMesh(`.${getSquishyStyle(id).modelUrl}`), rest = Float32Array.from(mesh.positions), positions = rest.slice();
-  const d = createSurfaceClay(positions, Float32Array.from(mesh.normals), { indices: mesh.indices });
+  const geometry = createSurfaceGeometry(positions, Float32Array.from(mesh.normals), mesh.indices);
+  if (geometry.parameterization === 'star-convex') {
+    const t = topology(mesh); assert.equal(t.components, 1); assert.equal(t.boundaryOrNonmanifold, 0); assert.equal(t.euler, 2);
+  }
+  const d = getOrbFeel('clay').createDeformation(positions, Float32Array.from(mesh.normals), { surfaceGeometry: geometry });
+  const center = mesh.low.map((v, k) => (v + mesh.high[k]) / 2);
+  const determinant = (source, tri) => {
+    const [a, b, c] = tri.map(i => [0, 1, 2].map(k => source[i * 3 + k] - center[k]));
+    return a[0] * (b[1] * c[2] - b[2] * c[1]) + a[1] * (b[2] * c[0] - b[0] * c[2]) + a[2] * (b[0] * c[1] - b[1] * c[0]);
+  };
   const targets = [[0, 0], [.55, .12], [-.45, .35], [.12, -.5]];
   for (const [x, y] of targets) {
     d.reset(); let vertex = -1, best = Infinity;
@@ -66,10 +76,23 @@ for (const id of ids) test(`${id}：中心、侧缘、连接区域反复深压�
     assert.ok(vertex >= 0);
     const hit = Array.from(rest.slice(vertex, vertex + 3));
     for (let stroke = 0; stroke < 6; stroke++) { d.begin(hit); advance(d, 240); d.move(hit.map((v, k) => v + (k === 0 ? .04 : 0)), .1); advance(d, 40); d.release(); advance(d, 120); }
+    if (geometry.parameterization === 'star-convex') for (let i = 0; i < rest.length; i += 3) {
+      const a = center.map((v, k) => rest[i + k] - v), b = center.map((v, k) => positions[i + k] - v);
+      const cross = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+      assert.ok(Math.hypot(...cross) < 1e-6, 'Star-convex deformation stays on original ray');
+      assert.ok(a.reduce((sum, v, k) => sum + v * b[k], 0) > 0, 'Strictly positive radial scale');
+    }
     for (let i = 0; i < mesh.indices.length; i += 3) {
       const tri = mesh.indices.slice(i, i + 3), before = faceNormal(rest, ...tri), after = faceNormal(positions, ...tri);
       assert.ok(Math.hypot(...after) > 1e-9, `${id} collapsed face ${i / 3}, hit ${hit}`);
-      assert.ok(before.reduce((sum, n, k) => sum + n * after[k], 0) > 0, `${id} inverted face ${i / 3}, hit ${hit}`);
+      if (geometry.parameterization === 'star-convex') {
+        // A steep dent can rotate a wall normal by >90° without folding the
+        // skin. The stronger invariant is unchanged, one-to-one spherical
+        // parameterization: closed genus-zero rest skin, positive face radial
+        // determinants, and strictly positive ray scales at every vertex.
+        assert.ok(determinant(rest, tri) > 0, `${id} rest radial fold ${i / 3}`);
+        assert.ok(determinant(positions, tri) > 0, `${id} deformed radial fold ${i / 3}`);
+      } else assert.ok(before.reduce((sum, n, k) => sum + n * after[k], 0) > 0, `${id} inverted normal-thickness face ${i / 3}, hit ${hit}`);
     }
   }
 });

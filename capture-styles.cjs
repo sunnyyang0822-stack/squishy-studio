@@ -1,21 +1,51 @@
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
+const { createHash } = require('node:crypto');
 const { chromium } = require('playwright');
 const { readMesh, topology } = require('./tests/helpers/squishy-mesh.cjs');
-const { installStyleProbe, ready, point, stats, settle, surfaceLight, rotate } = require('./tests/helpers/squishy-browser.cjs');
+const { installStyleProbe, ready, point, stats, settle, surfaceLight, rotate, contactFor } = require('./tests/helpers/squishy-browser.cjs');
 const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4183';
 const folder = 'artifacts/issue-30/browser';
+const hash = data => createHash('sha256').update(data).digest('hex');
 
 (async () => {
   fs.mkdirSync(folder, { recursive: true });
   const { getSquishyStyle } = await import('./src/squishy-styles.mjs');
   const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
   const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (fs.existsSync(edge) ? edge : undefined) });
-  const report = { date: new Date().toISOString(), environment: { browser: await browser.version(), mobile: 'Playwright 390×844 viewport, touch emulation; no physical device', performance: 'Observed render intervals during active input; not device FPS' }, combinations: [] };
+  const report = { date: new Date().toISOString(), environment: { bundleSHA256: hash(fs.readFileSync('assets/orb-preview.js')), browser: await browser.version(), mobile: 'Playwright 390×844 viewport, touch emulation; no physical device', performance: 'Observed render intervals during active input; not device FPS' }, combinations: [] };
+  if (process.argv.includes('--resume')) {
+    const previous = JSON.parse(fs.readFileSync(`${folder}/validation.json`, 'utf8'));
+    assert.equal(previous.environment.bundleSHA256, report.environment.bundleSHA256, 'Resume requires identical runtime');
+    assert.equal(previous.environment.browser, report.environment.browser, 'Resume requires identical browser');
+    for (const result of previous.combinations) {
+      const style = getSquishyStyle(result.id);
+      assert.equal(hash(fs.readFileSync(`.${style.modelUrl}`)), result.asset.sha256, 'Resume requires identical captured assets');
+      assert.ok(fs.existsSync(`${folder}/${result.id}-clay-interaction.webm`));
+    }
+    report.combinations = previous.combinations;
+    report.resumedFrom = previous.date;
+  }
   try {
-    for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']) {
+    if (process.argv.includes('--review')) {
+      for (const [id, region] of [['cloud', 'body'], ['paw', 'pad'], ['paw', 'connection']]) {
+        const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+        await installStyleProbe(page, getSquishyStyle(id)); await page.goto(`${base}/squishy/cloud/?style=${id}`); await ready(page);
+        const name = region === 'connection' ? `${id}-connection` : id;
+        await page.screenshot({ path: `${folder}/${name}-review-rest.png`, fullPage: true });
+        const p = await point(page, ...(region === 'connection' ? [.5, .42] : contactFor(id))); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(1700);
+        const observed = await stats(page); assert.ok(observed.maximum > .03);
+        await page.screenshot({ path: `${folder}/${name}-review-pressed.png`, fullPage: true });
+        console.log(JSON.stringify({ id, region, ...observed })); await page.mouse.up(); await page.close();
+      }
+      return;
+    }
+    for (const id of ['cloud', 'cylinder', 'donut', 'pyramid', 'flower', 'star', 'paw']) {
+      const only = process.argv.find(arg => arg.startsWith('--only='))?.slice(7).split(',');
+      if (only && !only.includes(id)) continue;
+      if (report.combinations.some(result => result.id === id)) continue;
       const style = getSquishyStyle(id), mesh = readMesh(`.${style.modelUrl}`);
-      const result = { id, feelId: 'clay', asset: { bytes: mesh.bytes.length, vertices: mesh.positions.length / 3, triangles: mesh.indices.length / 3, bounds: [mesh.low, mesh.high], topology: topology(mesh) }, views: [], errors: [] };
+      const result = { id, feelId: 'clay', asset: { sha256: hash(mesh.bytes), bytes: mesh.bytes.length, vertices: mesh.positions.length / 3, triangles: mesh.indices.length / 3, bounds: [mesh.low, mesh.high], topology: topology(mesh) }, views: [], errors: [] };
       for (const [device, width, height] of [['desktop', 1440, 900], ['mobile', 390, 844]]) {
         const context = await browser.newContext({ viewport: { width, height }, isMobile: device === 'mobile', hasTouch: device === 'mobile', ...(device === 'desktop' ? { recordVideo: { dir: folder, size: { width, height } } } : {}) });
         const page = await context.newPage(); page.on('pageerror', e => result.errors.push(e.message));
@@ -25,7 +55,7 @@ const folder = 'artifacts/issue-30/browser';
           await page.evaluate(t => document.documentElement.dataset.theme = t, theme); await page.waitForTimeout(700);
           const prefix = `${folder}/${id}-${device}-${theme}`;
           await page.screenshot({ path: `${prefix}-rest.png`, fullPage: true });
-          const p = await point(page, id === 'donut' ? .76 : .5, .42);
+          const p = await point(page, ...contactFor(id));
           const scrollBefore = await page.evaluate(() => scrollY);
           if (touch) await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: p.x, y: p.y, id: 0 }] });
           else { await page.mouse.move(p.x, p.y); await page.mouse.down(); }
@@ -65,12 +95,24 @@ const folder = 'artifacts/issue-30/browser';
           await page.mouse.move(b.x + 12, b.y + 45); await page.mouse.down(); await page.mouse.move(b.x + 180, b.y + 100, { steps: 25 }); await page.mouse.up(); await page.waitForTimeout(500);
           await page.screenshot({ path: `${folder}/${id}-browser-rotated.png`, fullPage: true });
         }
+        for (let i = 0; i < 4; i++) await page.locator('.step-next').click();
+        await page.waitForSelector('.step-panel[data-step=play]'); await page.waitForTimeout(750);
+        const finalPoint = await point(page, ...contactFor(id));
+        if (touch) await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...finalPoint, id: 0 }] });
+        else { await page.mouse.move(finalPoint.x, finalPoint.y); await page.mouse.down(); }
+        await page.waitForTimeout(900); assert.ok((await stats(page)).maximum > .02, 'Final fifth-step model is playable');
+        if (touch) await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); else await page.mouse.up();
+        await settle(page); await page.screenshot({ path: `${folder}/${id}-${device}-final-play.png`, fullPage: true });
+        result.views.at(-1).finalPlay = await stats(page);
         const intervals = await page.evaluate(() => window.styleProbe.intervals.slice().sort((a, b) => a - b));
         result[`${device}RenderIntervalsMs`] = { samples: intervals.length, median: intervals[Math.floor(intervals.length / 2)] || null, p95: intervals[Math.floor(intervals.length * .95)] || null };
         const video = page.video(); await context.close();
         if (video) { await video.saveAs(`${folder}/${id}-clay-interaction.webm`); const generated = await video.path(); if (generated !== `${folder}/${id}-clay-interaction.webm`) fs.unlinkSync(generated); }
       }
-      assert.deepEqual(result.errors, []); report.combinations.push(result);
+      assert.deepEqual(result.errors, []);
+      assert.equal(hash(fs.readFileSync(`.${style.modelUrl}`)), result.asset.sha256, 'GLB must remain unchanged throughout evidence capture');
+      assert.equal(hash(fs.readFileSync('assets/orb-preview.js')), report.environment.bundleSHA256, 'Runtime bundle must remain unchanged throughout evidence capture');
+      report.combinations.push(result);
       fs.writeFileSync(`${folder}/validation.json`, JSON.stringify(report, null, 2)); console.log(`${id}×clay: captured, actual GPU deformation verified`);
     }
   } finally { await browser.close(); }

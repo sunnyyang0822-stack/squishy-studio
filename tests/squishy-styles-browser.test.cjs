@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
-const { installStyleProbe, stats, ready, point, settle, surfaceLight, rotate } = require('./helpers/squishy-browser.cjs');
+const { installStyleProbe, stats, ready, point, settle, surfaceLight, rotate, contactFor } = require('./helpers/squishy-browser.cjs');
 const base = 'http://127.0.0.1:4183';
 let browser, server;
 before(async () => {
@@ -24,11 +24,22 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
   const roseLight = await surfaceLight(page, 'day');
   assert.ok(roseLight.meanRGB[0] - roseLight.meanRGB[1] > 8, `Rose must actually appear pink: ${roseLight.meanRGB}`);
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
-  const x = id === 'donut' ? .76 : .5, y = .42;
+  const [x, y] = contactFor(id);
   const p = await point(page, x, y); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(1300);
   const held = await stats(page);
   assert.ok(held.maximum > .03 && held.maximum < .7, JSON.stringify(held));
   assert.ok(held.changed > 10 && held.changed < held.vertices * .6, 'Local deformation'); assert.ok(held.finite);
+  const remoteNormals = await page.evaluate(center => {
+    const p = window.styleProbe; let maximum = 0, count = 0;
+    if (!p.normals) throw Error('Actual normal buffer was not captured');
+    for (let i = 0; i < p.rest.length; i += 3) {
+      const far = Math.hypot(...[0, 1, 2].map(k => p.rest[i + k] - center[k])) > .9;
+      const unchanged = [0, 1, 2].every(k => Math.abs(p.positions[i + k] - p.rest[i + k]) < 1e-7);
+      if (far && unchanged) { count++; maximum = Math.max(maximum, Math.hypot(...[0, 1, 2].map(k => p.normals[i + k] - p.restNormals[i + k]))); }
+    }
+    return { maximum, count };
+  }, held.center);
+  assert.ok(remoteNormals.count > 100 && remoteNormals.maximum < 1e-5, `Unchanged remote skin keeps exported smooth normals: ${JSON.stringify(remoteNormals)}`);
   await page.mouse.move(p.x + 12, p.y - 8, { steps: 8 }); await page.waitForTimeout(300); await page.mouse.up(); await settle(page);
   const retained = await stats(page); assert.ok(retained.maximum > .02, 'Clay retains a dent');
   if (id === 'donut') {
@@ -70,6 +81,15 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
     assert.ok((await stats(page)).maximum > .02, 'Keyboard fallback hits real ring surface instead of empty center');
     await page.keyboard.up('Space'); await settle(page);
   }
+  for (let i = 0; i < 4; i++) await page.locator('.step-next').click();
+  await page.waitForSelector('.step-panel[data-step=play]'); await ready(page);
+  await page.waitForFunction(() => window.styleProbe.positions.every((v, i) => Math.abs(v - window.styleProbe.rest[i]) < 1e-6));
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id, 'Final squeeze retains selected geometry');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'clay');
+  for (let i = 0; i < 4; i++) await page.locator('.step-back').click();
+  await page.waitForSelector('.step-panel[data-step=core]'); await ready(page);
+  assert.equal(await page.locator('[name=styleId]').inputValue(), id, 'Returning to edit retains style');
+  await page.reload(); await ready(page); assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id, 'Refresh restores style from URL');
   await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pagehide')));
   await page.waitForFunction(() => window.styleProbe.contexts.every(gl => gl.isContextLost())); assert.equal(await page.locator('.toy-mount canvas').count(), 0);
   assert.deepEqual(errors, []); await page.close();
