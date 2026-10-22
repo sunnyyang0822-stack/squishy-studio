@@ -73,7 +73,7 @@
 .color-options { display: grid; grid-template-columns: repeat(5,minmax(44px,1fr)); gap: 8px; }
 .color-name { display: none; }
 .color-face { width: 44px; min-height: 44px; margin: auto; padding: 0; border-radius: 50%; border-color: transparent; justify-content: center; }
-.color-choice input:checked + .color-face { background: transparent; }
+.color-choice input:checked + .color-face { background: transparent; border-color: color-mix(in srgb,var(--swatch-color) 65%,black); }
 .color-swatch { position: relative; flex: 0 0 auto; width: 32px; height: 32px; border: 1px solid rgba(88,57,87,.18); border-radius: 50%; }
 .color-choice input:checked + .color-face .color-swatch::after { content: ''; position: absolute; left: 11px; top: 7px; width: 7px; height: 12px; border: solid #583957; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .step-navigation { flex: 0 0 auto; display: flex; gap: 10px; padding-top: 12px; border-top: 1px solid var(--detail-border); }

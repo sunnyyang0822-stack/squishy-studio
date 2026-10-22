@@ -132,10 +132,15 @@ test('颜色卡片选中与键盘即时反馈，减少动态下无位移动画�
       await input.check();
       const state = await input.evaluate(el => {
         const face = el.nextElementSibling, style = getComputedStyle(face);
-        return { border:style.borderTopStyle, width:style.borderTopWidth, weight:style.fontWeight, swatch:getComputedStyle(face.querySelector('.color-swatch')).backgroundColor, check:getComputedStyle(face.querySelector('.color-swatch'), '::after').content, animations:face.getAnimations().length };
+        const canvas=document.createElement('canvas'); canvas.width=canvas.height=1;
+        const context=canvas.getContext('2d'); context.fillStyle=style.borderTopColor; context.fillRect(0,0,1,1);
+        return { ring:Array.from(context.getImageData(0,0,1,1).data).slice(0,3), border:style.borderTopStyle, width:style.borderTopWidth, weight:style.fontWeight, swatch:getComputedStyle(face.querySelector('.color-swatch')).backgroundColor, check:getComputedStyle(face.querySelector('.color-swatch'), '::after').content, animations:face.getAnimations().length };
       });
       const rgb = color.hex.slice(1).match(/../g).map(hex => parseInt(hex,16));
       assert.equal(state.swatch, `rgb(${rgb.join(', ')})`);
+      const ratios=state.ring.map((channel,index)=>channel/rgb[index]);
+      assert.ok(ratios.every(ratio=>ratio>.5 && ratio<.85),'选中圈为当前色的加深版');
+      assert.ok(Math.max(...ratios)-Math.min(...ratios)<.02,'加深时保持当前颜色的色相比例');
       assert.equal(state.border, 'solid'); assert.equal(state.width, '2px');
       assert.equal(state.weight, '650'); assert.notEqual(state.check, 'none'); assert.equal(state.animations, 0);
     }

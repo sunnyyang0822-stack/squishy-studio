@@ -51,8 +51,10 @@ for (const group of groups) {
     input.dataset.choice = id;
     const face = document.createElement('span'); face.className = group.colors ? 'color-face' : 'text-face';
     if (group.colors) {
+      const color = orbColors.find(color => color.id === id);
+      label.style.setProperty('--swatch-color',color.hex);
       const swatch = document.createElement('span'); swatch.className = 'color-swatch';
-      swatch.style.backgroundColor = orbColors.find(color => color.id === id).hex;
+      swatch.style.backgroundColor = color.hex;
       swatch.setAttribute('aria-hidden', 'true'); face.append(swatch);
     }
     const text = document.createElement('span'); text.textContent = name;

@@ -9,7 +9,7 @@
 - 五步为内芯、外壳、装饰、制作、试捏。顶部五段箭头条标记当前、已完成和未开始；前进、返回和浏览器历史同步更新。这是步骤进度，不是制作任务百分比。
 - 步骤条尺寸紧凑、箭头紧贴；白天采用较浅颜色，夜晚沿用原强调色。内芯按钮为黏土、棉花糖、慢回弹，三个同排。
 - 桌面当前步骤的几组设置同时展示；手机的材质、颜色、填充物等分类点击切换，每次只展示一组。外壳分类为颜色、材质、厚度；厚度仅蜡可用。分类切换不重建场景、不更改配方。
-- 桌面左大圆球、右原位面板；手机上主体、下设置。色卡统一只有圆形色点，保留中文辅助名称和至少 44×44 CSS 像素触控区域。桌面三组设置的间隙均匀；内芯材质、外壳材质和厚度均为三项同排。
+- 桌面左大圆球、右原位面板；手机上主体、下设置。色卡统一只有圆形色点，选中圆环为当前色点的加深版，保留中文辅助名称和至少 44×44 CSS 像素触控区域。桌面三组设置的间隙均匀；内芯材质、外壳材质和厚度均为三项同排。
 - 产品界面去掉左侧说明、重复步骤标题和解释句。完整步骤标题保留给辅助技术；可见文案保留必要分类、选项、导航和错误提示。
 - 制作步骤的动画区域留白，提供返回修改和开始捏捏；没有假进度、计时或动画事件等待。进入时调用已有输入取消机制，结束正在施力的输入。
 - 进入最终体验时复用既有换色时钟和形态／姿态恢复流程；同色也可启动该时钟。正常换色的默认行为不变，恢复中仍可由新输入接管。
@@ -64,7 +64,7 @@
 | `node --test tests/detail.test.cjs` | 7 项流程、条件控件、分类与响应式测试通过 | 0 |
 | `node --test tests/orb-browser.test.cjs tests/orb-color.test.cjs tests/orb-day-color.test.cjs tests/orb-interaction.test.cjs tests/orb-rotation.test.cjs tests/toy-colors-motion.test.cjs` | 31 项浏览器回归通过 | 0 |
 | `npm test` | 82／82 通过，0 失败、0 跳过，含原构建流程 | 0 |
-| `node capture-making.cjs` | 14 张截图、2 段录屏和布局尺寸报告生成成功 | 0 |
+| `node capture-making.cjs` | 15 张截图、2 段录屏和布局尺寸报告生成成功 | 0 |
 
 [最终完整测试日志](../artifacts/issue-22/tests.txt)保留原输出和退出码。[首次失败日志](../artifacts/issue-22/tests-first-run.txt)保留了减少动态下色卡反馈的失败；通过恢复显式 `transition:none` 修复，没有删除或跳过原约束。旧 4197 端口有其他工作目录服务，日间颜色测试改用空闲的 4217，最终验证使用当前 worktree。
 
@@ -85,6 +85,8 @@ Windows Edge 155 自动化覆盖真实 WebGL 缓冲、局部形变、换色和�
 | 横屏 | [查看](../artifacts/issue-22/landscape-day.png) | [查看](../artifacts/issue-22/landscape-night.png) |
 
 流程截图：[外壳](../artifacts/issue-22/desktop-shell.png)、[装饰](../artifacts/issue-22/desktop-decoration.png)、[制作留白](../artifacts/issue-22/desktop-making.png)、[最终体验](../artifacts/issue-22/desktop-play.png)。
+
+[珊瑚红选中圆环](../artifacts/issue-22/desktop-coral.png)；十种颜色的圆环在昼夜均验证为当前色的加深版，色点本身仍使用原色表。
 
 录屏：[第一步试捏、旋转和连续换色](../artifacts/issue-22/core-squeeze-color.webm)；[从选样式到最终试捏](../artifacts/issue-22/full-flow.webm)。两段均为真实浏览器操作录制，不含正式制作动画。
 

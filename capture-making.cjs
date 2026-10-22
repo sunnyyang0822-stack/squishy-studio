@@ -37,6 +37,11 @@ async function main() {
           panel: document.querySelector('.step-panel').getBoundingClientRect().toJSON(),
         })) });
         await page.screenshot({ path: join(folder, `${name}-${theme}.png`), fullPage: true });
+        if (name === 'desktop' && theme === 'day') {
+          await page.locator('[name=color][value=coral]').check();
+          await page.waitForTimeout(800);
+          await page.screenshot({ path: join(folder,'desktop-coral.png'), fullPage: true });
+        }
         await page.close();
       }
     }
