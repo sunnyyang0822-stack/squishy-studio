@@ -106,7 +106,7 @@ test at tests\orb-day-color.test.cjs:146:1
   page.goto: Timeout 30000ms exceeded.
   Call log:
   [2m  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"[22m
-  
+
       at open (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:60:14)
       at async TestContext.<anonymous> (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:147:16) {
     name: 'TimeoutError',
@@ -118,7 +118,7 @@ test at tests\orb-day-color.test.cjs:179:58
   page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4217/squishy/cloud/
   Call log:
   [2m  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"[22m
-  
+
       at open (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:60:14)
       at async TestContext.<anonymous> (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:180:16) {
     name: 'Error',
@@ -130,7 +130,7 @@ test at tests\orb-day-color.test.cjs:179:58
   page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4217/squishy/cloud/
   Call log:
   [2m  - navigating to "http://127.0.0.1:4217/squishy/cloud/", waiting until "load"[22m
-  
+
       at open (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:60:14)
       at async TestContext.<anonymous> (D:\squishy-studio-issue-26\tests\orb-day-color.test.cjs:180:16) {
     name: 'Error',
