@@ -86,7 +86,11 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
   await page.waitForFunction(() => window.styleProbe.positions.every((v, i) => Math.abs(v - window.styleProbe.rest[i]) < 1e-6));
   assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id, 'Final squeeze retains selected geometry');
   assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'clay');
-  for (let i = 0; i < 4; i++) await page.locator('.step-back').click();
+  for (const step of ['decoration', 'shell', 'core']) {
+    await page.locator('.step-back').click();
+    await page.waitForSelector(`.step-panel[data-step=${step}]`);
+    assert.equal(await page.locator('.workflow-progress li[aria-current=step]').getAttribute('data-step'), step);
+  }
   await page.waitForSelector('.step-panel[data-step=core]'); await ready(page);
   assert.equal(await page.locator('[name=styleId]').inputValue(), id, 'Returning to edit retains style');
   await page.reload(); await ready(page); assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id, 'Refresh restores style from URL');
