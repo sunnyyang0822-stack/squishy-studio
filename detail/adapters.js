@@ -1,20 +1,29 @@
 // Lazy import keeps settings and retry usable if the engine bundle fails.
 export function createModelPreview(mount, options) {
   let renderer;
+  let rendererFeelId;
   let disposed = false;
   let attempt = 0;
   return {
     async prepare(config, context) {
+      const feelId = config.feelId || options?.feelId || 'clay';
+      if (renderer && rendererFeelId !== feelId) {
+        renderer.dispose(); renderer = undefined;
+      }
       if (!renderer) {
         // Failed module fetches are cached by browsers; a retry needs a fresh URL.
         const url = '/assets/orb-preview.js' + (attempt ? `?retry=${attempt}` : '');
         attempt++;
         const module = await import(url);
         if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-        renderer ||= module.createOrbPreview(mount, options);
+        renderer ||= module.createOrbPreview(mount, { ...options, feelId });
+        rendererFeelId = feelId;
       }
-      return renderer.prepare(config, context);
+      const handle = await renderer.prepare(config, context);
+      return { ...handle, commit() { handle.commit(); mount.dataset.feelId = feelId; } };
     },
+    stopInput() { renderer?.stopInput?.(); },
+    restore() { renderer?.restore?.(); },
     dispose() { disposed = true; renderer?.dispose(); },
   };
 }

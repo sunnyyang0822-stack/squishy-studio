@@ -1,0 +1,262 @@
+{
+  "browser": "155.0.4283.62",
+  "automation": "Playwright / Windows Edge；手机为模拟视口与触屏，未进行真机手机验证",
+  "viewports": [
+    {
+      "name": "desktop",
+      "theme": "day",
+      "viewport": [
+        1440,
+        900
+      ],
+      "document": [
+        1440,
+        900
+      ],
+      "stage": {
+        "x": 47,
+        "y": 122.296875,
+        "width": 900,
+        "height": 757.703125,
+        "top": 122.296875,
+        "right": 947,
+        "bottom": 880,
+        "left": 47
+      },
+      "panel": {
+        "x": 1026,
+        "y": 122.296875,
+        "width": 390,
+        "height": 757.703125,
+        "top": 122.296875,
+        "right": 1416,
+        "bottom": 880,
+        "left": 1026
+      }
+    },
+    {
+      "name": "desktop",
+      "theme": "night",
+      "viewport": [
+        1440,
+        900
+      ],
+      "document": [
+        1440,
+        900
+      ],
+      "stage": {
+        "x": 47,
+        "y": 122.296875,
+        "width": 900,
+        "height": 757.703125,
+        "top": 122.296875,
+        "right": 947,
+        "bottom": 880,
+        "left": 47
+      },
+      "panel": {
+        "x": 1026,
+        "y": 122.296875,
+        "width": 390,
+        "height": 757.703125,
+        "top": 122.296875,
+        "right": 1416,
+        "bottom": 880,
+        "left": 1026
+      }
+    },
+    {
+      "name": "mobile",
+      "theme": "day",
+      "viewport": [
+        390,
+        844
+      ],
+      "document": [
+        390,
+        844
+      ],
+      "stage": {
+        "x": 16,
+        "y": 106,
+        "width": 358,
+        "height": 477,
+        "top": 106,
+        "right": 374,
+        "bottom": 583,
+        "left": 16
+      },
+      "panel": {
+        "x": 16,
+        "y": 591,
+        "width": 358,
+        "height": 241,
+        "top": 591,
+        "right": 374,
+        "bottom": 832,
+        "left": 16
+      }
+    },
+    {
+      "name": "mobile",
+      "theme": "night",
+      "viewport": [
+        390,
+        844
+      ],
+      "document": [
+        390,
+        844
+      ],
+      "stage": {
+        "x": 16,
+        "y": 106,
+        "width": 358,
+        "height": 477,
+        "top": 106,
+        "right": 374,
+        "bottom": 583,
+        "left": 16
+      },
+      "panel": {
+        "x": 16,
+        "y": 591,
+        "width": 358,
+        "height": 241,
+        "top": 591,
+        "right": 374,
+        "bottom": 832,
+        "left": 16
+      }
+    },
+    {
+      "name": "small",
+      "theme": "day",
+      "viewport": [
+        320,
+        568
+      ],
+      "document": [
+        320,
+        568
+      ],
+      "stage": {
+        "x": 16,
+        "y": 98,
+        "width": 288,
+        "height": 221,
+        "top": 98,
+        "right": 304,
+        "bottom": 319,
+        "left": 16
+      },
+      "panel": {
+        "x": 16,
+        "y": 327,
+        "width": 288,
+        "height": 229,
+        "top": 327,
+        "right": 304,
+        "bottom": 556,
+        "left": 16
+      }
+    },
+    {
+      "name": "small",
+      "theme": "night",
+      "viewport": [
+        320,
+        568
+      ],
+      "document": [
+        320,
+        568
+      ],
+      "stage": {
+        "x": 16,
+        "y": 98,
+        "width": 288,
+        "height": 221,
+        "top": 98,
+        "right": 304,
+        "bottom": 319,
+        "left": 16
+      },
+      "panel": {
+        "x": 16,
+        "y": 327,
+        "width": 288,
+        "height": 229,
+        "top": 327,
+        "right": 304,
+        "bottom": 556,
+        "left": 16
+      }
+    },
+    {
+      "name": "landscape",
+      "theme": "day",
+      "viewport": [
+        844,
+        390
+      ],
+      "document": [
+        844,
+        390
+      ],
+      "stage": {
+        "x": 24,
+        "y": 102.296875,
+        "width": 372.25,
+        "height": 279.703125,
+        "top": 102.296875,
+        "right": 396.25,
+        "bottom": 382,
+        "left": 24
+      },
+      "panel": {
+        "x": 430,
+        "y": 102.296875,
+        "width": 390,
+        "height": 279.703125,
+        "top": 102.296875,
+        "right": 820,
+        "bottom": 382,
+        "left": 430
+      }
+    },
+    {
+      "name": "landscape",
+      "theme": "night",
+      "viewport": [
+        844,
+        390
+      ],
+      "document": [
+        844,
+        390
+      ],
+      "stage": {
+        "x": 24,
+        "y": 102.296875,
+        "width": 372.25,
+        "height": 279.703125,
+        "top": 102.296875,
+        "right": 396.25,
+        "bottom": 382,
+        "left": 24
+      },
+      "panel": {
+        "x": 430,
+        "y": 102.296875,
+        "width": 390,
+        "height": 279.703125,
+        "top": 102.296875,
+        "right": 820,
+        "bottom": 382,
+        "left": 430
+      }
+    }
+  ]
+}

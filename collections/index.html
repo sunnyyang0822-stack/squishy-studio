@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f9f3f4" />
     <script src="/theme-preference.js"></script>
     <title>合集大厅｜Squishy Studio</title>
-    <meta name="description" content="Squishy Studio 合集大厅，第一组脆皮捏捏正在制作中。" />
+    <meta name="description" content="选择奶油圆球，制作自己的捏捏。更多样式正在准备中。" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/showcase.css" />
   </head>
@@ -17,14 +17,21 @@
     </header>
     <main class="hall-main">
       <h1>合集大厅</h1>
-      <p class="hall-intro">喜欢的柔软，正在慢慢集合。<br />先留一点期待，等它们准备好。</p>
+      <p class="hall-intro">挑个样式</p>
+      <section class="collection-ready" aria-labelledby="orb-style">
+        <div class="orb-style-preview" aria-hidden="true"></div>
+        <div>
+          <span class="pending-status">可制作</span>
+          <h2 id="orb-style">奶油圆球</h2>
+          <a class="hall-back" href="/squishy/cloud/?style=orb">开始制作 <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
       <article class="collection-pending" aria-labelledby="first-collection">
         <img src="/assets/samples/cloud.svg" width="320" height="320" alt="圆润的奶油小云样例" />
         <div>
           <span class="pending-status">制作中</span>
           <h2 id="first-collection">柔软的一刻</h2>
           <p>第一组脆皮捏捏正在制作中。<br />准备好了，再来慢慢挑。</p>
-          <a class="hall-back" href="/squishy/cloud/">体验圆球捏压原型 <span aria-hidden="true">→</span></a>
         </div>
       </article>
       <a class="hall-back hall-return" href="/#samples"><span aria-hidden="true">←</span> 回去看看样例</a>

@@ -263,9 +263,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       floor.position.y = lowest - .003;
       invalidate();
     } });
-    current.selectColor = id => {
+    current.selectColor = (id, { restore = false } = {}) => {
       const next = orbColors.find(color => color.id === id) || orbColors[0];
-      if (next.id === selectedColor.id) return;
+      if (next.id === selectedColor.id && !restore) return;
       selectedColor = next;
       // A different color starts a fresh toy, without rebuilding the scene.
       // End captured gestures first so a held key/pointer cannot reapply a dent.
@@ -283,9 +283,10 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
         heights[i] = worldPoint.y; low = Math.min(low, heights[i]); high = Math.max(high, heights[i]);
       }
       for (let i = 0; i < heights.length; i++) heights[i] = (heights[i] - low) / Math.max(.001, high - low);
-      coating.select(new THREE.Color(next.hex).toArray(), heights);
+      coating.select(new THREE.Color(next.hex).toArray(), heights, { restart: restore });
       renderer.domElement.setAttribute('aria-label', `${next.name}圆球，${interactionLabel}`);
     };
+    current.restore = () => current.selectColor(selectedColor.id, { restore: true });
     motionPreference.addEventListener('change', event => {
       deformation.setReducedMotion(event.matches); coating.setReducedMotion(event.matches); invalidate();
       if (restorePose) beginRestore();
@@ -314,6 +315,17 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
   }
 
   return {
+    stopInput() {
+      view?.input.cancel();
+      view?.rotation.cancel();
+    },
+    restore() {
+      if (!view) return;
+      view.input.cancel({ preserveShape: true });
+      view.rotation.cancel();
+      view.restore();
+      view.invalidate();
+    },
     async prepare(config, { signal }) {
       if (disposed || signal.aborted) throw abortError();
       if (broken) { destroyView(); broken = false; }

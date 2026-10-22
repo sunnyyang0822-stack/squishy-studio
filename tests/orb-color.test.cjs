@@ -13,15 +13,47 @@ before(async () => {
   browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (existsSync(edge) ? edge : undefined) });
 });
 after(async () => { await browser?.close(); server?.kill(); });
-async function open(options = {}) {
+async function open(options = {}, { clock = false } = {}) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, ...options });
+  if (clock) await page.clock.install();
   await installOrbProbe(page, { pixels: true }); await page.goto(base + '/squishy/cloud/');
   await page.waitForFunction(() => window.orbMeshProbe?.pixelFrames.length);
+  if (await page.locator('[data-category=coreColor]').isVisible()) await page.locator('[data-category=coreColor]').click();
   return page;
 }
 const frame = page => page.evaluate(() => structuredClone(window.orbMeshProbe.pixelFrames.at(-1)));
 const distance = (a, b) => Math.max(...a.slice(0, 3).map((value, index) => Math.abs(value - b[index])));
 const matrixDistance = (a, b) => Math.max(...a.map((value, index) => Math.abs(value - b[index])));
+
+test('同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压', async () => {
+  const page = await open();
+  await idle(page);
+  const matrix = await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice());
+  const canvas = await page.locator('.toy-mount canvas').elementHandle();
+  await page.locator('.orb-input').focus();
+  await page.keyboard.down('Space');
+  await page.waitForTimeout(600);
+  await page.keyboard.up('Space'); await settled(page);
+  await page.mouse.move(100,250); await page.mouse.down();
+  await page.mouse.move(280,300,{steps:8}); await page.mouse.up(); await idle(page);
+  assert.ok(await page.evaluate(() => window.orbMeshProbe.positions.some((value,i) => Math.abs(value-window.orbMeshProbe.rest[i])>.025)));
+  assert.notDeepEqual(await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice()),matrix);
+  await page.getByRole('button',{name:'下一步'}).click();
+  await page.getByRole('button',{name:'下一步'}).click();
+  await page.locator('.orb-input').focus(); await page.keyboard.down('Space');
+  await page.locator('.step-next').evaluate(button => button.click());
+  assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'),'false');
+  await page.keyboard.up('Space');
+  await page.getByRole('button',{name:'开始捏捏'}).click();
+  await page.waitForFunction(() => window.orbMeshProbe.positions.every((value,i) => value===window.orbMeshProbe.rest[i]));
+  await idle(page);
+  assert.deepEqual(await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice()),matrix);
+  assert.equal(await canvas.evaluate(el => el===document.querySelector('.toy-mount canvas')),true);
+  assert.equal(await page.evaluate(() => window.orbMeshProbe.contexts.length),1);
+  await page.locator('.orb-input').focus(); await page.keyboard.down('Space');
+  await page.waitForFunction(() => window.orbMeshProbe.positions.some((value,i) => Math.abs(value-window.orbMeshProbe.rest[i])>.025));
+  await page.keyboard.up('Space'); await page.close();
+});
 async function idle(page) {
   await page.evaluate(() => { window.orbColorIdle = { draws: -1, time: performance.now() }; });
   await page.waitForFunction(() => {
@@ -161,23 +193,36 @@ for (const reducedMotion of ['no-preference', 'reduce']) test(`真实GPU形态�
 });
 
 test('新捏压或旋转中断自动复原，快速换色及减少动态切换从当前形态接续', async () => {
-  const page = await open(); await idle(page);
+  const page = await open({}, { clock: true }); await idle(page);
   const initial = await frame(page);
+  // Keep input inside the restoring interval even when CI mouse commands take
+  // longer than the animation. Real input and GPU buffers remain under test.
+  const partialColor = async index => {
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+    await page.locator('[name=color]').nth(index).evaluate(input => input.click());
+    await page.clock.runFor(80);
+    assert.ok((await frame(page)).maxDepth > 0, 'Input starts during partial restoration');
+  };
   const dent = async () => {
     const box = await page.locator('.orb-input').boundingBox();
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.mouse.down();
     await page.waitForTimeout(1000); await page.mouse.up(); await settled(page);
   };
   await dent();
-  await choose(page, 5); await page.waitForTimeout(70);
+  await partialColor(5);
   const interrupted = await frame(page);
   assert.ok(interrupted.maxDepth > 0);
   const box = await page.locator('.orb-input').boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.mouse.down();
+  await page.clock.resume();
   await page.waitForTimeout(850); await page.mouse.up(); await settled(page); await idle(page);
   assert.ok((await frame(page)).maxDepth > .05, 'New physical input prevents the color clock from erasing the new dent');
-  await choose(page, 8); await page.waitForTimeout(70);
-  await page.mouse.move(100, 250); await page.mouse.down(); await page.mouse.move(280, 300, { steps: 8 }); await page.mouse.up(); await idle(page);
+  await partialColor(8);
+  // Deliberately exceed the normal 650ms animation in host time. The paused
+  // animation clock makes the handoff independent of command transport speed.
+  await new Promise(resolve => setTimeout(resolve, 750));
+  await page.mouse.move(100, 250); await page.mouse.down(); await page.mouse.move(280, 300, { steps: 8 }); await page.mouse.up();
+  await page.clock.resume(); await idle(page);
   const rotated = await frame(page);
   assert.ok(rotated.maxDepth > 0, 'Rotation interruption keeps the current partially restored shape');
   assert.ok(matrixDistance(rotated.matrix, initial.matrix) > .1, 'New rotation survives color completion');

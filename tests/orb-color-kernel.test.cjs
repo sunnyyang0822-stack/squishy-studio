@@ -28,3 +28,21 @@ test('快速换色及动态偏好中断从当前每顶点颜色连续接续', as
   for (let i = 0; i < colors.length; i++) assert.ok(Math.abs(colors[i] - (interrupted[i] + [.4,.5,.9][i % 3]) / 2) < .000001);
   c.step(.06); assert.equal(c.step(1).needsFrame, false);
 });
+
+test('同色恢复复用换色时钟，默认同色选择仍保持闲置', async () => {
+  const { createOrbColor } = await modulePromise;
+  for (const reducedMotion of [false, true]) {
+    const colors = new Float32Array(9), rgb = [.8, .4, .5];
+    const c = createOrbColor(colors, rgb, { reducedMotion });
+    const heights = new Float32Array([1, .5, 0]);
+    assert.equal(c.select(rgb, heights), false);
+    assert.equal(c.step(1).needsFrame, false);
+    const before = colors.slice();
+    assert.equal(c.select(rgb, heights, { restart: true }), true);
+    const middle = c.step(reducedMotion ? .06 : .325);
+    assert.equal(middle.progress, .5);
+    assert.deepEqual(colors, before);
+    assert.equal(c.step(1).progress, 1);
+    assert.equal(c.step(1).needsFrame, false);
+  }
+});

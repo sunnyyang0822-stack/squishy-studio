@@ -15,8 +15,10 @@ before(async () => {
 after(async () => { await browser?.close(); server?.kill(); });
 async function open(options = {}) {
   const page = await browser.newPage(options); await installOrbProbe(page);
-  await page.goto(base + '/squishy/slow-rebound/');
+  await page.goto(base + '/squishy/cloud/');
   await page.waitForSelector('.toy-stage[data-state=ready] canvas');
+  await page.locator('[name=coreMaterial][value=butter]').check();
+  await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"] canvas');
   await page.waitForFunction(() => window.orbMeshProbe.positions);
   return page;
 }
@@ -43,11 +45,13 @@ test('慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏�
   await page.mouse.up(); await page.waitForTimeout(300);
   assert.ok((await meshStats(page)).maximum > held * .55);
   await recovered(page);
-  await page.getByRole('link', { name: '体验黏土' }).click(); await page.waitForSelector('.toy-stage[data-state=ready] canvas');
+  await page.locator('[name=coreMaterial][value=clay]').check(); await page.waitForSelector('.toy-mount[data-feel-id=clay] canvas');
   await press(page, 1000); await page.mouse.up(); await page.waitForTimeout(1800);
   assert.ok((await meshStats(page)).maximum > .07);
-  await page.goto(base + '/squishy/slow-rebound/'); await page.waitForSelector('.toy-stage[data-state=ready] canvas');
+  await page.locator('[name=coreMaterial][value=butter]').check(); await page.waitForSelector('.toy-mount[data-feel-id="slow-rebound"] canvas');
   assert.equal((await meshStats(page)).maximum, 0);
+  assert.equal(await page.locator('.toy-mount canvas').count(), 1);
+  assert.equal(await page.evaluate(() => window.orbMeshProbe.contexts.filter(gl => !gl.isContextLost()).length), 1);
   assert.deepEqual(errors, []); await page.close();
 });
 
@@ -60,7 +64,7 @@ test('新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管�
   assert.ok((await meshStats(page)).maximum > .04);
   await recovered(page);
   assert.equal(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')), true);
-  assert.equal((await meshStats(page)).contexts, 1);
+  assert.equal((await meshStats(page)).contexts, 2);
   await press(page, 1000); await page.mouse.up(); await page.locator('[name=color]').nth(7).check();
   await page.waitForTimeout(1000); assert.equal((await meshStats(page)).maximum, 0);
   assert.match(await page.locator('canvas').getAttribute('aria-label'), /完整回弹/);
@@ -106,6 +110,7 @@ test('手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复�
   await page.evaluate(() => document.documentElement.dataset.theme = 'night');
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   await page.emulateMedia({ reducedMotion: 'reduce' }); await recovered(page);
+  await page.locator('[data-category=coreColor]').click();
   await page.locator('[name=color]').nth(3).check(); await page.waitForTimeout(250);
   assert.equal(await page.locator('[name=color]').nth(3).isChecked(), true);
   await client.detach(); await page.close();
