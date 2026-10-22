@@ -103,4 +103,3 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     },
   };
 }
-

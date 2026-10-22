@@ -110,4 +110,3 @@ test('real GLB triangles retain outward winding after multidirectional crossing 
     }
   }
 });
-
