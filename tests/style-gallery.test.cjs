@@ -34,7 +34,8 @@ test('八种样式登记与静态入口一致；展示ID不进入真实模型登
     assert.equal(await card.locator('img').evaluate(img=>getComputedStyle(img).filter),'none');
   }
   assert.equal(await page.locator('canvas').count(),0,'大厅不新增WebGL场景');
-  assert.equal(await page.locator('.collection-pending a').count(),0);
+  assert.equal(await page.locator('.collection-pending').count(),0,'已删除旧合集占位卡片');
+  assert.equal(await page.getByText('柔软的一刻',{exact:true}).count(),0);
   for(const style of galleryStyles){
     const svg=readFileSync(`assets/style-thumbnails/${style.id}.svg`,'utf8');
     assert.ok(!/<script|(?:xlink:)?href=["']https?:|<image|<foreignObject/.test(svg),'原创SVG没有外部依赖');

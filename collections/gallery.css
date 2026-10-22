@@ -18,10 +18,6 @@
 .style-entry span { font-size: 20px; }
 .style-entry:focus-visible { outline: none; }
 .style-card:has(.style-entry:focus-visible) { outline: 3px solid #08a7bb; outline-offset: 4px; }
-.style-hall .collection-pending { max-width: 620px; margin: 40px auto 0; padding: 16px 24px; grid-template-columns: 100px 1fr; }
-.style-hall .collection-pending img { width: 100px; height: 100px; }
-.style-hall .collection-pending h2 { font-size: 18px; margin: 10px 0 6px; }
-.style-hall .collection-pending p { font-size: 12px; }
 @media (hover: hover) and (pointer: fine) {
   .style-card:hover { border-color: var(--sample-muted); }
 }
@@ -38,7 +34,5 @@
   .style-card h2 { font-size: 18px; }
   .style-hall .hall-intro { font-size: 18px; }
   .gallery-note { max-width: 300px; margin: 0 auto 26px; font-size: 12px; }
-  .style-hall .collection-pending { padding: 16px; gap: 12px; text-align: left; grid-template-columns: 72px 1fr; }
-  .style-hall .collection-pending img { width: 72px; height: 72px; }
 }
 @media (max-width: 350px) { .style-grid { gap: 10px; } .style-card { padding: 12px 10px 8px; } .style-card h2 { font-size: 16px; } .style-entry { font-size: 11px; } .style-state { font-size: 10px; } }
