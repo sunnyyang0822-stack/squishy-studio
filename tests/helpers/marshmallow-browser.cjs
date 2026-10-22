@@ -116,7 +116,7 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
       const frames = await page.evaluate(() => window.marshmallowPressFrames);
       const largestIncrease = Math.max(...frames.slice(1).map((f, i) => f.maximum - frames[i].maximum));
       assert.ok(frames.length >= 3 && frames.at(-1).maximum > frames[0].maximum + .01, 'Real GPU hold has multiple visible stages');
-      assert.ok(frames[0].maximum < shortStats.maximum + .02 && largestIncrease < .025, 'GPU press cannot jump to full depth in one frame');
+      assert.ok(frames[0].maximum < shortStats.maximum + .02 && largestIncrease < .025, 'GPU press cannot jump to full depth in one frame: ' + JSON.stringify({first:frames[0], shortStats, largestIncrease}));
       assert.ok(stages[3] < .5, 'One held press stays below the safety boundary');
       report.observations.push({ name, label: 'actual GPU progressive frames', count: frames.length, first: frames[0], last: frames.at(-1), largestIncrease });
       await send('up'); await freeze('long press', 2200);

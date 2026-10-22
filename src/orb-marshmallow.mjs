@@ -83,7 +83,9 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     setReducedMotion(value) { reducedMotion = value; },
     getState() { return { active, restoring, held, drag, depth: Math.max(...offsets), retainedDepth: Math.max(...retained), center: [...center] }; },
     step(elapsed) {
-      const dt = Math.max(0, Number.isFinite(elapsed) ? elapsed : 0);
+      // A delayed render must not consume a whole hold in one visible frame.
+      // Slow devices progress over rendered frames instead of jumping deeper.
+      const dt = Math.min(.04, Math.max(0, Number.isFinite(elapsed) ? elapsed : 0));
       if (active) held += dt;
       // A shallow touch yields before a deliberate hold. The .70 safety
       // boundary is approached over separate presses, never a single tap.

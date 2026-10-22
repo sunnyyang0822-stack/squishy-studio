@@ -1,0 +1,19 @@
+✔ marshmallow real GPU: mouse/touch, frozen release/cancel/blur/background, color takeover, lifecycle and workflow (47961.8437ms)
+✔ real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps (65.3664ms)
+✔ real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps (785.2549ms)
+✔ explicit restore, interruption, reset and instance isolation (4.7207ms)
+✔ measured GLB endpoint/middle curves with and without dwell: density and frame tolerances (547.0261ms)
+✔ optical material isolation preserves clay defaults and source, with separate soft fibre response (30.3505ms)
+✔ real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport (76.2933ms)
+✔ deep collapse leaves a small bounded core and repeated strokes cannot drill through it (89.8031ms)
+✔ press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously (64.8863ms)
+✔ stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process (21.3745ms)
+✔ a stalled render cannot skip the visible press process or consume a whole hold (2.7579ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48050.0893

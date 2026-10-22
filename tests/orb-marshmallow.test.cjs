@@ -163,3 +163,15 @@ test('stationary event density and frame rate do not accelerate pressing; reduce
     assert.deepEqual(f.positions, frozen);
   }
 });
+
+test('a stalled render cannot skip the visible press process or consume a whole hold', async () => {
+  const f = await fixture(); f.d.begin(front(0));
+  f.d.step(2);
+  assert.ok(depth(f, 0) > .008 && depth(f, 0) < .02);
+  assert.ok(f.d.getState().held <= .04 && f.d.step(0).needsFrame);
+  const before = depth(f, 0);
+  f.d.step(3);
+  assert.ok(depth(f, 0) > before && depth(f, 0) - before < .02);
+  f.d.release(); const frozen = f.positions.slice();
+  f.d.step(10); assert.deepEqual(f.positions, frozen);
+});
