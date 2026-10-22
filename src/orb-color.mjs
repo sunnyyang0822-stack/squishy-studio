@@ -6,8 +6,8 @@ export function createOrbColor(colors, initial, { reducedMotion = false } = {}) 
   function fill() { for (let i = 0; i < colors.length; i++) colors[i] = target[i % 3]; }
   fill();
   return {
-    select(rgb, nextHeights) {
-      if (rgb.every((value, i) => value === target[i])) return false;
+    select(rgb, nextHeights, { restart = false } = {}) {
+      if (!restart && rgb.every((value, i) => value === target[i])) return false;
       from.set(colors); target.splice(0, 3, ...rgb);
       heights = nextHeights.slice(); elapsed = 0; active = true;
       return true;
