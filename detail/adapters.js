@@ -2,16 +2,20 @@
 export function createModelPreview(mount, options) {
   let renderer;
   let disposed = false;
+  let rendererFeel;
   let attempt = 0;
   return {
     async prepare(config, context) {
+      const nextFeel = config.feelId || options?.feelId || 'clay';
+      if (renderer && rendererFeel !== nextFeel) { renderer.dispose(); renderer = undefined; }
       if (!renderer) {
         // Failed module fetches are cached by browsers; a retry needs a fresh URL.
         const url = '/assets/orb-preview.js' + (attempt ? `?retry=${attempt}` : '');
         attempt++;
         const module = await import(url);
         if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-        renderer ||= module.createOrbPreview(mount, options);
+        renderer ||= module.createOrbPreview(mount, { ...options, feelId: nextFeel });
+        rendererFeel = nextFeel;
       }
       return renderer.prepare(config, context);
     },

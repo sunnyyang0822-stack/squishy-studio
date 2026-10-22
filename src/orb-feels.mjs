@@ -1,8 +1,10 @@
 import { createOrbDeformation } from './orb-deformation.mjs';
+import { createMarshmallowDeformation } from './orb-marshmallow.mjs';
 
 // Stable behavior IDs are independent of the model, color and optical material.
 // Keep approved clay intact; future feels provide the same deformation API.
 export const orbFeels = Object.freeze({
+  marshmallow: Object.freeze({ id: 'marshmallow', name: '棉花糖', createDeformation: createMarshmallowDeformation }),
   clay: Object.freeze({
     id: 'clay',
     name: '黏土',

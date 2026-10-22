@@ -253,6 +253,7 @@ test('桌面同显当前步骤全部可用组；手机切回分类仍保留选�
   assert.deepEqual(await visibleGroups(), ['shellColor', 'shellMaterial']);
   await page.getByRole('button', { name: '上一步' }).click();
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('.category-tabs').waitFor({ state: 'visible' });
   assert.equal(await page.locator('.category-tabs').isVisible(), true);
   assert.deepEqual(await visibleGroups(), ['coreMaterial']);
   assert.equal(await choice(page, '内芯材质', '棉花糖').isChecked(), true);
