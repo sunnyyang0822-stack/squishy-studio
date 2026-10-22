@@ -197,6 +197,10 @@ test('加载失败可继续选择、前进及重试，快速换色保持最后�
   await page.getByRole('button', { name: '上一步' }).click();
   await show(page, 'coreColor');
   assert.equal(await choice(page, '内芯颜色', '薄荷绿').isChecked(), true);
+  // Returning to core starts another request; let that request fail while the
+  // route is still blocked so the button really exercises explicit retry.
+  await page.waitForSelector('.toy-stage[data-state="error"]');
+  assert.equal(await page.getByRole('button', { name: '重新加载' }).isVisible(), true);
   await page.unroute('**/squishy-orb.glb');
   await page.getByRole('button', { name: '重新加载' }).click();
   await ready(page);
