@@ -120,7 +120,7 @@ controller = createDetailController({
   onChange(state) {
     const { step, recipe, resource } = state;
     const styleName = styleNames[recipe.styleId];
-    document.querySelector('.detail-back').href = `/collections/#style-${recipe.styleId}`;
+    document.querySelector('.detail-back').href = recipe.styleId === 'orb' ? '/collections/' : `/collections/#style-${recipe.styleId}`;
     styleSelect.value = recipe.styleId;
     for (const option of styleSelect.options) option.disabled = option.value !== 'orb' && recipe.coreMaterial !== 'clay';
     for (const input of document.querySelectorAll('input[name="coreMaterial"]')) input.disabled = recipe.styleId !== 'orb' && input.value !== 'clay';
