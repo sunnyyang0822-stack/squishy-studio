@@ -7,7 +7,7 @@
     "prestart": "npm run build",
     "start": "node server.mjs",
     "pretest": "npm run build",
-    "test": "node --test tests/*.test.cjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.cjs",
     "capture": "node capture.cjs",
     "capture:showcase": "node capture-showcase.cjs",
     "capture:detail": "node capture-detail.cjs",

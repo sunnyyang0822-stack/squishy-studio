@@ -81,7 +81,7 @@ test('配置、主题、旋转复用真实 WebGL 场景；静止及后台不持�
   assert.equal(await page.evaluate(() => window.orbProbe.frames), disposedFrames, 'Observers and pending frames removed');
   for (let i = 0; i < 3; i++) {
     await page.goto(base + '/collections/');
-    await page.getByRole('link', { name: '开始制作' }).click(); await ready(page);
+    await page.getByRole('link', { name: '开始制作' }).and(page.locator('.collection-ready a[href*="style=orb"]')).click(); await ready(page);
     assert.equal(await page.locator('.toy-mount canvas').count(), 1);
     assert.equal(await page.evaluate(() => window.orbProbe.contexts.length), 1);
   }

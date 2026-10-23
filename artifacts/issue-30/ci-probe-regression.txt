@@ -1,0 +1,29 @@
+Issue 30 test-probe regression (2026-10-23 Asia/Shanghai)
+Commit under test: 21a7281 (helper content tested before its commit)
+No runtime, model, interaction step, assertion, or threshold changed.
+Command: node --test tests/style-ci-probe-check.cjs
+Isolation: temporary copy of tests/squishy-styles-browser.test.cjs with only
+4183 replaced by 4287; requires the actual updated squishy-browser.cjs helper.
+The temporary copy was removed by a PowerShell finally block after execution.
+Browser: installed Microsoft Edge selected by the existing test launch logic.
+Captured test output:
+
+✔ cloud×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (12352.198ms)
+✔ paw×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (12163.3713ms)
+✔ cylinder×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (10999.0558ms)
+✔ donut×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (14009.1543ms)
+✔ pyramid×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (10094.5351ms)
+✔ flower×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (10243.0594ms)
+✔ star×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (10242.2939ms)
+✔ 新增模型加载失败可重试，快速样式切换只提交最后选择 (1736.2032ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82727.2514
+
+Process exit code: 0
+Runtime bundle SHA-256: 6d4c2c130151cf6ed17d58fcbeeaeeefb761d3ac9aeca7d9bef7930f28c3d229

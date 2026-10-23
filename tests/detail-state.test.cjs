@@ -227,3 +227,108 @@ test('音量初始静音、上次音量恢复、边界与清理', async () => {
   c.dispose(); c.toggleMute();
   assert.equal(h.sound.length, count);
 });
+
+
+test('七种新样式均保留完整五步配方并明确限制黏土，原圆球仍可选择其他内芯', async () => {
+  const { createDetailController, styleNames } = await stateModule;
+  const h = harness(createDetailController), c = h.controller;
+  await c.load();
+  assert.deepEqual(Object.keys(styleNames), ['orb', 'cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']);
+  for (const styleId of Object.keys(styleNames).filter(id => id !== 'orb')) {
+    c.setStep('core');
+    await c.select('styleId', styleId);
+    assert.equal(h.prepared.at(-1).styleId, styleId);
+    assert.equal(h.prepared.at(-1).feelId, 'clay');
+    await c.select('coreMaterial', 'marshmallow');
+    assert.equal(c.getState().recipe.coreMaterial, 'clay');
+    assert.match(c.getState().selectionNotice, /仅支持黏土/);
+    await c.select('coreColor', 'mint');
+    await c.select('filling', 'rice');
+    c.setStep('shell'); await c.select('shellColor', 'sky');
+    c.setStep('decoration'); await c.select('decoration', 'three');
+    c.next(); c.next();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(c.getState().step, 'play');
+    assert.equal(h.prepared.at(-1).recipe.styleId, styleId);
+    assert.equal(h.prepared.at(-1).recipe.filling, 'rice');
+    assert.equal(h.prepared.at(-1).recipe.decoration, 'three');
+    assert.equal(h.prepared.at(-1).color, 'sky');
+  }
+  c.setStep('core'); await c.select('styleId', 'orb');
+  await c.select('coreMaterial', 'marshmallow');
+  await c.select('styleId', 'cloud');
+  assert.equal(c.getState().recipe.styleId, 'orb');
+  assert.equal(c.getState().preview.feelId, 'marshmallow');
+  assert.match(c.getState().selectionNotice, /先选择黏土/);
+  c.dispose();
+});
+
+test('样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放', async () => {
+  const { createDetailController } = await stateModule;
+  const pending = [], committed = [], released = [];
+  const h = harness(createDetailController, {
+    prepare(config, { signal }) {
+      return new Promise((resolve, reject) => pending.push({ config, signal, reject,
+        resolve: () => resolve({ commit() { committed.push(config.styleId); }, dispose() { released.push(config.styleId); } }) }));
+    }, dispose() {},
+  });
+  const c = h.controller;
+  const initial = c.load(); pending[0].resolve(); await initial;
+  const cloud = c.select('styleId', 'cloud'), donut = c.select('styleId', 'donut');
+  assert.equal(pending[1].signal.aborted, true);
+  pending[2].resolve(); await donut; pending[1].resolve(); await cloud;
+  assert.deepEqual(committed, ['orb', 'donut']);
+  assert.deepEqual(released, ['orb', 'cloud']);
+  const star = c.select('styleId', 'star'); pending[3].reject(new Error('asset missing')); await star;
+  assert.equal(c.getState().configError, true);
+  assert.equal(c.getState().resource, 'ready');
+  assert.ok(!released.includes('donut'));
+  const retry = c.retry(); pending[4].resolve(); await retry;
+  assert.deepEqual(committed, ['orb', 'donut', 'star']);
+  assert.equal(c.getState().configError, false);
+  const late = c.select('styleId', 'paw'); c.dispose();
+  assert.equal(pending[5].signal.aborted, true);
+  pending[5].resolve(); await late;
+  assert.deepEqual(released, ['orb', 'cloud', 'donut', 'star', 'paw']);
+});
+
+test('直达配方与步骤合法化，非法的新样式内芯明确告知而非静默替换', async () => {
+  const { createDetailController } = await stateModule;
+  const renderer = { async prepare() { return { commit() {}, dispose() {} }; } };
+  const audio = { ready: false, setVolume() {}, dispose() {} };
+  const c = createDetailController({ renderer, audio, styleId: 'donut', step: 'play', recipe: { coreMaterial: 'clay', coreColor: 'mint', shellColor: 'sky', filling: 'rice', decoration: 'three' } });
+  await c.load();
+  assert.equal(c.getState().step, 'play');
+  assert.equal(c.getState().preview.styleId, 'donut');
+  assert.equal(c.getState().recipe.coreColor, 'mint');
+  assert.equal(c.getState().recipe.decoration, 'three');
+  c.dispose();
+  const invalid = createDetailController({ renderer, audio, styleId: 'star', step: 'bad', recipe: { coreMaterial: 'marshmallow', coreColor: 'bad' } });
+  assert.equal(invalid.getState().step, 'core');
+  assert.equal(invalid.getState().recipe.coreMaterial, 'clay');
+  assert.equal(invalid.getState().recipe.coreColor, 'rose');
+  assert.match(invalid.getState().selectionNotice, /已按链接中的样式使用黏土/);
+  invalid.dispose();
+});
+
+
+test('浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入', async () => {
+  const { createDetailController } = await stateModule;
+  const h = harness(createDetailController), c = h.controller;
+  await c.load();
+  await c.restoreLocation({ styleId: 'star', step: 'shell', recipe: { coreColor: 'mint', shellColor: 'sky', filling: 'rice' } });
+  assert.equal(c.getState().recipe.styleId, 'star');
+  assert.equal(c.getState().step, 'shell');
+  assert.equal(h.prepared.at(-1).styleId, 'star');
+  assert.equal(h.prepared.at(-1).color, 'sky');
+  const count = h.prepared.length;
+  await c.restoreLocation({ styleId: 'donut', step: 'making', recipe: { decoration: 'three' } });
+  assert.equal(h.prepared.length, count);
+  assert.equal(c.getState().preview.mode, 'hidden');
+  assert.equal(c.getState().recipe.styleId, 'donut');
+  assert.equal(c.getState().recipe.decoration, 'three');
+  assert.equal(h.stopped, 2);
+  await c.restoreLocation({ styleId: 'orb', step: 'core', recipe: { coreMaterial: 'marshmallow' } });
+  assert.equal(h.prepared.at(-1).feelId, 'marshmallow');
+  c.dispose();
+});
