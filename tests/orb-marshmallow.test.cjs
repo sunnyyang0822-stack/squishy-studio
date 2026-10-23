@@ -227,3 +227,16 @@ test('subframe fast sweep is continuous between sparse endpoints without deepeni
       assert.deepEqual(f.positions.slice(i,i+3),before.slice(i,i+3));
   }
 });
+
+test('stopping after a fast swipe deepens on the very next frame without a pressure catch-up delay', async () => {
+  for (const hz of [30,60,120]) {
+    const f=await fixture(); f.d.begin(front(-1)); f.d.move(front(1)); f.d.step(1/hz);
+    const before=depth(f,1), middle=depth(f,0);
+    f.d.step(1/hz);
+    assert.ok(depth(f,1)>before+.00005, 'first held frame responds at '+hz+'Hz');
+    advance(f.d,.05,1/hz);
+    assert.ok(depth(f,1)>before+.003, 'visible early deepening at '+hz+'Hz');
+    assert.equal(depth(f,0),middle,'departed shallow trail stays fixed');
+    f.d.release(); const frozen=f.positions.slice(); advance(f.d,2); assert.deepEqual(f.positions,frozen);
+  }
+});

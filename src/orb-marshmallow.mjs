@@ -4,7 +4,7 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
   const count = positions.length / 3;
   const offsets = new Float32Array(count), retained = new Float32Array(count), envelope = new Float32Array(count);
   const contactTime = new Float32Array(count);
-  let swept = false;
+  let swept = false, pathAdvanced = false;
   const center = [0, 0, 1], targetCenter = [0, 0, 1], pressOrigin = [0, 0, 1];
   const low = [Infinity, Infinity, Infinity], high = [-Infinity, -Infinity, -Infinity];
   for (let i = 0; i < rest.length; i++) { const k = i % 3; low[k] = Math.min(low[k], rest[i]); high[k] = Math.max(high[k], rest[i]); }
@@ -55,11 +55,11 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     }
   }
 
-  function finish() { active = false; retained.set(offsets); envelope.fill(0); contactTime.fill(0); held = drag = 0; swept = false; }
+  function finish() { active = false; retained.set(offsets); envelope.fill(0); contactTime.fill(0); held = drag = 0; swept = false; pathAdvanced = false; }
   function interruptRestore() { if (restoring) { restoring = false; retained.set(offsets); } }
   return {
     begin(point) {
-      interruptRestore(); retained.set(offsets); envelope.fill(0); active = true; held = drag = 0; swept = false; contactTime.fill(0);
+      interruptRestore(); retained.set(offsets); envelope.fill(0); active = true; held = drag = 0; swept = false; pathAdvanced = false; contactTime.fill(0);
       copyPoint(center, point); copyPoint(targetCenter, point); copyPoint(pressOrigin, point); stamp(point);
     },
     move(point, distance = 0) {
@@ -67,6 +67,7 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
       // Sweeping follows the pointer promptly, but its depth still follows
       // the same gradual pressure ramp. Zero-distance events cannot speed a press.
       swept ||= Math.hypot(...point.map((v, k) => v - pressOrigin[k])) > .02;
+      pathAdvanced ||= Math.hypot(...point.map((v,k) => v-targetCenter[k])) > .002;
       samplePath(targetCenter, point); copyPoint(targetCenter, point); copyPoint(center, point); drag = distance;
     },
     release: finish,
@@ -100,7 +101,10 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
           (rest[index + 2] - targetCenter[2]) ** 2) / (.40 ** 2);
         const local = q2 < 1 ? (1 - q2) ** 2 : 0;
         if (active && dt > 0) contactTime[i] = local > 0 ? contactTime[i] + dt : 0;
-        const localStrength = .03 + .58 * Math.min(contactTime[i] / 2, 1);
+        // A swept contact starts at the same pressure as its shallow trail.
+        // Starting it below .06 would create a dead zone before holding can
+        // exceed the visible trail depth.
+        const localStrength = (swept && !pathAdvanced ? .06 : .03) + .58 * Math.min(contactTime[i] / 2, 1);
         // Pending swept segments get one shallow stamp. Once the contact leaves,
         // keep the exact reached depth; dwelling elsewhere cannot deepen them.
         const pressure = Math.max(localStrength * local, swept ? .06 * envelope[i] : 0);
@@ -118,7 +122,7 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
         }
         atRest &&= offsets[i] === 0; // Scene uses this to restore original normals only on an undeformed mesh.
       }
-      if (active && dt > 0) envelope.fill(0);
+      if (active && dt > 0) { envelope.fill(0); pathAdvanced = false; }
       if (changed) {
         for (let i = 0; i < count; i++) for (let k = 0; k < 3; k++) {
           const index = i * 3 + k; positions[index] = offsets[i] === 0 ? rest[index] : rest[index] - directions[index] * offsets[i];
