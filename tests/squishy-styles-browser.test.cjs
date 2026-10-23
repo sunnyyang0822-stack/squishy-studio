@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
-const { installStyleProbe, stats, ready, point, settle, surfaceLight, rotate, contactFor } = require('./helpers/squishy-browser.cjs');
+const { installStyleProbe, stats, ready, point, settle, surfaceLight, rotate, contactFor, projectedSurfaceContact } = require('./helpers/squishy-browser.cjs');
 const base = 'http://127.0.0.1:4183';
 let browser, server;
 before(async () => {
@@ -25,6 +25,19 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
   const roseLight = await surfaceLight(page, 'day');
   assert.ok(roseLight.meanRGB[0] - roseLight.meanRGB[1] > 8, `Rose must actually appear pink: ${roseLight.meanRGB}`);
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
+  if (id === 'paw') {
+    for (const [x, y] of [[-.76, .36], [-.29, .70], [.29, .70], [.76, .36], [-.24, -.46], [.24, -.46], [0, .17]]) {
+      const contact = await projectedSurfaceContact(page, x, y);
+      await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+      await page.mouse.move(contact.x, contact.y); await page.mouse.down(); await page.clock.runFor(2700);
+      const depth = await page.evaluate(({ index, local }) => Math.hypot(...local.map((v, k) => window.styleProbe.positions[index + k] - v)), contact);
+      assert.ok(depth > .06, `Paw actual contact (${x},${y}) presses visibly: ${depth}`);
+      await page.mouse.up(); await page.clock.runFor(1000); await page.clock.resume();
+      await page.locator('[name=color][value=mint]').check();
+      await page.waitForFunction(() => window.styleProbe.positions.every((v, i) => Math.abs(v - window.styleProbe.rest[i]) < 1e-6));
+      await page.locator('[name=color][value=rose]').check(); await page.waitForTimeout(700);
+    }
+  }
   const [x, y] = contactFor(id);
   const p = await point(page, x, y);
   // A wall-clock hold can skip most simulation frames on software WebGL.
