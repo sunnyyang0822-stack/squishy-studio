@@ -4,9 +4,12 @@ export const slowReboundParameters = Object.freeze({
   radius: .60,
   maximumDepth: .34,
   radialLimit: .40,
-  pressRate: .45,
-  initialResponse: .10,
-  contactRampSeconds: .75,
+  pressSpeed: .45, // model units/second; uniform inward travel while yielding
+  dragSpeed: 1.8,
+  dragThreshold: .04,
+  pressOnsetSeconds: .12,
+  initialResponse: 1,
+  contactRampSeconds: .10,
   contactMemoryDecay: 4,
   recoveryRate: .80,
   reducedRecoveryRate: 5,
@@ -33,9 +36,9 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
     for (let k = 0; k < 3; k++) directions[j + k] = (rest[j + k] - origin[k]) / Math.max(.001, radius);
   }
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  let active = false, restoring = false, dirty = false, held = 0;
+  let active = false, restoring = false, dirty = false, held = 0, strokeTravel = 0;
   let center = [0, 0, 1], pending = [];
-  function endContact() { active = false; held = 0; pending = []; contactTime.fill(0); }
+  function endContact() { active = false; held = 0; strokeTravel = 0; pending = []; contactTime.fill(0); }
   function interruptRestore() { restoring = false; }
   function writePositions() {
     for (let i = 0; i < count; i++) {
@@ -96,6 +99,7 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
       let changed = dirty, atRest = true, moving = false;
       if (!restoring) {
         const contacts = [];
+        const previousHeld = held;
         if (active) {
           held += dt;
           let total = 0;
@@ -105,9 +109,19 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
             center = point;
           }
           pending = [];
+          strokeTravel += total;
           if (total === 0) contacts.push({ points: [center], distance: 1 });
           else for (const path of contacts) path.distance /= total;
         }
+        // A short, continuous onset makes the start of a press legible. Integrate
+        // the speed ramp exactly, then keep a uniform speed without an ease-out
+        // tail. New path points still receive only this frame's local contact.
+        const pressIntegral = t => t < p.pressOnsetSeconds
+          ? t * t / (2 * p.pressOnsetSeconds) : t - p.pressOnsetSeconds / 2;
+        const pressSeconds = active ? pressIntegral(held) - pressIntegral(previousHeld) : 0;
+        // Slow stationary pressing should not erase the legibility of dragging.
+        // Travel is measured in model units, never in number of input events.
+        const inwardSpeed = p.pressSpeed + (p.dragSpeed - p.pressSpeed) * Math.min(1, strokeTravel / p.dragThreshold);
         for (let i = 0; i < count; i++) {
           const j = i * 3;
           let influence = 0;
@@ -120,9 +134,10 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
           // cannot give a freshly visited B the same fully yielded response.
           contactTime[i] = Math.min(p.contactRampSeconds, contactTime[i] * Math.exp(-p.contactMemoryDecay * dt * (1 - influence)) + dt * influence);
           const yielding = p.initialResponse + (1 - p.initialResponse) * contactTime[i] / p.contactRampSeconds;
-          const rate = active && target > before ? p.pressRate * yielding : reducedMotion ? p.reducedRecoveryRate : p.recoveryRate;
-          const blend = -Math.expm1(-rate * dt);
-          const next = before + (target - before) * blend;
+          const rate = reducedMotion ? p.reducedRecoveryRate : p.recoveryRate;
+          const next = active && target > before
+            ? Math.min(target, before + inwardSpeed * influence * yielding * pressSeconds)
+            : before + (target - before) * -Math.expm1(-rate * dt);
           // Snap only a subpixel remainder to the exact original mesh. Active
           // near-equilibrium values also settle, so a held press can stop frames.
           offsets[i] = Math.abs(next - target) <= p.convergence ? target : next;

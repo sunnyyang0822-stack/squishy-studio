@@ -47,12 +47,48 @@ async function recovered(page) {
   assert.equal((await meshStats(page)).maximum, 0);
 }
 
+test('正常鼠标滑动时实际GPU左右路径均可见，终点驻留达到限深且全路径自然回弹', async t => {
+  const page = await open({ viewport: { width: 1440, height: 900 } });
+  const start = await point(page, .32), end = await point(page, .68);
+  await page.mouse.move(start.x, start.y); await page.mouse.down();
+  const started = Date.now();
+  let progress = 0;
+  while (progress < 1) {
+    progress = Math.min(1, (Date.now() - started) / 800);
+    await page.mouse.move(start.x + (end.x - start.x) * progress, start.y);
+    if (progress < 1) await page.waitForTimeout(16);
+  }
+  const path = await page.evaluate(() => {
+    const { positions: p, rest: r } = window.orbMeshProbe;
+    const depths = [0, 0];
+    for (let i = 0; i < r.length; i += 3) {
+      if (r[i + 2] < .5 || Math.abs(r[i + 1] - .0175) > .25) continue;
+      const side = r[i] < 0 ? 0 : 1;
+      depths[side] = Math.max(depths[side], Math.hypot(p[i] - r[i], p[i + 1] - r[i + 1], p[i + 2] - r[i + 2]));
+    }
+    return depths;
+  });
+  for (const depth of path) assert.ok(depth > .08 && depth < .34, `Clearly visible bounded GPU path: ${path}`);
+  const sliding = (await meshStats(page)).maximum;
+  // A slow host may already have yielded deeply before automation returns.
+  // Dwell must reach the bounded target, without asking it to exceed the limit.
+  await reachesDepth(page, .33);
+  t.diagnostic(JSON.stringify({ slidingLeftRight: path, slidingMaximum: sliding, dwellMaximum: (await meshStats(page)).maximum }));
+  await page.mouse.up(); await recovered(page); await page.close();
+});
+
 test('慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离', async t => {
   const page = await open({ viewport: { width: 1440, height: 900 } }, { frames: true }); const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await press(page, 120); await reachesDepth(page, .10);
   const early = await page.evaluate(() => window.orbMeshProbe.positionFrames.find(frame => frame.maximum > 0));
-  assert.ok(early.maximum > .0002 && early.maximum < .0015, `Actual first GPU frame: ${JSON.stringify(early)}`);
+  assert.ok(early.maximum > .0004 && early.maximum < .0007, `Gentle actual first GPU frame: ${JSON.stringify(early)}`);
+  const pressingFrames = await page.evaluate(() => window.orbMeshProbe.positionFrames.filter(frame => frame.pressed && frame.maximum > 0).slice(0, 2));
+  assert.equal(pressingFrames.length, 2);
+  const onsetIntegral = t => t < .12 ? t * t / (.12 * 2) : t - .12 / 2;
+  const secondElapsed = 1 / 60 + Math.min(.1, (pressingFrames[1].time - early.time) / 1000);
+  const expectedSecond = early.maximum * onsetIntegral(secondElapsed) / onsetIntegral(1 / 60);
+  assert.ok(Math.abs(pressingFrames[1].maximum - expectedSecond) < .000002, 'Actual GPU follows gentle onset then uniform speed, without exponential ease-out');
   const held = (await meshStats(page)).maximum;
   assert.ok(held > .10 && held < .34);
   await page.mouse.up();

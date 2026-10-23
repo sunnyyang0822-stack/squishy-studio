@@ -43,6 +43,8 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 ## 独立慢回弹 `slow-rebound`
 
+2026-10-23 走查反馈修订：改为120ms平滑起步、随后匀速压深（pressSpeed .45模型单位/s），完整下压约0.82s；滑动按实际路径长度逐渐增强至dragSpeed 1.8，使痕迹可见。原回弹.80/s、减少动态5/s、收敛.00001及最大深度.34不变。按用户要求不改灯光、明暗和外观。最终参数、速度曲线和证据见 [走查修订记录](issue-25-responsive-pressure.md)，下方保留原始交付历史。
+
 工厂为 `src/orb-slow-rebound.mjs` 的 `createSlowReboundDeformation`，参数集中在同文件 `slowReboundParameters`。通过 `getOrbFeel('slow-rebound')` 或 `createOrbPreview(mount, { feelId: 'slow-rebound' })` 调用，统一接口不变，每次调用独立分配原始网格快照、压痕、当地接触时间与显式恢复状态。它缓慢压入、缓慢完整回弹，不保留黏土的永久压痕。
 
 实际入口：`/squishy/cloud/` → 内芯材质 → **慢回弹**（配方稳定标识 `butter`）。复用制作页色卡与页面控制器，沿用同一场景、命中检测、输入、旋转、颜色、资源释放及哑光灯光。默认仍是黏土，棉花糖保留最新主线的独立 `marshmallow`。离开页面会销毁实例，再进入不携带旧形变。
