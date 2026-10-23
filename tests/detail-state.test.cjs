@@ -229,23 +229,19 @@ test('音量初始静音、上次音量恢复、边界与清理', async () => {
 });
 
 
-test('七种新样式保留五步配方并支持黏土与棉花糖，慢回弹仍限原圆球', async () => {
+test('七种新样式均保留完整五步配方并明确限制黏土，原圆球仍可选择其他内芯', async () => {
   const { createDetailController, styleNames } = await stateModule;
   const h = harness(createDetailController), c = h.controller;
   await c.load();
   assert.deepEqual(Object.keys(styleNames), ['orb', 'cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']);
   for (const styleId of Object.keys(styleNames).filter(id => id !== 'orb')) {
     c.setStep('core');
-    await c.select('coreMaterial', 'clay');
     await c.select('styleId', styleId);
     assert.equal(h.prepared.at(-1).styleId, styleId);
     assert.equal(h.prepared.at(-1).feelId, 'clay');
     await c.select('coreMaterial', 'marshmallow');
-    assert.equal(c.getState().recipe.coreMaterial, 'marshmallow');
-    assert.equal(h.prepared.at(-1).feelId, 'marshmallow');
-    await c.select('coreMaterial', 'butter');
-    assert.equal(c.getState().recipe.coreMaterial, 'marshmallow');
-    assert.match(c.getState().selectionNotice, /慢回弹暂未接入/);
+    assert.equal(c.getState().recipe.coreMaterial, 'clay');
+    assert.match(c.getState().selectionNotice, /仅支持黏土/);
     await c.select('coreColor', 'mint');
     await c.select('filling', 'rice');
     c.setStep('shell'); await c.select('shellColor', 'sky');
@@ -261,14 +257,9 @@ test('七种新样式保留五步配方并支持黏土与棉花糖，慢回弹�
   c.setStep('core'); await c.select('styleId', 'orb');
   await c.select('coreMaterial', 'marshmallow');
   await c.select('styleId', 'cloud');
-  assert.equal(c.getState().recipe.styleId, 'cloud');
-  assert.equal(c.getState().preview.feelId, 'marshmallow');
-  assert.equal(c.getState().selectionNotice, '');
-  await c.select('styleId', 'orb'); await c.select('coreMaterial', 'butter');
-  await c.select('styleId', 'cloud');
   assert.equal(c.getState().recipe.styleId, 'orb');
-  assert.equal(c.getState().preview.feelId, 'slow-rebound');
-  assert.match(c.getState().selectionNotice, /先选择黏土或棉花糖/);
+  assert.equal(c.getState().preview.feelId, 'marshmallow');
+  assert.match(c.getState().selectionNotice, /先选择黏土/);
   c.dispose();
 });
 
@@ -312,11 +303,11 @@ test('直达配方与步骤合法化，非法的新样式内芯明确告知而�
   assert.equal(c.getState().recipe.coreColor, 'mint');
   assert.equal(c.getState().recipe.decoration, 'three');
   c.dispose();
-  const invalid = createDetailController({ renderer, audio, styleId: 'star', step: 'bad', recipe: { coreMaterial: 'butter', coreColor: 'bad' } });
+  const invalid = createDetailController({ renderer, audio, styleId: 'star', step: 'bad', recipe: { coreMaterial: 'marshmallow', coreColor: 'bad' } });
   assert.equal(invalid.getState().step, 'core');
   assert.equal(invalid.getState().recipe.coreMaterial, 'clay');
   assert.equal(invalid.getState().recipe.coreColor, 'rose');
-  assert.match(invalid.getState().selectionNotice, /已使用黏土/);
+  assert.match(invalid.getState().selectionNotice, /已按链接中的样式使用黏土/);
   invalid.dispose();
 });
 

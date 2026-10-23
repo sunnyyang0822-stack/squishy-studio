@@ -1,5 +1,5 @@
 // Independent plastic collapse: monotone response, absolute envelope, frozen unload.
-export function createMarshmallowDeformation(positions, normals, { reducedMotion = false, surfaceGeometry } = {}) {
+export function createMarshmallowDeformation(positions, normals, { reducedMotion = false } = {}) {
   const rest = positions.slice();
   const count = positions.length / 3;
   const offsets = new Float32Array(count), retained = new Float32Array(count), envelope = new Float32Array(count);
@@ -10,26 +10,17 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
   const axes = low.map((value, k) => Math.max(.001, (high[k] - value) / 2));
   const directions = new Float32Array(rest.length), limits = new Float32Array(count);
   const restoreOffsets = new Float32Array(count);
-  const constrainOffsets = surfaceGeometry?.constrainOffsets;
-  const renderedOffsets = constrainOffsets ? new Float32Array(count) : null;
   for (let i = 0; i < count; i++) {
     const index = i * 3;
     const radial = origin.map((value, k) => rest[index + k] - value);
     const radius = Math.hypot(...radial);
-    limits[i] = (surfaceGeometry ? surfaceGeometry.radii[i] : radius) * .76;
-    for (let k = 0; k < 3; k++) directions[index + k] = surfaceGeometry ? surfaceGeometry.directions[index + k] : radial[k] / Math.max(.001, radius);
+    limits[i] = radius * .76;
+    for (let k = 0; k < 3; k++) directions[index + k] = radial[k] / Math.max(.001, radius);
   }
   let active = false, held = 0, drag = 0, dirty = false, restoring = false;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const copyPoint = (out, point) => { for (let i = 0; i < 3; i++) out[i] = point[i]; };
   function stamp(point) {
-    if (surfaceGeometry) {
-      for (const [i, distance] of surfaceGeometry.neighborhood(point, .66)) {
-        const q2 = distance ** 2 / (.66 ** 2);
-        if (q2 < 1) envelope[i] = Math.max(envelope[i], (1 - q2) ** 2);
-      }
-      return;
-    }
     for (let i = 0; i < count; i++) {
       const index = i * 3;
       const q2 = ((rest[index] - point[0]) ** 2 + (rest[index + 1] - point[1]) ** 2 + (rest[index + 2] - point[2]) ** 2) / (.66 ** 2);
@@ -37,10 +28,6 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     }
   }
   function samplePath(from, to) {
-    if (surfaceGeometry) {
-      for (const point of surfaceGeometry.path(from, to, .04)) stamp(point);
-      return;
-    }
     // Follow the rounded rest surface rather than cutting a chord through its
     // interior. Sparse events still leave a connected path on the visible skin.
     const a = from.map((v, k) => (v - origin[k]) / axes[k]);
@@ -79,13 +66,12 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     },
     release: finish,
     cancel: finish,
-    reset() { restoring = false; finish(); offsets.fill(0); if (constrainOffsets) constrainOffsets(renderedOffsets, offsets); retained.fill(0); positions.set(rest); renderedOffsets?.fill(0); dirty = true; },
+    reset() { restoring = false; finish(); offsets.fill(0); retained.fill(0); positions.set(rest); dirty = true; },
     beginRestore() { finish(); restoreOffsets.set(offsets); restoring = true; },
     applyRestore(progress) {
       if (!restoring) return;
       const remaining = (1 - clamp(progress, 0, 1)) ** 3;
       for (let i = 0; i < count; i++) offsets[i] = restoreOffsets[i] * remaining;
-      if (constrainOffsets) constrainOffsets(renderedOffsets, offsets);
       dirty = true;
       if (progress >= 1) { restoring = false; retained.set(offsets); }
     },
@@ -108,12 +94,6 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
         atRest &&= offsets[i] === 0; // Scene uses this to restore original normals only on an undeformed mesh.
       }
       if (changed) {
-        if (constrainOffsets) {
-          const alpha = constrainOffsets(renderedOffsets, offsets);
-          renderedOffsets.set(offsets);
-          moving &&= alpha > 1e-5;
-          atRest = offsets.every(value => value === 0);
-        }
         for (let i = 0; i < count; i++) for (let k = 0; k < 3; k++) {
           const index = i * 3 + k; positions[index] = rest[index] - directions[index] * offsets[i];
         }

@@ -122,9 +122,9 @@ controller = createDetailController({
     const styleName = styleNames[recipe.styleId];
     document.querySelector('.detail-back').href = recipe.styleId === 'orb' ? '/collections/' : `/collections/#style-${recipe.styleId}`;
     styleSelect.value = recipe.styleId;
-    for (const option of styleSelect.options) option.disabled = option.value !== 'orb' && recipe.coreMaterial === 'butter';
-    for (const input of document.querySelectorAll('input[name="coreMaterial"]')) input.disabled = recipe.styleId !== 'orb' && input.value === 'butter';
-    styleNotice.textContent = state.selectionNotice || (recipe.styleId !== 'orb' ? '新样式支持黏土和棉花糖质感。' : recipe.coreMaterial === 'butter' ? '切换新样式前，请先选择黏土或棉花糖内芯。' : '');
+    for (const option of styleSelect.options) option.disabled = option.value !== 'orb' && recipe.coreMaterial !== 'clay';
+    for (const input of document.querySelectorAll('input[name="coreMaterial"]')) input.disabled = recipe.styleId !== 'orb' && input.value !== 'clay';
+    styleNotice.textContent = state.selectionNotice || (recipe.styleId !== 'orb' ? '新样式目前仅支持黏土质感。' : recipe.coreMaterial !== 'clay' ? '切换新样式前，请先选择黏土内芯。' : '');
     styleNotice.hidden = !styleNotice.textContent;
     document.title = `制作${styleName}｜Squishy Studio`;
     stage.setAttribute('aria-label', `${styleName}展示区`);
