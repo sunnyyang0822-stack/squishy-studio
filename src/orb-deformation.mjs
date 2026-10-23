@@ -11,6 +11,8 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
   const axes = low.map((value, k) => Math.max(.001, (high[k] - value) / 2));
   const directions = new Float32Array(rest.length), limits = new Float32Array(count);
   const restoreOffsets = new Float32Array(count);
+  const constrainOffsets = surfaceGeometry?.constrainOffsets;
+  const renderedOffsets = constrainOffsets ? new Float32Array(count) : null;
   for (let i = 0; i < count; i++) {
     const index = i * 3;
     const radial = origin.map((value, k) => rest[index + k] - value);
@@ -67,6 +69,7 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
   function cancel() {
     active = false; held = drag = 0; envelope.fill(0);
     if (restoring) return;
+    if (constrainOffsets) constrainOffsets(offsets, retained);
     offsets.set(retained); dirty = true;
     copyPoint(center, targetCenter);
   }
@@ -89,10 +92,11 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
       active = false;
       // Only 15% of the completed stroke rebounds, including at deep pressures.
       for (let i = 0; i < count; i++) retained[i] += (offsets[i] - retained[i]) * .85;
+      if (constrainOffsets) constrainOffsets(offsets, retained);
       envelope.fill(0);
     },
     cancel,
-    reset() { restoring = false; retained.fill(0); cancel(); positions.set(rest); },
+    reset() { restoring = false; retained.fill(0); cancel(); positions.set(rest); renderedOffsets?.fill(0); },
     beginRestore() {
       active = false; held = drag = 0; envelope.fill(0);
       restoreOffsets.set(offsets); retained.fill(0); restoring = true;
@@ -101,6 +105,7 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
       if (!restoring) return;
       const remaining = (1 - clamp(progress, 0, 1)) ** 3;
       for (let i = 0; i < count; i++) offsets[i] = restoreOffsets[i] * remaining;
+      if (constrainOffsets) constrainOffsets(renderedOffsets, offsets);
       dirty = true;
       if (progress >= 1) restoring = false;
     },
@@ -136,6 +141,12 @@ export function createOrbDeformation(positions, normals, { reducedMotion = false
         atRest &&= offsets[i] === 0;
       }
       if (changed) {
+        if (constrainOffsets) {
+          const alpha = constrainOffsets(renderedOffsets, offsets);
+          renderedOffsets.set(offsets);
+          moving &&= alpha > 1e-5;
+          atRest = offsets.every(value => value === 0);
+        }
         for (let i = 0; i < count; i++) {
           const index = i * 3, offset = offsets[i];
           positions[index] = rest[index] - directions[index] * offset;

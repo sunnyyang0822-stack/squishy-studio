@@ -10,6 +10,8 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
   const axes = low.map((value, k) => Math.max(.001, (high[k] - value) / 2));
   const directions = new Float32Array(rest.length), limits = new Float32Array(count);
   const restoreOffsets = new Float32Array(count);
+  const constrainOffsets = surfaceGeometry?.constrainOffsets;
+  const renderedOffsets = constrainOffsets ? new Float32Array(count) : null;
   for (let i = 0; i < count; i++) {
     const index = i * 3;
     const radial = origin.map((value, k) => rest[index + k] - value);
@@ -77,12 +79,13 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     },
     release: finish,
     cancel: finish,
-    reset() { restoring = false; finish(); offsets.fill(0); retained.fill(0); positions.set(rest); dirty = true; },
+    reset() { restoring = false; finish(); offsets.fill(0); if (constrainOffsets) constrainOffsets(renderedOffsets, offsets); retained.fill(0); positions.set(rest); renderedOffsets?.fill(0); dirty = true; },
     beginRestore() { finish(); restoreOffsets.set(offsets); restoring = true; },
     applyRestore(progress) {
       if (!restoring) return;
       const remaining = (1 - clamp(progress, 0, 1)) ** 3;
       for (let i = 0; i < count; i++) offsets[i] = restoreOffsets[i] * remaining;
+      if (constrainOffsets) constrainOffsets(renderedOffsets, offsets);
       dirty = true;
       if (progress >= 1) { restoring = false; retained.set(offsets); }
     },
@@ -105,6 +108,12 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
         atRest &&= offsets[i] === 0; // Scene uses this to restore original normals only on an undeformed mesh.
       }
       if (changed) {
+        if (constrainOffsets) {
+          const alpha = constrainOffsets(renderedOffsets, offsets);
+          renderedOffsets.set(offsets);
+          moving &&= alpha > 1e-5;
+          atRest = offsets.every(value => value === 0);
+        }
         for (let i = 0; i < count; i++) for (let k = 0; k < 3; k++) {
           const index = i * 3 + k; positions[index] = rest[index] - directions[index] * offsets[i];
         }

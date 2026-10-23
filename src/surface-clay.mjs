@@ -21,6 +21,72 @@ class Heap {
   }
 }
 
+// Geometry-only projection of an actual proposed displacement. Unlike an
+// independent per-vertex box, this keeps the correlated, broad clay footprint.
+// The rest face's projected signed area along a straight offset segment is a
+// quadratic polynomial. Its first zero bounds every intermediate position.
+export function createOffsetSafety(rest, directions, indices) {
+  const count = rest.length / 3, faces = new Float64Array(indices.length / 3 * 4);
+  const previous = new Float64Array(rest.length), delta = new Float64Array(rest.length);
+  const zeros = new Float32Array(count), trial = new Float32Array(count);
+  const margin = .08001; // Retains the original .08 area margin after float32 upload.
+  for (let t = 0; t < indices.length; t += 3) {
+    const a = indices[t] * 3, b = indices[t + 1] * 3, c = indices[t + 2] * 3;
+    const ux = rest[b] - rest[a], uy = rest[b + 1] - rest[a + 1], uz = rest[b + 2] - rest[a + 2];
+    const vx = rest[c] - rest[a], vy = rest[c + 1] - rest[a + 1], vz = rest[c + 2] - rest[a + 2];
+    const x = uy * vz - uz * vy, y = uz * vx - ux * vz, z = ux * vy - uy * vx;
+    const f = t / 3 * 4; faces[f] = x; faces[f + 1] = y; faces[f + 2] = z; faces[f + 3] = x * x + y * y + z * z;
+    if (!(faces[f + 3] > 0)) throw new RangeError('Offset safety requires nondegenerate faces');
+  }
+  function segmentLimit(from, to) {
+    for (let i = 0; i < count; i++) for (let k = 0; k < 3; k++) {
+      const j = i * 3 + k; previous[j] = rest[j] - directions[j] * from[i]; delta[j] = -directions[j] * (to[i] - from[i]);
+    }
+    let limit = 1;
+    for (let t = 0; t < indices.length; t += 3) {
+      const a = indices[t] * 3, b = indices[t + 1] * 3, c = indices[t + 2] * 3, f = t / 3 * 4;
+      const ux = previous[b] - previous[a], uy = previous[b + 1] - previous[a + 1], uz = previous[b + 2] - previous[a + 2];
+      const vx = previous[c] - previous[a], vy = previous[c + 1] - previous[a + 1], vz = previous[c + 2] - previous[a + 2];
+      const dx = delta[b] - delta[a], dy = delta[b + 1] - delta[a + 1], dz = delta[b + 2] - delta[a + 2];
+      const ex = delta[c] - delta[a], ey = delta[c + 1] - delta[a + 1], ez = delta[c + 2] - delta[a + 2];
+      const nx = faces[f], ny = faces[f + 1], nz = faces[f + 2], area = faces[f + 3];
+      const q0 = (nx * (uy * vz - uz * vy) + ny * (uz * vx - ux * vz) + nz * (ux * vy - uy * vx)) / area - margin;
+      const q1 = (nx * (dy * vz - dz * vy + uy * ez - uz * ey) + ny * (dz * vx - dx * vz + uz * ex - ux * ez) + nz * (dx * vy - dy * vx + ux * ey - uy * ex)) / area;
+      const q2 = (nx * (dy * ez - dz * ey) + ny * (dz * ex - dx * ez) + nz * (dx * ey - dy * ex)) / area;
+      if (q0 < -2e-6) throw new RangeError('Offset safety received an unsafe previous surface');
+      const minimumAt = q2 > 0 ? Math.max(0, Math.min(limit, -q1 / (2 * q2))) : limit;
+      const value = q0 + minimumAt * (q1 + minimumAt * q2);
+      if (value >= 0 || minimumAt === 0) continue;
+      // This interval ends at the first minimum, so it contains exactly the
+      // first crossing even when the proposed endpoint is safe again.
+      let low = 0, high = minimumAt;
+      for (let step = 0; step < 30; step++) {
+        const mid = (low + high) / 2;
+        if (q0 + mid * (q1 + mid * q2) >= 0) low = mid; else high = mid;
+      }
+      limit = Math.min(limit, low * (1 - 1e-5));
+    }
+    return limit;
+  }
+  return function constrainOffsets(from, candidate) {
+    let alpha = segmentLimit(from, candidate);
+    const makeTrial = value => { for (let i = 0; i < count; i++) trial[i] = from[i] + (candidate[i] - from[i]) * value; };
+    makeTrial(alpha);
+    // Every accepted state also has a safe straight route to exact rest. This
+    // makes explicit restoration safe throughout, rather than only at its end.
+    if (segmentLimit(zeros, trial) < 1) {
+      let low = 0, high = alpha;
+      for (let step = 0; step < 20; step++) {
+        const mid = (low + high) / 2; makeTrial(mid);
+        if (segmentLimit(zeros, trial) === 1) low = mid; else high = mid;
+      }
+      alpha = low; makeTrial(alpha);
+    }
+    candidate.set(trial);
+    return alpha;
+  };
+}
+
 export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis } = {}) {
   const rest = source.slice(), count = rest.length / 3;
   if (!indices?.length || sourceNormals.length !== rest.length) throw new TypeError('Surface clay requires indexed positions and normals');
@@ -129,7 +195,7 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
     // combination as well. This prevents skinny triangles folding after many
     // retained strokes without touching the clay pressure/retention law.
     const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-    for (let pass = 0; pass < 3; pass++) for (const tri of triangles) {
+    for (let pass = 0; pass < (depthAxis === undefined ? 3 : 0); pass++) for (const tri of triangles) {
       const p = tri.map(point), n = tri.map(i => Array.from(directions.slice(i * 3, i * 3 + 3)));
       const face = cross(p[1].map((v, k) => v - p[0][k]), p[2].map((v, k) => v - p[0][k]));
       const area = face.reduce((s, v) => s + v * v, 0);
@@ -188,6 +254,7 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
   }
   return {
     directions, radii, parameterization: starConvex ? 'star-convex' : 'normal-thickness',
+    ...(depthAxis !== undefined && !starConvex ? { constrainOffsets: createOffsetSafety(rest, directions, indices) } : {}),
     neighborhood(p, radius) { return search(p, radius).found; },
     path(from, to, spacing) {
       const straight = distance(from, to); if (straight < spacing) return [to];
