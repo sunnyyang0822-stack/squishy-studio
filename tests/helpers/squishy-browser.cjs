@@ -9,33 +9,45 @@ async function installStyleProbe(page, style) {
       if (type !== 'webgl2' || !gl || p.contexts.includes(gl)) return gl;
       p.contexts.push(gl);
       let positionBuffer, normalBuffer, lastDraw;
+      // Observe bindings at their source instead of synchronously querying the
+      // GPU process during every draw and dynamic buffer upload.
+      let currentProgram = gl.getParameter(gl.CURRENT_PROGRAM);
+      let arrayBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
+      let drawFramebuffer = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
+      let readFramebuffer = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
       const names = new Map(), matrices = new Map();
-      for (const method of ['bufferData', 'bufferSubData', 'getUniformLocation', 'uniformMatrix4fv', 'drawElements']) {
+      for (const method of ['useProgram', 'bindBuffer', 'bindFramebuffer', 'bufferData', 'bufferSubData', 'getUniformLocation', 'uniformMatrix4fv', 'drawElements']) {
         const native = gl[method].bind(gl);
         gl[method] = function(...a) {
           const result = native(...a);
+          if (method === 'useProgram') currentProgram = a[0];
+          if (method === 'bindBuffer' && a[0] === gl.ARRAY_BUFFER) arrayBuffer = a[1];
+          if (method === 'bindFramebuffer') {
+            if (a[0] === gl.FRAMEBUFFER || a[0] === gl.DRAW_FRAMEBUFFER) drawFramebuffer = a[1];
+            if (a[0] === gl.FRAMEBUFFER || a[0] === gl.READ_FRAMEBUFFER) readFramebuffer = a[1];
+          }
           if (method === 'getUniformLocation' && result) names.set(result, a[1]);
-          if (method === 'uniformMatrix4fv' && names.get(a[0]) === 'modelViewMatrix') matrices.set(gl.getParameter(gl.CURRENT_PROGRAM), Array.from(a[2]));
+          if (method === 'uniformMatrix4fv' && names.get(a[0]) === 'modelViewMatrix') matrices.set(currentProgram, Array.from(a[2]));
           if (method === 'bufferData' && a[0] === gl.ARRAY_BUFFER && a[1]?.length === rest.length && rest.every((v, i) => Math.abs(a[1][i] - v) < 1e-6)) {
-            positionBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING); p.positions = Array.from(a[1]); p.uploads++;
+            positionBuffer = arrayBuffer; p.positions = Array.from(a[1]); p.uploads++;
           }
           if (method === 'bufferData' && a[0] === gl.ARRAY_BUFFER && a[1]?.length === restNormals.length && restNormals.every((v, i) => Math.abs(a[1][i] - v) < 1e-6)) {
-            normalBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING); p.normals = Array.from(a[1]);
+            normalBuffer = arrayBuffer; p.normals = Array.from(a[1]);
           }
-          if (method === 'bufferSubData' && positionBuffer && a[0] === gl.ARRAY_BUFFER && gl.getParameter(gl.ARRAY_BUFFER_BINDING) === positionBuffer) {
+          if (method === 'bufferSubData' && positionBuffer && a[0] === gl.ARRAY_BUFFER && arrayBuffer === positionBuffer) {
             const data = a[2], offset = a[3] || 0, length = a[4] || data.length - offset;
             for (let i = 0; i < length; i++) p.positions[a[1] / 4 + i] = data[offset + i];
             p.uploads++;
           }
-          if (method === 'bufferSubData' && normalBuffer && a[0] === gl.ARRAY_BUFFER && gl.getParameter(gl.ARRAY_BUFFER_BINDING) === normalBuffer) {
+          if (method === 'bufferSubData' && normalBuffer && a[0] === gl.ARRAY_BUFFER && arrayBuffer === normalBuffer) {
             const data = a[2], offset = a[3] || 0, length = a[4] || data.length - offset;
             for (let i = 0; i < length; i++) p.normals[a[1] / 4 + i] = data[offset + i];
           }
           if (method === 'drawElements' && a[1] === drawCount) {
-            p.matrix = matrices.get(gl.getParameter(gl.CURRENT_PROGRAM))?.slice();
+            p.matrix = matrices.get(currentProgram)?.slice();
             const now = performance.now(); if (lastDraw && now - lastDraw < 250) p.intervals.push(now - lastDraw); lastDraw = now;
             p.draws++; p.matrices.push(p.matrix); if (p.matrices.length > 20) p.matrices.shift();
-            if (p.readPixelsNext && !gl.getParameter(gl.FRAMEBUFFER_BINDING)) {
+            if (p.readPixelsNext && !drawFramebuffer && !readFramebuffer) {
               p.readPixelsNext = false;
               const rgba = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
               gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, rgba);
