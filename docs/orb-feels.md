@@ -1,8 +1,33 @@
 # 可复用圆球质感
 
-新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。走查后加深至 .70 模型单位、保留至少24%安全半径；快速塑性塌陷，释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
+新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。单次局部按压从浅到深渐进（响应8/s、当前接触区2秒压力进程），离开的浅轨迹冻结，多次按压保留 .70 模型单位/至少24%安全半径的边界；释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
 
 已确认的内陷行为正式命名为 **黏土**，稳定调用标识为 **`clay`**。命名的是按压行为，不是光学材质或颜色。默认圆球与后续调用它的样式共享同一实现。2026-10-22 按用户要求整体提高交互阻尼，见 [当前阻尼与实测](issue-16-clay-damping.md)。
+
+## 预制材质与跨样式调用
+
+黏土和棉花糖都可直接通过统一预设调用；预设将手感、哑光光学工厂和默认外观组合起来，工厂内部仍独立：
+
+```js
+import { createOrbPreview } from '../src/orb-preview.js';
+const preview = createOrbPreview(mount, { presetId: 'marshmallow', onUnavailable });
+// 黏土用 presetId: 'clay'；慢回弹用 presetId: 'slow-rebound'。
+// 保留 prepare / commit / dispose 协调，同质感仅换色不重建。
+```
+
+已有自定义网格场景可单独取得预制工厂：
+
+```js
+import { getOrbPreset } from '../src/orb-presets.mjs';
+const preset = getOrbPreset('marshmallow');
+const deformation = preset.createDeformation(positions, normals, { reducedMotion });
+const material = preset.createMaterial(sourceMaterial);
+// 每次调用都是独立实例；离页/切换时沿用现有生命周期并 material.dispose()。
+```
+
+注册表为 src/orb-presets.mjs 的不可变 orbPresets；稳定ID clay、marshmallow、slow-rebound。原 { feelId: 'marshmallow' } 仍兼容并取得同一光学工厂，显式feelId/appearanceId优先于preset默认值。shape/styleId不进入手感工厂，因此其他兼容样式无需复制场景即可调用。新版棉花糖足迹半径 .40（原 .66），滑动经过部分仅留下浅痕，停住后的持续加深只作用于当前接触区，历史轨迹逐顶点冻结；单点影响不到6%实际圆球顶点，足迹外顶点逐值不变；中心响应曲线、渐进过程和松手保持不变。
+
+预设可复用不表示任意模型已验证：当前形变适用于现有归一化近圆/椭球网格；比例或非凸新模型应验证足迹尺度、命中和穿面。大厅当前占位形状仍使用已验证圆球，没有新增模型保证。测试 tests/orb-presets.test.cjs 验证预设不可变、未知ID、工厂映射、独立形变和材质隔离。
 
 ## 新样式直接复用
 

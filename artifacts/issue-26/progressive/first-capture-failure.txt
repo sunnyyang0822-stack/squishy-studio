@@ -1,0 +1,9 @@
+AssertionError [ERR_ASSERTION]: Short press stays shallow
+    at run (D:\squishy-studio-issue-26\tests\helpers\marshmallow-browser.cjs:83:14) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

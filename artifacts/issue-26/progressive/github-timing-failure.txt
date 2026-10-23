@@ -1,0 +1,1215 @@
+browser-tests	UNKNOWN STEP	﻿2026-10-22T12:35:51.0761426Z Current runner version: '2.338.0'
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0807227Z ##[group]Runner Image Provisioner
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0808335Z Hosted Compute Agent
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0809030Z Version: 20261012.601
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0809861Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0810807Z Build Date: 2026-10-12T17:48:21Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0811611Z Worker ID: {4a0ed515-aa30-4e59-9489-406b7814c14c}
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0812598Z Region: westus3
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0813276Z Cloud: Azure
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0813996Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0816444Z ##[group]Operating System
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0817235Z Ubuntu
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0817958Z 26.04.1
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0818582Z LTS
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0819182Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0819986Z ##[group]Runner Image
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0820720Z Image: ubuntu-26.04
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0821513Z Version: 20261012.163.1
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0823011Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261012.163/images/ubuntu/Ubuntu2604-Readme.md
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0825068Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261012.163
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0826521Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0827899Z ##[group]GITHUB_TOKEN Permissions
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0830224Z Contents: read
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0831065Z Metadata: read
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0831752Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0834054Z Secret source: Actions
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0835296Z Cache mode: write
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.0836850Z Prepare workflow directory
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.1214132Z Prepare all required actions
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.1270506Z Getting action download info
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.4352051Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:51.7169476Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.0570291Z Complete job name: browser-tests
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1292383Z ##[group]Run actions/checkout@v4
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1293506Z with:
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1294247Z   repository: sunnyyang0822-stack/squishy-studio
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1301746Z   token: ***
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1302399Z   ssh-strict: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1303065Z   ssh-user: git
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1303746Z   persist-credentials: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1304495Z   clean: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1305163Z   sparse-checkout-cone-mode: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1306047Z   fetch-depth: 1
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1306704Z   fetch-tags: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1307379Z   show-progress: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1308064Z   lfs: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1308705Z   submodules: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1309410Z   set-safe-directory: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1310196Z   allow-unsafe-pr-checkout: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.1311222Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2284504Z Syncing repository: sunnyyang0822-stack/squishy-studio
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2288687Z ##[group]Getting Git version info
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2291248Z Working directory is '/home/runner/work/squishy-studio/squishy-studio'
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2335857Z [command]/usr/bin/git version
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2407994Z git version 2.55.0
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2412006Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2422134Z Temporarily overriding HOME='/home/runner/work/_temp/c55de4b9-5ad7-4d50-a560-ba07f558497a' before making global git config changes
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2425727Z Adding repository directory to the temporary git global config as a safe directory
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.2438797Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/squishy-studio/squishy-studio
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3668025Z Deleting the contents of '/home/runner/work/squishy-studio/squishy-studio'
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3670773Z ##[group]Initializing the repository
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3673079Z [command]/usr/bin/git init /home/runner/work/squishy-studio/squishy-studio
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3778071Z hint: Using 'master' as the name for the initial branch. This default branch name
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3780357Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3784316Z hint: to use in all of your new repositories, which will suppress this warning,
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3786266Z hint: call:
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3787176Z hint:
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3788298Z hint: 	git config --global init.defaultBranch <name>
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3789600Z hint:
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3790869Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3792921Z hint: 'development'. The just-created branch can be renamed via this command:
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3794784Z hint:
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3795642Z hint: 	git branch -m <name>
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3797064Z hint:
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3798230Z hint: Disable this message with "git config set advice.defaultBranchName false"
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3800607Z Initialized empty Git repository in /home/runner/work/squishy-studio/squishy-studio/.git/
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3807276Z [command]/usr/bin/git remote add origin https://github.com/sunnyyang0822-stack/squishy-studio
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3860321Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3862452Z ##[group]Disabling automatic garbage collection
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3867176Z [command]/usr/bin/git config --local gc.auto 0
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3897028Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3901531Z ##[group]Setting up auth
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3904034Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.3934758Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.6505341Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.6517235Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.6764781Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.6797940Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.7043448Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.7082011Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.7083224Z ##[group]Fetching the repository
+browser-tests	UNKNOWN STEP	2026-10-22T12:35:52.7090400Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +13d6bc809f34c222a46af765620ba8ecd9ae7fb4:refs/remotes/pull/32/merge
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2691631Z From https://github.com/sunnyyang0822-stack/squishy-studio
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2693020Z  * [new ref]         13d6bc809f34c222a46af765620ba8ecd9ae7fb4 -> pull/32/merge
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2710964Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2712067Z ##[group]Determining the checkout info
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2712949Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2717321Z [command]/usr/bin/git sparse-checkout disable
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2795412Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2827687Z ##[group]Checking out the ref
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.2830888Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/32/merge
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6844359Z Note: switching to 'refs/remotes/pull/32/merge'.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6856835Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6857429Z You are in 'detached HEAD' state. You can look around, make experimental
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6858381Z changes and commit them, and you can discard any commits you make in this
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6876895Z state without impacting any branches by switching back to a branch.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6886768Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6887395Z If you want to create a new branch to retain commits you create, you may
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6888289Z do so (now or later) by using -c with the switch command. Example:
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6889183Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6889498Z   git switch -c <new-branch-name>
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6889920Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6890249Z Or undo this operation with:
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6890621Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6890927Z   git switch -
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6891573Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6892115Z Turn off this advice by setting config variable advice.detachedHead to false
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6892669Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6893241Z HEAD is now at 13d6bc8 Merge 7d811078b148a702377276d1a1ca1189ca001cf9 into aa78cc164885917581ca353ee97612211f00f863
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6895401Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.6996102Z [command]/usr/bin/git log -1 --format=%H
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7021189Z 13d6bc809f34c222a46af765620ba8ecd9ae7fb4
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7275457Z ##[group]Run actions/setup-node@v4
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7275704Z with:
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7275882Z   node-version: 22
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7276212Z   cache: npm
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7276385Z   always-auth: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7276570Z   check-latest: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7278501Z   token: ***
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.7278702Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.9717852Z (node:2080) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.9731273Z (Use `node --trace-deprecation ...` to show where the warning was created)
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.9732698Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:01.9733549Z ##[group]Environment details
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:06.7115373Z node: v22.23.3
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:06.7125863Z npm: 10.9.9
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:06.7132879Z yarn: 1.22.22
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:06.7133683Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:06.7186906Z [command]/opt/hostedtoolcache/node/22.23.3/x64/bin/npm config get cache
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:07.1621283Z /home/runner/.npm
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:07.4617703Z Cache hit for: node-cache-Linux-x64-npm-e21ec3c551986890bf627588c0dacb51f9c259fd3b52b5b6c8cec7ebf178a95b
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:07.4735310Z (node:2080) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.6160948Z Received 15787229 of 15787229 (100.0%), 16.3 MBs/sec
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.6161876Z Cache Size: ~15 MB (15787229 B)
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.6181286Z [command]/usr/bin/tar -xf /home/runner/work/_temp/50e19c41-7229-45c2-ac81-4e790ca43b11/cache.tzst -P -C /home/runner/work/squishy-studio/squishy-studio --use-compress-program unzstd
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.6700966Z Cache restored successfully
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.6737456Z Cache restored from key: node-cache-Linux-x64-npm-e21ec3c551986890bf627588c0dacb51f9c259fd3b52b5b6c8cec7ebf178a95b
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.6887465Z ##[group]Run npm ci
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.6887715Z ^[[36;1mnpm ci^[[0m
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.7799676Z shell: /usr/bin/bash -e {0}
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:08.7799961Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7753138Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7760941Z added 19 packages, and audited 20 packages in 3s
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7761792Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7762211Z 2 packages are looking for funding
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7762733Z   run `npm fund` for details
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7763096Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7763426Z found 0 vulnerabilities
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7996553Z ##[group]Run npx playwright install --with-deps chromium
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.7996935Z ^[[36;1mnpx playwright install --with-deps chromium^[[0m
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.8053014Z shell: /usr/bin/bash -e {0}
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:11.8053231Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:12.8412254Z Installing dependencies...
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:12.8495677Z Switching to root user to install dependencies...
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.1697627Z Get:1 https://packages.microsoft.com/ubuntu/26.04/prod resolute InRelease [3964 B]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.1979385Z Get:2 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.3469526Z Hit:3 http://azure.archive.ubuntu.com/ubuntu resolute InRelease
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.3493274Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.3592582Z Get:5 http://azure.archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.3701181Z Get:6 http://azure.archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.3847528Z Get:7 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main arm64 Packages [103 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4036403Z Get:8 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main armhf Packages [962 B]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4138569Z Get:11 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main amd64 Packages [112 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4157848Z Get:9 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 Packages [745 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4307060Z Get:10 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main Translation-en [176 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4326886Z Get:12 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 Packages [334 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4364318Z Get:13 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe Translation-en [110 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4507544Z Get:14 http://azure.archive.ubuntu.com/ubuntu resolute-security/main amd64v3 Packages [607 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4591830Z Get:15 http://azure.archive.ubuntu.com/ubuntu resolute-security/main Translation-en [141 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4616843Z Get:16 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe amd64v3 Packages [206 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:13.4627560Z Get:17 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe Translation-en [67.7 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:19.8966800Z Fetched 3018 kB in 1s (5729 kB/s)
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.4467421Z Reading package lists...
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.4694191Z Reading package lists...
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6298219Z Building dependency tree...
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6316461Z Reading state information...
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6655122Z libasound2t64 is already the newest version (1.2.15.3-1ubuntu1.1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6656211Z libasound2t64 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6657052Z libatk-bridge2.0-0t64 is already the newest version (2.60.4-0ubuntu0.1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6663964Z libatk-bridge2.0-0t64 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6664666Z libatk1.0-0t64 is already the newest version (2.60.4-0ubuntu0.1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6665417Z libatk1.0-0t64 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6666248Z libatspi2.0-0t64 is already the newest version (2.60.4-0ubuntu0.1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6671385Z libatspi2.0-0t64 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6671985Z libcairo2 is already the newest version (1.18.4-3).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6672540Z libcairo2 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6673125Z libcups2t64 is already the newest version (2.4.16-1ubuntu1.3).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6673713Z libcups2t64 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6674279Z libdbus-1-3 is already the newest version (1.16.2-2ubuntu4).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6674838Z libdbus-1-3 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6675349Z libdrm2 is already the newest version (2.4.131-1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6675877Z libdrm2 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6676631Z libgbm1 is already the newest version (26.0.8-1ubuntu0.3).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6677654Z libgbm1 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6678228Z libglib2.0-0t64 is already the newest version (2.88.0-1ubuntu0.1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6678817Z libglib2.0-0t64 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6679413Z libnspr4 is already the newest version (2:4.38.2-1ubuntu1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6679994Z libnspr4 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6680544Z libpango-1.0-0 is already the newest version (1.57.0-1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6681089Z libpango-1.0-0 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6681688Z libx11-6 is already the newest version (2:1.8.13-1ubuntu0.1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6682225Z libx11-6 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6682753Z libxcb1 is already the newest version (1.17.0-2ubuntu1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6683282Z libxcb1 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6684140Z libxcomposite1 is already the newest version (1:0.4.6-1build1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6684771Z libxcomposite1 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6699075Z libxdamage1 is already the newest version (1:1.1.7-1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6699666Z libxdamage1 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6700257Z libxext6 is already the newest version (2:1.3.4-1build3).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6700802Z libxext6 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6701374Z libxfixes3 is already the newest version (1:6.0.0-2build2).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6701932Z libxfixes3 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6702571Z libxkbcommon0 is already the newest version (1.13.1-1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6703158Z libxkbcommon0 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6718150Z libxrandr2 is already the newest version (2:1.5.4-1build1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6718774Z libxrandr2 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6719410Z fonts-noto-color-emoji is already the newest version (2.051-1build1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6720140Z libfontconfig1 is already the newest version (2.17.1-3ubuntu1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6720716Z libfontconfig1 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6721401Z libfreetype6 is already the newest version (2.14.2+dfsg-1ubuntu0.2).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6721983Z libfreetype6 set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6722598Z fonts-liberation is already the newest version (1:2.1.5-3build1).
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.6723192Z fonts-liberation set to manually installed.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.7241583Z Solving dependencies...
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8128310Z The following additional packages will be installed:
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8136317Z   libnss3-tools xfonts-encodings xfonts-utils xserver-common
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8144367Z Recommended packages:
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8145000Z   fonts-ipafont-mincho fonts-tlwg-loma
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8373326Z The following NEW packages will be installed:
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8374397Z   fonts-freefont-ttf fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-unifont
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8382286Z   fonts-wqy-zenhei xfonts-cyrillic xfonts-encodings xfonts-scalable
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8382982Z   xfonts-utils
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8388836Z The following packages will be upgraded:
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8394380Z   libnss3 libnss3-tools xserver-common xvfb
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8597771Z 4 upgraded, 9 newly installed, 0 to remove and 78 not upgraded.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8598676Z Need to get 24.9 MB of archives.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8606790Z After this operation, 80.2 MB of additional disk space will be used.
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:20.8616678Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+browser-tests	UNKNOWN STEP	2026-10-22T12:36:35.7101055Z Get:2 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-ipafont-gothic all 00303-23ubuntu1 [3703 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:37:13.4521924Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 fonts-freefont-ttf all 20211204+svn4273-4build1 [5656 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:37:53.2175527Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-tlwg-loma-otf all 1:0.7.3-1build1 [106 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:38:27.6670270Z Ign:5 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-unifont all 1:16.0.04-1build1
+browser-tests	UNKNOWN STEP	2026-10-22T12:38:59.7495899Z Get:6 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-wqy-zenhei all 0.9.45-8build1 [7863 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6948339Z Ign:7 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 libnss3 amd64 2:3.120-1ubuntu2.2
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6949644Z Ign:8 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 libnss3-tools amd64 2:3.120-1ubuntu2.2
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6950939Z Ign:9 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 xfonts-encodings all 1:1.0.5-0ubuntu3
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6951988Z Ign:10 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 xfonts-utils amd64 1:7.7+7build1
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6952924Z Ign:11 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 xfonts-cyrillic all 1:1.0.5+nmu1build1
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6954740Z Ign:12 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 xfonts-scalable all 1:1.0.3-1.3build1
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6956375Z Ign:13 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 xserver-common all 2:21.1.22-1ubuntu1.3
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6957695Z Ign:14 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 xvfb amd64 2:21.1.22-1ubuntu1.3
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:31.6958862Z Ign:5 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-unifont all 1:16.0.04-1build1
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.3796917Z Get:5 https://archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-unifont all 1:16.0.04-1build1 [3169 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.6949354Z Ign:14 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 xvfb amd64 2:21.1.22-1ubuntu1.3
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.6951332Z Ign:13 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 xserver-common all 2:21.1.22-1ubuntu1.3
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.6952406Z Ign:12 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 xfonts-scalable all 1:1.0.3-1.3build1
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.6953512Z Ign:11 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 xfonts-cyrillic all 1:1.0.5+nmu1build1
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.6954508Z Ign:10 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 xfonts-utils amd64 1:7.7+7build1
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.6955466Z Ign:9 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 xfonts-encodings all 1:1.0.5-0ubuntu3
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.6956709Z Ign:8 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 libnss3-tools amd64 2:3.120-1ubuntu2.2
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:32.6957741Z Ign:7 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 libnss3 amd64 2:3.120-1ubuntu2.2
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:33.4999230Z Get:14 https://archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 xvfb amd64 2:21.1.22-1ubuntu1.3 [905 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:33.6573740Z Get:13 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 xserver-common all 2:21.1.22-1ubuntu1.3 [30.0 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:33.7893086Z Get:12 https://archive.ubuntu.com/ubuntu resolute/universe amd64v3 xfonts-scalable all 1:1.0.3-1.3build1 [304 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:33.9284962Z Get:11 https://archive.ubuntu.com/ubuntu resolute/universe amd64v3 xfonts-cyrillic all 1:1.0.5+nmu1build1 [384 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:34.0705641Z Get:10 https://archive.ubuntu.com/ubuntu resolute/main amd64v3 xfonts-utils amd64 1:7.7+7build1 [97.3 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:34.2043521Z Get:9 https://archive.ubuntu.com/ubuntu resolute/main amd64v3 xfonts-encodings all 1:1.0.5-0ubuntu3 [576 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:34.3523605Z Get:8 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 libnss3-tools amd64 2:3.120-1ubuntu2.2 [628 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:34.5013828Z Get:7 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 libnss3 amd64 2:3.120-1ubuntu2.2 [1518 kB]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2132275Z Fetched 24.9 MB in 3min 14s (129 kB/s)
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2625027Z Selecting previously unselected package fonts-ipafont-gothic.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2952460Z (Reading database ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2952959Z (Reading database ... 5%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2953298Z (Reading database ... 10%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2953922Z (Reading database ... 15%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2966990Z (Reading database ... 20%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2967552Z (Reading database ... 25%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2968203Z (Reading database ... 30%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2968717Z (Reading database ... 35%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2969187Z (Reading database ... 40%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2969657Z (Reading database ... 45%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.2970119Z (Reading database ... 50%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.4397985Z (Reading database ... 55%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.4999111Z (Reading database ... 60%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.6929800Z (Reading database ... 65%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.8127500Z (Reading database ... 70%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:35.8306848Z (Reading database ... 75%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:36.1824976Z (Reading database ... 80%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:36.7822789Z (Reading database ... 85%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:37.3571267Z (Reading database ... 90%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.0477978Z (Reading database ... 95%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.0478630Z (Reading database ... 100%
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.0479578Z (Reading database ... 211065 files and directories currently installed.)
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.0508822Z Preparing to unpack .../00-fonts-ipafont-gothic_00303-23ubuntu1_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.0758758Z Unpacking fonts-ipafont-gothic (00303-23ubuntu1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.2812008Z Selecting previously unselected package fonts-freefont-ttf.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.2958378Z Preparing to unpack .../01-fonts-freefont-ttf_20211204+svn4273-4build1_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.2965045Z Unpacking fonts-freefont-ttf (20211204+svn4273-4build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.4695305Z Selecting previously unselected package fonts-tlwg-loma-otf.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.4822201Z Preparing to unpack .../02-fonts-tlwg-loma-otf_1%3a0.7.3-1build1_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.4836867Z Unpacking fonts-tlwg-loma-otf (1:0.7.3-1build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.5119786Z Selecting previously unselected package fonts-unifont.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.5245787Z Preparing to unpack .../03-fonts-unifont_1%3a16.0.04-1build1_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.5267071Z Unpacking fonts-unifont (1:16.0.04-1build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.9007465Z Selecting previously unselected package fonts-wqy-zenhei.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.9122894Z Preparing to unpack .../04-fonts-wqy-zenhei_0.9.45-8build1_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:38.9303879Z Unpacking fonts-wqy-zenhei (0.9.45-8build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.1793264Z Preparing to unpack .../05-libnss3_2%3a3.120-1ubuntu2.2_amd64v3.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.1836962Z Unpacking libnss3:amd64 (2:3.120-1ubuntu2.2) over (2:3.120-1ubuntu2.1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.2652218Z Preparing to unpack .../06-libnss3-tools_2%3a3.120-1ubuntu2.2_amd64v3.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.3126283Z Unpacking libnss3-tools (2:3.120-1ubuntu2.2) over (2:3.120-1ubuntu2.1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.3887306Z Selecting previously unselected package xfonts-encodings.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.3998538Z Preparing to unpack .../07-xfonts-encodings_1%3a1.0.5-0ubuntu3_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.4007437Z Unpacking xfonts-encodings (1:1.0.5-0ubuntu3) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.4444549Z Selecting previously unselected package xfonts-utils.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.4567699Z Preparing to unpack .../08-xfonts-utils_1%3a7.7+7build1_amd64v3.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.4576629Z Unpacking xfonts-utils (1:7.7+7build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.5697138Z Selecting previously unselected package xfonts-cyrillic.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.5815096Z Preparing to unpack .../09-xfonts-cyrillic_1%3a1.0.5+nmu1build1_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.5826654Z Unpacking xfonts-cyrillic (1:1.0.5+nmu1build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.6446685Z Selecting previously unselected package xfonts-scalable.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.6574143Z Preparing to unpack .../10-xfonts-scalable_1%3a1.0.3-1.3build1_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.6581522Z Unpacking xfonts-scalable (1:1.0.3-1.3build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.7006384Z Preparing to unpack .../11-xserver-common_2%3a21.1.22-1ubuntu1.3_all.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.7027186Z Unpacking xserver-common (2:21.1.22-1ubuntu1.3) over (2:21.1.22-1ubuntu1.2) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.7423295Z Preparing to unpack .../12-xvfb_2%3a21.1.22-1ubuntu1.3_amd64v3.deb ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.8160762Z Unpacking xvfb (2:21.1.22-1ubuntu1.3) over (2:21.1.22-1ubuntu1.2) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9047437Z Setting up fonts-wqy-zenhei (0.9.45-8build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9194696Z Setting up fonts-freefont-ttf (20211204+svn4273-4build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9210428Z Setting up libnss3:amd64 (2:3.120-1ubuntu2.2) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9241703Z Setting up fonts-tlwg-loma-otf (1:0.7.3-1build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9262954Z Setting up xfonts-encodings (1:1.0.5-0ubuntu3) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9357007Z Setting up fonts-ipafont-gothic (00303-23ubuntu1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9424497Z update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9444885Z Setting up xserver-common (2:21.1.22-1ubuntu1.3) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9463975Z Setting up libnss3-tools (2:3.120-1ubuntu2.2) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9487700Z Setting up fonts-unifont (1:16.0.04-1build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9509701Z Setting up xvfb (2:21.1.22-1ubuntu1.3) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9533448Z Setting up xfonts-utils (1:7.7+7build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:39.9595006Z Setting up xfonts-cyrillic (1:1.0.5+nmu1build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:40.0645739Z Setting up xfonts-scalable (1:1.0.3-1.3build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:40.1111030Z Processing triggers for libc-bin (2.43-2ubuntu2.4) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:41.9661152Z Processing triggers for man-db (2.13.1-1build1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:41.9681709Z Not building database; man-db/auto-update is not 'true'.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:41.9693495Z Processing triggers for fontconfig (2.17.1-3ubuntu1) ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.5938915Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.5939776Z Running kernel seems to be up-to-date.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.5940501Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.5940851Z Restarting services...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6098089Z  systemctl restart udisks2.service
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6710831Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6711800Z Service restarts being deferred:
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6712510Z  systemctl restart hosted-compute-agent.service
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6712959Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6713305Z No containers need to be restarted.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6713668Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6714028Z No user sessions are running outdated binaries.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6714424Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:43.6714902Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:44.8517672Z Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248) from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-linux64.zip
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:45.3198895Z |                                                                                |   0% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:45.4949810Z |■■■■■■■■                                                                        |  10% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:45.5945275Z |■■■■■■■■■■■■■■■■                                                                |  20% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:45.6624928Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:45.7368273Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:45.8461236Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:45.9399923Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:46.0236469Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:46.1312094Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:46.2446613Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:46.3208673Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 191.1 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.3869029Z Chrome for Testing 156.0.8078.4 (playwright chromium v1248) downloaded to /home/runner/.cache/ms-playwright/chromium-1248
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.3871716Z Downloading FFmpeg (playwright ffmpeg v1013) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1013/ffmpeg-linux.zip
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8610709Z |                                                                                |   0% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8648306Z |■■■■■■■■                                                                        |  10% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8673566Z |■■■■■■■■■■■■■■■■                                                                |  20% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8688609Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8708085Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8726564Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8765588Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8786957Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8802935Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8809075Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.8818077Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.2 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.9315878Z FFmpeg (playwright ffmpeg v1013) downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1013
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:48.9319368Z Downloading Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-headless-shell-linux64.zip
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.3177407Z |                                                                                |   0% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.4618192Z |■■■■■■■■                                                                        |  10% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.5157930Z |■■■■■■■■■■■■■■■■                                                                |  20% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.5736192Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.6175937Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.6532518Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.7007259Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.7485789Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.7916527Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.8526634Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:49.8948192Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 120 MiB
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.4108123Z Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1248
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.5016697Z ##[group]Run npm test
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.5017046Z ^[[36;1mnpm test^[[0m
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.5073851Z shell: /usr/bin/bash -e {0}
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.5074292Z ##[endgroup]
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.7810149Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.7810976Z > squishy-studio@1.0.0 pretest
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.7811867Z > npm run build
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.7812271Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.8624981Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.8625918Z > squishy-studio@1.0.0 build
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.8626956Z > npm run build:brand && npm run build:orb
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.8627415Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.9470762Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.9471637Z > squishy-studio@1.0.0 build:brand
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.9472778Z > node scripts/build-brand.cjs
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:51.9473334Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:52.5832268Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:52.5832573Z > squishy-studio@1.0.0 build:orb
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:52.5832987Z > node scripts/build-orb.cjs
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:52.5833187Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:52.9729108Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:52.9756545Z > squishy-studio@1.0.0 test
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:52.9887486Z > node --test --test-concurrency=2 tests/*.test.cjs
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:52.9891247Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0445489Z TAP version 13
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0904535Z # Subtest: 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0905090Z ok 1 - 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0905408Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0905687Z   duration_ms: 4.437252
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0906171Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0906428Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0906895Z # Subtest: 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0907375Z ok 2 - 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0907707Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0907948Z   duration_ms: 0.988021
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0908206Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0908429Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0908792Z # Subtest: 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0909211Z ok 3 - 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0909509Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0909730Z   duration_ms: 1.132184
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0909967Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0910234Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0910644Z # Subtest: 快速换色只提交最后请求；过期失败不覆盖，离页释放
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0911070Z ok 4 - 快速换色只提交最后请求；过期失败不覆盖，离页释放
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0911364Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0911664Z   duration_ms: 0.759353
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0911925Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0912138Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0912537Z # Subtest: 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0912941Z ok 5 - 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0913214Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0913442Z   duration_ms: 1.56279
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0913725Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0913967Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0914345Z # Subtest: 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0914789Z ok 6 - 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0915083Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0915326Z   duration_ms: 8.263329
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0915605Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0915858Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0926832Z # Subtest: 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0927366Z ok 7 - 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0927701Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0927958Z   duration_ms: 0.822917
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0928253Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0928515Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0929215Z # Subtest: 音量初始静音、上次音量恢复、边界与清理
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0929613Z ok 8 - 音量初始静音、上次音量恢复、边界与清理
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0929893Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0930148Z   duration_ms: 0.492668
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0930435Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:39:53.0930687Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:40:38.2829661Z # Subtest: 可用样式入口、旧详情路径、完整五步与返回修改保留选择
+browser-tests	UNKNOWN STEP	2026-10-22T12:40:38.2849397Z ok 9 - 可用样式入口、旧详情路径、完整五步与返回修改保留选择
+browser-tests	UNKNOWN STEP	2026-10-22T12:40:38.3299456Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:40:38.3300234Z   duration_ms: 44770.127202
+browser-tests	UNKNOWN STEP	2026-10-22T12:40:38.3579823Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:40:38.3601297Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:14.2792479Z # Subtest: 十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史有效
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:14.2828345Z ok 10 - 十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史有效
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:14.2886793Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:14.2924532Z   duration_ms: 36042.979388
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:14.2971784Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:14.3016627Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:23.7057456Z # Subtest: 加载失败可继续选择、前进及重试，快速换色保持最后颜色
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:23.7108955Z ok 11 - 加载失败可继续选择、前进及重试，快速换色保持最后颜色
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:23.7159112Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:23.7200037Z   duration_ms: 9424.427267
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:23.7231388Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:23.7282154Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:32.6822632Z # Subtest: 分类一次只显示一组；切换分类不改配方、不重建场景；手机色卡保留辅助名称
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:32.6825125Z ok 12 - 分类一次只显示一组；切换分类不改配方、不重建场景；手机色卡保留辅助名称
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:32.6828264Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:32.6830211Z   duration_ms: 8982.242339
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:32.6832411Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:32.6835623Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:49.5935529Z # Subtest: 桌面同显当前步骤全部可用组；手机切回分类仍保留选择
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:49.5968215Z ok 13 - 桌面同显当前步骤全部可用组；手机切回分类仍保留选择
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:49.6048558Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:49.6067487Z   duration_ms: 16902.751385
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:49.6074368Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:41:49.6078516Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:43:53.5949065Z # Subtest: 桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主体可滚动触达
+browser-tests	UNKNOWN STEP	2026-10-22T12:43:53.5956740Z ok 14 - 桌面与手机昼夜、短屏横屏无横向溢出；触控目标与主体可滚动触达
+browser-tests	UNKNOWN STEP	2026-10-22T12:43:53.5976288Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:43:53.5996282Z   duration_ms: 124005.939596
+browser-tests	UNKNOWN STEP	2026-10-22T12:43:53.6017077Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:43:53.6030121Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.5797472Z # Subtest: 动态高度、横竖屏与安全留白变化复用同一画布，配方保留且全部导航可触达
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.5806205Z ok 15 - 动态高度、横竖屏与安全留白变化复用同一画布，配方保留且全部导航可触达
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.5856798Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.5918194Z   duration_ms: 13978.596962
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.5946729Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6043220Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6797744Z # Subtest: 桌面首屏可读且昼夜切换可连续操作
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6798911Z ok 16 - 桌面首屏可读且昼夜切换可连续操作
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6845391Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6862226Z   duration_ms: 27388.750212
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6864129Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6864576Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6866242Z # Subtest: 夜间切回白天时文字快速清晰，连续切换不会重置颜色
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6867933Z ok 17 - 夜间切回白天时文字快速清晰，连续切换不会重置颜色
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6877201Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6885005Z   duration_ms: 47968.23599
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6890070Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6890605Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6892643Z # Subtest: 字标与主题逻辑保留用户确认的 5b5e8c7 版本
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6895184Z ok 18 - 字标与主题逻辑保留用户确认的 5b5e8c7 版本
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6902093Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6910373Z   duration_ms: 0.814705
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6923771Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6924978Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6929176Z # Subtest: 昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6929826Z ok 19 - 昼夜开关显示云朵与星星，太阳连续变成月牙且反向操作不跳变
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6930316Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6930727Z   duration_ms: 19124.16065
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6936238Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6937112Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6938198Z # Subtest: 手机和短屏仍能看到主体与切换控件
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6946548Z ok 20 - 手机和短屏仍能看到主体与切换控件
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6953728Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6954435Z   duration_ms: 18472.166768
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6966404Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6971540Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6976195Z # Subtest: 减少动态效果时仍能切换
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6976866Z ok 21 - 减少动态效果时仍能切换
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6986468Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.6996289Z   duration_ms: 9770.799976
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7001315Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7001757Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7002395Z # Subtest: WebGL 不可用时保留可读的备用字标
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7004400Z ok 22 - WebGL 不可用时保留可读的备用字标
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7006093Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7006688Z   duration_ms: 663.443894
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7008727Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7009161Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7009881Z # Subtest: 圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形变输入有效
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7013765Z ok 23 - 圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形变输入有效
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7014305Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7015604Z   duration_ms: 15.261775
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7034836Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:07.7041563Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3199158Z # Subtest: 实际静态根返回 GLB 字节与 MIME，不误用 Next public 路径
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3275229Z ok 24 - 实际静态根返回 GLB 字节与 MIME，不误用 Next public 路径
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3332990Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3376675Z   duration_ms: 446.29107
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3387631Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3454550Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3477780Z # Subtest: 配置、主题、旋转复用真实 WebGL 场景；静止及后台不持续渲染；离页释放
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3535024Z ok 25 - 配置、主题、旋转复用真实 WebGL 场景；静止及后台不持续渲染；离页释放
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3626777Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3633575Z   duration_ms: 53848.684192
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3676744Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3679499Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3680251Z # Subtest: 真实上下文丢失可重试重建，控件与导航在中断后可用
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3680923Z ok 26 - 真实上下文丢失可重试重建，控件与导航在中断后可用
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3681439Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3681890Z   duration_ms: 36124.308424
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3682374Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3682789Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3683401Z # Subtest: HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重试
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3684136Z ok 27 - HTML 伪模型及引擎包失败不会锁住页面，两者均可真实重试
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3684665Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3685088Z   duration_ms: 26032.216065
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3685611Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3686331Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3686860Z # Subtest: 手机圆球交互不带动页面，面板可滚动且颜色仍可选择
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3687509Z ok 28 - 手机圆球交互不带动页面，面板可滚动且颜色仍可选择
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3688423Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3688860Z   duration_ms: 14102.219316
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3689354Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.3689778Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4085267Z # Subtest: 顶部覆盖先于底部，结束精确统一颜色并停止更新
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4106724Z ok 29 - 顶部覆盖先于底部，结束精确统一颜色并停止更新
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4107342Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4126435Z   duration_ms: 1.831579
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4147956Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4148430Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4167238Z # Subtest: 快速换色及动态偏好中断从当前每顶点颜色连续接续
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4197067Z ok 30 - 快速换色及动态偏好中断从当前每顶点颜色连续接续
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4198340Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4218105Z   duration_ms: 0.412841
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4246443Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4246881Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4276689Z # Subtest: 同色恢复复用换色时钟，默认同色选择仍保持闲置
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4277873Z ok 31 - 同色恢复复用换色时钟，默认同色选择仍保持闲置
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4296358Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4316340Z   duration_ms: 0.345461
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4316834Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:08.4336497Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:34.6419290Z # Subtest: 同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:34.6436739Z ok 32 - 同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:34.6471056Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:34.6484661Z   duration_ms: 26400.501369
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:34.6485758Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:34.6490970Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7150297Z # Subtest: 真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7166845Z not ok 33 - 真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7219892Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7220590Z   duration_ms: 13073.6367
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7221029Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7221726Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/orb-color.test.cjs:71:1'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7222455Z   failureType: 'testCodeFailure'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7223155Z   error: 'A real frame shows changed top while bottom retains its previous color'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7223775Z   code: 'ERR_ASSERTION'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7224181Z   name: 'AssertionError'
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7224611Z   expected: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7225002Z   actual: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7225376Z   operator: '=='
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7225753Z   stack: |-
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7226631Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/orb-color.test.cjs:78:10)
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7227619Z     async Test.run (node:internal/test_runner/test:1054:7)
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7228726Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+browser-tests	UNKNOWN STEP	2026-10-22T12:44:47.7229785Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:21.2842020Z # Subtest: 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:21.2903880Z ok 34 - 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:21.2936313Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:21.2975662Z   duration_ms: 33571.105575
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:21.2990862Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:21.3059243Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:45.3048633Z # Subtest: 换色取消键盘、鼠标捏压和正在旋转的owner，旧输入后续事件不会再修改重置模型
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:45.3049711Z ok 35 - 换色取消键盘、鼠标捏压和正在旋转的owner，旧输入后续事件不会再修改重置模型
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:45.3138573Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:45.3210418Z   duration_ms: 24017.687709
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:45.3285864Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:45:45.3366699Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:02.8877791Z # Subtest: 减少动态时换色正确收束，动态偏好切换后可继续换色并停帧
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:02.8878551Z ok 36 - 减少动态时换色正确收束，动态偏好切换后可继续换色并停帧
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:02.8893118Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:02.8906631Z   duration_ms: 17586.007746
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:02.8920376Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:02.8921350Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:26.5727653Z # Subtest: 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：no-preference
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:26.6217799Z ok 37 - 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：no-preference
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:26.6218686Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:26.6240868Z   duration_ms: 23682.907465
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:26.6241679Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:26.6243215Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3218140Z # Subtest: 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：reduce
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3270080Z not ok 38 - 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：reduce
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3306270Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3346594Z   duration_ms: 19742.786891
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3369958Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3422346Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/orb-color.test.cjs:160:58'
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3506570Z   failureType: 'testCodeFailure'
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3546405Z   error: |-
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3598452Z     The expression evaluated to a falsy value:
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3681285Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3746952Z       assert.ok(before.maxDepth > .05)
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3793309Z
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3866726Z   code: 'ERR_ASSERTION'
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3893130Z   name: 'AssertionError'
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.3962828Z   expected: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.4016662Z   actual: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.4076474Z   operator: '=='
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.4148427Z   stack: |-
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.4201477Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/orb-color.test.cjs:171:10)
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.4244840Z     async Test.run (node:internal/test_runner/test:1054:7)
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.4311591Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+browser-tests	UNKNOWN STEP	2026-10-22T12:46:46.4357331Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.3677739Z # Subtest: 新捏压或旋转中断自动复原，快速换色及减少动态切换从当前形态接续
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.3738965Z ok 39 - 新捏压或旋转中断自动复原，快速换色及减少动态切换从当前形态接续
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.3746576Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.3786665Z   duration_ms: 29055.078461
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.3830478Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.3866605Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5217791Z # Subtest: 十色真实GPU：白天首帧和night→day→night提升色度与明度，夜间精确恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5226843Z ok 40 - 十色真实GPU：白天首帧和night→day→night提升色度与明度，夜间精确恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5356687Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5438116Z   duration_ms: 38976.376317
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5485339Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5506503Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5567152Z # Subtest: 主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5577645Z ok 41 - 主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5578149Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5581269Z   duration_ms: 24614.106461
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5607955Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5612438Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5615797Z # Subtest: 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：no-preference
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5622030Z ok 42 - 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：no-preference
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5623152Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5623571Z   duration_ms: 13604.452753
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5624037Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5646286Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5646820Z # Subtest: 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：reduce
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5653128Z ok 43 - 白天换色继续覆盖并收束到正确GPU色值，保留减少动态选择：reduce
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5657314Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5657720Z   duration_ms: 13764.986148
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5658156Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5660286Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5660987Z # Subtest: 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5664731Z ok 44 - 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5665275Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5665683Z   duration_ms: 136.434583
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5666347Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5691996Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5712823Z # Subtest: 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5713582Z ok 45 - 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5714075Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5717336Z   duration_ms: 63.407311
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5720007Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5722928Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5723529Z # Subtest: 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5726881Z ok 46 - 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5747501Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5754535Z   duration_ms: 40.925732
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5769437Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5770656Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5771321Z # Subtest: 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5771973Z ok 47 - 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5772759Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5775562Z   duration_ms: 47.725205
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5778647Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5786548Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5796871Z # Subtest: 释放只回弹15%，每顶点单调且无跳变；减少动态=false
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5803714Z ok 48 - 释放只回弹15%，每顶点单调且无跳变；减少动态=false
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5804691Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5805318Z   duration_ms: 107.514439
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5805900Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5806534Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5807347Z # Subtest: 释放只回弹15%，每顶点单调且无跳变；减少动态=true
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5812351Z ok 49 - 释放只回弹15%，每顶点单调且无跳变；减少动态=true
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5949327Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5992118Z   duration_ms: 119.215583
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.5996374Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6016612Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6023853Z # Subtest: 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6024566Z ok 50 - 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6060665Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6086167Z   duration_ms: 69.369671
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6117767Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6121714Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6122639Z # Subtest: 单次stroke采用最大包络；重复采样与采样密度不会无界叠加
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6124406Z ok 51 - 单次stroke采用最大包络；重复采样与采样密度不会无界叠加
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6128056Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6128563Z   duration_ms: 158.540057
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6130085Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6130986Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6131641Z # Subtest: 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6132312Z ok 52 - 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6134443Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6134857Z   duration_ms: 1728.478322
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6135284Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6135688Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6136464Z # Subtest: 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6137673Z ok 53 - 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6140001Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6140444Z   duration_ms: 1760.653305
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6140911Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6141358Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6141945Z # Subtest: 下一stroke从永久base继续，异处按压不擦除旧路径
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6142969Z ok 54 - 下一stroke从永久base继续，异处按压不擦除旧路径
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6143463Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6145385Z   duration_ms: 112.670611
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6145854Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6146442Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6147176Z # Subtest: 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6147900Z ok 55 - 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6149785Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6155671Z   duration_ms: 87.279113
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6157543Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6159054Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6162508Z # Subtest: 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6163291Z ok 56 - 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6165416Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6173388Z   duration_ms: 59.354722
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6173974Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6176714Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6177360Z # Subtest: 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6193094Z ok 57 - 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6198983Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6199430Z   duration_ms: 63.263408
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6202349Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6202770Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6203408Z # Subtest: 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6211446Z ok 58 - 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6222649Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6228274Z   duration_ms: 60.216001
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6246391Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6256299Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6276799Z # Subtest: 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6280450Z ok 59 - 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6296367Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6296653Z   duration_ms: 65.584653
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6296977Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:15.6297240Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4445877Z # Subtest: 真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；按住时长增强并有界
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4507480Z ok 60 - 真实 GPU 顶点：左、右、上命中局部凹陷，远侧不缩放；按住时长增强并有界
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4519409Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4536413Z   duration_ms: 76429.907537
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4537142Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4556448Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4578225Z # Subtest: 连续拖动、回弹中再次按压、移出松开和键盘操作；缩放主题不重建控制
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4588127Z ok 61 - 连续拖动、回弹中再次按压、移出松开和键盘操作；缩放主题不重建控制
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4605608Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4616479Z   duration_ms: 33810.276079
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4658104Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:47:35.4670340Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:23.4369088Z # Subtest: pointercancel、丢失捕获、窗口失焦、后台和离页均释放输入并保留已完成凹痕
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:23.4403139Z ok 62 - pointercancel、丢失捕获、窗口失焦、后台和离页均释放输入并保留已完成凹痕
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:23.4403790Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:23.4404662Z   duration_ms: 47996.637834
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:23.4405465Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:23.4405827Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:36.6466815Z # Subtest: 真实模拟触摸：圆球拖动不滚页，第二触点不夺取输入，设置面板可滚动
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:36.6512997Z ok 63 - 真实模拟触摸：圆球拖动不滚页，第二触点不夺取输入，设置面板可滚动
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:36.6599460Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:36.6659395Z   duration_ms: 13207.313659
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:36.6695198Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:36.6747784Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:54.4541740Z # Subtest: 减少动态仍有局部反馈，偏好可在按住期间切换并恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:54.4580669Z ok 64 - 减少动态仍有局部反馈，偏好可在按住期间切换并恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:54.4581165Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:54.4581844Z   duration_ms: 17806.980601
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:54.4582299Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:48:54.4582687Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.7138868Z # Subtest: 轻点明显浅于长按；真实GPU长按和重复按压可以超过旧0.30硬上限
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.7166336Z ok 65 - 轻点明显浅于长按；真实GPU长按和重复按压可以超过旧0.30硬上限
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.7176483Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.7186513Z   duration_ms: 25261.078577
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.7206636Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.7226498Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.7982758Z # Subtest: marshmallow real GPU: mouse/touch, frozen release/cancel/blur/background, color takeover, lifecycle and workflow
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.7997145Z not ok 66 - marshmallow real GPU: mouse/touch, frozen release/cancel/blur/background, color takeover, lifecycle and workflow
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8024784Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8027624Z   duration_ms: 120761.630418
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8028120Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8028917Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/orb-marshmallow-browser.test.cjs:4:1'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8029755Z   failureType: 'testCodeFailure'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8030229Z   error: 'Restoration is continuous'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8030666Z   code: 'ERR_ASSERTION'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8031060Z   name: 'AssertionError'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8031448Z   expected: true
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8031813Z   actual: false
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8032170Z   operator: '=='
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8032511Z   stack: |-
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8033226Z     run (/home/runner/work/squishy-studio/squishy-studio/tests/helpers/marshmallow-browser.cjs:152:14)
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8034485Z     async TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/orb-marshmallow-browser.test.cjs:5:3)
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8035450Z     async Test.run (node:internal/test_runner/test:1054:7)
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8036350Z     async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:19.8057756Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4300653Z # Subtest: real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4317054Z ok 67 - real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4396717Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4436547Z   duration_ms: 327.565531
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4456769Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4457081Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4477053Z # Subtest: real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4495729Z ok 68 - real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4499975Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4538157Z   duration_ms: 2477.067462
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4552738Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4556884Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4557612Z # Subtest: explicit restore, interruption, reset and instance isolation
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4558506Z ok 69 - explicit restore, interruption, reset and instance isolation
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4559208Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4559635Z   duration_ms: 9.177075
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4560051Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4560440Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4561182Z # Subtest: measured GLB endpoint/middle curves with and without dwell: density and frame tolerances
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4562285Z ok 70 - measured GLB endpoint/middle curves with and without dwell: density and frame tolerances
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4563002Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4563422Z   duration_ms: 2076.705549
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4564002Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4564382Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4565204Z # Subtest: optical material isolation preserves clay defaults and source, with separate soft fibre response
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4566981Z ok 71 - optical material isolation preserves clay defaults and source, with separate soft fibre response
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4567668Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4568044Z   duration_ms: 61.879123
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4568460Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4568824Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4569709Z # Subtest: real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4587627Z ok 72 - real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4606476Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4606969Z   duration_ms: 231.206425
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4626514Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4630984Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4631845Z # Subtest: deep collapse leaves a small bounded core and repeated strokes cannot drill through it
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4632979Z ok 73 - deep collapse leaves a small bounded core and repeated strokes cannot drill through it
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4633714Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4634125Z   duration_ms: 243.714351
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4634591Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4635010Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4635907Z # Subtest: press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4637310Z ok 74 - press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4639204Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4639699Z   duration_ms: 387.926378
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4640177Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4640585Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4641457Z # Subtest: stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4642699Z ok 75 - stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4643466Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4643867Z   duration_ms: 90.140461
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4644326Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4644726Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4645475Z # Subtest: a stalled render cannot skip the visible press process or consume a whole hold
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4646619Z ok 76 - a stalled render cannot skip the visible press process or consume a whole hold
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4677336Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4677609Z   duration_ms: 5.50309
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4677916Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:49:22.4678179Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:09.4142262Z # Subtest: 普通移动不转；按住留白以真实模型中心连续整圈旋转，松开立即停止
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:09.4165356Z ok 77 - 普通移动不转；按住留白以真实模型中心连续整圈旋转，松开立即停止
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:09.4236941Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:09.4328799Z   duration_ms: 49194.632712
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:09.4377220Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:09.4448165Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:48.7857895Z # Subtest: 球体捏压与设置不触发旋转；已有凹痕跟随刚体旋转且不上传新位置
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:48.7895040Z ok 78 - 球体捏压与设置不触发旋转；已有凹痕跟随刚体旋转且不上传新位置
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:48.7927039Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:48.7959426Z   duration_ms: 39375.530583
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:48.7978307Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:50:48.8066923Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:37.5307677Z # Subtest: 旋转后实际命中对应屏幕侧；取消捏压保持旧痕，旋转中断后可重新拖动
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:37.5346990Z ok 79 - 旋转后实际命中对应屏幕侧；取消捏压保持旧痕，旋转中断后可重新拖动
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:37.5406594Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:37.5496710Z   duration_ms: 48743.429946
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:37.5602840Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:37.5603438Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:49.5309085Z # Subtest: 触屏留白轻触不额外滚动且不转模型，设置面板可原生滚动
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:49.5344898Z ok 80 - 触屏留白轻触不额外滚动且不转模型，设置面板可原生滚动
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:49.5359386Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:49.5366551Z   duration_ms: 11999.865436
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:49.5387652Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:51:49.5406420Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.0707754Z # Subtest: 慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.0762616Z ok 81 - 慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.0827980Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.0907062Z   duration_ms: 84281.254097
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.0967699Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.0986344Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1049881Z # {"firstGpuFrame":{"time":24338.3,"maximum":0.0003043681154702239,"pressed":true},"release":{"before":{"time":29338.2,"maximum":0.12456599758028668,"pressed":true},"after":{"time":29721.5,"maximum":0.0916700388451617,"pressed":false}},"expectedReleaseDepth":0.09167004624969308}
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1090768Z # Subtest: 新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管后全网格自然归零
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1123285Z ok 82 - 新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管后全网格自然归零
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1152985Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1214494Z   duration_ms: 46866.8581
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1218884Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1268909Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1287710Z # {"interruptedGpuDepth":0.15511741034343954,"inputAccepted":"true","immediatePositionError":0}
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1320353Z # Subtest: pointercancel、失焦、后台结束施力；后台暂停且前台连续恢复，离页释放
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1345764Z ok 83 - pointercancel、失焦、后台结束施力；后台暂停且前台连续恢复，离页释放
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1357147Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1362728Z   duration_ms: 39860.82216
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1385747Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:14.1398897Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:40.5905276Z # Subtest: 手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复加速，色卡和页面可用
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:40.5952489Z ok 84 - 手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复加速，色卡和页面可用
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:40.6036112Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:40.6091467Z   duration_ms: 26516.991401
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:40.6160162Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:52:40.6210080Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:53:36.3559643Z # Subtest: 连续切换质感最后选择生效；保留独立棉花糖且所有旧上下文释放
+browser-tests	UNKNOWN STEP	2026-10-22T12:53:36.3612516Z ok 85 - 连续切换质感最后选择生效；保留独立棉花糖且所有旧上下文释放
+browser-tests	UNKNOWN STEP	2026-10-22T12:53:36.3658860Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:53:36.3700266Z   duration_ms: 55769.303583
+browser-tests	UNKNOWN STEP	2026-10-22T12:53:36.3720881Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:53:36.3741190Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.2423672Z # Subtest: 厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，黏土与棉花糖保持原外观
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.2479487Z ok 86 - 厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，黏土与棉花糖保持原外观
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.2526718Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.2556560Z   duration_ms: 138882.735387
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.2596683Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.2656865Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3695696Z # Subtest: 慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与黏土可量测区分
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3737285Z ok 87 - 慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与黏土可量测区分
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3746697Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3796635Z   duration_ms: 414.035343
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3801627Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3818058Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3837197Z # {"firstFrame":0.00030492444779649274,"at100ms":0.0025814551329477217,"at3s":0.2370615528352492,"slowAfter2s":0.04786186994405008,"clayAfter2s":0.3133114409563414}
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3838758Z # Subtest: 厚实哑光外观独立于手感：仅full-matte增厚和加深，默认外观完全保留
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3856743Z ok 88 - 厚实哑光外观独立于手感：仅full-matte增厚和加深，默认外观完全保留
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3876381Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3896442Z   duration_ms: 1.467391
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3916423Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3916925Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3936818Z # Subtest: 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=false
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3956624Z ok 89 - 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=false
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3957177Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3976596Z   duration_ms: 269.027964
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.3996559Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4016451Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4017913Z # {"reduced":false,"stoppedAt":12.783333333333333,"maxFinalStep":0.000009298324584960938,"finalError":0}
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4036957Z # Subtest: 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=true
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4056907Z ok 90 - 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=true
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4076561Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4077048Z   duration_ms: 195.949847
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4096603Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4116535Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4135402Z # {"reduced":true,"stoppedAt":2.05,"maxFinalStep":0.000009715557098388672,"finalError":0}
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4136617Z # Subtest: 驻留起点→滑动→驻留终点：中段浅、松手不造坑，整条路径恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4156712Z ok 91 - 驻留起点→滑动→驻留终点：中段浅、松手不造坑，整条路径恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4176445Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4196364Z   duration_ms: 438.24605
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4216516Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4216996Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4236925Z # {"angles":[-1,0,1],"depths":[0.04708233330886725,0.0019350630149811568,0.12722356308360602]}
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4256867Z # Subtest: 长按后移到新位置，当地首帧与100ms仍缓慢压入，不继承整次按住时长
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4276702Z ok 92 - 长按后移到新位置，当地首帧与100ms仍缓慢压入，不继承整次按住时长
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4277283Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4296508Z   duration_ms: 432.063725
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4316691Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4336373Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4337324Z # Subtest: 连续滑动0.12s无驻留：无均匀深沟、路径连通且完全恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4356663Z ok 93 - 连续滑动0.12s无驻留：无均匀深沟、路径连通且完全恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4376385Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4416621Z   duration_ms: 237.133541
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4436418Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4476309Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4496736Z # Subtest: 连续滑动0.8s无驻留：无均匀深沟、路径连通且完全恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4516571Z ok 94 - 连续滑动0.8s无驻留：无均匀深沟、路径连通且完全恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4556460Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4596371Z   duration_ms: 212.946349
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4616281Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4636378Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4676598Z # Subtest: 连续滑动4s无驻留：无均匀深沟、路径连通且完全恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4696449Z ok 95 - 连续滑动4s无驻留：无均匀深沟、路径连通且完全恢复
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4716532Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4756604Z   duration_ms: 274.054935
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4796519Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4816367Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4836920Z # Subtest: 折返、交叉、重复揉压有界；旧痕和新痕最终共同消失
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4876780Z ok 96 - 折返、交叉、重复揉压有界；旧痕和新痕最终共同消失
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4896372Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4936331Z   duration_ms: 594.61515
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4956304Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.4976345Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5016660Z # Subtest: 深按、长按及多轮多方向按压无残差、不外翻、不越界
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5036520Z ok 97 - 深按、长按及多轮多方向按压无残差、不外翻、不越界
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5076369Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5096377Z   duration_ms: 2823.985592
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5136335Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5156366Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5196776Z # Subtest: 稀疏跨越、同帧重复move不加深；不同刷新与事件密度处于有限误差内
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5216569Z ok 98 - 稀疏跨越、同帧重复move不加深；不同刷新与事件密度处于有限误差内
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5236548Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5276344Z   duration_ms: 1068.626198
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5296340Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5336903Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5357596Z # {"configurations":[{"dt":0.03333333333333333,"hz":30},{"dt":0.016666666666666666,"hz":60},{"dt":0.008333333333333333,"hz":120},{"dt":0.016666666666666666,"hz":10}],"maxCoordinateErrors":[0.0006073713302612305,0,0.0003052949905395508,0.0025894641876220703]}
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5379151Z # Subtest: 显式换色恢复独占时钟；快速重启、取消与输入中断连续接管
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5416709Z ok 99 - 显式换色恢复独占时钟；快速重启、取消与输入中断连续接管
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5436659Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5466448Z   duration_ms: 238.525685
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5506370Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5526345Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5556998Z # Subtest: 取消缓慢恢复；reset清空计时和旧路径；减少动态切换、实例和资产隔离
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5586889Z ok 100 - 取消缓慢恢复；reset清空计时和旧路径；减少动态切换、实例和资产隔离
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5606346Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5656409Z   duration_ms: 533.459384
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5672623Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5696400Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5719355Z # Subtest: PR 检查安装依赖和浏览器并执行完整测试
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5756809Z ok 101 - PR 检查安装依赖和浏览器并执行完整测试
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5778423Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5778731Z   duration_ms: 1.258181
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5779044Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5779339Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5779759Z # Subtest: PR 模板要求范围、验证和回滚信息
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5780174Z ok 102 - PR 模板要求范围、验证和回滚信息
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5780469Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5780723Z   duration_ms: 0.269329
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5781021Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5781271Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5781613Z # Subtest: 原有 Hero 样式文件保持基线原样
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5781998Z ok 103 - 原有 Hero 样式文件保持基线原样
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5782290Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5782538Z   duration_ms: 275.86713
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5782829Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5783088Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5783501Z # Subtest: Hero 后通过原生滚动到达四只独立样例和真实大厅链接
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5783980Z ok 104 - Hero 后通过原生滚动到达四只独立样例和真实大厅链接
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5784314Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5784569Z   duration_ms: 12444.826864
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5784891Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5785148Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5785540Z # Subtest: 大厅直接访问、无尾斜线跳转和浏览器返回均有效
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5786122Z ok 105 - 大厅直接访问、无尾斜线跳转和浏览器返回均有效
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5806797Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5807085Z   duration_ms: 11588.549788
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5807402Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5807669Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5808152Z # Subtest: 昼夜选择跨导航、刷新和返回保持一致，样例过渡可反向连续操作
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5808670Z ok 106 - 昼夜选择跨导航、刷新和返回保持一致，样例过渡可反向连续操作
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5809008Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5809266Z   duration_ms: 28956.971403
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5809587Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5809847Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5810256Z # Subtest: 手机、短屏和横屏：样例未裁切，主入口可触达，没有水平溢出
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5810739Z ok 107 - 手机、短屏和横屏：样例未裁切，主入口可触达，没有水平溢出
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5811059Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5811302Z   duration_ms: 32166.997434
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5811647Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5811898Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5812269Z # Subtest: 样例图片失败时占位尺寸稳定，仍能进入大厅
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5812893Z ok 108 - 样例图片失败时占位尺寸稳定，仍能进入大厅
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5813200Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5813445Z   duration_ms: 12071.499816
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5813745Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5814004Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5814370Z # Subtest: 主题存储被禁用时页面、图片和导航仍可用
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5814768Z ok 109 - 主题存储被禁用时页面、图片和导航仍可用
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5815060Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5815299Z   duration_ms: 11454.353931
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5815601Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:55:55.5815847Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.3721277Z # Subtest: 八种样式登记与静态入口一致；展示ID不进入真实模型登记或配方
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.3783259Z ok 110 - 八种样式登记与静态入口一致；展示ID不进入真实模型登记或配方
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.3814456Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.3888448Z   duration_ms: 993.695607
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.3938612Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.3980836Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.4007934Z # Subtest: 七个新入口均进入真实圆球；刷新、返回原样式、昼夜状态一致
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.4045699Z ok 111 - 七个新入口均进入真实圆球；刷新、返回原样式、昼夜状态一致
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.4067786Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.4084260Z   duration_ms: 173634.638317
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.4098574Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:42.4136601Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:54.2857364Z # Subtest: 占位样式保留五步制作及试捏入口，不改变模板；浏览器返回保留提示
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:54.2906948Z ok 112 - 占位样式保留五步制作及试捏入口，不改变模板；浏览器返回保留提示
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:54.2966845Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:54.3076918Z   duration_ms: 11911.389417
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:54.3108156Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:56:54.3229073Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:22.5160157Z # Subtest: 五种尺寸昼夜大厅无溢出、入口44px；详情提示不重叠；键盘与触屏可进入
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:22.5167293Z ok 113 - 五种尺寸昼夜大厅无溢出、入口44px；详情提示不重叠；键盘与触屏可进入
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:22.5169958Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:22.5170678Z   duration_ms: 148233.946642
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:22.5171156Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:22.5171548Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.6608927Z # Subtest: 缩略图全部失败时仍有名称与完整入口，布局不塌陷；无JavaScript时静态大厅仍可用
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.6637107Z ok 114 - 缩略图全部失败时仍有名称与完整入口，布局不塌陷；无JavaScript时静态大厅仍可用
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.6637540Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.6637815Z   duration_ms: 6142.91912
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.6638166Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.6638428Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7182258Z # Subtest: 详情白天色彩校正可逆，四只样例与大厅玩具在昼夜仍保留原色
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7183477Z ok 115 - 详情白天色彩校正可逆，四只样例与大厅玩具在昼夜仍保留原色
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7184619Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7185122Z   duration_ms: 94576.450331
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7185581Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7186167Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7186930Z # Subtest: 独立面板fixture保留180/120ms、连续反转与关闭立即inert契约
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7187686Z ok 116 - 独立面板fixture保留180/120ms、连续反转与关闭立即inert契约
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7188196Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7188608Z   duration_ms: 8411.422135
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7189039Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7189435Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7190081Z # Subtest: 独立面板fixture响应减少动态并收束正在执行的动画，首页键盘保持即时反馈
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7190782Z ok 117 - 独立面板fixture响应减少动态并收束正在执行的动画，首页键盘保持即时反馈
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7191269Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7191655Z   duration_ms: 6042.312732
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7192095Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7192487Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7193461Z # Subtest: 颜色卡片选中与键盘即时反馈，减少动态下无位移动画且色块遵循共享色表
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7194195Z ok 118 - 颜色卡片选中与键盘即时反馈，减少动态下无位移动画且色块遵循共享色表
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7194682Z   ---
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7195123Z   duration_ms: 32922.479495
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7195562Z   type: 'test'
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7195916Z   ...
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7196492Z 1..118
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7196849Z # tests 118
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7197158Z # suites 0
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7197495Z # pass 115
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7197852Z # fail 3
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7198195Z # cancelled 0
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7198558Z # skipped 0
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7198900Z # todo 0
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7199274Z # duration_ms 1175718.751238
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7331671Z ##[error]Process completed with exit code 1.
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.7452624Z Post job cleanup.
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.8306294Z [command]/usr/bin/git version
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.8379777Z git version 2.55.0
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.8452663Z Temporarily overriding HOME='/home/runner/work/_temp/ec35de0e-8e7d-493c-8267-33386da8a08b' before making global git config changes
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.8482453Z Adding repository directory to the temporary git global config as a safe directory
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.8497367Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/squishy-studio/squishy-studio
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.8546698Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.8597892Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.9052668Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.9142616Z http.https://github.com/.extraheader
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.9166998Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.9229325Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.9727192Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:28.9797342Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:29.0361652Z Cleaning up orphan processes
+browser-tests	UNKNOWN STEP	2026-10-22T12:59:29.0559569Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
