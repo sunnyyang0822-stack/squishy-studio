@@ -1,5 +1,7 @@
 # Issue #26：独立棉花糖
 
+2026-10-23 用户走查确认当前版本保存为预制质感，稳定ID marshmallow。最终完整隔离回归123/123、0失败/跳过、exit 0（local-contact/final-suite.txt 与 final-suite-exit.txt），正常速度录屏更新为即时驻留版且capture passed。预设入口、局部/快划/冻结规则以本文最新章节与orb-feels.md为准。
+
 最新走查追加：保留渐进按压过程，仅将足迹半径从 .66 收紧至 .40。真实GLB单次影响顶点占比低于6%，范围外顶点原样；108组连续轨迹仍沿用原 .065 容差。统一预制入口 getOrbPreset('marshmallow') / createOrbPreview(mount, { presetId: 'marshmallow' }) 已接入，调用与隔离见 orb-feels.md。黏土/慢回弹工厂和材质参数未改变。
 
 2026-10-22，从远端 `origin/main` **959a71901f8f55fb484e6b6ea3578b7969434ed4** 建立 `codex/issue-26-marshmallow`，工作树 `D:/squishy-studio-issue-26`。未操作原工作区中慢回弹执行者的未提交实现、文档或生成文件。此基线的正式制作流程已存在，但没有登记 `slow-rebound` 或其源文件/测试；本次保留 butter 原有 clay 映射，不引入或调整本地慢回弹。关联 #26；#16、#22、#25、#3 保持独立范围。
