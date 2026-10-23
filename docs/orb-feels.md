@@ -27,7 +27,7 @@ const material = preset.createMaterial(sourceMaterial);
 
 注册表为 src/orb-presets.mjs 的不可变 orbPresets；稳定ID clay、marshmallow、slow-rebound。原 { feelId: 'marshmallow' } 仍兼容并取得同一光学工厂，显式feelId/appearanceId优先于preset默认值。shape/styleId不进入手感工厂，因此其他兼容样式无需复制场景即可调用。新版棉花糖足迹半径 .40（原 .66），滑动经过部分仅留下浅痕，停住后的持续加深只作用于当前接触区，历史轨迹逐顶点冻结；单点影响不到6%实际圆球顶点，足迹外顶点逐值不变；中心响应曲线、渐进过程和松手保持不变。
 
-预设可复用不表示任意模型已验证：当前形变适用于现有归一化近圆/椭球网格；比例或非凸新模型应验证足迹尺度、命中和穿面。大厅当前占位形状仍使用已验证圆球，没有新增模型保证。测试 tests/orb-presets.test.cjs 验证预设不可变、未知ID、工厂映射、独立形变和材质隔离。
+预设可复用不表示任意模型已验证：圆球沿原径向分支；本轮七款真实模型通过下述可选几何适配复用已确认工厂。其他比例或非凸模型仍应验证足迹尺度、命中和穿面。测试 tests/orb-presets.test.cjs 验证预设不可变、未知ID、工厂映射、独立形变和材质隔离。
 
 ## 新样式直接复用
 
@@ -68,11 +68,15 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 ## 非球形几何适配（Issue #30）
 
-新七款目前仅使用 `clay`。统一调用 `createOrbPreview(mount, { styleId: 'donut', feelId: 'clay' })`，再走原 `prepare/commit/dispose` 生命周期。样式登记在 `src/squishy-styles.mjs`，与质感登记分开。
+新七款支持 `clay` 和 `marshmallow`，后者明确复用 PR #32 的 `f9c223d87d52d603a721d726b54a0d5568c72956` 渐进局部按压版本。统一调用 `createOrbPreview(mount, { styleId: 'donut', presetId: 'marshmallow' })`（黏土使用 `presetId: 'clay'`），再走原 `prepare/commit/dispose` 生命周期。样式登记在 `src/squishy-styles.mjs`，与质感登记分开。
 
 `src/surface-clay.mjs` 向同一个 `getOrbFeel('clay').createDeformation` 传入可选 `surfaceGeometry`：只提供每顶点几何方向、可压入半径、表面邻域和路径采样。工厂的 `.66` 足迹、`.04` 采样间距、按压强度、5/s 响应、85% 留痕、释放与恢复逻辑未调参；未传此选项的圆球继续执行原分支。等价球空间查询有逐帧相等回归，原圆球测试原样保留。
 
 真实甜甜圈不能采用朝球心的方向或椭球补点，因此此可选几何契约必需。新适配沿真实网格图计算距离，不通过空孔补出球面路径。经每面有向体积验证的星形可参数化表面使用自身原始径向几何；猫爪、甜甜圈使用局部法线、内部厚度、曲率及三角形安全界限，界限只减不增地平滑。恢复始终回到各自原始网格。几何安全边界会影响薄处能压多深，不改变材料时序参数。
+
+棉花糖同样接收可选 `surfaceGeometry`：方向与安全厚度来自真实几何，当前接触区及待处理路径都用真实表面邻域，避免甜甜圈跨孔相互按压。`.40` 足迹、`.04` 路径采样、8/s 响应、2 秒局部压力进程、`.06` 浅滑痕、40ms 单帧保护、停住后下一帧局部加深与旧轨逐值冻结均保留。猫爪的实际位移安全约束只缩减违规三角形关联的新增位移，未改变材料压力或卸载规则。几何安全厚度可能限制薄处最终深度。
+
+`node scripts/check-marshmallow-baseline.cjs` 对固定 PR #32 head 验证正常/减少动态下原圆球逐帧位置、状态与返回值严格相等；七模型 CPU/GPU 用真实 GLB 检查渐进过程、局部驻留、保持与显式恢复，见 `tests/squishy-marshmallow*.test.cjs`。本轮不启用新模型的慢回弹。
 
 这套适配已针对本次资产验证，不承诺任意输入网格都兼容。详细数学前提、已发现的失败案例、视觉证据与有限验证范围见 [独立验证](issue-30-validation.md) 和 [交付说明](issue-30-clay-styles.md)。
 

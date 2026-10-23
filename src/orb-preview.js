@@ -4,7 +4,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { getOrbPreset } from './orb-presets.mjs';
 import { getOrbFeel } from './orb-feels.mjs';
 import { getSquishyStyle } from './squishy-styles.mjs';
-import { createSurfaceClay } from './surface-clay.mjs';
+import { createSurfaceGeometry } from './surface-clay.mjs';
 import { getOrbAppearance } from './orb-appearance.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
@@ -68,7 +68,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     let deformation;
     try {
       deformation = isSurface
-        ? createSurfaceClay(geometry.attributes.position.array, geometry.attributes.normal.array, { indices: geometry.index.array, geometryOptions: style.geometryOptions, reducedMotion: motionPreference.matches })
+        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, style.geometryOptions), reducedMotion: motionPreference.matches })
         : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
     } catch (error) { releaseObject(root); throw error; }
     let renderer;
