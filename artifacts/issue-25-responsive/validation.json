@@ -1,0 +1,231 @@
+{
+  "baseline": "2bf30c3",
+  "integrationBaseline": "5a8350a",
+  "speed": "normal wall time",
+  "physicalPhone": false,
+  "recordings": [
+    {
+      "name": "desktop-mouse",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "mouse",
+      "measurements": [
+        {
+          "stage": "300ms-press",
+          "time": 1113.2000000001863,
+          "maximum": 0.1199490057113807,
+          "changed": 233,
+          "center": [
+            0.019940988259714604,
+            0.31992772580173595,
+            0.9003599402134944
+          ],
+          "uploads": 59,
+          "contexts": 2
+        },
+        {
+          "stage": "exact-rest",
+          "time": 14221.5,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 2319,
+          "contexts": 2
+        },
+        {
+          "stage": "1500ms-press",
+          "time": 15744.80000000028,
+          "maximum": 0.45808662737993344,
+          "changed": 236,
+          "center": [
+            0.019940374246264974,
+            0.31992837321588835,
+            0.9003592749613786
+          ],
+          "uploads": 2510,
+          "contexts": 2
+        },
+        {
+          "stage": "exact-rest",
+          "time": 30073.899999999907,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 4214,
+          "contexts": 2
+        },
+        {
+          "stage": "sliding",
+          "time": 30899.399999999907,
+          "maximum": 0.1992818587205957,
+          "changed": 383,
+          "center": [
+            0.10395176568940712,
+            0.31117816906091084,
+            0.8691643724359316
+          ],
+          "uploads": 4308,
+          "contexts": 2
+        },
+        {
+          "stage": "endpoint-dwell",
+          "time": 32171.899999999907,
+          "maximum": 0.45577054089915897,
+          "changed": 389,
+          "center": [
+            0.2944359519671227,
+            0.30544120842912864,
+            0.8453473048194744
+          ],
+          "uploads": 4473,
+          "contexts": 2
+        },
+        {
+          "stage": "exact-rest",
+          "time": 46096.000000000466,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 5876,
+          "contexts": 2
+        }
+      ]
+    },
+    {
+      "name": "mobile-touch",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "CDP touch emulation",
+      "measurements": [
+        {
+          "stage": "300ms-press",
+          "time": 717.2000000001863,
+          "maximum": 0.1150199713515938,
+          "changed": 233,
+          "center": [
+            0.019917356756678415,
+            0.3199423390575095,
+            0.9003544204671556
+          ],
+          "uploads": 45,
+          "contexts": 2
+        },
+        {
+          "stage": "exact-rest",
+          "time": 13792.400000000373,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 2237,
+          "contexts": 2
+        },
+        {
+          "stage": "1500ms-press",
+          "time": 15321,
+          "maximum": 0.45808812633885865,
+          "changed": 236,
+          "center": [
+            0.019916750123780903,
+            0.3199429902948264,
+            0.9003537474054313
+          ],
+          "uploads": 2423,
+          "contexts": 2
+        },
+        {
+          "stage": "exact-rest",
+          "time": 29471.5,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 4770,
+          "contexts": 2
+        },
+        {
+          "stage": "sliding",
+          "time": 30324.900000000373,
+          "maximum": 0.1992725375998005,
+          "changed": 391,
+          "center": [
+            0.10304097929892754,
+            0.3108760566606832,
+            0.8684828016593416
+          ],
+          "uploads": 4911,
+          "contexts": 2
+        },
+        {
+          "stage": "endpoint-dwell",
+          "time": 31313.200000000186,
+          "maximum": 0.4557765299766894,
+          "changed": 392,
+          "center": [
+            0.2828930775569645,
+            0.3054423800699552,
+            0.8459185816742221
+          ],
+          "uploads": 5082,
+          "contexts": 2
+        },
+        {
+          "stage": "exact-rest",
+          "time": 45243.200000000186,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 7420,
+          "contexts": 2
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.4283.62",
+  "parameters": {
+    "radius": 0.6,
+    "maximumDepth": 0.46,
+    "radialLimit": 0.5,
+    "pressSpeed": 0.45,
+    "dragSpeed": 1.1,
+    "dragThreshold": 0.04,
+    "dragDepth": 0.2,
+    "dragGraceSeconds": 0.12,
+    "pressOnsetSeconds": 0.12,
+    "initialResponse": 1,
+    "contactRampSeconds": 0.1,
+    "contactMemoryDecay": 4,
+    "recoveryRate": 0.8,
+    "reducedRecoveryRate": 5,
+    "convergence": 0.00001,
+    "pathSpacing": 0.035,
+    "maximumContactStep": 0.1
+  }
+}

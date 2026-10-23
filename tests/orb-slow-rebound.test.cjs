@@ -59,7 +59,7 @@ function safe(f) {
   for (let i = 0; i < f.rest.length; i += 3) {
     const before = origin.map((v, k) => f.rest[i + k] - v), after = origin.map((v, k) => f.positions[i + k] - v);
     assert.ok(after.every(Number.isFinite));
-    assert.ok(Math.hypot(...after) >= Math.hypot(...before) * .59999);
+    assert.ok(Math.hypot(...after) >= Math.hypot(...before) * .49999);
     assert.ok(Math.hypot(...after) <= Math.hypot(...before) + 1e-6);
   }
   const indices = modelIndices();
@@ -79,18 +79,18 @@ test('慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与�
   const slow = await fixture(), clay = await fixture(false, 'clay');
   slow.d.begin(front(0)); assert.deepEqual(slow.positions, slow.rest);
   slow.d.step(1 / 60); const first = maximum(slow);
-  assert.ok(first > .0002 && first < .0015);
+  assert.ok(first > .0004 && first < .0007, 'A gentle onset makes the first-frame indentation small');
   advance(slow.d, .1 - 1 / 60); const short = maximum(slow);
-  assert.ok(short > first && short < .007);
-  advance(slow.d, 2.9); const long = maximum(slow);
-  assert.ok(long > .20 && long < .26, 'Strong resistance needs sustained dwell to reach a deep dent');
+  assert.ok(short > .015 && short < .025, '100ms shows the beginning of a gradual press');
+  advance(slow.d, .2); const responsive = maximum(slow);
+  assert.ok(responsive > .10 && responsive < .12, '300ms is visibly indented while the downward process continues');
+  advance(slow.d, 2.7); const long = maximum(slow);
+  assert.ok(long > .44 && long < .46, 'A sustained press continues to a deeper bounded indentation');
   clay.d.begin(front(0)); advance(clay.d, .1);
-  assert.ok(short < maximum(clay) * .6, 'Fresh contact yields more slowly than approved clay');
   advance(clay.d, 2.9);
-  assert.ok(maximum(clay) > long * 1.25);
   slow.d.release(); clay.d.release(); advance(slow.d, 2); advance(clay.d, 2);
-  assert.ok(maximum(clay) > maximum(slow) * 4);
-  t.diagnostic(JSON.stringify({ firstFrame: first, at100ms: short, at3s: long, slowAfter2s: maximum(slow), clayAfter2s: maximum(clay) }));
+  assert.ok(maximum(clay) > maximum(slow) * 3);
+  t.diagnostic(JSON.stringify({ firstFrame: first, at100ms: short, at300ms: responsive, at3s: long, slowAfter2s: maximum(slow), clayAfter2s: maximum(clay) }));
   fullyRecover(slow);
 });
 
@@ -100,6 +100,30 @@ test('厚实哑光外观独立于手感：仅full-matte增厚和加深，默认�
   assert.deepEqual(getOrbAppearance('full-matte'), { id: 'full-matte', scale: [1, 1.06, 1.1], pigmentGain: .94 });
   assert.ok(Object.isFrozen(orbAppearances) && Object.isFrozen(orbAppearances['full-matte'].scale));
   for (const id of ['slow-rebound', 'missing', 'constructor']) assert.throws(() => getOrbAppearance(id), RangeError);
+});
+
+test('反馈修订不改变用户确认的回弹曲线、减少动态恢复或最终收敛', async () => {
+  const { slowReboundParameters: p } = await import('../src/orb-slow-rebound.mjs');
+  assert.equal(p.recoveryRate, .80); assert.equal(p.reducedRecoveryRate, 5);
+  assert.equal(p.convergence, .00001); assert.equal(p.maximumDepth, .46);
+  const f = await fixture(); f.d.begin(front(0)); advance(f.d, .3); f.d.release();
+  const before = maximum(f); advance(f.d, .5);
+  assert.ok(Math.abs(maximum(f) / before - Math.exp(-.8 * .5)) < .000002);
+  fullyRecover(f);
+});
+
+test('按压有平滑起步，120ms后匀速深入，没有先猛陷再缓慢逼近的尾段', async t => {
+  const f = await fixture(); f.d.begin(front(0));
+  advance(f.d, 1 / 60); assert.ok(maximum(f) < .003);
+  advance(f.d, .12 - 1 / 60); const values = [maximum(f)];
+  for (let i = 0; i < 2; i++) { advance(f.d, .05); values.push(maximum(f)); }
+  const increments = values.slice(1).map((value, i) => value - values[i]);
+  assert.ok(increments[0] > .02 && increments[0] < .025);
+  for (const increment of increments) assert.ok(Math.abs(increment - increments[0]) < .000001);
+  advance(f.d, .65); assert.ok(maximum(f) > .35 && maximum(f) < .38);
+  advance(f.d, .4); assert.ok(maximum(f) > .44 && maximum(f) < .46);
+  safe(f); f.d.release(); fullyRecover(f);
+  t.diagnostic(JSON.stringify({ timesMs: [120, 170, 220], values, increments }));
 });
 
 for (const reduced of [false, true]) test(`松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=${reduced}`, async t => {
@@ -126,32 +150,34 @@ for (const reduced of [false, true]) test(`松开初期保持凹陷；每个顶�
 
 test('驻留起点→滑动→驻留终点：中段浅、松手不造坑，整条路径恢复', async t => {
   const f = await fixture(); f.d.begin(front(-1)); advance(f.d, 2.5);
+  const initialDwell = depth(f, front(-1));
   stroke(f, .7); advance(f.d, 1.3);
   const measurements = [-1, 0, 1].map(angle => depth(f, front(angle)));
-  assert.ok(measurements[0] > measurements[1] * 1.4);
+  assert.ok(initialDwell > measurements[1] * 3, 'The initial dwelling contact is deeper; it then recovers while the endpoint is held');
   assert.ok(measurements[2] > measurements[1] * 3);
-  assert.ok(measurements[1] > .001 && measurements[1] < .025);
+  assert.ok(measurements[1] > .03 && measurements[1] < .06, 'The recovered middle stays visible and shallower than the held endpoint');
   const held = f.positions.slice(); f.d.release(); assert.deepEqual(f.positions, held);
   f.d.step(1 / 60); assert.ok(depth(f, front(1)) < measurements[2]);
   t.diagnostic(JSON.stringify({ angles: [-1, 0, 1], depths: measurements }));
   fullyRecover(f);
 });
 
-test('长按后移到新位置，当地首帧与100ms仍缓慢压入，不继承整次按住时长', async () => {
+test('长按后移到新位置，只接收当前帧接触量，不继承旧压深', async () => {
   const f = await fixture(); f.d.begin(front(-1)); advance(f.d, 8);
   assert.equal(depth(f, front(1)), 0);
   f.d.move(front(1)); f.d.step(1 / 60);
-  assert.ok(depth(f, front(1)) < .004);
+  assert.ok(depth(f, front(1)) < .03, 'A sparse cross-surface path does not teleport a full deep press');
   advance(f.d, .1 - 1 / 60);
-  assert.ok(depth(f, front(1)) < .023);
+  assert.ok(depth(f, front(1)) > .085 && depth(f, front(1)) < .11);
   const early = depth(f, front(1)); advance(f.d, 2);
-  assert.ok(depth(f, front(1)) > early * 8);
+  assert.ok(depth(f, front(1)) > early * 1.05);
   f.d.release(); fullyRecover(f);
 });
 
 for (const seconds of [.12, .8, 4]) test(`连续滑动${seconds}s无驻留：无均匀深沟、路径连通且完全恢复`, async () => {
   const f = await fixture(); f.d.begin(front(-1.2)); stroke(f, seconds, -1.2, 1.2);
-  assert.ok(maximum(f) > .0002 && maximum(f) < (seconds === 4 ? .13 : seconds === .8 ? .04 : .015));
+  const limits = seconds === 4 ? [.19, .201] : seconds === .8 ? [.16, .20] : [.02, .03];
+  assert.ok(maximum(f) > limits[0] && maximum(f) < limits[1], 'Visible track remains shallower than a stationary press');
   for (const angle of [-1, -.5, 0, .5, 1]) assert.ok(depth(f, front(angle)) > .0001);
   safe(f); f.d.release(); fullyRecover(f);
 });
@@ -161,7 +187,7 @@ test('折返、交叉、重复揉压有界；旧痕和新痕最终共同消失',
   for (let repeat = 0; repeat < 8; repeat++) {
     stroke(f, .3, -1, 1); stroke(f, .3, 1, -1);
     f.d.move([0, .8, .5]); advance(f.d, .15); f.d.move(front(-1)); advance(f.d, .15);
-    assert.ok(maximum(f) < .20); safe(f);
+    assert.ok(maximum(f) < .46); safe(f);
   }
   f.d.release(); advance(f.d, 1);
   const current = f.positions.slice(); f.d.begin(front(.8)); assert.deepEqual(f.positions, current);
@@ -172,7 +198,7 @@ test('折返、交叉、重复揉压有界；旧痕和新痕最终共同消失',
 test('深按、长按及多轮多方向按压无残差、不外翻、不越界', async () => {
   const f = await fixture();
   for (const point of [front(0), [1, .0175, 0], [-1, .0175, 0], [0, .94, 0], [0, -.905, 0], [0, .0175, -1]]) {
-    f.d.begin(point); advance(f.d, 18); assert.ok(maximum(f) <= .340001); safe(f);
+    f.d.begin(point); advance(f.d, 18); assert.ok(maximum(f) <= .460001); safe(f);
     f.d.release(); fullyRecover(f);
   }
 });
