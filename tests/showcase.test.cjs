@@ -208,6 +208,7 @@ test('四个非圆球样例复用大厅资产，点击加载对应黏土模型�
     const entry = page.getByRole('link', { name: `${style.name}：进入制作流程`, exact: true });
     const figure = page.locator('.sample').filter({ has: entry });
     assert.equal(await figure.locator('img').getAttribute('src'), `/assets/style-thumbnails/${style.id}.svg`);
+    if (style.id === 'flower') assert.match(await figure.locator('img').getAttribute('alt'), /五片饱满花瓣围绕圆润花蕊/);
     assert.match(await figure.locator('figcaption').innerText(), new RegExp(`^${style.name}`));
     await entry.click();
     await assertActualStyle(page, style.id);
