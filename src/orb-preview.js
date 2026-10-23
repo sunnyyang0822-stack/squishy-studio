@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { createOrbMaterial } from './orb-optics.mjs';
+import { getOrbPreset } from './orb-presets.mjs';
 import { getOrbFeel } from './orb-feels.mjs';
 import { getOrbAppearance } from './orb-appearance.mjs';
 import { bindOrbInput } from './orb-input.js';
@@ -22,7 +22,10 @@ function releaseObject(root) {
 
 // One renderer per page. Frames run only while deformation is changing or the
 // viewport needs redrawing. Audio and shell fracture are outside this adapter.
-export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'clay', appearanceId = 'matte' } = {}) {
+export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, feelId, appearanceId } = {}) {
+  const preset = presetId === undefined ? null : getOrbPreset(presetId);
+  feelId ??= preset?.feelId ?? 'clay';
+  appearanceId ??= preset?.appearanceId ?? 'matte';
   const feel = getOrbFeel(feelId);
   const appearance = getOrbAppearance(appearanceId);
   const restingFloor = -.908 * appearance.scale[1];
@@ -109,7 +112,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     // Diffuse, solid surface. Colors share the existing geometry and material;
     // no new GLBs, textures, transparent shells or layered draw calls.
     const sourceMaterial = mesh.material;
-    mesh.material = createOrbMaterial(sourceMaterial, feelId);
+    mesh.material = getOrbPreset(feelId).createMaterial(sourceMaterial);
     sourceMaterial.dispose();
     const colors = new Float32Array(geometry.attributes.position.count * 3);
     const coatingColors = new Float32Array(colors.length);
@@ -128,7 +131,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
     surface.setAttribute('aria-label', feel.id === 'slow-rebound' ? '按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车' : '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
-    if (feelId === 'marshmallow') surface.setAttribute('aria-label', '棉花糖，按住或拖动快速压陷，松开完全保留；空格或回车也可按压，换色可复原');
+    if (feelId === 'marshmallow') surface.setAttribute('aria-label', '棉花糖，按住逐渐局部压陷，滑动留浅痕，松开完全保留；空格或回车也可按压，换色可复原');
     surface.setAttribute('aria-pressed', 'false');
     const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
     root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
@@ -251,7 +254,16 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     function invalidate() {
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
     }
-    current.input = bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin: interruptRestore });
+    current.input = bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin: interruptRestore,
+      beforeRelease() {
+        // Commit pending marshmallow path input while still pressed. A quick
+        // swipe ending between rAF callbacks must not drop its final segment.
+        if (feelId === 'marshmallow' && current.frame) {
+          cancelAnimationFrame(current.frame); current.frame = 0;
+          draw(performance.now());
+        }
+      },
+    });
     const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
     const turn = new THREE.Quaternion(), worldPoint = new THREE.Vector3();

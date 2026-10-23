@@ -1,8 +1,9 @@
-// Independent plastic collapse: monotone response, absolute envelope, frozen unload.
+// Independent local plastic collapse: gradual contact, shallow swept segments, frozen unload.
 export function createMarshmallowDeformation(positions, normals, { reducedMotion = false } = {}) {
   const rest = positions.slice();
   const count = positions.length / 3;
   const offsets = new Float32Array(count), retained = new Float32Array(count), envelope = new Float32Array(count);
+  const contactTime = new Float32Array(count);
   let swept = false;
   const center = [0, 0, 1], targetCenter = [0, 0, 1], pressOrigin = [0, 0, 1];
   const low = [Infinity, Infinity, Infinity], high = [-Infinity, -Infinity, -Infinity];
@@ -24,7 +25,7 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
   function stamp(point) {
     for (let i = 0; i < count; i++) {
       const index = i * 3;
-      const q2 = ((rest[index] - point[0]) ** 2 + (rest[index + 1] - point[1]) ** 2 + (rest[index + 2] - point[2]) ** 2) / (.66 ** 2);
+      const q2 = ((rest[index] - point[0]) ** 2 + (rest[index + 1] - point[1]) ** 2 + (rest[index + 2] - point[2]) ** 2) / (.40 ** 2);
       if (q2 < 1) envelope[i] = Math.max(envelope[i], (1 - q2) ** 2);
     }
   }
@@ -54,11 +55,11 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     }
   }
 
-  function finish() { active = false; retained.set(offsets); envelope.fill(0); held = drag = 0; swept = false; }
+  function finish() { active = false; retained.set(offsets); envelope.fill(0); contactTime.fill(0); held = drag = 0; swept = false; }
   function interruptRestore() { if (restoring) { restoring = false; retained.set(offsets); } }
   return {
     begin(point) {
-      interruptRestore(); retained.set(offsets); envelope.fill(0); active = true; held = drag = 0; swept = false;
+      interruptRestore(); retained.set(offsets); envelope.fill(0); active = true; held = drag = 0; swept = false; contactTime.fill(0);
       copyPoint(center, point); copyPoint(targetCenter, point); copyPoint(pressOrigin, point); stamp(point);
     },
     move(point, distance = 0) {
@@ -89,29 +90,42 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
       if (active) held += dt;
       // A shallow touch yields before a deliberate hold. The .70 safety
       // boundary is approached over separate presses, never a single tap.
-      const strength = .03 + .58 * Math.min(held / 2, 1);
-      const blend = -Math.expm1(-(swept ? 240 : 8) * dt);
+      // Pressure age belongs only to the current footprint, not the historical path.
+      const blend = -Math.expm1(-8 * dt);
       let changed = dirty, moving = false, atRest = true;
       for (let i = 0; i < count; i++) {
-        // Per-stroke envelope uses max, so events and retracing do not stack.
-        // Each new deliberate press takes over the retained shape; remaining
-        // space stiffens smoothly toward the independent safety boundary.
-        const target = retained[i] + (limits[i] - retained[i]) *
-          -Math.expm1(-strength * envelope[i] / Math.max(.001, limits[i]));
+        const index = i * 3;
+        const q2 = ((rest[index] - targetCenter[0]) ** 2 +
+          (rest[index + 1] - targetCenter[1]) ** 2 +
+          (rest[index + 2] - targetCenter[2]) ** 2) / (.40 ** 2);
+        const local = q2 < 1 ? (1 - q2) ** 2 : 0;
+        if (active && dt > 0) contactTime[i] = local > 0 ? contactTime[i] + dt : 0;
+        const localStrength = .03 + .58 * Math.min(contactTime[i] / 2, 1);
+        // Pending swept segments get one shallow stamp. Once the contact leaves,
+        // keep the exact reached depth; dwelling elsewhere cannot deepen them.
+        const pressure = Math.max(localStrength * local, swept ? .06 * envelope[i] : 0);
+        const target = Math.max(offsets[i], retained[i] + (limits[i] - retained[i]) *
+          -Math.expm1(-pressure / Math.max(.001, limits[i])));
         if (active && dt > 0) {
-          const next = offsets[i] + (target - offsets[i]) * blend;
+          // Spatially sampled shallow sweeps must be visible even when input
+          // arrives just before the frame; only this bounded shallow target gets
+          // a minimum exposure. Continued local holding keeps its gradual ramp.
+          const pathBlend = swept && envelope[i] > 0
+            ? Math.max(blend, -Math.expm1(-240 * Math.max(dt, 1 / 60))) : blend;
+          const next = offsets[i] + (target - offsets[i]) * pathBlend;
           const value = Math.abs(target - next) < .00001 ? target : next;
           changed ||= value !== offsets[i]; offsets[i] = value; moving ||= value !== target;
         }
         atRest &&= offsets[i] === 0; // Scene uses this to restore original normals only on an undeformed mesh.
       }
+      if (active && dt > 0) envelope.fill(0);
       if (changed) {
         for (let i = 0; i < count; i++) for (let k = 0; k < 3; k++) {
-          const index = i * 3 + k; positions[index] = rest[index] - directions[index] * offsets[i];
+          const index = i * 3 + k; positions[index] = offsets[i] === 0 ? rest[index] : rest[index] - directions[index] * offsets[i];
         }
         dirty = false;
       }
-      return { changed, atRest, needsFrame: restoring || (active && (moving || held < 2)) };
+      return { changed, atRest, needsFrame: restoring || (active && (moving || held < 2 || contactTime.some(t => t > 0 && t < 2))) };
     },
   };
 }

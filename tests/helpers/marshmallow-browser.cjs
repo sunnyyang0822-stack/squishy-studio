@@ -3,12 +3,19 @@ const { existsSync, mkdirSync, mkdtempSync, unlinkSync, rmdirSync } = require('n
 const { tmpdir } = require('node:os');
 const { join } = require('node:path');
 const { spawn } = require('node:child_process');
+const { createServer } = require('node:net');
 const assert = require('node:assert/strict');
 const { installOrbProbe, meshStats, settled } = require('./orb-probe.cjs');
 module.exports = async function run({ capture = false, folder = 'artifacts/issue-26' } = {}) {
-  const base = 'http://127.0.0.1:4216';
+  const port = await new Promise((resolve, reject) => {
+    const probe = createServer(); probe.on('error', reject);
+    probe.listen(0, '127.0.0.1', () => {
+      const value = probe.address().port; probe.close(() => resolve(value));
+    });
+  });
+  const base = 'http://127.0.0.1:' + port;
   if (capture) mkdirSync(folder, { recursive: true });
-  const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4216' }, stdio: 'ignore' });
+  const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: String(port) }, stdio: 'ignore' });
   let browser;
   const report = { phone: 'CDP native touch emulation; no physical phone tested', observations: [], errors: [] };
   try {
@@ -122,7 +129,26 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
       await send('up'); await freeze('long press', 2200);
       await send('down', at(.24)); await page.waitForTimeout(350);
       for (let i = 1; i <= 18; i++) { await send('move', at(.24 + .52 * i / 18)); await page.waitForTimeout(16); }
-      await page.waitForTimeout(350); await send('up'); await freeze('dwell endpoints and slide', 1400);
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      const beforeDwell = await snapshot();
+      await page.waitForTimeout(800);
+      const afterDwell = await snapshot();
+      const localDwell = await page.evaluate(({ before, after }) => {
+        const rest = window.orbMeshProbe.rest, changed = []; let frozenDented = 0;
+        for (let i = 0; i < rest.length; i += 3) {
+          const delta = Math.hypot(...[0,1,2].map(k => after[i+k] - before[i+k]));
+          if (delta > .00001) changed.push(rest.slice(i,i+3));
+          else if (Math.hypot(...[0,1,2].map(k => before[i+k] - rest[i+k])) > .001) frozenDented++;
+        }
+        let diameter = 0;
+        for (const a of changed) for (const b of changed)
+          diameter = Math.max(diameter, Math.hypot(...a.map((v,k) => v-b[k])));
+        return { changed: changed.length, frozenDented, diameter };
+      }, { before: beforeDwell, after: afterDwell });
+      assert.ok(localDwell.changed > 0 && localDwell.frozenDented > 0, 'Endpoint deepens while departed dents freeze');
+      assert.ok(localDwell.diameter <= .801, 'Only one .40 footprint deepens while holding');
+      report.observations.push({ name, label: 'local endpoint dwell', ...localDwell });
+      await send('up'); await freeze('dwell endpoints and slide', 1400);
       for (const [label, duration, reverse] of [['fast swipe', 100, false], ['long swipe', 700, false], ['retrace kneading', 180, true]]) {
         await send('down', at(.2, .6));
         for (let round = 0; round < (reverse ? 4 : 1); round++) for (let i = 1; i <= 12; i++) {
@@ -175,11 +201,53 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
       await page.locator('[name=color][value=rose]').check(); await page.waitForTimeout(850);
       assert.equal((await meshStats(page)).maximum, 0, 'Explicit color restore completes');
       assert.equal(await page.evaluate(() => window.orbMeshProbe.contexts.length), contextsBefore);
+      // Real pointer ownership, then a sparse move and release in one browser
+      // task: no rAF can run in between. beforeRelease must flush this path.
+      await input.evaluate(el => el.addEventListener('pointerdown', event => {
+        window.marshmallowFastPointer = event.pointerId;
+      }, { once: true, capture: true }));
+      await send('down', at(.25));
+      const end = at(.75);
+      const burst = await page.evaluate(end => {
+        const pointerId = window.marshmallowFastPointer;
+        window.dispatchEvent(new PointerEvent('pointermove', { ...end, clientX:end.x, clientY:end.y, pointerId, isPrimary:true, buttons:1 }));
+        window.dispatchEvent(new PointerEvent('pointerup', { ...end, clientX:end.x, clientY:end.y, pointerId, isPrimary:true, buttons:0 }));
+        const p=window.orbMeshProbe, points=[];
+        for(let i=0;i<p.rest.length;i+=3) {
+          const depth=Math.hypot(...[0,1,2].map(k=>p.positions[i+k]-p.rest[i+k]));
+          if(depth>.0001) points.push({x:p.rest[i],depth});
+        }
+        const low=Math.min(...points.map(p=>p.x)), high=Math.max(...points.map(p=>p.x));
+        const samples=Array.from({length:7},(_,i)=>{
+          const x=low+(high-low)*(.2+.1*i);
+          return Math.max(0,...points.filter(p=>Math.abs(p.x-x)<.06).map(p=>p.depth));
+        });
+        return { changed:points.length, samples, pressed:document.querySelector('.orb-input').getAttribute('aria-pressed') };
+      }, end);
+      await send('up');
+      assert.equal(burst.pressed,'false');
+      assert.ok(burst.changed>100 && burst.samples.every(d=>d>.015), 'Subframe move/release leaves a continuous GPU trail: '+JSON.stringify(burst));
+      report.observations.push({name,label:'sparse move and release in one task',...burst});
+      await freeze('subframe sparse swipe');
       // Carry the selected feel through settings and final play.
       for (let i = 0; i < 4; i++) { await page.locator('.step-next').click(); await page.waitForTimeout(120); }
       await page.waitForSelector('.orb-input'); assert.match(await input.getAttribute('aria-label'), /棉花糖/);
       await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pagehide')));
       await page.waitForFunction(() => window.orbMeshProbe.contexts.every(gl => gl.isContextLost()));
+      // A different style/host can instantiate the ready-to-use preset directly
+      // through the public scene API, with its own material and lifecycle.
+      await page.evaluate(async () => {
+        const { createOrbPreview } = await import('/assets/orb-preview.js');
+        const mount = document.querySelector('.toy-mount');
+        window.marshmallowPresetScene = createOrbPreview(mount, { presetId:'marshmallow' });
+        const handle = await window.marshmallowPresetScene.prepare({color:'mint'}, {signal:new AbortController().signal});
+        handle.commit();
+      });
+      await page.waitForFunction(() => document.querySelector('.orb-input')?.getAttribute('aria-label').includes('棉花糖'));
+      assert.equal(await page.locator('.toy-mount canvas').count(),1);
+      await page.evaluate(() => window.marshmallowPresetScene.dispose());
+      await page.waitForFunction(() => window.orbMeshProbe.contexts.every(gl => gl.isContextLost()));
+      report.observations.push({name,label:'direct marshmallow preset creates independent scene and releases GPU resources'});
       await session?.detach(); await context.close();
       if (capture) { await video.saveAs(`${folder}/${name}.webm`); unlinkSync(await video.path()); rmdirSync(temp); }
     }

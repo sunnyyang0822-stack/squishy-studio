@@ -45,7 +45,10 @@ test('real GLB: fast/slow/long/reversed/crossing paths, sparse events, event den
     }
     const samples = [-1, -.75, -.5, -.25, 0, .25, .5, .75, 1].map(a => depth(f, a));
     assert.ok(Math.min(...samples) > .04, JSON.stringify({ duration, frames, events, samples }));
-    assert.ok(Math.max(...samples) - Math.min(...samples) < .065, JSON.stringify({ duration, frames, events, samples }));
+    // Slow sparse inputs actually dwell between events; local pressure may
+    // deepen those contacted points. A quick uninterrupted sweep stays uniform.
+    if (duration === .1) assert.ok(Math.max(...samples) - Math.min(...samples) < .065, JSON.stringify({ duration, frames, events, samples }));
+    assert.ok(Math.max(...samples) < .5);
     f.d.release(); const snapshot = f.positions.slice(); advance(f.d, 2); assert.deepEqual(f.positions, snapshot);
     for (let repeat = 0; repeat < 15; repeat++) {
       f.d.begin(front(1)); f.d.move(front(-1), 1); f.d.move([0, .94, 0], 1); f.d.move(front(1), 1);
@@ -71,9 +74,15 @@ test('explicit restore, interruption, reset and instance isolation', async () =>
 test('measured GLB endpoint/middle curves with and without dwell: density and frame tolerances', async () => {
   const report = await require('./helpers/marshmallow-metrics.cjs')();
   for (const path of report.paths) {
-    assert.ok(path.maxDifference < .065, JSON.stringify(path));
+    if (path.duration === .1 && path.dwell === 0) assert.ok(path.maxDifference < .065, JSON.stringify(path));
+    assert.ok(path.samples.every(s => s.depth > .04 && s.depth < .5), JSON.stringify(path));
     assert.equal(path.releaseDrift, 0);
-    const sameDuration = report.paths.filter(p => p.duration === path.duration && p.dwell === path.dwell);
+    assert.equal(path.departedTrailDrift, 0, 'Dwell cannot deepen departed trail');
+    if (path.dwell > 0) assert.ok(path.endpointDwellGain > .01);
+    // A dwell is now explicitly local; a sparse stream contains genuine
+    // stationary gaps and must not be forced to deepen the whole trail to match.
+    const sameDuration = path.duration === .1 && path.dwell === 0
+      ? report.paths.filter(p => p.duration === path.duration && p.dwell === 0) : [];
     for (const other of sameDuration) for (let i = 0; i < path.samples.length; i++) {
       assert.ok(Math.abs(path.samples[i].depth - other.samples[i].depth) < .065);
     }
@@ -174,4 +183,47 @@ test('a stalled render cannot skip the visible press process or consume a whole 
   assert.ok(depth(f, 0) > before && depth(f, 0) - before < .02);
   f.d.release(); const frozen = f.positions.slice();
   f.d.step(10); assert.deepEqual(f.positions, frozen);
+});
+
+test('one press is local: outside .40 footprint is unchanged and affected area is under 6 percent', async () => {
+  const f = await fixture(); const point = front(0);
+  f.d.begin(point); advance(f.d, 1); f.d.release();
+  let affected = 0;
+  for (let i = 0; i < f.rest.length; i += 3) {
+    const distance = Math.hypot(...point.map((v, k) => f.rest[i + k] - v));
+    const displaced = Math.hypot(...point.map((_, k) => f.rest[i + k] - f.positions[i + k]));
+    if (displaced > .00001) affected++;
+    if (distance >= .40) assert.deepEqual(f.positions.slice(i, i + 3), f.rest.slice(i, i + 3));
+  }
+  assert.ok(affected / (f.rest.length / 3) < .06);
+  assert.ok(depth(f, 0) > .21 && depth(f, 0) < .26, 'center pressing process retained');
+});
+
+test('dwelling at a slide endpoint deepens only its local footprint; departed trail stays exactly frozen', async () => {
+  const f = await fixture(); f.d.begin(front(-1));
+  for (let i = 1; i <= 20; i++) { f.d.move(front(-1 + i / 10)); f.d.step(.01); }
+  const trail = f.positions.slice(), endBefore = depth(f, 1);
+  advance(f.d, 1.2);
+  let checked = 0;
+  for (let i = 0; i < f.rest.length; i += 3) {
+    const distance = Math.hypot(...front(1).map((v,k) => f.rest[i+k] - v));
+    if (distance >= .40) { assert.deepEqual(f.positions.slice(i,i+3),trail.slice(i,i+3)); checked++; }
+  }
+  assert.ok(checked > 2000);
+  assert.ok(depth(f,1) > endBefore + .15);
+  assert.ok(depth(f,0) > .04 && depth(f,0) < .07);
+  f.d.release(); const frozen=f.positions.slice(); advance(f.d,10); assert.deepEqual(f.positions,frozen);
+});
+
+test('subframe fast sweep is continuous between sparse endpoints without deepening the departed path', async () => {
+  const f=await fixture(); f.d.begin(front(-1)); f.d.move(front(1));
+  assert.deepEqual(f.positions,f.rest);
+  f.d.step(.0001);
+  for(let i=0;i<=16;i++) assert.ok(depth(f,-1+i/8)>.045 && depth(f,-1+i/8)<.07);
+  const before=f.positions.slice();
+  advance(f.d,.8);
+  for(let i=0;i<f.rest.length;i+=3) {
+    if(Math.hypot(...front(1).map((v,k)=>f.rest[i+k]-v))>=.40)
+      assert.deepEqual(f.positions.slice(i,i+3),before.slice(i,i+3));
+  }
 });

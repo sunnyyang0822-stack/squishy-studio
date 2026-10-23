@@ -1,10 +1,11 @@
 // Pointer ownership is independent of rendering and the deformation kernel.
-export function bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin = () => {} }) {
+export function bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin = () => {}, beforeRelease = () => {} }) {
   const events = new AbortController();
   let owner = null, keyboardKey = null, start, last;
   const on = (target, type, listener) => target.addEventListener(type, listener, { signal: events.signal });
   const setPressed = value => surface.setAttribute('aria-pressed', String(value));
   function finish({ immediate = false, preserveShape = false } = {}) {
+    if (owner !== null && !immediate && !preserveShape) beforeRelease();
     const previous = owner;
     owner = null;
     keyboardKey = null;
