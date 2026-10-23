@@ -69,10 +69,16 @@ async function choose(page, index) {
 }
 
 test('真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制', async () => {
-  const page = await open(); await idle(page);
+  const page = await open({}, { clock: true }); await idle(page);
   assert.equal(await page.locator('[name=color]').count(), 10);
+  // Software WebGL can take longer than the whole transition to present one
+  // frame. Advance the existing animation clock one RAF at a time so real
+  // GPU draws observe the wipe, independently of host rendering throughput.
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
   const before = await frame(page), start = await page.evaluate(() => window.orbMeshProbe.pixelFrames.length);
-  await choose(page, 5); await idle(page);
+  await page.locator('[name=color]').nth(5).evaluate(input => input.click());
+  await page.clock.runFor(700);
+  await page.clock.resume(); await idle(page);
   const frames = await page.evaluate(start => window.orbMeshProbe.pixelFrames.slice(start), start);
   assert.ok(frames.every(value => value.top[3] === 255 && value.middle[3] === 255 && value.bottom[3] === 255), 'Samples hit the opaque rendered orb');
   assert.ok(frames.some(value => distance(value.top, before.top) > 12 && distance(value.bottom, before.bottom) < 4), 'A real frame shows changed top while bottom retains its previous color');

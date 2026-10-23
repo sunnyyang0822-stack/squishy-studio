@@ -1,31 +1,49 @@
 // Lazy import keeps settings and retry usable if the engine bundle fails.
 export function createModelPreview(mount, options) {
   let renderer;
-  let rendererFeelId, rendererAppearanceId;
   let disposed = false;
+  let rendererKey;
   let attempt = 0;
+  let revision = 0;
+  const preparing = new Set();
   return {
     async prepare(config, context) {
-      const feelId = config.feelId || options?.feelId || 'clay';
+      const nextFeel = config.feelId || options?.feelId || 'clay';
+      const styleId = config.styleId || options?.styleId || 'orb';
       const appearanceId = config.appearanceId || options?.appearanceId || 'matte';
-      if (renderer && (rendererFeelId !== feelId || rendererAppearanceId !== appearanceId)) {
-        renderer.dispose(); renderer = undefined;
-      }
-      if (!renderer) {
+      const key = `${styleId}:${nextFeel}:${appearanceId}`;
+      const ownRevision = ++revision;
+      let candidate = key === rendererKey ? renderer : undefined;
+      let owned = false, committed = false;
+      if (!candidate) {
         // Failed module fetches are cached by browsers; a retry needs a fresh URL.
         const url = '/assets/orb-preview.js' + (attempt ? `?retry=${attempt}` : '');
         attempt++;
         const module = await import(url);
         if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-        renderer ||= module.createOrbPreview(mount, { ...options, feelId, appearanceId });
-        rendererFeelId = feelId; rendererAppearanceId = appearanceId;
+        if (ownRevision !== revision) throw new DOMException('Aborted', 'AbortError');
+        candidate = module.createOrbPreview(mount, { ...options, feelId: nextFeel, styleId, appearanceId });
+        owned = true; preparing.add(candidate);
       }
-      const handle = await renderer.prepare(config, context);
-      return { ...handle, commit() { handle.commit(); mount.dataset.feelId = feelId; mount.dataset.appearanceId = appearanceId; } };
+      try {
+        const handle = await candidate.prepare(config, context);
+        if (disposed || context.signal.aborted || ownRevision !== revision) throw new DOMException('Aborted', 'AbortError');
+        return {
+          commit() {
+            if (disposed || context.signal.aborted || ownRevision !== revision) return;
+            if (candidate !== renderer) { renderer?.dispose(); renderer = candidate; rendererKey = key; }
+            preparing.delete(candidate); committed = true; handle.commit(); mount.dataset.appearanceId = appearanceId;
+          },
+          dispose() { handle.dispose(); if (owned && !committed) { preparing.delete(candidate); candidate.dispose(); } },
+        };
+      } catch (error) {
+        if (owned) { preparing.delete(candidate); candidate.dispose(); }
+        throw error;
+      }
     },
     stopInput() { renderer?.stopInput?.(); },
     restore() { renderer?.restore?.(); },
-    dispose() { disposed = true; renderer?.dispose(); },
+    dispose() { disposed = true; revision++; renderer?.dispose(); for (const candidate of preparing) candidate.dispose(); preparing.clear(); },
   };
 }
 

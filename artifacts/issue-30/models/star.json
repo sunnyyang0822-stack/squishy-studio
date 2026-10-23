@@ -1,0 +1,26 @@
+{
+  "id": "star",
+  "name": "五角星",
+  "blender": "4.4.0",
+  "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
+  "bboxMin": [
+    -1.1064430475234985,
+    -1.0623714923858643,
+    -0.5486434102058411
+  ],
+  "bboxMax": [
+    1.1064430475234985,
+    1.0623714923858643,
+    0.5486434102058411
+  ],
+  "vertices": 6944,
+  "triangles": 13884,
+  "glbBytes": 251284,
+  "meshes": 1,
+  "primitives": 1,
+  "materials": 1,
+  "closedManifold": true,
+  "externalTextures": false,
+  "feelId": "clay",
+  "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"
+}

@@ -1,0 +1,73 @@
+PR #34: CI test merge included newly delivered origin/main PR #33 (homepage sample links).
+The three failures below still expected orb substitution. Real model loading had already replaced it.
+These are integrated on our own branch; PR #33 itself is not edited.
+
+2026-10-23T04:34:40.8786369Z not ok 43 - 样例图片失败时占位尺寸稳定，样例及大厅入口仍可用
+2026-10-23T04:34:40.8788750Z   ---
+2026-10-23T04:34:40.8789180Z   duration_ms: 10334.480371
+2026-10-23T04:34:40.8789624Z   type: 'test'
+2026-10-23T04:34:40.8790366Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/showcase.test.cjs:142:1'
+2026-10-23T04:34:40.8791330Z   failureType: 'testCodeFailure'
+2026-10-23T04:34:40.8791761Z   error: |-
+2026-10-23T04:34:40.8792473Z     The input did not match the regular expression /甜甜圈造型准备中.*圆球/. Input:
+2026-10-23T04:34:40.8793041Z     
+2026-10-23T04:34:40.8793393Z     ''
+2026-10-23T04:34:40.8793735Z     
+2026-10-23T04:34:40.8794067Z   code: 'ERR_ASSERTION'
+2026-10-23T04:34:40.8794465Z   name: 'AssertionError'
+2026-10-23T04:34:40.8794846Z   expected:
+2026-10-23T04:34:40.8795195Z   actual: ''
+2026-10-23T04:34:40.8795591Z   operator: 'match'
+2026-10-23T04:34:40.8795970Z   stack: |-
+2026-10-23T04:34:40.8796859Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/showcase.test.cjs:156:10)
+2026-10-23T04:34:40.8797770Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-23T04:34:40.8798460Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-23T04:34:40.8799040Z   ...
+2026-10-23T04:34:46.3740317Z # Subtest: 主题存储被禁用时页面、图片和导航仍可用
+2026-10-23T04:34:55.4469740Z not ok 45 - 四个非圆球样例复用大厅资产，点击进入对应圆球代体验并可刷新返回
+2026-10-23T04:34:55.4470635Z   ---
+2026-10-23T04:34:55.4471093Z   duration_ms: 9074.378087
+2026-10-23T04:34:55.4471598Z   type: 'test'
+2026-10-23T04:34:55.4472335Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/showcase.test.cjs:187:1'
+2026-10-23T04:34:55.4473410Z   failureType: 'testCodeFailure'
+2026-10-23T04:34:55.4473982Z   error: |-
+2026-10-23T04:34:55.4474451Z     Expected values to be strictly equal:
+2026-10-23T04:34:55.4475272Z     
+2026-10-23T04:34:55.4475673Z     'cloud' !== 'orb'
+2026-10-23T04:34:55.4480249Z     
+2026-10-23T04:34:55.4481759Z   code: 'ERR_ASSERTION'
+2026-10-23T04:34:55.4482274Z   name: 'AssertionError'
+2026-10-23T04:34:55.4482746Z   expected: 'orb'
+2026-10-23T04:34:55.4483180Z   actual: 'cloud'
+2026-10-23T04:34:55.4483634Z   operator: 'strictEqual'
+2026-10-23T04:34:55.4484059Z   stack: |-
+2026-10-23T04:34:55.4484786Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/showcase.test.cjs:201:12)
+2026-10-23T04:34:55.4485611Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-23T04:34:55.4486327Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-23T04:34:55.4487368Z   ...
+2026-10-23T04:35:05.8971690Z # Subtest: 首页样例支持键盘、触屏及减少动态效果，触控目标至少44像素
+2026-10-23T04:35:05.8973532Z not ok 46 - 首页样例支持键盘、触屏及减少动态效果，触控目标至少44像素
+2026-10-23T04:35:05.8988480Z   ---
+2026-10-23T04:35:05.8989524Z   duration_ms: 10445.549903
+2026-10-23T04:35:05.8990174Z   type: 'test'
+2026-10-23T04:35:05.8991533Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/showcase.test.cjs:219:1'
+2026-10-23T04:35:05.8992444Z   failureType: 'testCodeFailure'
+2026-10-23T04:35:05.8992918Z   error: |-
+2026-10-23T04:35:05.8993332Z     Expected values to be strictly equal:
+2026-10-23T04:35:05.8993753Z     
+2026-10-23T04:35:05.8994113Z     null !== 'paw'
+2026-10-23T04:35:05.8994473Z     
+2026-10-23T04:35:05.8994812Z   code: 'ERR_ASSERTION'
+2026-10-23T04:35:05.8995191Z   name: 'AssertionError'
+2026-10-23T04:35:05.8995564Z   expected: 'paw'
+2026-10-23T04:35:05.8995925Z   actual: ~
+2026-10-23T04:35:05.8996307Z   operator: 'strictEqual'
+2026-10-23T04:35:05.8996976Z   stack: |-
+2026-10-23T04:35:05.8997698Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/showcase.test.cjs:238:12)
+2026-10-23T04:35:05.8998853Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-23T04:35:05.8999543Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-23T04:35:05.9000487Z   ...
+2026-10-23T04:35:07.4699078Z # Subtest: 八种样式登记与静态入口、真实模型登记及配方一致
+2026-10-23T04:39:38.0795511Z # tests 51
+2026-10-23T04:39:38.0797045Z # pass 48
+2026-10-23T04:39:38.0797510Z # fail 3

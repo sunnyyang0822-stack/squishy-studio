@@ -1,0 +1,13 @@
+Command: node --test --test-name-pattern='donut×clay' tests/squishy-styles-browser.test.cjs
+Exit code: 0
+Keyboard hold advances 1100 ms of RAF time through Playwright clock; real GPU probe and original >.02 assertion unchanged. All existing assertion-bearing lines preserved verbatim.
+
+✔ donut×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (13971.3102ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14825.839
