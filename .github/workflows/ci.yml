@@ -29,13 +29,43 @@ jobs:
         run: |
           export PLAYWRIGHT_BROWSER_PATH="$(node -p "require('playwright').chromium.executablePath()")"
           npm run build
-          node --test --test-concurrency=1 --test-shard=${{ matrix.shard }}/4 tests/*.test.cjs
+          files=(tests/*.test.cjs)
+          general=()
+          for file in "${files[@]}"; do
+            if [[ "$file" != tests/squishy-styles-browser.test.cjs ]]; then
+              general+=("$file")
+            fi
+          done
+          node --test --test-concurrency=1 --test-shard=${{ matrix.shard }}/4 "${general[@]}"
+
+  style-cases:
+    name: style-case (${{ matrix.case }})
+    strategy:
+      fail-fast: false
+      matrix:
+        case: [cloud, paw, cylinder, donut, pyramid, flower, star, loading-race]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Run exactly one original style browser test
+        run: |
+          export PLAYWRIGHT_BROWSER_PATH="$(node -p "require('playwright').chromium.executablePath()")"
+          npm run build
+          node scripts/run-style-ci-case.cjs "${{ matrix.case }}"
 
   browser-tests:
     name: browser-tests
-    needs: browser-shards
+    needs: [browser-shards, style-cases]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Require every shard to succeed
-        run: test "${{ needs.browser-shards.result }}" = success
+        run: |
+          test "${{ needs.browser-shards.result }}" = success
+          test "${{ needs.style-cases.result }}" = success
