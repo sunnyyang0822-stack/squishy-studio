@@ -19,4 +19,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm test
+      - name: Run real WebGL tests with full Chromium
+        # Match local Chrome/Edge's new headless mode instead of headless shell.
+        run: |
+          export PLAYWRIGHT_BROWSER_PATH="$(node -p "require('playwright').chromium.executablePath()")"
+          npm test
