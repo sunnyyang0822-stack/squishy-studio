@@ -24,7 +24,7 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
       const page = await context.newPage(), video = page.video();
       page.on('pageerror', e => report.errors.push(e.message));
       page.on('console', m => { if (m.type() === 'error' && /THREE|shader/i.test(m.text())) report.errors.push(m.text()); });
-      await installOrbProbe(page);
+      await installOrbProbe(page, { frames: true });
       await page.goto(base + '/squishy/cloud/');
       await page.waitForFunction(() => window.orbMeshProbe?.positions);
       await page.evaluate(() => document.fonts.ready);
@@ -148,9 +148,29 @@ module.exports = async function run({ capture = false, folder = 'artifacts/issue
       }
       const contextsBefore = await page.evaluate(() => window.orbMeshProbe.contexts.length);
       if (touch) await page.locator('[data-category=coreColor]').click();
-      await page.locator('[name=color][value=mint]').check(); await page.waitForTimeout(90);
-      assert.ok((await meshStats(page)).maximum > 0, 'Restoration is continuous');
-      await send('down', at(.5)); await page.waitForTimeout(100); await send('up');
+      // Catch the actual first restoring upload inside the browser; remote
+      // automation latency must not skip the entire 650ms restoration.
+      await page.evaluate(() => {
+        document.addEventListener('orb-probe-position', event => {
+          const depth = event.detail.maximum;
+          queueMicrotask(() => {
+            const p = window.orbMeshProbe, before = Array.from(p.positions);
+            const surface = document.querySelector('.orb-input'); surface.focus();
+            surface.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+            window.marshmallowRestoreTakeover = {
+              depth, before, after: Array.from(p.positions),
+              pressed: surface.getAttribute('aria-pressed')
+            };
+          });
+        }, { once: true });
+        document.querySelector('[name=color][value=mint]').click();
+      });
+      await page.waitForFunction(() => window.marshmallowRestoreTakeover);
+      const takeover = await page.evaluate(() => window.marshmallowRestoreTakeover);
+      assert.ok(takeover.depth > 0, 'Actual restoration frame remains deformed');
+      assert.deepEqual(takeover.after, takeover.before, 'Input takeover cannot teleport vertices');
+      assert.equal(takeover.pressed, 'true');
+      await page.waitForTimeout(100); await page.keyboard.up('Space');
       await freeze('interrupt explicit color restoration'); assert.ok((await meshStats(page)).maximum > .1);
       await page.locator('[name=color][value=rose]').check(); await page.waitForTimeout(850);
       assert.equal((await meshStats(page)).maximum, 0, 'Explicit color restore completes');
