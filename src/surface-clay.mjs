@@ -271,6 +271,50 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
       radii.set(next);
     }
   }
+  // The padded paw's pressure wave crosses triangle interiors rather than
+  // following only mesh-edge directions. This causal first-order fast marching
+  // approximation stays on connected faces; it cannot jump a toe gap or hole.
+  // Other models and stroke routing retain the original graph search.
+  const waveFaces = depthAxis === undefined ? null : Array.from({ length: count }, () => []);
+  const waveMetrics = waveFaces ? new Float64Array(triangles.length * 9) : null;
+  if (waveFaces) for (let t = 0; t < triangles.length; t++) {
+    const ids = triangles[t];
+    for (let k = 0; k < 3; k++) {
+      waveFaces[ids[k]].push(t);
+      const p = point(ids[k]), a = point(ids[(k + 1) % 3]), b = point(ids[(k + 2) % 3]);
+      const length = distance(a, b);
+      const u = p.reduce((sum, v, axis) => sum + (v - a[axis]) * (b[axis] - a[axis]), 0) / length;
+      const height = Math.sqrt(Math.max(0, distance(p, a) ** 2 - u ** 2));
+      const offset = t * 9 + k * 3;
+      waveMetrics[offset] = length; waveMetrics[offset + 1] = u; waveMetrics[offset + 2] = height;
+    }
+  }
+  function waveNeighborhood(p, radius) {
+    const [seed] = nearest(p), distances = new Float64Array(count).fill(Infinity), settled = new Uint8Array(count), heap = new Heap(), found = [];
+    // Keep the original one-ring source seeding and its subvertex continuity.
+    for (const i of [seed, ...adjacency[seed].keys()]) { const d = distance(p, point(i)); distances[i] = d; heap.push([d, i]); }
+    function offer(i, value) { if (!settled[i] && value < distances[i] && value <= radius) { distances[i] = value; heap.push([value, i]); } }
+    while (heap.items.length) {
+      const [d, i] = heap.pop(); if (d !== distances[i] || settled[i] || d > radius) continue;
+      settled[i] = 1; found.push([i, d]);
+      for (const [j, length] of adjacency[i]) offer(j, d + length);
+      for (const t of waveFaces[i]) {
+        const ids = triangles[t];
+        for (let k = 0; k < 3; k++) {
+          const target = ids[k], a = ids[(k + 1) % 3], b = ids[(k + 2) % 3];
+          if (settled[target] || !settled[a] || !settled[b]) continue;
+          const offset = t * 9 + k * 3, length = waveMetrics[offset], u = waveMetrics[offset + 1], height = waveMetrics[offset + 2];
+          const slope = (distances[b] - distances[a]) / length;
+          if (Math.abs(slope) >= 1) continue;
+          const x = Math.max(0, Math.min(length, u - slope * height / Math.sqrt(1 - slope * slope)));
+          const candidate = distances[a] + slope * x + Math.hypot(x - u, height);
+          // Reject noncausal/obtuse updates; the single-edge fallback remains.
+          if (candidate >= Math.max(distances[a], distances[b])) offer(target, candidate);
+        }
+      }
+    }
+    return found;
+  }
   function nearest(p) {
     let best = Infinity, index = 0;
     for (let i = 0; i < count; i++) { const d = distance(p, point(i)); if (d < best) { best = d; index = i; } }
@@ -290,7 +334,7 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
   return {
     directions, radii, parameterization: starConvex ? 'star-convex' : 'normal-thickness',
     ...(depthAxis !== undefined && !starConvex ? { constrainOffsets: createOffsetSafety(rest, directions, indices) } : {}),
-    neighborhood(p, radius) { return search(p, radius).found; },
+    neighborhood(p, radius) { return waveFaces ? waveNeighborhood(p, radius) : search(p, radius).found; },
     path(from, to, spacing) {
       const straight = distance(from, to); if (straight < spacing) return [to];
       const [target] = nearest(to), result = search(from, straight * 1.6 + spacing * 2, target);
