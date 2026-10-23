@@ -28,8 +28,10 @@ class Heap {
 export function createOffsetSafety(rest, directions, indices) {
   const count = rest.length / 3, faces = new Float64Array(indices.length / 3 * 4);
   const previous = new Float64Array(rest.length), delta = new Float64Array(rest.length);
-  const zeros = new Float32Array(count), trial = new Float32Array(count);
-  const margin = .08001; // Retains the original .08 area margin after float32 upload.
+  const zeros = new Float32Array(count);
+  const incident = Array.from({ length: count }, () => []);
+  const triangleCount = indices.length / 3;
+  const queue = new Int32Array(triangleCount), queued = new Uint8Array(triangleCount), visits = new Uint8Array(triangleCount);
   for (let t = 0; t < indices.length; t += 3) {
     const a = indices[t] * 3, b = indices[t + 1] * 3, c = indices[t + 2] * 3;
     const ux = rest[b] - rest[a], uy = rest[b + 1] - rest[a + 1], uz = rest[b + 2] - rest[a + 2];
@@ -37,23 +39,31 @@ export function createOffsetSafety(rest, directions, indices) {
     const x = uy * vz - uz * vy, y = uz * vx - ux * vz, z = ux * vy - uy * vx;
     const f = t / 3 * 4; faces[f] = x; faces[f + 1] = y; faces[f + 2] = z; faces[f + 3] = x * x + y * y + z * z;
     if (!(faces[f + 3] > 0)) throw new RangeError('Offset safety requires nondegenerate faces');
+    for (let j = 0; j < 3; j++) incident[indices[t + j]].push(t / 3);
   }
-  function segmentLimit(from, to) {
-    for (let i = 0; i < count; i++) for (let k = 0; k < 3; k++) {
+  function segmentLimit(from, to, triangle = -1, margin = .08001) {
+    function prepare(i) { for (let k = 0; k < 3; k++) {
       const j = i * 3 + k; previous[j] = rest[j] - directions[j] * from[i]; delta[j] = -directions[j] * (to[i] - from[i]);
-    }
+    } }
+    if (triangle >= 0) for (let k = 0; k < 3; k++) prepare(indices[triangle * 3 + k]);
+    else for (let i = 0; i < count; i++) prepare(i);
     let limit = 1;
-    for (let t = 0; t < indices.length; t += 3) {
+    const start = triangle < 0 ? 0 : triangle * 3, end = triangle < 0 ? indices.length : start + 3;
+    for (let t = start; t < end; t += 3) {
       const a = indices[t] * 3, b = indices[t + 1] * 3, c = indices[t + 2] * 3, f = t / 3 * 4;
       const ux = previous[b] - previous[a], uy = previous[b + 1] - previous[a + 1], uz = previous[b + 2] - previous[a + 2];
       const vx = previous[c] - previous[a], vy = previous[c + 1] - previous[a + 1], vz = previous[c + 2] - previous[a + 2];
       const dx = delta[b] - delta[a], dy = delta[b + 1] - delta[a + 1], dz = delta[b + 2] - delta[a + 2];
       const ex = delta[c] - delta[a], ey = delta[c + 1] - delta[a + 1], ez = delta[c + 2] - delta[a + 2];
       const nx = faces[f], ny = faces[f + 1], nz = faces[f + 2], area = faces[f + 3];
-      const q0 = (nx * (uy * vz - uz * vy) + ny * (uz * vx - ux * vz) + nz * (ux * vy - uy * vx)) / area - margin;
+      const rawQ0 = (nx * (uy * vz - uz * vy) + ny * (uz * vx - ux * vz) + nz * (ux * vy - uy * vx)) / area - margin;
       const q1 = (nx * (dy * vz - dz * vy + uy * ez - uz * ey) + ny * (dz * vx - dx * vz + uz * ex - ux * ez) + nz * (dx * vy - dy * vx + ux * ey - uy * ex)) / area;
       const q2 = (nx * (dy * ez - dz * ey) + ny * (dz * ex - dx * ez) + nz * (dx * ey - dy * ex)) / area;
-      if (q0 < -2e-6) throw new RangeError('Offset safety received an unsafe previous surface');
+      if (rawQ0 < -2e-6) throw new RangeError('Offset safety received an unsafe previous surface');
+      // Float32 offsets may round an accepted face a fraction below our extra
+      // margin while remaining above .08. A stationary distant face must not
+      // freeze a new, unrelated footprint for that numerical difference.
+      const q0 = Math.max(0, rawQ0);
       const minimumAt = q2 > 0 ? Math.max(0, Math.min(limit, -q1 / (2 * q2))) : limit;
       const value = q0 + minimumAt * (q1 + minimumAt * q2);
       if (value >= 0 || minimumAt === 0) continue;
@@ -69,21 +79,46 @@ export function createOffsetSafety(rest, directions, indices) {
     return limit;
   }
   return function constrainOffsets(from, candidate) {
-    let alpha = segmentLimit(from, candidate);
-    const makeTrial = value => { for (let i = 0; i < count; i++) trial[i] = from[i] + (candidate[i] - from[i]) * value; };
-    makeTrial(alpha);
-    // Every accepted state also has a safe straight route to exact rest. This
-    // makes explicit restoration safe throughout, rather than only at its end.
-    if (segmentLimit(zeros, trial) < 1) {
-      let low = 0, high = alpha;
-      for (let step = 0; step < 20; step++) {
-        const mid = (low + high) / 2; makeTrial(mid);
-        if (segmentLimit(zeros, trial) === 1) low = mid; else high = mid;
+    let proposed = 0;
+    for (let i = 0; i < count; i++) proposed = Math.max(proposed, Math.abs(candidate[i] - from[i]));
+    if (proposed === 0) return 1;
+    queued.fill(1); visits.fill(0);
+    for (let t = 0; t < triangleCount; t++) queue[t] = t;
+    let head = 0, tail = triangleCount;
+    const enqueue = t => { if (!queued[t]) { queued[t] = 1; queue[tail++ % triangleCount] = t; } };
+    while (head < tail) {
+      const t = queue[head++ % triangleCount]; queued[t] = 0;
+      const alpha = segmentLimit(from, candidate, t);
+      const restAlpha = segmentLimit(zeros, candidate, t, .08);
+      if (alpha === 1 && restAlpha === 1) continue;
+      const ids = [indices[t * 3], indices[t * 3 + 1], indices[t * 3 + 2]];
+      const before = ids.map(i => candidate[i]);
+      const assign = value => { for (let k = 0; k < 3; k++) { const i = ids[k]; candidate[i] = from[i] + (before[k] - from[i]) * value; } };
+      let fraction = alpha;
+      assign(fraction);
+      // Each accepted face must also have a safe route to its own rest shape.
+      if (segmentLimit(zeros, candidate, t, .08) < 1) {
+        let low = 0, high = fraction;
+        for (let step = 0; step < 20; step++) {
+          const mid = (low + high) / 2; assign(mid);
+          if (segmentLimit(zeros, candidate, t, .08) === 1) low = mid; else high = mid;
+        }
+        fraction = low; assign(fraction);
       }
-      alpha = low; makeTrial(alpha);
+      // Iterative local corrections can touch a neighbour already checked.
+      // Requeue those faces. A stubborn local cycle freezes only these three
+      // increments; it never scales or freezes a distant new footprint.
+      if (fraction < 1e-5 || ++visits[t] >= 12 || ids.every((i, k) => candidate[i] === before[k])) assign(0);
+      let changed = false;
+      for (let k = 0; k < 3; k++) if (candidate[ids[k]] !== before[k]) {
+        changed = true; for (const face of incident[ids[k]]) enqueue(face);
+      }
+      if (!changed) throw new RangeError('Offset safety could not repair a previously accepted face');
     }
-    candidate.set(trial);
-    return alpha;
+    if (segmentLimit(from, candidate) < 1 || segmentLimit(zeros, candidate, -1, .08) < 1) throw new RangeError('Offset safety did not converge');
+    let accepted = 0;
+    for (let i = 0; i < count; i++) accepted = Math.max(accepted, Math.abs(candidate[i] - from[i]));
+    return Math.min(1, accepted / proposed);
   };
 }
 
