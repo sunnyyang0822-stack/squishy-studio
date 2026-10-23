@@ -25,7 +25,12 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
   assert.ok(roseLight.meanRGB[0] - roseLight.meanRGB[1] > 8, `Rose must actually appear pink: ${roseLight.meanRGB}`);
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
   const [x, y] = contactFor(id);
-  const p = await point(page, x, y); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(1300);
+  const p = await point(page, x, y);
+  const uploadsBeforeHold = await page.evaluate(() => window.styleProbe.uploads);
+  await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(1300);
+  // Software GPU runners may draw only a few frames in 1300 ms. Require real
+  // simulation uploads as well as wall time; keep the original depth bounds.
+  await page.waitForFunction(minimum => window.styleProbe.uploads >= minimum, uploadsBeforeHold + 30, { timeout: 60000 });
   const held = await stats(page);
   assert.ok(held.maximum > .03 && held.maximum < .7, JSON.stringify(held));
   assert.ok(held.changed > 10 && held.changed < held.vertices * .6, 'Local deformation'); assert.ok(held.finite);
