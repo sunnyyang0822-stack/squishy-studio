@@ -87,9 +87,11 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
     await page.locator('[name=color][value=mint]').check(); await page.waitForTimeout(650);
   }
   if (id === 'donut') {
-    await page.locator('.orb-input').focus(); await page.keyboard.down('Space'); await page.waitForTimeout(1100);
+    await page.locator('.orb-input').focus();
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+    await page.keyboard.down('Space'); await page.clock.runFor(1100);
     assert.ok((await stats(page)).maximum > .02, 'Keyboard fallback hits real ring surface instead of empty center');
-    await page.keyboard.up('Space'); await settle(page);
+    await page.keyboard.up('Space'); await page.clock.resume(); await settle(page);
   }
   for (let i = 0; i < 4; i++) await page.locator('.step-next').click();
   await page.waitForSelector('.step-panel[data-step=play]'); await ready(page);
