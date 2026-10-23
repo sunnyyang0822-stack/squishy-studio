@@ -9,7 +9,12 @@ permissions:
   contents: read
 
 jobs:
-  browser-tests:
+  browser-shards:
+    name: browser-shard (${{ matrix.shard }}/4)
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,4 +28,14 @@ jobs:
         # Match local Chrome/Edge's new headless mode instead of headless shell.
         run: |
           export PLAYWRIGHT_BROWSER_PATH="$(node -p "require('playwright').chromium.executablePath()")"
-          npm test
+          npm run build
+          node --test --test-concurrency=1 --test-shard=${{ matrix.shard }}/4 tests/*.test.cjs
+
+  browser-tests:
+    name: browser-tests
+    needs: browser-shards
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every shard to succeed
+        run: test "${{ needs.browser-shards.result }}" = success

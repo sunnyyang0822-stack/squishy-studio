@@ -7,7 +7,13 @@ test('PR 检查安装依赖和浏览器并执行完整测试', () => {
   assert.match(workflow, /pull_request:/);
   assert.match(workflow, /npm ci/);
   assert.match(workflow, /playwright install --with-deps chromium/);
-  assert.match(workflow, /npm test/);
+  assert.match(workflow, /node-version: '22'/);
+  assert.match(workflow, /shard: \[1, 2, 3, 4\]/);
+  assert.match(workflow, /fail-fast: false/);
+  assert.match(workflow, /npm run build\s+node --test --test-concurrency=1 --test-shard=\$\{\{ matrix\.shard \}\}\/4 tests\/\*\.test\.cjs/);
+  assert.match(workflow, /export PLAYWRIGHT_BROWSER_PATH=/);
+  assert.match(workflow, /browser-tests:\s+name: browser-tests\s+needs: browser-shards\s+if: \$\{\{ always\(\) \}\}/);
+  assert.match(workflow, /run: test "\$\{\{ needs\.browser-shards\.result \}\}" = success/);
   assert.doesNotMatch(workflow, /pull_request_target:/);
 });
 
