@@ -17,6 +17,7 @@ after(async () => { await browser?.close(); server?.kill(); });
 for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']) test(`${id}×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放`, async () => {
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   const style = getSquishyStyle(id), page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.clock.install();
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   let modelRequests = 0; page.on('request', r => { if (r.url().endsWith(style.modelUrl)) modelRequests++; });
   const mesh = await installStyleProbe(page, style); await page.goto(`${base}/squishy/cloud/?style=${id}`); await ready(page);
@@ -26,12 +27,16 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
   const [x, y] = contactFor(id);
   const p = await point(page, x, y);
+  // A wall-clock hold can skip most simulation frames on software WebGL.
+  // Keep the original 1300 ms hold, advancing every RAF while actual GPU
+  // uploads and draws complete, independently of host rendering throughput.
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
   const uploadsBeforeHold = await page.evaluate(() => window.styleProbe.uploads);
-  await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(1300);
-  // Software GPU runners may draw only a few frames in 1300 ms. Require real
-  // simulation uploads as well as wall time; keep the original depth bounds.
-  await page.waitForFunction(minimum => window.styleProbe.uploads >= minimum, uploadsBeforeHold + 30, { timeout: 60000 });
+  await page.mouse.move(p.x, p.y); await page.mouse.down();
+  await page.clock.runFor(1300);
   const held = await stats(page);
+  assert.ok(held.uploads - uploadsBeforeHold >= 30, 'The hold executes at least 30 actual position uploads');
+  await page.clock.resume();
   assert.ok(held.maximum > .03 && held.maximum < .7, JSON.stringify(held));
   assert.ok(held.changed > 10 && held.changed < held.vertices * .6, 'Local deformation'); assert.ok(held.finite);
   const remoteNormals = await page.evaluate(center => {
