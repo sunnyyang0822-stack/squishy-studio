@@ -1,5 +1,6 @@
 {
   "baseline": "2bf30c3",
+  "integrationBaseline": "5a8350a",
   "speed": "normal wall time",
   "physicalPhone": false,
   "recordings": [
@@ -13,20 +14,20 @@
       "measurements": [
         {
           "stage": "300ms-press",
-          "time": 1181.5999999996275,
-          "maximum": 0.11748430005365297,
-          "changed": 234,
+          "time": 1113.2000000001863,
+          "maximum": 0.1199490057113807,
+          "changed": 233,
           "center": [
-            0.019940340676663348,
-            0.3199270255043244,
-            0.9003599638169335
+            0.019940988259714604,
+            0.31992772580173595,
+            0.9003599402134944
           ],
-          "uploads": 58,
+          "uploads": 59,
           "contexts": 2
         },
         {
           "stage": "exact-rest",
-          "time": 14274.69999999972,
+          "time": 14221.5,
           "maximum": 0,
           "changed": 0,
           "center": [
@@ -34,25 +35,25 @@
             0,
             0
           ],
-          "uploads": 2203,
+          "uploads": 2319,
           "contexts": 2
         },
         {
-          "stage": "1000ms-press",
-          "time": 15295.799999999814,
-          "maximum": 0.338585769418034,
+          "stage": "1500ms-press",
+          "time": 15744.80000000028,
+          "maximum": 0.45808662737993344,
           "changed": 236,
           "center": [
-            0.019940374624325196,
-            0.3199283716259875,
-            0.9003592762498978
+            0.019940374246264974,
+            0.31992837321588835,
+            0.9003592749613786
           ],
-          "uploads": 2308,
+          "uploads": 2510,
           "contexts": 2
         },
         {
           "stage": "exact-rest",
-          "time": 29062.69999999972,
+          "time": 30073.899999999907,
           "maximum": 0,
           "changed": 0,
           "center": [
@@ -60,38 +61,38 @@
             0,
             0
           ],
-          "uploads": 3737,
+          "uploads": 4214,
           "contexts": 2
         },
         {
           "stage": "sliding",
-          "time": 29905.5,
-          "maximum": 0.3386278952389779,
-          "changed": 394,
+          "time": 30899.399999999907,
+          "maximum": 0.1992818587205957,
+          "changed": 383,
           "center": [
-            0.10968048682937513,
-            0.3104115607335686,
-            0.8671186835763501
+            0.10395176568940712,
+            0.31117816906091084,
+            0.8691643724359316
           ],
-          "uploads": 3832,
+          "uploads": 4308,
           "contexts": 2
         },
         {
           "stage": "endpoint-dwell",
-          "time": 30927.599999999627,
-          "maximum": 0.3369099710442597,
-          "changed": 392,
+          "time": 32171.899999999907,
+          "maximum": 0.45577054089915897,
+          "changed": 389,
           "center": [
-            0.2182833497783194,
-            0.3067722397336303,
-            0.8531907328522397
+            0.2944359519671227,
+            0.30544120842912864,
+            0.8453473048194744
           ],
-          "uploads": 3948,
+          "uploads": 4473,
           "contexts": 2
         },
         {
           "stage": "exact-rest",
-          "time": 44481.09999999963,
+          "time": 46096.000000000466,
           "maximum": 0,
           "changed": 0,
           "center": [
@@ -99,7 +100,7 @@
             0,
             0
           ],
-          "uploads": 5790,
+          "uploads": 5876,
           "contexts": 2
         }
       ]
@@ -114,20 +115,20 @@
       "measurements": [
         {
           "stage": "300ms-press",
-          "time": 707.3999999999069,
-          "maximum": 0.12003898861144445,
-          "changed": 234,
+          "time": 717.2000000001863,
+          "maximum": 0.1150199713515938,
+          "changed": 233,
           "center": [
-            0.01991675276039481,
-            0.31994164664965696,
-            0.9003544440609617
+            0.019917356756678415,
+            0.3199423390575095,
+            0.9003544204671556
           ],
-          "uploads": 59,
+          "uploads": 45,
           "contexts": 2
         },
         {
           "stage": "exact-rest",
-          "time": 13359.399999999907,
+          "time": 13792.400000000373,
           "maximum": 0,
           "changed": 0,
           "center": [
@@ -135,25 +136,25 @@
             0,
             0
           ],
-          "uploads": 2244,
+          "uploads": 2237,
           "contexts": 2
         },
         {
-          "stage": "1000ms-press",
-          "time": 14378.099999999627,
-          "maximum": 0.33858689140469106,
+          "stage": "1500ms-press",
+          "time": 15321,
+          "maximum": 0.45808812633885865,
           "changed": 236,
           "center": [
-            0.019916751224376857,
-            0.3199429950442537,
-            0.9003537452957164
+            0.019916750123780903,
+            0.3199429902948264,
+            0.9003537474054313
           ],
-          "uploads": 2389,
+          "uploads": 2423,
           "contexts": 2
         },
         {
           "stage": "exact-rest",
-          "time": 28002.5,
+          "time": 29471.5,
           "maximum": 0,
           "changed": 0,
           "center": [
@@ -161,38 +162,38 @@
             0,
             0
           ],
-          "uploads": 4737,
+          "uploads": 4770,
           "contexts": 2
         },
         {
           "stage": "sliding",
-          "time": 28824.19999999972,
-          "maximum": 0.33874579836471513,
-          "changed": 394,
+          "time": 30324.900000000373,
+          "maximum": 0.1992725375998005,
+          "changed": 391,
           "center": [
-            0.10230990827868132,
-            0.3111299504321705,
-            0.8689794904769145
+            0.10304097929892754,
+            0.3108760566606832,
+            0.8684828016593416
           ],
-          "uploads": 4883,
+          "uploads": 4911,
           "contexts": 2
         },
         {
           "stage": "endpoint-dwell",
-          "time": 29690.5,
-          "maximum": 0.3371097850545892,
-          "changed": 394,
+          "time": 31313.200000000186,
+          "maximum": 0.4557765299766894,
+          "changed": 392,
           "center": [
-            0.20647565443739774,
-            0.30697381818299174,
-            0.8543218449555987
+            0.2828930775569645,
+            0.3054423800699552,
+            0.8459185816742221
           ],
-          "uploads": 5039,
+          "uploads": 5082,
           "contexts": 2
         },
         {
           "stage": "exact-rest",
-          "time": 43239,
+          "time": 45243.200000000186,
           "maximum": 0,
           "changed": 0,
           "center": [
@@ -200,7 +201,7 @@
             0,
             0
           ],
-          "uploads": 7373,
+          "uploads": 7420,
           "contexts": 2
         }
       ]
@@ -210,11 +211,13 @@
   "browser": "155.0.4283.62",
   "parameters": {
     "radius": 0.6,
-    "maximumDepth": 0.34,
-    "radialLimit": 0.4,
+    "maximumDepth": 0.46,
+    "radialLimit": 0.5,
     "pressSpeed": 0.45,
-    "dragSpeed": 1.8,
+    "dragSpeed": 1.1,
     "dragThreshold": 0.04,
+    "dragDepth": 0.2,
+    "dragGraceSeconds": 0.12,
     "pressOnsetSeconds": 0.12,
     "initialResponse": 1,
     "contactRampSeconds": 0.1,

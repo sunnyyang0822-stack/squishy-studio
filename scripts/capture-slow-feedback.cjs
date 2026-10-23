@@ -11,7 +11,7 @@ const folder = 'artifacts/issue-25-responsive', base = 'http://127.0.0.1:4208';
   fs.mkdirSync(folder, { recursive: true });
   const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4208' }, stdio: 'ignore' });
   let browser;
-  const report = { baseline: '2bf30c3', speed: 'normal wall time', physicalPhone: false, recordings: [], errors: [] };
+  const report = { baseline: '2bf30c3', integrationBaseline: '5a8350a', speed: 'normal wall time', physicalPhone: false, recordings: [], errors: [] };
   try {
     for (let i = 0; i < 60; i++) { try { if ((await fetch(base)).ok) break; } catch {} await new Promise(r => setTimeout(r, 100)); }
     const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
@@ -55,8 +55,8 @@ const folder = 'artifacts/issue-25-responsive', base = 'http://127.0.0.1:4208';
       await send('down', point(.5)); await page.waitForTimeout(300); await measure('300ms-press');
       await page.screenshot({ path: `${folder}/${name}-short-press.png` });
       await send('up'); await recover();
-      await label('持续按住1秒，完整观察约0.8秒下压过程');
-      await send('down', point(.5)); await page.waitForTimeout(1000); await measure('1000ms-press');
+      await label('持续按住1.5秒，观察渐进下压及长按继续压深');
+      await send('down', point(.5)); await page.waitForTimeout(1500); await measure('1500ms-press');
       await page.screenshot({ path: `${folder}/${name}-full-press.png` });
       await send('up'); await recover();
       await label('连续滑动800ms，无端点驻留');
