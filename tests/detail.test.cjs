@@ -360,9 +360,9 @@ test('详情样式和配方直达刷新、五步及浏览器返回保持', async
   await page.goto(base + path + '?style=donut');
   await ready(page);
   assert.equal(await page.getByRole('combobox', { name: '捏捏样式' }).inputValue(), 'donut');
-  assert.equal(await choice(page, '内芯材质', '棉花糖').isDisabled(), true);
+  assert.equal(await choice(page, '内芯材质', '棉花糖').isDisabled(), false);
   assert.equal(await choice(page, '内芯材质', '慢回弹').isDisabled(), true);
-  assert.match(await page.locator('.style-notice').textContent(), /仅支持黏土/);
+  assert.match(await page.locator('.style-notice').textContent(), /支持黏土和棉花糖/);
   await show(page, 'coreColor'); await choice(page, '内芯颜色', '薄荷绿').check();
   await next(page); await choice(page, '外壳颜色', '雾蓝').check();
   await page.reload(); await ready(page);

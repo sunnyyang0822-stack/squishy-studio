@@ -43,11 +43,13 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 ## 非球形几何适配（Issue #30）
 
-新七款目前仅使用 `clay`。统一调用 `createOrbPreview(mount, { styleId: 'donut', feelId: 'clay' })`，再走原 `prepare/commit/dispose` 生命周期。样式登记在 `src/squishy-styles.mjs`，与质感登记分开。
+新七款支持 `clay` 与 `marshmallow`，使用各自已确认工厂；`slow-rebound` 当前仍仅原圆球支持。统一调用 `createOrbPreview(mount, { styleId: 'donut', feelId: 'clay' })`，再走原 `prepare/commit/dispose` 生命周期。样式登记在 `src/squishy-styles.mjs`，与质感登记分开。
 
 `src/surface-clay.mjs` 向同一个 `getOrbFeel('clay').createDeformation` 传入可选 `surfaceGeometry`：只提供每顶点几何方向、可压入半径、表面邻域和路径采样。工厂的 `.66` 足迹、`.04` 采样间距、按压强度、5/s 响应、85% 留痕、释放与恢复逻辑未调参；未传此选项的圆球继续执行原分支。等价球空间查询有逐帧相等回归，原圆球测试原样保留。
 
 真实甜甜圈不能采用朝球心的方向或椭球补点，因此此可选几何契约必需。新适配沿真实网格图计算距离，不通过空孔补出球面路径。经每面有向体积验证的星形可参数化表面使用自身原始径向几何；猫爪、甜甜圈使用局部法线、内部厚度、曲率及三角形安全界限，界限只减不增地平滑。恢复始终回到各自原始网格。几何安全边界会影响薄处能压多深，不改变材料时序参数。
+
+棉花糖工厂同样接收可选 `surfaceGeometry`，直接复用这套方向、局部安全厚度、网格邻域与路径；`.70` 绝对上限、`.76` 安全倍率、360/s 响应、释放/取消完全保留与显式恢复参数均未改变。不传几何适配的原圆球继续走原分支。安全厚度约束可能使薄区域达不到圆球的深度。
 
 这套适配已针对本次资产验证，不承诺任意输入网格都兼容。详细数学前提、已发现的失败案例、视觉证据与有限验证范围见 [独立验证](issue-30-validation.md) 和 [交付说明](issue-30-clay-styles.md)。
 

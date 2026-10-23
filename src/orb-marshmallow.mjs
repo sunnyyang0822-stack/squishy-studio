@@ -1,5 +1,5 @@
 // Independent plastic collapse: monotone response, absolute envelope, frozen unload.
-export function createMarshmallowDeformation(positions, normals, { reducedMotion = false } = {}) {
+export function createMarshmallowDeformation(positions, normals, { reducedMotion = false, surfaceGeometry } = {}) {
   const rest = positions.slice();
   const count = positions.length / 3;
   const offsets = new Float32Array(count), retained = new Float32Array(count), envelope = new Float32Array(count);
@@ -14,13 +14,20 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     const index = i * 3;
     const radial = origin.map((value, k) => rest[index + k] - value);
     const radius = Math.hypot(...radial);
-    limits[i] = radius * .76;
-    for (let k = 0; k < 3; k++) directions[index + k] = radial[k] / Math.max(.001, radius);
+    limits[i] = (surfaceGeometry ? surfaceGeometry.radii[i] : radius) * .76;
+    for (let k = 0; k < 3; k++) directions[index + k] = surfaceGeometry ? surfaceGeometry.directions[index + k] : radial[k] / Math.max(.001, radius);
   }
   let active = false, held = 0, drag = 0, dirty = false, restoring = false;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const copyPoint = (out, point) => { for (let i = 0; i < 3; i++) out[i] = point[i]; };
   function stamp(point) {
+    if (surfaceGeometry) {
+      for (const [i, distance] of surfaceGeometry.neighborhood(point, .66)) {
+        const q2 = distance ** 2 / (.66 ** 2);
+        if (q2 < 1) envelope[i] = Math.max(envelope[i], (1 - q2) ** 2);
+      }
+      return;
+    }
     for (let i = 0; i < count; i++) {
       const index = i * 3;
       const q2 = ((rest[index] - point[0]) ** 2 + (rest[index + 1] - point[1]) ** 2 + (rest[index + 2] - point[2]) ** 2) / (.66 ** 2);
@@ -28,6 +35,10 @@ export function createMarshmallowDeformation(positions, normals, { reducedMotion
     }
   }
   function samplePath(from, to) {
+    if (surfaceGeometry) {
+      for (const point of surfaceGeometry.path(from, to, .04)) stamp(point);
+      return;
+    }
     // Follow the rounded rest surface rather than cutting a chord through its
     // interior. Sparse events still leave a connected path on the visible skin.
     const a = from.map((v, k) => (v - origin[k]) / axes[k]);
