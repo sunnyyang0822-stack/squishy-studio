@@ -25,7 +25,9 @@ test('详情白天色彩校正可逆，四只样例与大厅玩具在昼夜仍�
       await page.evaluate(() => document.fonts.ready);
       // Fixed backing isolates original texture/color from the intended change
       // of environment visible through the SVGs' transparent pixels.
-      await page.addStyleTag({ content: `${selector}{background:#807b87!important} .sample,.sample-art{transform:none!important} .toy-stage:has([data-color-proof]),.sample:has([data-color-proof]){z-index:2147483647!important} [data-color-proof]{position:fixed!important;inset:0 auto auto 0!important;width:192px!important;height:192px!important;z-index:2147483647!important}` });
+      // Geometry normalization is immediate: hover transitions must not animate
+      // the test-only removal of rotation while pixel coordinates are sampled.
+      await page.addStyleTag({ content: `${selector}{background:#807b87!important} .sample,.sample-art{transform:none!important;transition:none!important} .toy-stage:has([data-color-proof]),.sample:has([data-color-proof]){z-index:2147483647!important} [data-color-proof]{position:fixed!important;inset:0 auto auto 0!important;width:192px!important;height:192px!important;z-index:2147483647!important}` });
       const images = await page.locator(selector).all();
       const texturePixels = async image => {
         // A fixed integer pixel position prevents scroll-dependent SVG edge
