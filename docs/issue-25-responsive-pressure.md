@@ -48,6 +48,8 @@
 
 最终完整命令为 `npm test`（含构建），实际结果与退出码见[最终完整输出](../artifacts/issue-25-responsive/tests-final.txt)。16项慢回弹几何/配置测试、7项浏览器测试均保留。不要将中途旧参数的通过结果当成最终参数验证。
 
+最终参数 `pressSpeed=.45 / pressOnsetSeconds=.12 / dragSpeed=1.8` 的完整运行结果为 **120/120通过，失败0、跳过0、退出0**，耗时108.09s。日志同时记录实际GPU首帧`.000519`、真实释放曲线，以及三个阶段的等速增量，和当前最终参数一致。
+
 `node scripts/capture-slow-feedback.cjs` 生成正常速度的鼠标与CDP触屏模拟录屏。包含300ms短按、1秒持续按压（展示约0.8秒下压过程）、连续滑动和终点驻留，每段释放后录到GPU精确归位。手机未做真机验证。
 
 - [桌面鼠标录屏](../artifacts/issue-25-responsive/desktop-mouse.webm)
