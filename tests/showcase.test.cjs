@@ -5,11 +5,12 @@ const { existsSync, readFileSync } = require('node:fs');
 const { chromium } = require('playwright');
 const { createHash } = require('node:crypto');
 
-const base = 'http://127.0.0.1:4176';
+const port = process.env.SHOWCASE_TEST_PORT || '4176';
+const base = `http://127.0.0.1:${port}`;
 let browser;
 let server;
 before(async () => {
-  server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4176' } });
+  server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: port } });
   for (let i = 0; i < 50; i++) {
     try { if ((await fetch(base)).ok) break; } catch {}
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -18,6 +19,19 @@ before(async () => {
   browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (existsSync(edge) ? edge : undefined), headless: true });
 });
 after(async () => { await browser?.close(); server?.kill(); });
+
+async function assertActualStyle(page, id) {
+  await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
+  assert.equal(new URL(page.url()).searchParams.get('style'), id);
+  assert.equal(new URL(page.url()).searchParams.has('preview'), false);
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id);
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'clay');
+  assert.equal(await page.locator('.style-placeholder-note:visible').count(), 0);
+  assert.equal(await page.locator('.style-placeholder-note').textContent(), '');
+  const models = await page.evaluate(() => performance.getEntriesByType('resource')
+    .map(entry => new URL(entry.name).pathname).filter(path => path.endsWith('.glb')));
+  assert.deepEqual([...new Set(models)], [`/assets/models/squishy-${id}.glb`], 'Only the selected real geometry is requested');
+}
 
 const scrollSamples = async page => {
   await page.evaluate(() => document.getElementById('samples').scrollIntoView({ block: 'start' }));
@@ -44,7 +58,7 @@ test('Hero 后通过原生滚动到达四只可进入制作的样例和真实大
   assert.equal(await page.locator('.sample').count(), 4);
   for (const sample of await page.locator('.sample').all()) {
     assert.equal(await sample.locator('a').count(), 1);
-    assert.match(await sample.locator('a').getAttribute('href'), /^\/squishy\/cloud\/\?style=orb&preview=(cloud|paw|donut|flower)$/);
+    assert.match(await sample.locator('a').getAttribute('href'), /^\/squishy\/cloud\/\?style=(cloud|paw|donut|flower)$/);
     assert.equal(await sample.locator('img').getAttribute('loading'), 'lazy');
   }
   const entry = page.getByRole('link', { name: '去合集大厅挑选' });
@@ -152,8 +166,7 @@ test('样例图片失败时占位尺寸稳定，样例及大厅入口仍可用',
   assert.deepEqual(after, before);
   assert.equal(await page.locator('.sample-fallback:visible').count(), 4);
   await page.getByRole('link', { name: '甜甜圈：进入制作流程', exact: true }).click();
-  await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
-  assert.match(await page.locator('.style-placeholder-note').innerText(), /甜甜圈造型准备中.*圆球/);
+  await assertActualStyle(page, 'donut');
   await page.goBack();
   await scrollSamples(page);
   await page.getByRole('link', { name: '去合集大厅挑选' }).click();
@@ -184,7 +197,7 @@ const homeStyles = [
   { id: 'flower', name: '花朵' },
 ];
 
-test('四个非圆球样例复用大厅资产，点击进入对应圆球代体验并可刷新返回', async () => {
+test('四个非圆球样例复用大厅资产，点击加载对应黏土模型并可刷新返回', async () => {
   const page = await browser.newPage({ reducedMotion: 'reduce' });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -197,15 +210,11 @@ test('四个非圆球样例复用大厅资产，点击进入对应圆球代体�
     assert.equal(await figure.locator('img').getAttribute('src'), `/assets/style-thumbnails/${style.id}.svg`);
     assert.match(await figure.locator('figcaption').innerText(), new RegExp(`^${style.name}`));
     await entry.click();
-    await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
-    assert.equal(new URL(page.url()).searchParams.get('style'), 'orb');
-    assert.equal(new URL(page.url()).searchParams.get('preview'), style.id);
+    await assertActualStyle(page, style.id);
     assert.equal(await page.locator('.workflow-progress [data-step=core]').getAttribute('aria-current'), 'step');
-    assert.match(await page.locator('.style-placeholder-note').innerText(), new RegExp(`${style.name}造型准备中.*圆球`));
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
     await page.reload();
-    await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
-    assert.match(await page.locator('.style-placeholder-note').innerText(), new RegExp(style.name));
+    await assertActualStyle(page, style.id);
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'night');
     await page.goBack();
     await scrollSamples(page);
@@ -234,8 +243,7 @@ test('首页样例支持键盘、触屏及减少动态效果，触控目标至�
       assert.equal(focusVisible, true);
       await page.keyboard.press('Enter');
     }
-    await page.locator('.toy-stage[data-state=ready] canvas').waitFor();
-    assert.equal(new URL(page.url()).searchParams.get('preview'), 'paw');
+    await assertActualStyle(page, 'paw');
     await page.close();
   }
 });
