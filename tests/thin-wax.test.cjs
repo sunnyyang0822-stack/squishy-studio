@@ -26,6 +26,10 @@ test('thin wax is a separate closed-volume shell with independently owned color 
   assert.ok(metrics.attachedMinGap > .00399); assert.ok(metrics.maxThicknessError < metrics.tolerance);
   assert.equal(metrics.attachedViolations, 0); assert.equal(metrics.drawCalls, 1);
   assert.ok(metrics.shellTriangles > geometry.index.count / 3 * 2, 'Top, bottom and volumetric boundary walls');
+  for (let k = 0; k < 3; k++) {
+    const outer = shell.geometry.index.array[k], original = geometry.index.array[k];
+    for (let axis = 0; axis < 3; axis++) assert.ok(Math.abs(shell.geometry.attributes.normal.array[outer * 3 + axis] - geometry.attributes.normal.array[original * 3 + axis]) < .000001, 'Smooth outer normals cannot be averaged with perpendicular fracture sidewalls');
+  }
   wax.dispose(); geometry.dispose();
 });
 

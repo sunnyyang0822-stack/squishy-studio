@@ -72,7 +72,7 @@ export function createThinWax({ geometry, color = '#eed3af', clock = () => perfo
     const faces = [], queue = [seed]; assigned[seed] = 1;
     while (queue.length) {
       const f = queue.pop(); faces.push(f);
-      for (const n of adjacency[f]) if (!assigned[n] && faceCenters[n].distanceTo(faceCenters[seed]) < .115 && faceNormals[n].dot(faceNormals[seed]) > .65) { assigned[n] = 1; queue.push(n); }
+      for (const n of adjacency[f]) if (!assigned[n] && faceCenters[n].distanceTo(faceCenters[seed]) < .09 && faceNormals[n].dot(faceNormals[seed]) > .65) { assigned[n] = 1; queue.push(n); }
     }
     const vertices = [...new Set(faces.flatMap(f => Array.from(indices.slice(f * 3, f * 3 + 3))))];
     const contactCenter = new THREE.Vector3(); for (const id of vertices) contactCenter.add(new THREE.Vector3().fromArray(rest, id * 3)); contactCenter.multiplyScalar(1 / vertices.length);
@@ -88,12 +88,20 @@ export function createThinWax({ geometry, color = '#eed3af', clock = () => perfo
       outputIndices.push(a + 1, b + 1, c + 1, c, b, a);
       for (let k = 0; k < 3; k++) { const x = ids[k], y = ids[(k + 1) % 3], key = x < y ? `${x}:${y}` : `${y}:${x}`; if (boundary.has(key)) boundary.delete(key); else boundary.set(key, [x, y]); }
     }
-    for (const [x, y] of boundary.values()) { const a = local.get(x), b = local.get(y); outputIndices.push(a, b, b + 1, a, b + 1, a + 1); }
+    // Boundary walls own their vertices. Sharing them with the outer surface
+    // averages perpendicular normals into every chunk, making wax look faceted.
+    for (const [x, y] of boundary.values()) {
+      const a = records.length, side = [x, y]; side.normal = new THREE.Vector3();
+      records.push({ id: x, layer: 0, patch, side }, { id: y, layer: 0, patch, side }, { id: y, layer: 1, patch, side }, { id: x, layer: 1, patch, side });
+      outputIndices.push(a, a + 1, a + 2, a, a + 2, a + 3);
+    }
     patch.end = records.length;
   }
   const shellGeometry = new THREE.BufferGeometry();
   const positions = new Float32Array(records.length * 3);
+  const shellNormals = new Float32Array(positions.length);
   shellGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage)); shellGeometry.setIndex(outputIndices);
+  shellGeometry.setAttribute('normal', new THREE.BufferAttribute(shellNormals, 3).setUsage(THREE.DynamicDrawUsage));
   const material = new THREE.MeshStandardMaterial({ color, roughness: .63, metalness: 0 });
   const mesh = new THREE.Mesh(shellGeometry, material); mesh.frustumCulled = false;
   const group = new THREE.Group(); group.name = 'Thin_Wax'; group.add(mesh);
@@ -104,9 +112,8 @@ export function createThinWax({ geometry, color = '#eed3af', clock = () => perfo
   function center(patch) { const result = new THREE.Vector3(); for (const id of patch.vertices) result.add(v.fromBufferAttribute(source, id)); return result.multiplyScalar(1 / patch.vertices.length); }
   function crack() {
     if (!contact) return;
-    let nearest, distance = Infinity;
-    for (const patch of patches) if (!patch.detached) { const d = patch.center.distanceTo(contact); if (d < distance) { distance = d; nearest = patch; } }
-    if (nearest && distance < .3) { nearest.cracked = true; dirty = true; }
+    const nearest = patches.filter(p => !p.detached && p.center.distanceTo(contact) < .19).sort((a, b) => a.center.distanceToSquared(contact) - b.center.distanceToSquared(contact));
+    for (const patch of nearest.slice(0, 4)) { patch.cracked = true; dirty = true; }
   }
   function begin(value) { if (disposed) return; active = true; anchor = contact = point(value); since = lastDrop = clock(); crack(); }
   function move(value) {
@@ -147,12 +154,23 @@ export function createThinWax({ geometry, color = '#eed3af', clock = () => perfo
         u.copy(midpoint).sub(base); u.addScaledVector(normal, -u.dot(normal)).multiplyScalar(1 - shrink);
         if (u.length() > .003) u.setLength(.003);
         base.add(u).addScaledVector(normal, config.gap + record.layer * config.thickness).addScaledVector(desired, fraction);
-        positions.set(base.toArray(), r * 3);
+        positions[r * 3] = base.x; positions[r * 3 + 1] = base.y; positions[r * 3 + 2] = base.z;
+        if (record.side) {
+          if (record.id === record.side[0] && record.layer === 0) {
+            const edge = w.fromBufferAttribute(source, record.side[1]).sub(u.fromBufferAttribute(source, record.side[0]));
+            u.fromBufferAttribute(normals, record.side[0]).add(v.fromBufferAttribute(normals, record.side[1])).normalize();
+            record.side.normal.copy(edge).cross(u).normalize();
+          }
+          const n = record.side.normal; shellNormals[r * 3] = n.x; shellNormals[r * 3 + 1] = n.y; shellNormals[r * 3 + 2] = n.z;
+        } else {
+          const sign = record.layer ? 1 : -1;
+          shellNormals[r * 3] = normal.x * sign; shellNormals[r * 3 + 1] = normal.y * sign; shellNormals[r * 3 + 2] = normal.z * sign;
+        }
       }
     }
     // Removed fragments collapse only their own triangles; holes never regrow.
     for (const patch of patches) if (patch.dead) for (let r = patch.start; r < patch.end; r++) positions.set([0, 0, 0], r * 3);
-    shellGeometry.attributes.position.needsUpdate = true; shellGeometry.computeVertexNormals(); dirty = false;
+    shellGeometry.attributes.position.needsUpdate = true; shellGeometry.attributes.normal.needsUpdate = true; dirty = false;
   }
   function step(dt, now = clock()) {
     if (disposed) return { changed: false, needsFrame: false };
@@ -183,7 +201,7 @@ export function createThinWax({ geometry, color = '#eed3af', clock = () => perfo
   function reset() { end(); totalDetached = 0; for (const p of patches) { p.cracked = p.detached = p.dead = false; p.offset.set(0, 0, 0); } dirty = true; sync(); }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, maxThicknessError = 0, samples = 0, violations = 0;
-    for (const patch of patches) if (!patch.detached) for (let r = patch.start; r < patch.end; r += 2) {
+    for (const patch of patches) if (!patch.detached) for (let r = patch.start; r < patch.start + patch.vertices.length * 2; r += 2) {
       const id = records[r].id, normal = new THREE.Vector3().fromBufferAttribute(normals, id).normalize();
       const inner = new THREE.Vector3().fromArray(positions, r * 3), outer = new THREE.Vector3().fromArray(positions, (r + 1) * 3);
       const gap = inner.clone().sub(v.fromBufferAttribute(source, id)).dot(normal);
