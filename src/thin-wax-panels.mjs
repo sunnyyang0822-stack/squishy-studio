@@ -100,7 +100,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   shell.setAttribute('position', new THREE.BufferAttribute(output, 3).setUsage(THREE.DynamicDrawUsage));
   shell.setAttribute('normal', new THREE.BufferAttribute(outputNormals, 3).setUsage(THREE.DynamicDrawUsage)); shell.setIndex(indices);
   const colors = new Float32Array(output.length);
-  for (let r = 0; r < records.length; r++) { const shade = records[r].edge ? .78 : records[r].layer ? 1 : .88; colors.fill(shade, r * 3, r * 3 + 3); }
+  for (let r = 0; r < records.length; r++) { const shade = records[r].edge ? .69 : records[r].layer ? 1 : .85; colors.fill(shade, r * 3, r * 3 + 3); }
   shell.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   const material = new THREE.MeshStandardMaterial({ color, roughness: .64, metalness: 0, vertexColors: true });
   const mesh = new THREE.Mesh(shell, material); mesh.frustumCulled = false;
@@ -264,7 +264,6 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         if (panel.detached) continue;
         panel.cracked = panel.detached = true; panel.born = now; panel.burst = burst; totalDetached++; stroke.detachCount++; dirty = true; lastDamageTime = now;
         panel.outward.set(0, 0, 0); for (const vertex of panel.vertices) panel.outward.add(map(vertex, normals, vec())); panel.outward.normalize();
-        panel.burstTangent = gravity.clone().cross(panel.outward).normalize().multiplyScalar(b % 2 ? 1 : -1);
       }
     }
     if (active && now - since > config.dwell && !stroke.fractured) {
@@ -280,7 +279,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     // Additional chips require *new core strain*. A stationary held timer may
     // finish the crack wave but cannot empty the contact footprint piece by piece.
-    if (active && stroke.fractured && stroke.reserve && now - since > 1.35 && depth() - stroke.baselineDepth > config.extraFractureStrain && stroke.detachCount < config.maxLocalFragments) {
+    if (active && stroke.fractured && stroke.reserve && now - since > 1.15 && depth() - stroke.baselineDepth > config.extraFractureStrain && stroke.detachCount < config.maxLocalFragments) {
       detach([stroke.reserve], false); stroke.reserve = null;
     }
     let living = false;
@@ -296,14 +295,14 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       dirty = living = true; const age = Math.max(0, now - panel.born);
       if (age >= config.lifetime) panel.dead = true;
       else {
-        panel.offset.copy(panel.outward).multiplyScalar(.012 + (reducedMotion ? .018 : .065) * (1 - Math.exp(-age / .035))).addScaledVector(gravity, (reducedMotion ? .08 : .34) * age * age);
-        if (panel.burst) panel.offset.addScaledVector(panel.burstTangent, (reducedMotion ? .014 : .05) * (1 - Math.exp(-age / .035)));
+        // Separation clears the fracture wall; gravity, not an outward impulse, carries the chip.
+        panel.offset.copy(panel.outward).multiplyScalar(.004 + (reducedMotion ? .004 : .012) * (1 - Math.exp(-age / .06))).addScaledVector(gravity, (reducedMotion ? .12 : 1.2) * age * age);
       }
     }
     const changed = dirty; if (changed) sync(); return { changed, needsFrame: active || living };
   }
   function reset() { end(); totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = false; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
-  function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead).length, expired: panels.filter(p => p.dead).length, firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: reducedMotion ? .51 : 1.86, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: 3, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
+  function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead).length, expired: panels.filter(p => p.dead).length, firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: reducedMotion ? .067 : .2, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: 3, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, minSigned = Infinity, maxThicknessError = 0, attachedSamples = 0, attachedSurfaceSamples = 0, attachedViolations = 0, detachedSamples = 0, detachedInteriorSamples = 0, detachedMin = Infinity, detachedViolations = 0, wallSamples = 0;
     const normal = vec(), sourcePoint = vec();

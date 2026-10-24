@@ -1,8 +1,9 @@
-Runtime bundle SHA-256: 1716243347dbfd9b01fb6a4f0d1bf8b000ab17065dc03b7f4d31d93228fd2f11
-npm run build: exit code 0
-node scripts/capture-thin-wax.cjs --capture-only: exit code 0; stdout in capture-output.txt
-node scripts/capture-thin-wax.cjs --performance-only: exit code 0; stdout was empty
-Independent performance summary extracted from validation.json: {"samples":688,"medianMs":5.7000000001862645,"p95Ms":7,"maximumMs":14.5,"maximumCountJump":1,"measurement":"MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
-node --test tests/thin-wax.test.cjs: exit code 0; 15/15; original executed tool output saved in geometry-dbe706e-node-test.txt (not a new run)
-Final complete suite: in progress, parent agent will append exact results.
-Visual acceptance: pending user review; no PR merge authorized.
+Runtime bundle SHA-256: e2f01ab3933c86e37c5ac114d7bdd0ef0b5236824908ad20784fb52fcb48124b
+npm run build:orb: exit 0
+node --test tests/thin-wax.test.cjs tests/orb-shell-input.test.cjs: 17/17, exit 0, 52249.3796ms
+node --test tests/thin-wax-browser.test.cjs: 6/6, exit 0, 43103.0642ms
+node scripts/capture-thin-wax.cjs --capture-only: exit 0
+node scripts/capture-thin-wax.cjs --performance-only: exit 0
+Performance: {"samples": 649, "medianMs": 5.900000000372529, "p95Ms": 8.400000000372529, "maximumMs": 15.100000000558794, "maximumCountJump": 1, "measurement": "MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
+Prior commit 330500a full suite: 239/239 exit 0; not rerun for this parameter refinement.
+Visual acceptance pending user review. PR remains draft.

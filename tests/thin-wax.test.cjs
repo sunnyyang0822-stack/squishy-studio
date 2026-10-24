@@ -22,7 +22,7 @@ test('thin wax is a separate closed-volume shell with independently owned color 
   const shell = wax.group.children[0];
   assert.notEqual(shell.geometry, geometry); assert.equal(shell.material.color.getHexString(), 'ffeeaa');
   const metrics = wax.getMetrics();
-  assert.equal(metrics.thickness, .008); assert.equal(metrics.gap, .004);
+  assert.equal(metrics.thickness, .014); assert.equal(metrics.gap, .004);
   assert.ok(metrics.attachedMinGap > .00399); assert.ok(metrics.maxThicknessError < metrics.tolerance);
   assert.equal(metrics.attachedViolations, 0); assert.equal(metrics.drawCalls, 1);
   assert.ok(metrics.shellTriangles > geometry.index.count / 3 * 2, 'Top, bottom and volumetric boundary walls');
@@ -40,15 +40,33 @@ test('actual continuous dwell exceeds one second; one brittle local wave retains
   f.advance(.999); assert.equal(f.wax.getState().detached, 0);
   f.advance(.001); assert.equal(f.wax.getState().detached, 0);
   f.advance(.001); const initial = f.wax.getState(); assert.ok(initial.detached >= 1 && initial.detached <= 3); assert.equal(initial.firstBurst, initial.detached);
-  assert.ok(initial.burstInitialOutwardSpeed > 1);
+  assert.ok(initial.burstInitialOutwardSpeed <= .2, 'No outward ejection impulse');
   assert.ok(initial.localDamaged >= 6); assert.ok(initial.localRetainedFraction >= .6);
   f.advance(.14); const afterImpulse = f.wax.getState();
-  assert.ok(afterImpulse.maxOutwardOffset > initial.maxOutwardOffset + .03, 'Brief chip release, no sustained outward propulsion');
+  assert.ok(afterImpulse.maxOutwardOffset < .04, 'Small clearance plus projected gravity, no outward ejection');
   f.advance(.30); assert.equal(f.wax.getState().detached, initial.detached, 'Held clock alone must not eject another plate');
   assert.ok(f.wax.getState().detached < f.wax.getMetrics().patches / 20, 'Local chips, not whole-shell explosion');
   f.wax.end(); const count = f.wax.getState().detached; f.advance(5);
   assert.equal(f.wax.getState().detached, count); assert.equal(f.wax.getState().living, 0);
   f.wax.dispose();
+});
+
+test('released wax chips fall promptly under gravity instead of ejecting sideways', async () => {
+  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(1.001);
+  const before = f.wax.getSurfaceSnapshot();
+  const panel = before.panelIds[before.detached.findIndex(Boolean)];
+  f.wax.end(); f.advance(.4);
+  const after = f.wax.getSurfaceSnapshot(); let count = 0, down = 0, sideways = 0;
+  for (let r = 0; r < before.layers.length; r++) if (before.panelIds[r] === panel && before.layers[r] === 0) {
+    down += before.positions[r * 3 + 1] - after.positions[r * 3 + 1];
+    sideways += Math.abs(after.positions[r * 3] - before.positions[r * 3]); count++;
+  }
+  assert.ok(count > 20);
+  assert.ok(down / count > .1, `Prompt downward fall: ${down / count}`);
+  assert.ok(sideways / count < .05, `No sideways pop: ${sideways / count}`);
+  const metrics = f.wax.getMetrics({ exhaustive: true });
+  assert.equal(metrics.detachedViolations, 0); assert.equal(metrics.attachedViolations, 0);
+  f.wax.dispose(); f.geometry.dispose();
 });
 
 test('short taps, cancellation, hit loss and sliding cannot borrow previous dwell time', async () => {
