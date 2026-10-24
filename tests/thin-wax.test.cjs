@@ -35,9 +35,9 @@ test('thin wax is a separate closed-volume shell with independently owned color 
   wax.dispose(); geometry.dispose();
 });
 
-test('actual continuous dwell exceeds one second; one brittle local wave retains most plates and releases only a few small chips', async () => {
+test('actual continuous dwell exceeds 0.7 seconds; one brittle local wave retains most plates and releases only a few small chips', async () => {
   const f = await fixture(); f.begin();
-  f.advance(.999); assert.equal(f.wax.getState().detached, 0);
+  f.advance(.699); assert.equal(f.wax.getState().detached, 0);
   f.advance(.001); assert.equal(f.wax.getState().detached, 0);
   f.advance(.001); const initial = f.wax.getState(); assert.ok(initial.detached >= 1 && initial.detached <= 3); assert.equal(initial.firstBurst, initial.detached);
   assert.ok(initial.burstInitialOutwardSpeed <= .2, 'No outward ejection impulse');
@@ -52,7 +52,7 @@ test('actual continuous dwell exceeds one second; one brittle local wave retains
 });
 
 test('released wax chips fall promptly under gravity instead of ejecting sideways', async () => {
-  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(1.001);
+  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(.701);
   const before = f.wax.getSurfaceSnapshot();
   const panel = before.panelIds[before.detached.findIndex(Boolean)];
   f.wax.end(); f.advance(.4);
@@ -91,7 +91,7 @@ test('actual clay dent and dragged deformation all receive local crack geometry 
     assert.ok(region.slit > .00025, `Panel ${id} must visibly separate along an edge, not just carry a damage flag: ${region.slit}`);
   }
   assert.ok(deformed >= 6, `Exercise the dent rim and dragged trail, not just the clicked cell: ${deformed}`);
-  assert.equal(f.wax.getState().detached, 0, 'Visible deformation cracks do not bypass the one-second fragment threshold');
+  assert.equal(f.wax.getState().detached, 0, 'Visible deformation cracks do not bypass the 0.7-second fragment threshold');
   f.wax.end(); const stopped = f.wax.getState().cracked;
   f.deformation.release(); f.baseline.release(); frames(f, 20);
   assert.equal(f.wax.getState().cracked, stopped, 'No damage propagation after release');
@@ -100,13 +100,13 @@ test('actual clay dent and dragged deformation all receive local crack geometry 
 });
 
 test('additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone', async () => {
-  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(1.001);
+  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(.701);
   assert.equal(f.wax.getState().detached, 2);
   const positions = f.geometry.attributes.position.array;
   for (let i = 0; i < positions.length; i += 3) if (positions[i + 2] > .7 && Math.hypot(positions[i], positions[i + 1]) < .3) positions[i + 2] -= .025;
   f.geometry.computeVertexNormals(); f.advance(.058);
   assert.equal(f.wax.getState().detached, 2, 'Keep a small separation between first break and further strain response');
-  f.advance(.003); assert.equal(f.wax.getState().detached, 3, 'Small further indentation responds immediately after 1.06s');
+  f.advance(.003); assert.equal(f.wax.getState().detached, 3, 'Small further indentation responds immediately after 0.76s');
   f.advance(1); assert.equal(f.wax.getState().detached, 3, 'No continued stripping from a held timer');
   const metrics = f.wax.getMetrics({ exhaustive: true }); assert.equal(metrics.detachedViolations, 0);
   f.wax.dispose(); f.geometry.dispose();
@@ -116,7 +116,7 @@ test('short taps, cancellation, hit loss and sliding cannot borrow previous dwel
   const f = await fixture();
   for (let i = 0; i < 8; i++) { f.wax.begin([0, 0, .9]); f.advance(.3); f.wax.cancel(); f.advance(.01); }
   assert.equal(f.wax.getState().detached, 0); assert.ok(f.wax.getState().cracked > 0);
-  f.wax.begin([0, 0, .9]); f.advance(.8); f.wax.move([.3, 0, .85]); f.advance(.4);
+  f.wax.begin([0, 0, .9]); f.advance(.6); f.wax.move([.3, 0, .85]); f.advance(.4);
   assert.equal(f.wax.getState().detached, 0);
   f.wax.move(null); f.advance(3); assert.equal(f.wax.getState().detached, 0);
   assert.equal(f.wax.getState().active, false); f.wax.dispose();
@@ -281,7 +281,7 @@ test('irregular area distribution, rapid connected cracking and strain-limited s
   const f = await fixture(), metrics = f.wax.getMetrics();
   assert.ok(metrics.panelAreaCV > .35, `Unequal rendered plate area CV ${metrics.panelAreaCV}`);
   assert.ok(metrics.panelAreaRange[1] / metrics.panelAreaRange[0] > 5);
-  f.wax.begin([0, 0, .9]); f.advance(.99); const before = f.wax.getState();
+  f.wax.begin([0, 0, .9]); f.advance(.69); const before = f.wax.getState();
   assert.equal(before.detached, 0); assert.ok(before.cracked < 4);
   f.advance(.02); const wave = f.wax.getState();
   assert.equal(wave.chainWaveCount, 1); assert.ok(wave.cracked - before.cracked >= 5);

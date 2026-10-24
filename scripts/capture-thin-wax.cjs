@@ -54,8 +54,8 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           await page.screenshot({ path: `${folder}/${name}-${theme}-intact.png` });
           await send('down'); await page.waitForTimeout(260); await send('up'); await measure(`${theme}-short`); await page.waitForTimeout(250);
           await page.screenshot({ path: `${folder}/${name}-${theme}-crack.png` });
-          await label('按住700ms：保持局部起裂，尚不脱落');
-          await send('down'); await page.waitForTimeout(700); await send('up'); const lifting = await measure(`${theme}-lifting`); assert.equal(lifting.thinWax.detached, 0);
+          await label('按住600ms：保持局部起裂，尚不脱落');
+          await send('down'); await page.waitForTimeout(600); await send('up'); const lifting = await measure(`${theme}-lifting`); assert.equal(lifting.thinWax.detached, 0);
           await page.screenshot({ path: `${folder}/${name}-${theme}-lifting.png` });
           if (!touch) { await rotate(page, 48, 8); await page.screenshot({ path: `${folder}/${name}-${theme}-lifting-side.png` }); await rotate(page, -48, -8); }
           await label('持续挤压：局部瞬间连锁裂开，多数碎片仍附着，仅少量落下');
@@ -63,7 +63,7 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
             window.waxCaptureTimeline = [];
             window.addEventListener('pointerdown', () => {
               const start = performance.now();
-              for (const targetMs of [650, 1050, 1600, 2600, 5000]) setTimeout(() => {
+              for (const targetMs of [600, 760, 1100, 2600, 5000]) setTimeout(() => {
                 const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
                 window.waxCaptureTimeline.push({ targetMs, actualMs: performance.now() - start, thinWax: d.thinWax, coreState: d.coreState });
               }, targetMs);

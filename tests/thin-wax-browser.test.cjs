@@ -73,7 +73,7 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
       window.waxTimedSamples = [];
       window.addEventListener('pointerdown', () => {
         const start = performance.now();
-        for (const targetMs of [650, 1050, 1600, 2600, 5000]) setTimeout(() => {
+        for (const targetMs of [600, 760, 1100, 2600, 5000]) setTimeout(() => {
           const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
           window.waxTimedSamples.push({ targetMs, actualMs: performance.now() - start, thinWax: d.thinWax, coreState: d.coreState });
         }, targetMs);
@@ -82,7 +82,8 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
     await press(page); await page.waitForFunction(() => window.waxTimedSamples.length === 5, null, { timeout: 15000 });
     const timed = await page.evaluate(() => window.waxTimedSamples), [beforeThreshold, onset, chain, saturated, held] = timed;
     assert.equal(beforeThreshold.thinWax.detached, 0, JSON.stringify(beforeThreshold));
-    assert.ok(chain.thinWax.detached > 0 && chain.thinWax.dwell > 1, JSON.stringify(timed));
+    assert.ok(onset.thinWax.detached > 0, 'Fragments already start at the 760ms page-local sample: ' + JSON.stringify(onset));
+    assert.ok(chain.thinWax.detached > 0 && chain.thinWax.dwell > .7, JSON.stringify(timed));
     assert.ok(chain.thinWax.cracked >= 6 && chain.thinWax.cracked > chain.thinWax.detached * 2, 'The first local chain fracture cracks many more polygons than it drops: ' + JSON.stringify(timed));
     assert.ok(chain.thinWax.attachedPartialBranches >= 4, 'Most attached cracked plates expose partial connected branches rather than complete polygon outlines');
     assert.ok(chain.thinWax.visibleLongCrackEdges < chain.thinWax.cracked * 3, 'Local damage does not trace every polygon edge');

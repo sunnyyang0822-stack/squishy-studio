@@ -1,10 +1,9 @@
-Runtime bundle SHA-256: b4c16599ef07a7c4b61debbc3f27f4b8bb0e5d95dd665aefd27d58e6e27a8430
+Runtime bundle SHA-256: 77ad8fd4801e89712eea462c3cc2d446ba445e2cc9104c09eb50a969ab50bc8f
 npm run build:orb: exit 0
-node --test tests/thin-wax.test.cjs tests/orb-shell-input.test.cjs: 19/19 exit 0, 66537.2039ms
-node --test tests/thin-wax-browser.test.cjs: 6/6 exit 0, 43580.1276ms
-node --test --test-name-pattern="actual clay dent" tests/thin-wax.test.cjs: 1/1 exit 0, 1557.5818ms; supplemental actual slit measurement assertion
+node --test tests/thin-wax.test.cjs tests/orb-shell-input.test.cjs: 19/19 exit 0, 65212.8177ms
+node --test tests/thin-wax-browser.test.cjs: 6/6 exit 0, 43786.4663ms
 node scripts/capture-thin-wax.cjs --capture-only: exit 0
 node scripts/capture-thin-wax.cjs --performance-only: exit 0
-Performance: {"samples": 402, "medianMs": 10.300000000745058, "p95Ms": 12, "maximumMs": 17, "maximumCountJump": 1, "measurement": "MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
+Performance: {"samples": 382, "medianMs": 10.800000000745058, "p95Ms": 13.199999999254942, "maximumMs": 17.40000000037253, "maximumCountJump": 1, "measurement": "MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
 Prior commit 330500a full suite: 239/239 exit 0, historical baseline only.
 Visual acceptance pending user review. PR remains draft.
