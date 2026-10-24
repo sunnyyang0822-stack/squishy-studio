@@ -43,9 +43,66 @@ test('五步、默认配方；黏土、棉花糖和慢回弹独立映射，制�
   assert.equal(c.getState().preview.mode, 'hidden');
   assert.equal(h.stopped, 1);
   c.next(); assert.equal(c.getState().step, 'play');
-  assert.equal(h.restored, 1);
+  assert.equal(h.restored, 0);
   c.previous(); assert.equal(c.getState().step, 'making');
   c.setStep('invalid'); assert.equal(c.getState().step, 'making');
+  c.dispose();
+});
+
+test('薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动', async () => {
+  const { previewFor, defaultRecipe, recipeKeyFor } = await stateModule;
+  assert.equal(defaultRecipe.waxThickness, 'medium');
+  for (const coreMaterial of ['clay', 'marshmallow', 'butter']) {
+    const recipe = { ...defaultRecipe, coreMaterial, coreColor: 'mint', shellColor: 'sky', waxThickness: 'thin' };
+    const core = previewFor('core', recipe), shell = previewFor('shell', recipe);
+    assert.equal(core.mode, 'core');
+    assert.equal(core.color, 'mint');
+    assert.equal(shell.mode, 'shell');
+    assert.equal(shell.coreColor, 'mint');
+    assert.equal(shell.shellColor, 'sky');
+    assert.equal(shell.shellMaterial, 'wax');
+    assert.equal(shell.waxThickness, 'thin');
+    assert.equal(core.recipeKey, shell.recipeKey);
+    assert.equal(shell.recipeKey, previewFor('play', recipe).recipeKey);
+    assert.equal(shell.recipeKey, recipeKeyFor(Object.fromEntries(Object.entries(recipe).reverse())));
+    for (const [key, value] of [['coreColor', 'lemon'], ['shellColor', 'lemon'], ['styleId', 'cloud'], ['waxThickness', 'thick'], ['shellMaterial', 'sugar']]) {
+      assert.notEqual(shell.recipeKey, recipeKeyFor({ ...recipe, [key]: value }), key);
+    }
+    assert.equal(previewFor('shell', { ...recipe, shellMaterial: 'polish' }).waxThickness, null);
+  }
+});
+
+test('同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置', async () => {
+  const { createDetailController } = await stateModule;
+  const h = harness(createDetailController), c = h.controller;
+  const settle = () => new Promise(resolve => setImmediate(resolve));
+  await c.load();
+  await c.select('waxThickness', 'thin');
+  c.setStep('shell'); await settle();
+  const shellCount = h.prepared.length;
+  c.setStep('decoration'); await settle();
+  c.setStep('making'); c.setStep('play'); await settle();
+  c.setStep('making'); c.setStep('decoration'); await settle();
+  c.setStep('shell'); await settle();
+  assert.equal(h.prepared.length, shellCount);
+  assert.equal(h.restored, 0);
+  assert.equal(h.stopped, 2);
+  const previous = h.prepared.at(-1);
+  await c.select('coreColor', 'mint');
+  assert.equal(h.prepared.length, shellCount + 1);
+  assert.equal(h.prepared.at(-1).color, previous.color);
+  assert.notEqual(h.prepared.at(-1).recipeKey, previous.recipeKey);
+  await c.select('waxThickness', 'medium');
+  assert.equal(h.prepared.at(-1).waxThickness, 'medium');
+  await c.select('shellMaterial', 'sugar');
+  assert.equal(h.prepared.at(-1).waxThickness, null);
+  const count = h.prepared.length;
+  await c.select('waxThickness', 'thick');
+  assert.equal(h.prepared.length, count, 'inactive wax thickness preference does not rebuild sugar');
+  c.setStep('core'); await settle();
+  assert.equal(h.prepared.at(-1).mode, 'core');
+  c.setStep('shell'); await settle();
+  assert.equal(h.prepared.at(-1).mode, 'shell');
   c.dispose();
 });
 
