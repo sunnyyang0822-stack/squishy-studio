@@ -1,0 +1,8 @@
+Runtime bundle SHA-256: 1716243347dbfd9b01fb6a4f0d1bf8b000ab17065dc03b7f4d31d93228fd2f11
+npm run build: exit code 0
+node scripts/capture-thin-wax.cjs --capture-only: exit code 0; stdout in capture-output.txt
+node scripts/capture-thin-wax.cjs --performance-only: exit code 0; stdout was empty
+Independent performance summary extracted from validation.json: {"samples":688,"medianMs":5.7000000001862645,"p95Ms":7,"maximumMs":14.5,"maximumCountJump":1,"measurement":"MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
+node --test tests/thin-wax.test.cjs: exit code 0; 15/15; original executed tool output saved in geometry-dbe706e-node-test.txt (not a new run)
+Final complete suite: in progress, parent agent will append exact results.
+Visual acceptance: pending user review; no PR merge authorized.

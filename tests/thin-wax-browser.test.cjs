@@ -84,6 +84,8 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
     assert.equal(beforeThreshold.thinWax.detached, 0, JSON.stringify(beforeThreshold));
     assert.ok(chain.thinWax.detached > 0 && chain.thinWax.dwell > 1, JSON.stringify(timed));
     assert.ok(chain.thinWax.cracked >= 6 && chain.thinWax.cracked > chain.thinWax.detached * 2, 'The first local chain fracture cracks many more polygons than it drops: ' + JSON.stringify(timed));
+    assert.ok(chain.thinWax.attachedPartialBranches >= 4, 'Most attached cracked plates expose partial connected branches rather than complete polygon outlines');
+    assert.ok(chain.thinWax.visibleLongCrackEdges < chain.thinWax.cracked * 3, 'Local damage does not trace every polygon edge');
     assert.ok(held.thinWax.cracked - held.thinWax.detached >= 3, 'Long holding preserves visibly attached cracked plates');
     assert.ok(held.thinWax.detached - saturated.thinWax.detached <= 1, 'Saturated pressure must not keep ejecting plates on a repeating timer: ' + JSON.stringify(timed));
     assert.ok(held.thinWax.detached <= 24 && held.thinWax.detached < held.thinWax.panels / 4);
@@ -139,7 +141,10 @@ test('detached polygon keeps its actual GPU vertex distances while the live core
       return { panel: before.panel, sampledVertices: before.ids.length, distanceError, coreChange };
     });
     assert.ok(measured.sampledVertices > 10); assert.ok(measured.coreChange > .005); assert.ok(measured.distanceError < 1e-5, JSON.stringify(measured));
-    t.diagnostic(JSON.stringify(measured));
+    const liveGeometry = await diagnostics(page, { measure: true, exhaustive: true });
+    assert.ok(liveGeometry.geometry.detachedSamples > 0, 'Collision measurement includes still-living detached geometry during core recovery');
+    geometryOK(liveGeometry);
+    t.diagnostic(JSON.stringify({ ...measured, liveRecoveryGeometry: liveGeometry.geometry }));
   } finally { await page.close(); }
 });
 test('front damage leaves the untouched back shell positions and normals bitwise unchanged', { timeout: 60000 }, async t => {
@@ -252,8 +257,3 @@ test('cancellation, blur, hidden document, hit loss and leave stop the same inpu
     assert.equal(await page.locator('.toy-mount canvas').count(), 0);
   } finally { await page.close(); }
 });
-
-
-
-
-

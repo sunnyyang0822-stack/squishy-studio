@@ -54,7 +54,7 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           await page.screenshot({ path: `${folder}/${name}-${theme}-intact.png` });
           await send('down'); await page.waitForTimeout(260); await send('up'); await measure(`${theme}-short`); await page.waitForTimeout(250);
           await page.screenshot({ path: `${folder}/${name}-${theme}-crack.png` });
-          await label('按住700ms：裂边逐渐翘起，尚不脱落');
+          await label('按住700ms：保持局部起裂，尚不脱落');
           await send('down'); await page.waitForTimeout(700); await send('up'); const lifting = await measure(`${theme}-lifting`); assert.equal(lifting.thinWax.detached, 0);
           await page.screenshot({ path: `${folder}/${name}-${theme}-lifting.png` });
           if (!touch) { await rotate(page, 48, 8); await page.screenshot({ path: `${folder}/${name}-${theme}-lifting-side.png` }); await rotate(page, -48, -8); }
@@ -134,9 +134,6 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
     } finally { await perfContext.close(); }
     }
     assert.deepEqual(report.errors, []); report.exitCode = 0;
-  } catch (error) { report.failure = error.stack; throw error; }
+  } catch (error) { report.exitCode = 1; report.failure = error.stack; throw error; }
   finally { fs.writeFileSync(`${folder}/validation.json`, JSON.stringify(report, null, 2) + '\n'); await browser?.close(); server.kill(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
-
-
-
