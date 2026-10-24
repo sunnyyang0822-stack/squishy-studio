@@ -32,7 +32,7 @@ jobs:
           files=(tests/*.test.cjs)
           general=()
           for file in "${files[@]}"; do
-            if [[ "$file" != tests/squishy-styles-browser.test.cjs ]]; then
+            if [[ "$file" != tests/squishy-styles-browser.test.cjs && "$file" != tests/squishy-marshmallow-browser.test.cjs && "$file" != tests/squishy-slow-rebound-browser.test.cjs ]]; then
               general+=("$file")
             fi
           done
@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        case: [cloud, paw, cylinder, donut, pyramid, flower, star, loading-race]
+        case: [cloud, paw, cylinder, donut, pyramid, flower, star, loading-race, cloud-marshmallow, paw-marshmallow, cylinder-marshmallow, donut-marshmallow, pyramid-marshmallow, flower-marshmallow, star-marshmallow, cloud-slow-rebound, paw-slow-rebound, cylinder-slow-rebound, donut-slow-rebound, pyramid-slow-rebound, flower-slow-rebound, star-slow-rebound, slow-rebound-touch]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
