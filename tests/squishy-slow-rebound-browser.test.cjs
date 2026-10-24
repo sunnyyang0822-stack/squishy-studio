@@ -26,12 +26,18 @@ async function assertConfig(page, id) {
 async function exactRest(page) {
   assert.equal(await page.evaluate(() => window.styleProbe.positions.every((v, i) => v === window.styleProbe.rest[i])), true, 'Every actual GPU position returns to this asset’s exact rest mesh');
 }
+async function renderTime(page, milliseconds) {
+  // Each 50 ms interval executes a real rAF/upload/draw, staying below the
+  // factory's 100 ms contact-step bound. CI software WebGL need not redraw
+  // every 16 ms to verify a time-based 1800 ms directional edge press.
+  for (let remaining = milliseconds; remaining > 0; remaining -= 50) await page.clock.fastForward(Math.min(50, remaining));
+}
 async function finishRecovery(page) {
   const before = await stats(page);
   // Observe a full second of actual rAF/GPU recovery, then advance the idle
   // tail. Replaying ~875 software-rendered frames is not needed to verify the
   // final exact rest; CPU tests and wall-clock recordings cover that trajectory.
-  await page.clock.runFor(1000);
+  await renderTime(page, 1000);
   const partial = await stats(page);
   assert.ok(partial.maximum > 0 && partial.maximum < before.maximum, 'Actual GPU recovery remains gradual throughout its first second');
   await page.clock.fastForward(13000); await exactRest(page);
@@ -43,7 +49,7 @@ async function assertPerpendicularEdge(page, id, pose) {
   const samples = { star: [.85, .15], flower: [.78, .05], pyramid: [.36, -.25] };
   if (!samples[id]) return;
   const hit = await projectedSurfaceContact(page, ...samples[id]);
-  await page.mouse.move(hit.x, hit.y); await page.mouse.down(); await page.clock.runFor(1800);
+  await page.mouse.move(hit.x, hit.y); await page.mouse.down(); await renderTime(page, 1800);
   const displacement = await page.evaluate(({ index }) => {
     const p = window.styleProbe, delta = [0, 1, 2].map(k => p.positions[index + k] - p.rest[index + k]);
     return [0, 1, 2].map(k => delta.reduce((sum, v, j) => sum + v * p.matrix[j * 4 + k], 0));

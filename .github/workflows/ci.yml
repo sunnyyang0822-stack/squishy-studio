@@ -14,11 +14,11 @@ concurrency:
 
 jobs:
   browser-shards:
-    name: browser-shard (${{ matrix.shard }}/4)
+    name: browser-shard (${{ matrix.shard }}/6)
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
               general+=("$file")
             fi
           done
-          node --test --test-concurrency=1 --test-shard=${{ matrix.shard }}/4 "${general[@]}"
+          node --test --test-concurrency=1 --test-shard=${{ matrix.shard }}/6 "${general[@]}"
 
   style-cases:
     name: style-case (${{ matrix.case }})

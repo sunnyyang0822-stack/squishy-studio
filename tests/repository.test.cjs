@@ -10,14 +10,14 @@ test('PR 检查安装依赖和浏览器并执行完整测试', async () => {
   assert.match(workflow, /npm ci/);
   assert.match(workflow, /playwright install --with-deps chromium/);
   assert.match(workflow, /node-version: '22'/);
-  assert.match(workflow, /shard: \[1, 2, 3, 4\]/);
+  assert.match(workflow, /shard: \[1, 2, 3, 4, 5, 6\]/);
   assert.match(workflow, /fail-fast: false/);
   assert.match(workflow, /npm run build/);
   assert.match(workflow, /files=\(tests\/\*\.test\.cjs\)/);
   const separatedFiles = ['tests/squishy-styles-browser.test.cjs', 'tests/squishy-marshmallow-browser.test.cjs', 'tests/squishy-slow-rebound-browser.test.cjs'];
   assert.deepEqual([...workflow.matchAll(/"\$file" != (tests\/[\w-]+\.test\.cjs)/g)].map(m => m[1]), separatedFiles, 'Only the three fully separated browser suites may be excluded from generic shards');
   assert.match(workflow, /\]\]; then\s+general\+=\("\$file"\)/);
-  assert.match(workflow, /node --test --test-concurrency=1 --test-shard=\$\{\{ matrix\.shard \}\}\/4 "\$\{general\[@\]\}"/);
+  assert.match(workflow, /node --test --test-concurrency=1 --test-shard=\$\{\{ matrix\.shard \}\}\/6 "\$\{general\[@\]\}"/);
   assert.match(workflow, /export PLAYWRIGHT_BROWSER_PATH=/);
   assert.match(workflow, /browser-tests:\s+name: browser-tests\s+needs: \[browser-shards, style-cases\]\s+if: \$\{\{ always\(\) \}\}/);
   for (const dependency of ['browser-shards', 'style-cases']) {

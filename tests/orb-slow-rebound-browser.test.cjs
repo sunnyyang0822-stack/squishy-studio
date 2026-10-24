@@ -17,13 +17,15 @@ test('慢回弹原圆球边缘沿按入方向凹陷，旋转后不向球心拉�
       if (pose === 'rotated') await rotate(page, 55, 16);
       const hit = await projectedSurfaceContact(page, .6, .05);
       await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
-      await page.mouse.move(hit.x, hit.y); await page.mouse.down(); await page.clock.runFor(1300);
+      await page.mouse.move(hit.x, hit.y); await page.mouse.down();
+      for (let i = 0; i < 26; i++) await page.clock.fastForward(50);
       const delta = await page.evaluate(({ index }) => {
         const p = window.styleProbe, d = [0, 1, 2].map(k => p.positions[index + k] - p.rest[index + k]);
         return [0, 1, 2].map(k => d.reduce((s, v, j) => s + v * p.matrix[j * 4 + k], 0));
       }, hit);
       assert.ok(Math.hypot(delta[0], delta[1]) < 1e-5 && delta[2] < -.02, `${pose}: ${delta}`);
-      await page.mouse.up(); await page.clock.runFor(1000);
+      await page.mouse.up();
+      for (let i = 0; i < 20; i++) await page.clock.fastForward(50);
       const recovering = await page.evaluate(() => {
         const p = window.styleProbe; let maximum = 0;
         for (let i = 0; i < p.rest.length; i += 3) maximum = Math.max(maximum, Math.hypot(...[0, 1, 2].map(k => p.positions[i + k] - p.rest[i + k])));
