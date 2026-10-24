@@ -257,3 +257,19 @@ test('random Voronoi cutting covers the complete real orb GLB surface with no in
   }
   f.wax.dispose(); f.geometry.dispose();
 });
+
+test('retained shells open connected partial boundary chains while unbroken boundary bridges remain geometrically closed', async () => {
+  const f = await fixture(), before = f.wax.getSurfaceSnapshot();
+  f.wax.begin([0, 0, .9]); f.advance(1.01); f.advance(.08);
+  const after = f.wax.getSurfaceSnapshot(), state = f.wax.getState();
+  assert.ok(state.attachedPartialBranches >= 4, `Bound plates need open branches, not complete cell rings: ${JSON.stringify(state)}`);
+  let unchangedBridges = 0, openCorners = 0;
+  for (let r = 0; r < after.layers.length; r++) if (after.damage[r] && !after.detached[r] && !after.loose[r] && after.layers[r] === 1 && after.boundaryVertex[r]) {
+    if (after.openBoundary[r]) { openCorners++; continue; }
+    for (let axis = 0; axis < 3; axis++) assert.equal(after.positions[r * 3 + axis], before.positions[r * 3 + axis], 'Unbroken perimeter bridge cannot shrink or lift into a complete scale outline');
+    unchangedBridges++;
+  }
+  assert.ok(unchangedBridges > 20 && openCorners > 20);
+  const metrics = f.wax.getMetrics({ exhaustive: true }); assert.equal(metrics.attachedViolations, 0); assert.equal(metrics.detachedViolations, 0);
+  f.wax.dispose(); f.geometry.dispose();
+});
