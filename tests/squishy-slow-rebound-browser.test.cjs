@@ -51,6 +51,7 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
   try {
     await page.clock.install(); const mesh = await installStyleProbe(page, getSquishyStyle(id));
     await page.goto(`${base}/squishy/cloud/?style=${id}&coreMaterial=butter`); await ready(page); await assertConfig(page, id);
+    console.log(`${id}: real surface mounted`);
     const canvas = await page.locator('.toy-mount canvas').elementHandle(), p = await contact(page, id);
     await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
     await assertPerpendicularEdge(page, id, 'initial');
@@ -66,12 +67,21 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
     const released = await stats(page); await page.clock.runFor(300); const recovering = await stats(page);
     assert.ok(recovering.maximum > .001 && recovering.maximum < released.maximum * .98, 'Release recovers gradually without instantly clearing or retaining a plastic dent');
     await page.clock.runFor(14000); await exactRest(page);
+    console.log(`${id}: press, drag and natural recovery passed`);
     await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.clock.runFor(500);
     const beforeCancel = await stats(page); assert.ok(beforeCancel.maximum > .02);
     await page.evaluate(() => window.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 1 })));
     await page.mouse.up(); await page.clock.runFor(150);
     const cancelled = await stats(page); assert.ok(cancelled.maximum > 0 && cancelled.maximum < beforeCancel.maximum, 'Cancellation ends force and continues slow recovery');
-    await page.locator('[name=color][value=mint]').check(); await page.clock.runFor(1000); await exactRest(page);
+    // Locator actionability waits for stable animation frames. Keep the real
+    // clock running while checking the color input; a paused rAF can deadlock
+    // Chromium/Linux even though Edge happens to consider the input stable.
+    await page.clock.resume();
+    await page.locator('[name=color][value=mint]').check();
+    await page.waitForFunction(() => window.styleProbe.positions.every((v, i) => v === window.styleProbe.rest[i]));
+    await exactRest(page);
+    console.log(`${id}: cancellation and color restore passed`);
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
     assert.equal(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')), true, 'Color restore keeps the same renderer');
     const before = await page.evaluate(() => window.styleProbe.matrix), center = mesh.low.map((v, k) => (v + mesh.high[k]) / 2);
     const transformedCenter = matrix => [0, 1, 2].map(k => matrix[12 + k] + center.reduce((sum, v, j) => sum + v * matrix[j * 4 + k], 0));
