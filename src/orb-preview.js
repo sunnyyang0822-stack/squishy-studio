@@ -104,6 +104,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = .95;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.domElement.setAttribute('role', 'img');
     renderer.domElement.setAttribute('aria-label', '奶油粉色圆球，局部按压后部分恢复并保留凹痕');
 
@@ -117,6 +118,12 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     scene.add(fill);
     const key = new THREE.DirectionalLight(0xfff5ed, 2.6);
     key.position.set(...(isSurface ? [-3.8, 3.2, 2.1] : [-3.5, 2.4, 1.8]));
+    // One bounded shadow pass, enabled only for the clay-orb thin coating.
+    // Actual shell geometry casts onto the core; depth testing stays enabled.
+    key.shadow.mapSize.set(1024, 1024);
+    Object.assign(key.shadow.camera, { left: -1.65, right: 1.65, top: 1.65, bottom: -1.65, near: .1, far: 10 });
+    key.shadow.bias = -.00002;
+    key.shadow.normalBias = .002;
     scene.add(key);
     const rim = new THREE.DirectionalLight(0xe9e4ff, .55);
     rim.position.set(3, 2, -3); scene.add(rim);
@@ -307,11 +314,11 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         geometry.computeBoundingSphere();
       }
       if (wax && shellVisible) {
-        if (step.changed) wax.sync();
         pivot.updateMatrixWorld(true);
         gravity.set(0, -1, 0).transformDirection(mesh.matrixWorld.clone().invert());
         wax.setGravity?.(gravity.toArray());
         const shellStep = wax.step(dt);
+        if (step.changed && !shellStep.changed) wax.sync();
         needsFrame ||= shellStep.needsFrame;
       }
       current.lastTime = needsFrame ? time : null;
@@ -326,7 +333,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     function invalidate() {
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
     }
-    current.input = bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin: interruptRestore,
+    current.input = bindOrbInput({ surface, hitTest: (x, y, actual) => hitTest(x, y, actual || shellVisible), deformation, invalidate, onBegin: interruptRestore,
       onContact(point, phase) { if (shellVisible) wax?.[phase === 'begin' ? 'begin' : 'move'](point); },
       onEnd() { wax?.end(); },
       endOnMiss: () => shellVisible,
@@ -392,7 +399,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     current.configure = config => {
       const thinRecipe = style.id === 'orb' && feelId === 'clay' && config.shellMaterial === 'wax' && config.waxThickness === 'thin';
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
-      if (wax || thinRecipe) current.input.cancel();
+      if (wax || thinRecipe) current.input.cancel({ preserveShape: changed });
       if (changed && (wax || thinRecipe)) { disposeWax(); current.selectColor(config.coreColor || config.color, { restore: true }); }
       recipeKey = config.recipeKey;
       activeConfig = { ...config };
@@ -403,13 +410,20 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         mesh.add(wax.group);
       }
       if (wax) { wax.group.visible = shellVisible; if (shellVisible) wax.sync(); }
+      const shadowsChanged = renderer.shadowMap.enabled !== shellVisible;
+      renderer.shadowMap.enabled = shellVisible;
+      key.castShadow = shellVisible;
+      mesh.receiveShadow = shellVisible;
+      if (wax) wax.group.traverse(object => { if (object.isMesh) { object.castShadow = true; object.receiveShadow = true; } });
+      if (shadowsChanged) mesh.material.needsUpdate = true;
       // Navigating a fixed thin-wax recipe never recolors or repairs its core.
       current.selectColor(thinRecipe ? config.coreColor : config.color);
-      current.diagnostics = () => ({
+      current.diagnostics = ({ exhaustive = false, surface = false, measure = true } = {}) => ({
         enabled: Boolean(wax && shellVisible), configKey: recipeKey,
         coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor,
         corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions),
-        coreState: deformation.getState(), thinWax: wax?.getState(), geometry: wax?.getMetrics(),
+        coreState: deformation.getState(), thinWax: wax?.getState(), geometry: measure ? wax?.getMetrics({ exhaustive }) : undefined,
+        surface: surface ? wax?.getSurfaceSnapshot?.() : undefined,
         resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries },
       });
       mount.thinWaxDiagnostics = current.diagnostics;

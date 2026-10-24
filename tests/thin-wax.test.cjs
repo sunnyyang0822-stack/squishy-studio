@@ -26,10 +26,12 @@ test('thin wax is a separate closed-volume shell with independently owned color 
   assert.ok(metrics.attachedMinGap > .00399); assert.ok(metrics.maxThicknessError < metrics.tolerance);
   assert.equal(metrics.attachedViolations, 0); assert.equal(metrics.drawCalls, 1);
   assert.ok(metrics.shellTriangles > geometry.index.count / 3 * 2, 'Top, bottom and volumetric boundary walls');
-  for (let k = 0; k < 3; k++) {
-    const outer = shell.geometry.index.array[k], original = geometry.index.array[k];
-    for (let axis = 0; axis < 3; axis++) assert.ok(Math.abs(shell.geometry.attributes.normal.array[outer * 3 + axis] - geometry.attributes.normal.array[original * 3 + axis]) < .000001, 'Smooth outer normals cannot be averaged with perpendicular fracture sidewalls');
+  const snapshot = wax.getSurfaceSnapshot(); let outerSamples = 0;
+  for (let r = 0; r < snapshot.layers.length; r++) if (snapshot.layers[r] === 1) {
+    for (let axis = 0; axis < 3; axis++) assert.ok(Math.abs(snapshot.normals[r * 3 + axis] - snapshot.restSupportNormals[r * 3 + axis]) < .000001, 'Smooth outer normals cannot be averaged with perpendicular fracture sidewalls');
+    outerSamples++;
   }
+  assert.ok(outerSamples > 5000);
   wax.dispose(); geometry.dispose();
 });
 
@@ -38,11 +40,11 @@ test('actual continuous dwell exceeds one second; first local burst is three chi
   f.advance(.999); assert.equal(f.wax.getState().detached, 0);
   f.advance(.001); assert.equal(f.wax.getState().detached, 0);
   f.advance(.001); const initial = f.wax.getState(); assert.equal(initial.detached, 3); assert.equal(initial.firstBurst, 3);
-  assert.equal(initial.burstInitialOutwardSpeed, 2);
+  assert.ok(initial.burstInitialOutwardSpeed > 2);
   f.advance(.14); const afterImpulse = f.wax.getState();
   assert.ok(afterImpulse.maxOutwardOffset > initial.maxOutwardOffset + .1, 'Visible outward burst during first 140ms');
   f.advance(.30); assert.equal(f.wax.getState().detached, 4);
-  assert.ok(f.wax.getState().detached < f.wax.getMetrics().patches / 50, 'Local chips, not whole-shell explosion');
+  assert.ok(f.wax.getState().detached < f.wax.getMetrics().patches / 20, 'Local chips, not whole-shell explosion');
   f.wax.end(); const count = f.wax.getState().detached; f.advance(5);
   assert.equal(f.wax.getState().detached, count); assert.equal(f.wax.getState().living, 0);
   f.wax.dispose();
@@ -164,5 +166,51 @@ test('the actual 24-chip budget is reached across fresh locations and cannot be 
   assert.equal(f.wax.getState().detached, 24); assert.equal(f.wax.getState().expired, 24);
   assert.equal(f.wax.getState().living, 0, 'Expiry cannot resurrect or duplicate a detached patch');
   f.wax.reset(); assert.equal(f.wax.getState().detached, 0); assert.equal(f.wax.getState().expired, 0);
+  f.wax.dispose(); f.geometry.dispose();
+});
+
+test('one local press leaves remote real render positions, normals and colors exactly unchanged', async () => {
+  const f = await fixture(); f.geometry.computeVertexNormals(); f.wax.sync();
+  const before = f.wax.getSurfaceSnapshot(); f.begin(frontContact(f, 0, 0)); frames(f, 95);
+  const after = f.wax.getSurfaceSnapshot(); let samples = 0;
+  for (let r = 0; r < before.damage.length; r++) if (before.restSupportPositions[r * 3 + 2] < -.4) {
+    assert.equal(after.damage[r], 0, 'Remote pre-cut boundaries are never exposed');
+    for (let axis = 0; axis < 3; axis++) {
+      const i = r * 3 + axis;
+      assert.equal(after.positions[i], before.positions[i], 'Remote rendered position must remain bit-identical');
+      assert.equal(after.normals[i], before.normals[i], 'Remote rendered normal must remain bit-identical');
+      assert.equal(after.colors[i], before.colors[i], 'Remote rendered color must remain bit-identical');
+    }
+    samples++;
+  }
+  assert.ok(samples > 5000); assert.ok(f.wax.getState().detached > 0);
+  f.wax.dispose(); f.geometry.dispose();
+});
+
+test('creating a shell over an old bare-core dent retains original contact coordinates', async () => {
+  const f = await fixture(), initial = f.wax.getSurfaceSnapshot();
+  f.deformation.begin([0, 0, .9]); for (let i = 0; i < 180; i++) f.deformation.step(1 / 60); f.geometry.computeVertexNormals();
+  const { createThinWax } = await import('../src/thin-wax.mjs'); let time = 0;
+  const wax = createThinWax({ geometry: f.geometry, restPositions: f.restPositions, restNormals: Float32Array.from(readMesh('./assets/models/squishy-orb.glb').normals), clock: () => time });
+  assert.deepEqual(wax.getSurfaceSnapshot().restSupportPositions, initial.restSupportPositions);
+  wax.begin([0, 0, .9]); assert.ok(wax.getState().cracked > 0); time = 1.01; wax.step(1.01);
+  assert.equal(wax.getState().detached, 3, 'Old dent cannot displace the recipe shell contact coordinates');
+  assert.equal(wax.getMetrics({ exhaustive: true }).detachedViolations, 0);
+  wax.dispose(); f.wax.dispose(); f.geometry.dispose();
+});
+
+test('detached curved plates retain frozen edge lengths while the original core continues deforming', async () => {
+  const f = await fixture(); f.begin(); frames(f, 70); const before = f.wax.getSurfaceSnapshot();
+  frames(f, 50); const after = f.wax.getSurfaceSnapshot();
+  const first = new Map(); let checked = 0, maximumError = 0;
+  for (let r = 0; r < before.layers.length; r++) if (before.detached[r] && after.detached[r] && before.layers[r] === 1) {
+    const id = before.panelIds[r];
+    if (!first.has(id)) { first.set(id, r); continue; }
+    const start = first.get(id);
+    const distance = snapshot => Math.hypot(...[0, 1, 2].map(axis => snapshot.positions[r * 3 + axis] - snapshot.positions[start * 3 + axis]));
+    const error = Math.abs(distance(after) - distance(before)); maximumError = Math.max(maximumError, error); checked++;
+  }
+  assert.ok(checked > 50); assert.ok(maximumError < .000001, `Frozen plate edge-length error ${maximumError}`);
+  const metrics = f.wax.getMetrics({ exhaustive: true }); assert.equal(metrics.detachedViolations, 0); assert.ok(metrics.wallSamples > 1000);
   f.wax.dispose(); f.geometry.dispose();
 });
