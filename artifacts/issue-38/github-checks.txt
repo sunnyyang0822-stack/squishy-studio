@@ -1,0 +1,10 @@
+GitHub Actions run: https://github.com/sunnyyang0822-stack/squishy-studio/actions/runs/40099673577
+Commit tested remotely: 330500ad7073207167608a95984fc1e3719f8542
+Result: failure before any job step started; job steps array is empty.
+Confirmed annotation from GitHub check-run 120889053422:
+The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings
+
+Local final source validation: node scripts/test-port-isolated.cjs
+239 passed, 0 failed, exit code 0, duration 660089.9726ms.
+No billing settings, spending limits, CI workflow, or required checks were changed.
+PR remains draft and unmerged for user visual review and successful remote checks.

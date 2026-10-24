@@ -61,7 +61,8 @@ node scripts/capture-thin-wax.cjs --performance-only
 
 - 构建、正常速度录屏和独立性能命令均退出 0；实际命令与输出来源见 [commands.txt](../artifacts/issue-38/commands.txt)、[capture-output.txt](../artifacts/issue-38/capture-output.txt)。
 - 最新几何专项 15/15、退出 0，42.123 秒；[原始工具输出](../artifacts/issue-38/geometry-dbe706e-node-test.txt) 是已实际执行输出的保存，未为保存日志重复执行。
-- 最终完整本地回归正在运行，结果与完整输出由主交付补入；最终 GitHub 检查仍须通过。旧 235/235、退出 0（691 秒）属于前一版本，不替代最终回归或视觉验收。
+- 最终完整本地回归 `node scripts/test-port-isolated.cjs`：239/239、退出 0、660.090 秒；[完整原始输出](../artifacts/issue-38/full-local-tests.txt)。覆盖原有黏土、棉花糖、慢回弹和流程回归；这不表示已为其他内芯启用或验收薄蜡。
+- GitHub 检查未通过：[运行 40099673577](https://github.com/sunnyyang0822-stack/squishy-studio/actions/runs/40099673577) 在执行测试前失败，注释明确为账户付款失败或支出额度不足。未修改计费、额度或 CI 规则；额度恢复后须重跑并通过，不以本地结果替代远端必需检查。见 [CI 阻塞记录](../artifacts/issue-38/github-checks.txt)。
 - 最终桌面/模拟手机昼夜四段时序均为：实际约 650–658ms 仅 1 裂 0 掉，1051–1061ms 为 9 裂 2 掉，1602–1617ms 为 9 裂 3 掉，约 2.6 秒至 5 秒保持 6 片附着、不再增加掉落。每段保留 5 个部分分叉附着板。
 - 正常速度录屏：[桌面昼夜](../artifacts/issue-38/orb-clay-desktop.webm)、[390×844 模拟触摸昼夜](../artifacts/issue-38/orb-clay-mobile.webm)。包含短点、阈值瞬间分叉、多数裂片附着、少量掉落、长持压不机械清空、重复深压拖动、侧面、重开、导航与快速配置切换。
 - 辅助图：[阈值后局部分叉与断面阴影](../artifacts/issue-38/orb-clay-desktop-day-burst.png)、[持续持压多数裂片保留](../artifacts/issue-38/orb-clay-desktop-day-held.png)、[侧面](../artifacts/issue-38/orb-clay-desktop-day-side.png)。截图不替代录屏。
@@ -72,6 +73,6 @@ node scripts/capture-thin-wax.cjs --performance-only
 
 ## 分支与回滚
 
-明确基线 `origin/main 2440cdc`，分支 `codex/issue-38-thin-wax`，工作树 `D:/squishy-studio/.worktrees/issue-38-thin-wax`。仓库保持 Private，不改共享历史，不自动关闭 Issue #38。最终 PR 链接及 GitHub 检查结果待创建后补入；用户查验前不合并。
+明确基线 `origin/main 2440cdc`，分支 `codex/issue-38-thin-wax`，工作树 `D:/squishy-studio/.worktrees/issue-38-thin-wax`。[草稿 PR #39](https://github.com/sunnyyang0822-stack/squishy-studio/pull/39) 指向 main；仓库保持 Private，不改共享历史，不自动关闭 Issue #38。用户查验及必需检查通过前不合并。
 
 回滚通过普通 PR 撤销本分支相对基线的薄蜡模块、场景/流程接入和构建产物，执行 `npm run build`；没有配方存储迁移，不回滚其他协作者成果。不要强推 main。当前外壳只针对黏土圆球；其他样式、其他内芯及中/厚蜡须另行验证后再启用。
