@@ -357,12 +357,15 @@ test('动态高度、横竖屏与安全留白变化复用同一画布，配方�
 test('详情样式和配方直达刷新、五步及浏览器返回保持', async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
-  await page.goto(base + path + '?style=donut');
+  await page.goto(base + path + '?style=donut&coreMaterial=butter');
   await ready(page);
   assert.equal(await page.getByRole('combobox', { name: '捏捏样式' }).inputValue(), 'donut');
-  assert.equal(await choice(page, '内芯材质', '棉花糖').isDisabled(), true);
-  assert.equal(await choice(page, '内芯材质', '慢回弹').isDisabled(), true);
-  assert.match(await page.locator('.style-notice').textContent(), /仅支持黏土/);
+  assert.equal(await choice(page, '内芯材质', '棉花糖').isDisabled(), false);
+  assert.equal(await choice(page, '内芯材质', '慢回弹').isDisabled(), false);
+  assert.equal(await choice(page, '内芯材质', '慢回弹').isChecked(), true);
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'slow-rebound');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-appearance-id'), 'full-matte');
+  assert.equal(await page.locator('.style-notice').isHidden(), true);
   await show(page, 'coreColor'); await choice(page, '内芯颜色', '薄荷绿').check();
   await next(page); await choice(page, '外壳颜色', '雾蓝').check();
   await page.reload(); await ready(page);
@@ -386,6 +389,9 @@ test('详情样式和配方直达刷新、五步及浏览器返回保持', async
   assert.equal(await current(page, 'play'), 'step');
   assert.match(await page.title(), /五角星/);
   assert.equal(new URL(page.url()).searchParams.get('decoration'), 'three');
+  assert.equal(new URL(page.url()).searchParams.get('coreMaterial'), 'butter');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'slow-rebound');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-appearance-id'), 'full-matte');
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   assert.deepEqual(errors, []);
   await page.close();

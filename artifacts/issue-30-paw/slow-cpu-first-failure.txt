@@ -1,0 +1,25 @@
+✖ donut×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (846.6801ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 914.1649
+
+✖ failing tests:
+
+test at tests\squishy-slow-rebound.test.cjs:7:23
+✖ donut×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (846.6801ms)
+  AssertionError [ERR_ASSERTION]: Stopping allows local deep pressure
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-30-paw\tests\squishy-slow-rebound.test.cjs:45:27)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

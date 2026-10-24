@@ -8,13 +8,17 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   browser-shards:
-    name: browser-shard (${{ matrix.shard }}/4)
+    name: browser-shard (${{ matrix.shard }}/6)
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,18 +36,18 @@ jobs:
           files=(tests/*.test.cjs)
           general=()
           for file in "${files[@]}"; do
-            if [[ "$file" != tests/squishy-styles-browser.test.cjs ]]; then
+            if [[ "$file" != tests/squishy-styles-browser.test.cjs && "$file" != tests/squishy-marshmallow-browser.test.cjs && "$file" != tests/squishy-slow-rebound-browser.test.cjs ]]; then
               general+=("$file")
             fi
           done
-          node --test --test-concurrency=1 --test-shard=${{ matrix.shard }}/4 "${general[@]}"
+          node --test --test-concurrency=1 --test-shard=${{ matrix.shard }}/6 "${general[@]}"
 
   style-cases:
     name: style-case (${{ matrix.case }})
     strategy:
       fail-fast: false
       matrix:
-        case: [cloud, paw, cylinder, donut, pyramid, flower, star, loading-race]
+        case: [cloud, paw, cylinder, donut, pyramid, flower, star, loading-race, cloud-marshmallow, paw-marshmallow, cylinder-marshmallow, donut-marshmallow, pyramid-marshmallow, flower-marshmallow, star-marshmallow, cloud-slow-rebound, paw-slow-rebound, cylinder-slow-rebound, donut-slow-rebound, pyramid-slow-rebound, flower-slow-rebound, star-slow-rebound, slow-rebound-touch]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

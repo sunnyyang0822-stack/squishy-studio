@@ -1,0 +1,23 @@
+TAP version 13
+# {"model":"paw","actualContact":[-0.76,0.36],"depth":0.25072404742240906}
+# {"model":"paw","actualContact":[-0.29,0.7],"depth":0.2512560784816742}
+# {"model":"paw","actualContact":[0.29,0.7],"depth":0.2512560784816742}
+# {"model":"paw","actualContact":[0.76,0.36],"depth":0.25072404742240906}
+# {"model":"paw","actualContact":[-0.24,-0.46],"depth":0.3052181899547577}
+# {"model":"paw","actualContact":[0.24,-0.46],"depth":0.3050549030303955}
+# {"model":"paw","actualContact":[0,0.17],"depth":0.21666768252643737}
+# Subtest: paw×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放
+ok 1 - paw×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放
+  ---
+  duration_ms: 32940.3706
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 33969.6319

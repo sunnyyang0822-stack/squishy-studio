@@ -87,28 +87,39 @@ def make(style):
         # replaces sphere-intersection valleys on both front and back.
         return fuse([inflated_outline('Cloud_Convex_Cap',cloud_outline,.68)],.052,18)
     if style == 'paw':
-        # Four toes and one broad palm. Five raised pads fuse into the body.
-        parts = [ellipsoid((0,0,-.35),(.88,.43,.75))]
-        for x,z,rx,rz in [(-.76,.36,.36,.47),(-.29,.70,.37,.50),(.29,.70,.37,.50),(.76,.36,.36,.47)]:
+        # Real thick palm/toe volumes and genuinely raised pads. A single voxel
+        # union removes interior shells while preserving the puffy heart cap.
+        toe_specs=[(-.76,.36,.36,.47),(-.29,.70,.37,.50),(.29,.70,.37,.50),(.76,.36,.36,.47)]
+        # Rounded thick outer palm, not a triangular chin. A wide upper body
+        # wraps the four toe roots in one continuous fleshy volume.
+        parts=[ellipsoid((0,0,-.35),(.88,.43,.75)),
+            ellipsoid((0,0,.03),(.95,.41,.53))]
+        for x,z,rx,rz in toe_specs:
             parts.append(ellipsoid((x,0,z),(rx,.39,rz)))
-            parts.append(ellipsoid((x,-.34,z+.015),(rx*.68,.18,rz*.62)))
-        obj=fuse(parts,.043,9)
-        # The raised inverted-heart palm is a C-infinity geometric heightfield
-        # in the original continuous front surface. Unlike a closed heart cap
-        # union, it has NO undercut, knife tip, narrow seam or deep notch.
-        # Two lower round lobes and a shorter rounded upper lobe give the
-        # requested tip-up/twin-lobes-down outline with broad soft transitions.
-        for vertex in obj.data.vertices:
-            p=obj.matrix_world @ vertex.co
-            if p.y>=0: continue
-            keep=1.0
-            for cx,cz,rx,rz in [(-.22,-.53,.32,.27),(.22,-.53,.32,.27),(0,-.27,.22,.30)]:
-                q=((p.x-cx)/rx)**2+((p.z-cz)/rz)**2
-                h=math.exp(-1.35*q)
-                keep*=1-h
-            w=min(1,max(0,-p.y/.24)); w=w*w*(3-2*w)
-            vertex.co.y -= .235*(1-keep)*w
-        modifier(obj,'SMOOTH',factor=.35,iterations=2)
+        # Fuse a broad fleshy root before adding pads: toes emerge from a
+        # continuous thick palm rather than four balls on narrow necks.
+        body=fuse(parts,.040,18)
+        parts=[body]
+        for x,z,rx,rz in toe_specs:
+            parts.append(ellipsoid((x,-.33,z+.015),(rx*.75,.27,rz*.69)))
+        # Low wide support between the two upper pads, no needle-like bridge.
+        parts.append(ellipsoid((0,-.20,.68),(.23,.23,.36)))
+        def heart_outline(t):
+            # Classical inverted heart: tip toward toes, broad twin lobes
+            # toward palm bottom, with a shallow gently rounded cleft.
+            x=.52*math.sin(t)**3+.03*math.sin(t)
+            z=-.027*(13*math.cos(t)-5*math.cos(2*t)-2*math.cos(3*t)-math.cos(4*t))-.03*math.cos(t)
+            z-=.05*math.exp(-(math.sin(t/2)/.22)**2)
+            # True 0.10 m round fillet replaces the mathematical upward tip.
+            if abs(x)<.10 and z>.28:
+                z=min(z,.28+math.sqrt(max(0,.10**2-x*x)))
+            return x,z
+        # Full balloon depth and generous solid overlap form a rounded shoulder.
+        pad=inflated_outline('Paw_Puffy_Inverted_Heart',heart_outline,.36,center=(0,-.50,-.25))
+        pad=fuse([pad],.035,10)
+        parts.append(pad)
+        obj=fuse(parts,.035,11)
+        modifier(obj,'TRIANGULATE',quad_method='BEAUTY',ngon_method='BEAUTY')
         return obj
     if style == 'flower':
         # Product review supersedes the original six-petal ring: five petal
@@ -205,7 +216,7 @@ def build(style):
         'vertices':positions['count'],'triangles':gltf['accessors'][primitive['indices']]['count']//3,
         'glbBytes':len(raw),'meshes':1,'primitives':1,'materials':1,
         'closedManifold':True,'externalTextures':False,'feelId':'clay',
-        'reviewStatus':'review revision: four toes + inverted heart palm; approved tetrahedron; five petals + one center'}
+        'reviewStatus':('reference revision: rounded thick outer palm; four raised oval toe pads with broad root fillets; classical inverted-heart main pad, 0.10 m rounded tip toward toes and two full lower lobes with shallow cleft' if style=='paw' else 'review revision: four toes + inverted heart palm; approved tetrahedron; five petals + one center')}
     (OUT/(style+'.json')).write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf8')
     cam=setup_render(scene)
     for view,loc in [('front',(0,-6,.1)),('side',(6,0,.1)),('back',(0,6,.1)),('bottom',(0,0,-6))]:
@@ -220,7 +231,7 @@ def build(style):
         '坐标：米制、Blender Z-up，导出 glTF Y-up；正面为 glTF +Z。原点为包围盒中心，所有对象变换已应用。浏览器落地与相机按包围盒适配。\n\n'
         '复现：在仓库根目录运行 `blender --background --python scripts/build-styles.py -- '+style+'`。此脚本只用于独立后台进程，会清空当前场景；不要在未保存的交互场景中执行。导出仅选择表面，不含相机或灯光。`.blend` 保留可编辑表面与独立审阅灯光。\n\n'
         '几何统计和包围盒见 `artifacts/issue-30/models/'+style+'.json`；正、侧、背、底图在同目录。浏览器验证另由运行时测试记录，Blender 图不能代替可玩验收。\n\n'
-        +('按产品评审修订：4 个趾体、4 个鼓起趾垫，加 1 个倒心形主肉垫（尖端朝上、下方双圆瓣）；肉垫全部真实融合。\n' if style=='paw' else '')
+        +('按用户猫爪参考图和最新澄清修订：仅参考形状比例，不添加毛发。外掌保持圆厚自然轮廓，宽厚包裹四个趾根。中央主肉垫采用经典倒心形：圆钝尖端朝向四趾，下方是两个饱满大圆瓣与浅柔凹口。主垫构型总厚度 0.72 米，以真实半径 0.10 米圆弧柔化朝趾尖端，独立闭合体经 0.035 米体素与 10 次平滑后，再与厚掌和四个真实鼓起的椭圆趾垫自然融合。趾掌底体先用 0.040 米体素和 18 次平滑融合，最终统一体素步长 0.035 米与 11 次平滑；宽圆肩过渡，不保留内部壳、悬浮贴片或尖 V 缝。几何适配按最终模型验证，不改变既有 clay 手感参数。\n' if style=='paw' else '')
         +('产品已确认三角底四面体（3 个底角 + 1 个顶部），默认视角可略转以展示体积。\n' if style=='pyramid' else '')
         +('最新产品反馈覆盖最初六瓣环规格：5 个圆球为花瓣，1 个圆球为鼓起花蕊，总计 6 球融合。花蕊通过几何区分，不依赖固定材质或烘色。\n' if style=='flower' else '')
         +('按产品评审消除正背面的交汇凹点：云瓣外轮廓搭配单一连续凸起厚度曲面，保留自然瓣间轮廓，不在表面留下莫名凹陷。\n' if style=='cloud' else '')

@@ -1,0 +1,7 @@
+cloud×slow-rebound: captured, actual GPU deformation verified
+cylinder×slow-rebound: captured, actual GPU deformation verified
+donut×slow-rebound: captured, actual GPU deformation verified
+pyramid×slow-rebound: captured, actual GPU deformation verified
+flower×slow-rebound: captured, actual GPU deformation verified
+star×slow-rebound: captured, actual GPU deformation verified
+paw×slow-rebound: captured, actual GPU deformation verified

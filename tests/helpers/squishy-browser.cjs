@@ -108,4 +108,20 @@ async function rotate(page, dx, dy) {
   await page.mouse.move(b.x + 12 + dx, b.y + 45 + dy, { steps: 20 }); await page.mouse.up(); await page.waitForTimeout(200);
 }
 const contactFor = id => [id === 'donut' ? .76 : .5, id === 'paw' ? .68 : .42];
-module.exports = { installStyleProbe, stats, ready, point, settle, surfaceLight, rotate, contactFor };
+async function projectedSurfaceContact(page, x, y) {
+  const box = await page.locator('.toy-mount canvas').boundingBox();
+  return page.evaluate(({ box, x, y }) => {
+    const p = window.styleProbe; let index = -1, best = Infinity;
+    for (let i = 0; i < p.rest.length; i += 3) {
+      if (p.restNormals[i + 2] < .5) continue;
+      const distance = (p.rest[i] - x) ** 2 + (p.rest[i + 1] - y) ** 2;
+      if (distance < best) { best = distance; index = i; }
+    }
+    if (index < 0 || best > .04) throw Error('No front surface near requested region');
+    const local = p.rest.slice(index, index + 3), m = p.matrix;
+    const view = [0, 1, 2].map(k => m[12 + k] + local.reduce((s, v, j) => s + v * m[j * 4 + k], 0));
+    const h = Math.max(1.6, 1.48 * box.height / box.width), w = h * box.width / box.height;
+    return { index, local, x: box.x + box.width * (.5 + view[0] / (2 * w)), y: box.y + box.height * (.5 - view[1] / (2 * h)) };
+  }, { box, x, y });
+}
+module.exports = { installStyleProbe, stats, ready, point, settle, surfaceLight, rotate, contactFor, projectedSurfaceContact };

@@ -1,0 +1,30 @@
+TAP version 13
+# flower: real surface mounted
+# {"model":"flower","pose":"initial","edgeDisplacementInView":[0,2.068916149511324e-10,-0.24029334131330982]}
+# flower: press, drag and natural recovery passed
+# flower: cancellation and color restore passed
+# {"model":"flower","pose":"rotated","edgeDisplacementInView":[2.933547077477172e-8,-5.586375362298668e-9,-0.1941444572043518]}
+# Subtest: flower×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle
+ok 1 - flower×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle
+  ---
+  duration_ms: 5260.3489
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6262.157
+✔ 慢回弹原圆球边缘沿按入方向凹陷，旋转后不向球心拉扯且完整恢复 (2673.002ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3578.0549

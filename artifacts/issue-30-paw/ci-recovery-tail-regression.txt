@@ -1,0 +1,30 @@
+TAP version 13
+# pyramid: real surface mounted
+# {"model":"pyramid","pose":"initial","edgeDisplacementInView":[1.6637800470675757e-8,-4.56997939490833e-9,-0.38822078261167103]}
+# pyramid: press, drag and natural recovery passed
+# pyramid: cancellation and color restore passed
+# {"model":"pyramid","pose":"rotated","edgeDisplacementInView":[-7.708507054893232e-9,-5.148314574654478e-8,-0.27078411440163563]}
+# Subtest: pyramid×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle
+ok 1 - pyramid×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle
+  ---
+  duration_ms: 6490.271
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7481.5854
+✔ 慢回弹原圆球边缘沿按入方向凹陷，旋转后不向球心拉扯且完整恢复 (4138.5573ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5167.029

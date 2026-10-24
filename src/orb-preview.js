@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { createOrbMaterial } from './orb-optics.mjs';
+import { getOrbPreset } from './orb-presets.mjs';
 import { getOrbFeel } from './orb-feels.mjs';
 import { getSquishyStyle } from './squishy-styles.mjs';
-import { createSurfaceClay } from './surface-clay.mjs';
-import { getOrbAppearance } from './orb-appearance.mjs';
+import { createSurfaceGeometry } from './surface-clay.mjs';
+import { getOrbAppearance, getModelPresentationScale } from './orb-appearance.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
@@ -23,7 +23,10 @@ function releaseObject(root) {
 
 // One renderer per page. Frames run only while deformation is changing or the
 // viewport needs redrawing. Audio and shell fracture are outside this adapter.
-export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'clay', styleId = 'orb', appearanceId = 'matte' } = {}) {
+export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, feelId, styleId = 'orb', appearanceId } = {}) {
+  const preset = presetId === undefined ? null : getOrbPreset(presetId);
+  feelId ??= preset?.feelId ?? 'clay';
+  appearanceId ??= preset?.appearanceId ?? 'matte';
   const feel = getOrbFeel(feelId);
   const appearance = getOrbAppearance(appearanceId);
   const interactionLabel = feel.id === 'slow-rebound' ? '缓慢按下，松开后缓慢完整回弹' : '可按压留痕';
@@ -62,11 +65,18 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     }
     const geometry = mesh.geometry;
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+    const orbPressGeometry = feelId === 'slow-rebound' && !isSurface
+      ? createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array) : null;
+    const pressOptions = feelId === 'slow-rebound' ? {
+      getPressDirection: () => raycaster.ray.direction.clone().transformDirection(mesh.matrixWorld.clone().invert()).negate().toArray(),
+      ...(!isSurface ? { constrainPress: orbPressGeometry.createContactSafety(), getPressRadius: (i, direction) => orbPressGeometry.contactRadius(i, direction) } : {}),
+    } : {};
     let deformation;
     try {
       deformation = isSurface
-        ? createSurfaceClay(geometry.attributes.position.array, geometry.attributes.normal.array, { indices: geometry.index.array, geometryOptions: style.geometryOptions, reducedMotion: motionPreference.matches })
-        : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
+        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, { ...style.geometryOptions, continuousFootprint: feelId === 'slow-rebound' }), reducedMotion: motionPreference.matches,
+          ...pressOptions })
+        : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches, ...pressOptions });
     } catch (error) { releaseObject(root); throw error; }
     let renderer;
     try {
@@ -75,7 +85,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
       releaseObject(root);
       throw Object.assign(error, { code: 'UNAVAILABLE' });
     }
-    mesh.scale.multiply(new THREE.Vector3(...appearance.scale));
+    mesh.scale.multiply(new THREE.Vector3(...getModelPresentationScale(appearance, style.geometryAdapter)));
     const scene = new THREE.Scene();
     const pivot = new THREE.Group();
     const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
@@ -129,7 +139,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     // Diffuse, solid surface. Colors share the existing geometry and material;
     // no new GLBs, textures, transparent shells or layered draw calls.
     const sourceMaterial = mesh.material;
-    mesh.material = createOrbMaterial(sourceMaterial, feelId);
+    mesh.material = getOrbPreset(feelId).createMaterial(sourceMaterial);
     mesh.material.vertexColors = true;
     sourceMaterial.dispose();
     const colors = new Float32Array(geometry.attributes.position.count * 3);
@@ -152,8 +162,10 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
     const surface = document.createElement('button');
     surface.type = 'button'; surface.className = 'orb-input';
     surface.setAttribute('aria-label', feel.id === 'slow-rebound' ? '按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车' : '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
-    if (feelId === 'marshmallow') surface.setAttribute('aria-label', '棉花糖，按住或拖动快速压陷，松开完全保留；空格或回车也可按压，换色可复原');
-    if (isSurface) surface.setAttribute('aria-label', `按住并拖动${style.name}，松开保留凹痕；也可按住空格或回车`);
+    if (feelId === 'marshmallow') surface.setAttribute('aria-label', '棉花糖，按住逐渐局部压陷，滑动留浅痕，松开完全保留；空格或回车也可按压，换色可复原');
+    if (isSurface && feelId !== 'marshmallow') surface.setAttribute('aria-label', feelId === 'slow-rebound'
+      ? `按住并拖动${style.name}，缓慢下陷，松开完整回弹；也可按住空格或回车`
+      : `按住并拖动${style.name}，松开保留凹痕；也可按住空格或回车`);
     surface.setAttribute('aria-pressed', 'false');
     const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
     root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
@@ -310,6 +322,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, feelId = 'cl
         }
         return null;
       } : undefined,
+      beforeRelease() {
+        // Commit pending marshmallow path input while still pressed. A quick
+        // swipe ending between rAF callbacks must not drop its final segment.
+        if (feelId === 'marshmallow' && current.frame) {
+          cancelAnimationFrame(current.frame); current.frame = 0;
+          draw(performance.now());
+        }
+      },
     });
     const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);

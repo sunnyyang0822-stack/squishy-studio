@@ -11,6 +11,44 @@ function faceNormal(p, a, b, c) {
   return [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
 }
 
+test('猫爪：四趾、心形主垫、连接处和背面均在指下明显压入', async () => {
+  const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
+  const { createSurfaceGeometry } = await import('../src/surface-clay.mjs');
+  const { getOrbFeel } = await import('../src/orb-feels.mjs');
+  const style = getSquishyStyle('paw'), mesh = readMesh(`.${style.modelUrl}`);
+  const rest = Float32Array.from(mesh.positions), positions = rest.slice();
+  const geometry = createSurfaceGeometry(positions, Float32Array.from(mesh.normals), mesh.indices, style.geometryOptions);
+  // Inspect the pressed vertex itself, rather than a maximum somewhere else.
+  // Geometry safety is checked independently by the repeated-stroke test.
+  const d = getOrbFeel('clay').createDeformation(positions, Float32Array.from(mesh.normals), { surfaceGeometry: geometry });
+  const regions = [
+    ['左外趾', -.72, .36], ['左内趾', -.29, .7], ['右内趾', .29, .7], ['右外趾', .72, .36],
+    ['心尖', 0, -.13], ['左心瓣', -.25, -.53], ['右心瓣', .25, -.53],
+    ['趾间连接', 0, .3], ['左掌缘', -.68, -.3], ['右掌缘', .68, -.3], ['背面', 0, -.35, true],
+  ];
+  for (const [name, x, y, back] of regions) {
+    let selected = -1, best = Infinity;
+    for (let i = 0; i < rest.length; i += 3) {
+      if ((back ? -1 : 1) * mesh.normals[i + 2] < .35) continue;
+      const score = (rest[i] - x) ** 2 + (rest[i + 1] - y) ** 2;
+      if (score < best) { selected = i; best = score; }
+    }
+    assert.ok(selected >= 0 && best < .04, `${name}: actual surface near requested region`);
+    const hit = Array.from(rest.slice(selected, selected + 3));
+    d.reset(); d.begin(hit); advance(d, 162);
+    const depth = Math.hypot(...hit.map((v, k) => positions[selected + k] - v));
+    assert.ok(depth > .08, `${name}: deformation at the actual contact, not a nearby vertex: ${depth}`);
+    const footprint = new Set(geometry.neighborhood(hit, .66).map(([i]) => i));
+    for (let i = 0; i < rest.length / 3; i++) if (!footprint.has(i)) {
+      assert.ok(Math.hypot(...[0, 1, 2].map(k => positions[i * 3 + k] - rest[i * 3 + k])) < 1e-6, `${name}: distant skin outside the real surface footprint is unchanged`);
+    }
+    d.release(); advance(d, 90);
+    const retained = Math.hypot(...hit.map((v, k) => positions[selected + k] - v));
+    assert.ok(Math.abs(retained / depth - .85) < .015, `${name}: clay retention unchanged`);
+    d.beginRestore(); d.applyRestore(1); d.step(1 / 60); assert.deepEqual(positions, rest);
+  }
+});
+
 test('等价球空间查询严格保留模板逐帧阻力、85%留痕、取消和恢复时序', async () => {
   const { getOrbFeel } = await import('../src/orb-feels.mjs');
   const rest = Float32Array.from([0, 0, 1, 0, 0, -1, 1, 0, 0, -1, 0, 0, 0, 1, 0, 0, -1, 0]);

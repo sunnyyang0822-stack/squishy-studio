@@ -8,9 +8,10 @@ export function createModelPreview(mount, options) {
   const preparing = new Set();
   return {
     async prepare(config, context) {
-      const nextFeel = config.feelId || options?.feelId || 'clay';
+      const presetId = config.presetId || options?.presetId;
+      const nextFeel = config.feelId || options?.feelId || presetId || 'clay';
       const styleId = config.styleId || options?.styleId || 'orb';
-      const appearanceId = config.appearanceId || options?.appearanceId || 'matte';
+      const appearanceId = config.appearanceId || options?.appearanceId || (presetId === 'slow-rebound' ? 'full-matte' : 'matte');
       const key = `${styleId}:${nextFeel}:${appearanceId}`;
       const ownRevision = ++revision;
       let candidate = key === rendererKey ? renderer : undefined;
@@ -22,7 +23,7 @@ export function createModelPreview(mount, options) {
         const module = await import(url);
         if (disposed || context.signal.aborted) throw new DOMException('Aborted', 'AbortError');
         if (ownRevision !== revision) throw new DOMException('Aborted', 'AbortError');
-        candidate = module.createOrbPreview(mount, { ...options, feelId: nextFeel, styleId, appearanceId });
+        candidate = module.createOrbPreview(mount, { ...options, presetId, feelId: nextFeel, styleId, appearanceId });
         owned = true; preparing.add(candidate);
       }
       try {

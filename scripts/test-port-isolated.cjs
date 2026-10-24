@@ -27,8 +27,11 @@ try {
   const detailPort = String(Number(process.env.DETAIL_TEST_PORT || 4180) + offset);
   assert(Number.isInteger(Number(detailPort)) && Number(detailPort) > 0 && Number(detailPort) <= 65535, 'Invalid isolated DETAIL_TEST_PORT');
   if (process.argv.includes('--check')) {
-    assert(helper.includes(`http://127.0.0.1:${4216 + offset}`));
-    assert(helper.includes(`PORT: '${4216 + offset}'`));
+    // PR #32 allocates its own OS-selected port. Verify that the probe, URL
+    // and child server still share that value instead of expecting old 4216.
+    assert(helper.includes("probe.listen(0, '127.0.0.1'"));
+    assert(helper.includes("const base = 'http://127.0.0.1:' + port"));
+    assert(helper.includes('PORT: String(port)'));
     const marshmallow = testCopies.find(file => file.endsWith('-orb-marshmallow-browser.test.cjs.cjs'));
     assert(readFileSync(marshmallow, 'utf8').includes(`./helpers/${helperName}`));
     for (const file of copies) {
@@ -36,7 +39,7 @@ try {
       if (result.error) throw result.error;
       assert.equal(result.status, 0, `Syntax check failed: ${file}`);
     }
-    console.log(`PASS: ${testCopies.length} isolated tests and helper parse; helper endpoints remapped; DETAIL_TEST_PORT=${detailPort}; no browser started.`);
+    console.log(`PASS: ${testCopies.length} isolated tests and helper parse; PR #32 helper uses a consistent OS-selected port; DETAIL_TEST_PORT=${detailPort}; no browser started.`);
   } else {
     console.log(`Running all ${testCopies.length} original test files with port offset +${offset}; assertions unchanged; concurrency=1; DETAIL_TEST_PORT=${detailPort}.`);
     const result = spawnSync(process.execPath, ['--test', '--test-concurrency=1', ...testCopies], {

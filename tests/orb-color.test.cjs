@@ -26,14 +26,15 @@ const distance = (a, b) => Math.max(...a.slice(0, 3).map((value, index) => Math.
 const matrixDistance = (a, b) => Math.max(...a.map((value, index) => Math.abs(value - b[index])));
 
 test('同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压', async () => {
-  const page = await open();
+  const page = await open({}, { clock: true });
   await idle(page);
   const matrix = await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice());
   const canvas = await page.locator('.toy-mount canvas').elementHandle();
   await page.locator('.orb-input').focus();
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
   await page.keyboard.down('Space');
-  await page.waitForTimeout(600);
-  await page.keyboard.up('Space'); await settled(page);
+  await page.clock.runFor(600);
+  await page.keyboard.up('Space'); await page.clock.resume(); await settled(page);
   await page.mouse.move(100,250); await page.mouse.down();
   await page.mouse.move(280,300,{steps:8}); await page.mouse.up(); await idle(page);
   assert.ok(await page.evaluate(() => window.orbMeshProbe.positions.some((value,i) => Math.abs(value-window.orbMeshProbe.rest[i])>.025)));
