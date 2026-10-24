@@ -35,15 +35,16 @@ test('thin wax is a separate closed-volume shell with independently owned color 
   wax.dispose(); geometry.dispose();
 });
 
-test('actual continuous dwell exceeds one second; first local burst is three chips with a decaying outward impulse', async () => {
+test('actual continuous dwell exceeds one second; one brittle local wave retains most plates and releases only a few small chips', async () => {
   const f = await fixture(); f.begin();
   f.advance(.999); assert.equal(f.wax.getState().detached, 0);
   f.advance(.001); assert.equal(f.wax.getState().detached, 0);
-  f.advance(.001); const initial = f.wax.getState(); assert.equal(initial.detached, 3); assert.equal(initial.firstBurst, 3);
-  assert.ok(initial.burstInitialOutwardSpeed > 2);
+  f.advance(.001); const initial = f.wax.getState(); assert.ok(initial.detached >= 1 && initial.detached <= 3); assert.equal(initial.firstBurst, initial.detached);
+  assert.ok(initial.burstInitialOutwardSpeed > 1);
+  assert.ok(initial.localDamaged >= 6); assert.ok(initial.localRetainedFraction >= .6);
   f.advance(.14); const afterImpulse = f.wax.getState();
-  assert.ok(afterImpulse.maxOutwardOffset > initial.maxOutwardOffset + .1, 'Visible outward burst during first 140ms');
-  f.advance(.30); assert.equal(f.wax.getState().detached, 4);
+  assert.ok(afterImpulse.maxOutwardOffset > initial.maxOutwardOffset + .03, 'Brief chip release, no sustained outward propulsion');
+  f.advance(.30); assert.equal(f.wax.getState().detached, initial.detached, 'Held clock alone must not eject another plate');
   assert.ok(f.wax.getState().detached < f.wax.getMetrics().patches / 20, 'Local chips, not whole-shell explosion');
   f.wax.end(); const count = f.wax.getState().detached; f.advance(5);
   assert.equal(f.wax.getState().detached, count); assert.equal(f.wax.getState().living, 0);
@@ -91,7 +92,7 @@ test('bounded lifetime, unique chips, reduced motion and idempotent cleanup', as
   const f = await fixture(); f.wax.setReducedMotion(true); f.wax.setGravity([0, -1, 0]); f.wax.begin([0, 0, .9]);
   for (let i = 0; i < 60; i++) f.advance(.5);
   assert.ok(f.wax.getState().detached <= f.parameters.maxFragments);
-  assert.equal(f.wax.getState().firstBurst, 3);
+  assert.ok(f.wax.getState().firstBurst >= 1 && f.wax.getState().firstBurst <= 3);
   f.wax.end(); f.advance(4); assert.equal(f.wax.getState().living, 0);
   let geometries = 0, materials = 0;
   f.wax.group.children[0].geometry.addEventListener('dispose', () => geometries++);
@@ -130,13 +131,13 @@ for (const gravity of [[0, -1, 0], [1, 0, 0], [0, 0, 1]]) test(`broken rim repea
   const f = await fixture(); f.wax.setGravity(gravity);
   const center = frontContact(f, 0, 0), edge = frontContact(f, .18, .04);
   f.begin(center); frames(f, 165);
-  assert.ok(f.wax.getState().detached >= 3); assertExhaustiveClearance(f, 'first deep crater');
+  assert.ok(f.wax.getState().detached >= 1 && f.wax.getState().detached <= 3); assertExhaustiveClearance(f, 'first deep crater');
   f.wax.end(); f.deformation.release(); f.baseline.release(); frames(f, 6);
   const firstDamage = f.wax.getState().detached;
   // The next press straddles existing broken rims and the sloped crater. Its
   // current geometry/normals differ substantially from the initial sphere.
   f.begin(edge); frames(f, 165); assertExhaustiveClearance(f, 'overlapping broken edge');
-  assert.ok(f.wax.getState().detached > firstDamage);
+  assert.ok(f.wax.getState().detached >= firstDamage); assert.ok(f.wax.getState().attachedCracked >= 3, 'A repeatedly pressed crater retains fractured attached shell');
   const points = [[-.45, .2], [.45, -.2], [-.3, -.25], [.3, .25], [0, 0]].map(([x, y]) => frontContact(f, x, y));
   for (const p of points) { f.deformation.move(p, .6); f.baseline.move(p, .6); f.wax.move(p); frames(f, 3); }
   assertExhaustiveClearance(f, 'rapid diagonal crossings through old crater');
@@ -194,7 +195,7 @@ test('creating a shell over an old bare-core dent retains original contact coord
   const wax = createThinWax({ geometry: f.geometry, restPositions: f.restPositions, restNormals: Float32Array.from(readMesh('./assets/models/squishy-orb.glb').normals), clock: () => time });
   assert.deepEqual(wax.getSurfaceSnapshot().restSupportPositions, initial.restSupportPositions);
   wax.begin([0, 0, .9]); assert.ok(wax.getState().cracked > 0); time = 1.01; wax.step(1.01);
-  assert.equal(wax.getState().detached, 3, 'Old dent cannot displace the recipe shell contact coordinates');
+  assert.ok(wax.getState().detached >= 1 && wax.getState().detached <= 3, 'Old dent cannot displace the recipe shell contact coordinates');
   assert.equal(wax.getMetrics({ exhaustive: true }).detachedViolations, 0);
   wax.dispose(); f.wax.dispose(); f.geometry.dispose();
 });
@@ -212,5 +213,23 @@ test('detached curved plates retain frozen edge lengths while the original core 
   }
   assert.ok(checked > 50); assert.ok(maximumError < .000001, `Frozen plate edge-length error ${maximumError}`);
   const metrics = f.wax.getMetrics({ exhaustive: true }); assert.equal(metrics.detachedViolations, 0); assert.ok(metrics.wallSamples > 1000);
+  f.wax.dispose(); f.geometry.dispose();
+});
+
+test('irregular area distribution, rapid connected cracking and strain-limited saturation replace regular scales and timed emptying', async () => {
+  const f = await fixture(), metrics = f.wax.getMetrics();
+  assert.ok(metrics.panelAreaCV > .35, `Unequal rendered plate area CV ${metrics.panelAreaCV}`);
+  assert.ok(metrics.panelAreaRange[1] / metrics.panelAreaRange[0] > 5);
+  f.wax.begin([0, 0, .9]); f.advance(.99); const before = f.wax.getState();
+  assert.equal(before.detached, 0); assert.ok(before.cracked < 4);
+  f.advance(.02); const wave = f.wax.getState();
+  assert.equal(wave.chainWaveCount, 1); assert.ok(wave.cracked - before.cracked >= 5);
+  assert.ok(wave.localRetainedFraction >= .6); assert.ok(wave.attachedCracked > wave.detached);
+  const detached = wave.detached, cracked = wave.cracked;
+  for (let i = 0; i < 10; i++) f.advance(.5);
+  assert.equal(f.wax.getState().detached, detached, 'Elapsed time cannot sequentially empty the cracked region');
+  assert.equal(f.wax.getState().cracked, cracked); assert.equal(f.wax.getState().chainWaveCount, 1);
+  f.wax.end(); f.wax.begin([0, 0, .9]); f.advance(1.1); const repeated = f.wax.getState();
+  assert.ok(repeated.attachedCracked >= wave.attachedCracked - 1, 'Repeated presses cannot strip the deliberately retained majority');
   f.wax.dispose(); f.geometry.dispose();
 });
