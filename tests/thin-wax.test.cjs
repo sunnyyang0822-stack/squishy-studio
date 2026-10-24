@@ -69,6 +69,49 @@ test('released wax chips fall promptly under gravity instead of ejecting sideway
   f.wax.dispose(); f.geometry.dispose();
 });
 
+test('actual clay dent and dragged deformation all receive local crack geometry before any chip can fall', async () => {
+  const f = await fixture(); f.begin(); frames(f, 18);
+  const target = frontContact(f, .44, .12);
+  f.deformation.move(target, .5); f.baseline.move(target, .5); f.wax.move(target); frames(f, 24);
+  const snapshot = f.wax.getSurfaceSnapshot(), regions = new Map();
+  for (let r = 0; r < snapshot.layers.length; r++) if (snapshot.layers[r] === 1) {
+    const id = snapshot.panelIds[r], region = regions.get(id) || { displacement: 0, cracked: false, open: false, slit: 0 };
+    region.displacement = Math.max(region.displacement, Math.hypot(...[0, 1, 2].map(k => snapshot.sourceSupportPositions[r * 3 + k] - snapshot.restSupportPositions[r * 3 + k])));
+    region.cracked ||= Boolean(snapshot.damage[r]); region.open ||= Boolean(snapshot.openBoundary[r]); regions.set(id, region);
+    if (snapshot.openBoundary[r]) {
+      const delta = [0, 1, 2].map(k => snapshot.positions[r * 3 + k] - snapshot.sourceSupportPositions[r * 3 + k]);
+      const normal = Array.from(snapshot.normals.slice(r * 3, r * 3 + 3)), projected = delta.reduce((sum, value, k) => sum + value * normal[k], 0);
+      region.slit = Math.max(region.slit, Math.hypot(...delta.map((value, k) => value - projected * normal[k])));
+    }
+    if (snapshot.restSupportPositions[r * 3 + 2] < -.4) assert.equal(snapshot.damage[r], 0, 'Untouched back never gets global cracks');
+  }
+  let deformed = 0;
+  for (const [id, region] of regions) if (region.displacement > .00401) {
+    assert.ok(region.cracked && region.open, `Deformed panel ${id} (${region.displacement}) must have an actual open boundary`); deformed++;
+    assert.ok(region.slit > .00025, `Panel ${id} must visibly separate along an edge, not just carry a damage flag: ${region.slit}`);
+  }
+  assert.ok(deformed >= 6, `Exercise the dent rim and dragged trail, not just the clicked cell: ${deformed}`);
+  assert.equal(f.wax.getState().detached, 0, 'Visible deformation cracks do not bypass the one-second fragment threshold');
+  f.wax.end(); const stopped = f.wax.getState().cracked;
+  f.deformation.release(); f.baseline.release(); frames(f, 20);
+  assert.equal(f.wax.getState().cracked, stopped, 'No damage propagation after release');
+  const metrics = f.wax.getMetrics({ exhaustive: true }); assert.equal(metrics.attachedViolations, 0);
+  f.wax.dispose(); f.geometry.dispose();
+});
+
+test('additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone', async () => {
+  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(1.001);
+  assert.equal(f.wax.getState().detached, 2);
+  const positions = f.geometry.attributes.position.array;
+  for (let i = 0; i < positions.length; i += 3) if (positions[i + 2] > .7 && Math.hypot(positions[i], positions[i + 1]) < .3) positions[i + 2] -= .025;
+  f.geometry.computeVertexNormals(); f.advance(.058);
+  assert.equal(f.wax.getState().detached, 2, 'Keep a small separation between first break and further strain response');
+  f.advance(.003); assert.equal(f.wax.getState().detached, 3, 'Small further indentation responds immediately after 1.06s');
+  f.advance(1); assert.equal(f.wax.getState().detached, 3, 'No continued stripping from a held timer');
+  const metrics = f.wax.getMetrics({ exhaustive: true }); assert.equal(metrics.detachedViolations, 0);
+  f.wax.dispose(); f.geometry.dispose();
+});
+
 test('short taps, cancellation, hit loss and sliding cannot borrow previous dwell time', async () => {
   const f = await fixture();
   for (let i = 0; i < 8; i++) { f.wax.begin([0, 0, .9]); f.advance(.3); f.wax.cancel(); f.advance(.01); }

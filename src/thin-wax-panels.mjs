@@ -155,6 +155,28 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     for (const vertex of nearest.vertices) maximum = Math.max(maximum, vertex.p.clone().sub(map(vertex, source, vec())).length());
     return maximum;
   }
+  function crackDeformedSurface() {
+    if (!active) return;
+    const current = vec(); let changed = false;
+    for (const panel of panels) {
+      if (panel.detached) continue;
+      let displacement = 0;
+      for (const vertex of panel.vertices) displacement = Math.max(displacement, map(vertex, source, current).distanceTo(vertex.p));
+      if (displacement < config.visibleDeformation) continue;
+      // Use the actual mapped core, including the dent rim and dragged trail.
+      // A deformed cell opens only one or two stressed long edges, not its ring.
+      const desired = displacement > .025 ? 2 : 1;
+      if ((panel.strainEdges || 0) >= desired) continue;
+      const ranked = panel.boundaryGroups.map(group => {
+        let strain = 0;
+        for (const edge of group.edges) for (const i of edge) strain = Math.max(strain, map(panel.vertices[i], source, current).distanceTo(panel.vertices[i].p));
+        return { group, strain };
+      }).sort((a, b) => b.strain - a.strain);
+      for (const { group } of ranked.slice(0, desired)) visibleCrackEdges.add(group.key);
+      panel.cracked = panel.strainCracked = true; panel.strainEdges = desired; changed = true;
+    }
+    if (changed) { refreshCrackMasks(); dirty = true; }
+  }
   function startLocalStroke() { since = clock(); stroke = { fractured: false, cohort: [], reserve: null, baselineDepth: 0, detachCount: 0 }; }
   function begin(value) { if (disposed) return; active = true; contact = anchor = point(value); startLocalStroke(); crack(); }
   function end() { active = false; contact = anchor = null; }
@@ -164,7 +186,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     crack();
   }
   function sync() {
-    if (disposed) return; collisions.refit(); sweepSamples = 0;
+    if (disposed) return; crackDeformedSurface(); collisions.refit(); sweepSamples = 0;
     const normal = vec(), base = vec(), tangent = vec(), original = vec();
     for (const panel of panels) {
       if (panel.dead) { for (let r = panel.start; r < panel.end; r++) output.fill(0, r * 3, r * 3 + 3); continue; }
@@ -200,7 +222,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
           // perimeter chains open; whole-cell shrinking produced a scale mosaic.
           if (panel.detached || panel.loose || panel.openVertexMask[i]) {
             tangent.copy(center).sub(vertex.target).addScaledVector(vertex.targetNormal, -tangent.dot(vertex.targetNormal));
-            const opening = panel.fractureAt === undefined ? .002 : .0055;
+            const opening = panel.fractureAt === undefined ? (panel.strainCracked ? .0035 : .002) : .0055;
             if (tangent.length() > .0001) tangent.setLength(Math.min(opening, tangent.length() * .035)); vertex.target.add(tangent);
           }
         }
@@ -279,7 +301,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     // Additional chips require *new core strain*. A stationary held timer may
     // finish the crack wave but cannot empty the contact footprint piece by piece.
-    if (active && stroke.fractured && stroke.reserve && now - since > 1.15 && depth() - stroke.baselineDepth > config.extraFractureStrain && stroke.detachCount < config.maxLocalFragments) {
+    if (active && stroke.fractured && stroke.reserve && now - since > config.dwell + config.extraFractureDelay && depth() - stroke.baselineDepth > config.extraFractureStrain && stroke.detachCount < config.maxLocalFragments) {
       detach([stroke.reserve], false); stroke.reserve = null;
     }
     let living = false;
@@ -301,7 +323,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     const changed = dirty; if (changed) sync(); return { changed, needsFrame: active || living };
   }
-  function reset() { end(); totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = false; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
+  function reset() { end(); totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
   function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead).length, expired: panels.filter(p => p.dead).length, firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: reducedMotion ? .067 : .2, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: 3, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, minSigned = Infinity, maxThicknessError = 0, attachedSamples = 0, attachedSurfaceSamples = 0, attachedViolations = 0, detachedSamples = 0, detachedInteriorSamples = 0, detachedMin = Infinity, detachedViolations = 0, wallSamples = 0;
@@ -336,15 +358,15 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   }
   function dispose() { if (disposed) return; end(); disposed = true; shell.dispose(); material.dispose(); group.removeFromParent(); }
   function getSurfaceSnapshot() {
-    const supports = new Float32Array(output.length), damage = new Uint8Array(records.length), referenceNormal = new Float32Array(output.length), layers = new Int8Array(records.length), panelIds = new Uint16Array(records.length), detached = new Uint8Array(records.length), loose = new Uint8Array(records.length), boundaryVertex = new Uint8Array(records.length), openBoundary = new Uint8Array(records.length);
+    const supports = new Float32Array(output.length), sourceSupports = new Float32Array(output.length), damage = new Uint8Array(records.length), referenceNormal = new Float32Array(output.length), layers = new Int8Array(records.length), panelIds = new Uint16Array(records.length), detached = new Uint8Array(records.length), loose = new Uint8Array(records.length), boundaryVertex = new Uint8Array(records.length), openBoundary = new Uint8Array(records.length);
     const support = vec(), normal = vec();
     for (let r = 0; r < records.length; r++) {
       const record = records[r], vertex = record.panel.vertices[record.vertex];
       map(vertex, rest, support); map(vertex, referenceNormals, normal).normalize();
-      supports.set(support.toArray(), r * 3); referenceNormal.set(normal.toArray(), r * 3); damage[r] = +record.panel.cracked; layers[r] = record.edge ? -1 : record.layer; panelIds[r] = record.panel.id; detached[r] = +(record.panel.detached && !record.panel.dead);
+      supports.set(support.toArray(), r * 3); map(vertex, source, support); sourceSupports.set(support.toArray(), r * 3); referenceNormal.set(normal.toArray(), r * 3); damage[r] = +record.panel.cracked; layers[r] = record.edge ? -1 : record.layer; panelIds[r] = record.panel.id; detached[r] = +(record.panel.detached && !record.panel.dead);
       loose[r] = +record.panel.loose; boundaryVertex[r] = record.panel.boundaryVertexMask[record.vertex]; openBoundary[r] = record.panel.openVertexMask[record.vertex];
     }
-    return { positions: output.slice(), normals: outputNormals.slice(), colors: colors.slice(), indices: shell.index.array.slice(), sourceFaces: Int32Array.from(sourceFaces), restSupportPositions: supports, restSupportNormals: referenceNormal, damage, layers, panelIds, detached, loose, boundaryVertex, openBoundary };
+    return { positions: output.slice(), normals: outputNormals.slice(), colors: colors.slice(), indices: shell.index.array.slice(), sourceFaces: Int32Array.from(sourceFaces), restSupportPositions: supports, sourceSupportPositions: sourceSupports, restSupportNormals: referenceNormal, damage, layers, panelIds, detached, loose, boundaryVertex, openBoundary };
   }
   sync();
   return { group, begin, move, end, release: end, cancel: end, sync, step, reset, dispose, getState, getMetrics, getSurfaceSnapshot, setGravity(value) { gravity.copy(point(value)).normalize(); }, setReducedMotion(value) { reducedMotion = !!value; } };
