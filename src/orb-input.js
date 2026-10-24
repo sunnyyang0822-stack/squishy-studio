@@ -25,7 +25,9 @@ export function bindOrbInput({ surface, hitTest, deformation, invalidate, onBegi
     } else if (endOnMiss()) {
       // A missed surface ends this continuous press, including shell dwell.
       // A fresh pointerdown is required; never keep loading the old location.
-      finish({ immediate: true });
+      // Moving off the toy is an ordinary end of pressure. Commit the normal
+      // release result instead of rolling the current clay stroke back.
+      finish();
     }
   }
   on(surface, 'pointerdown', event => {

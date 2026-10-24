@@ -32,7 +32,7 @@ test('同一捕获与命中同时驱动芯壳；命中丢失终止驻留，不�
     assert.equal(calls.filter(x => x === 'capture').length, 1);
     hit = null; event(window, 'pointermove');
     assert.equal(input.isActive(), false); assert.equal(captured.size, 0);
-    assert.deepEqual(calls.slice(-2), ['core.cancel', 'wax.end']);
+    assert.deepEqual(calls.slice(-2), ['core.release', 'wax.end']);
     const count = calls.length; hit = [1, 0, 0]; event(window, 'pointermove');
     assert.equal(calls.length, count, 'Returning from a miss needs a fresh press and dwell');
     event(surface, 'keydown', { key: ' ', repeat: false });

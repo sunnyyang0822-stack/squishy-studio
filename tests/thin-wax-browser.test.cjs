@@ -148,6 +148,32 @@ test('front damage leaves the untouched back shell positions and normals bitwise
     t.diagnostic(JSON.stringify(back));
   } finally { await page.close(); }
 });
+test('leaving a pressed surface ends force but retains normal clay dents and broken wax', { timeout: 60000 }, async t => {
+  const page = await open();
+  try {
+    await press(page); await page.waitForTimeout(1600);
+    await page.evaluate(() => window.addEventListener('pointermove', event => {
+      if (event.clientX > 10) return;
+      window.beforeWaxLeave = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
+    }, { capture: true, once: true }));
+    await page.mouse.move(5, 5); await page.waitForTimeout(900); await page.mouse.up();
+    const result = await page.locator('.toy-mount').evaluate(el => {
+      const before = window.beforeWaxLeave, after = el.thinWaxDiagnostics({ measure: false });
+      let error = 0, heldDepth = 0, retainedDepth = 0;
+      for (let i = 0; i < before.corePositions.length; i++) {
+        const rest = before.coreRestPositions[i], delta = before.corePositions[i] - rest;
+        error = Math.max(error, Math.abs(after.corePositions[i] - (rest + delta * .85)));
+        heldDepth = Math.max(heldDepth, Math.abs(delta)); retainedDepth = Math.max(retainedDepth, Math.abs(after.corePositions[i] - rest));
+      }
+      return { error, heldDepth, retainedDepth, damageBefore: before.thinWax.detached, damageAfter: after.thinWax.detached, active: after.thinWax.active };
+    });
+    assert.ok(result.heldDepth > .05 && result.retainedDepth > .04, JSON.stringify(result));
+    assert.ok(result.error < 1e-4, 'Leaving uses the existing 85% clay retention, not a reset: ' + JSON.stringify(result));
+    assert.ok(result.damageBefore > 0); assert.equal(result.damageAfter, result.damageBefore); assert.equal(result.active, false);
+    t.diagnostic(JSON.stringify(result));
+  } finally { await page.close(); }
+});
+
 test('same recipe survives full workflow; restart, color and configuration reset only their own state', { timeout: 90000 }, async () => {
   const page = await open();
   try {
