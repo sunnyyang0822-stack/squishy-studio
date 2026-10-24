@@ -29,10 +29,16 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
     for (const [x, y] of [[-.76, .36], [-.29, .70], [.29, .70], [.76, .36], [-.24, -.46], [.24, -.46], [0, .17]]) {
       const contact = await projectedSurfaceContact(page, x, y);
       await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
-      await page.mouse.move(contact.x, contact.y); await page.mouse.down(); await page.clock.runFor(2700);
+      await page.mouse.move(contact.x, contact.y); await page.mouse.down();
+      // Preserve the full 2700 ms press with real 50 ms rAF samples, below
+      // clay's 64 ms integration bound, without replaying 162 software draws.
+      for (let elapsed = 0; elapsed < 2700; elapsed += 50) await page.clock.fastForward(50);
       const depth = await page.evaluate(({ index, local }) => Math.hypot(...local.map((v, k) => window.styleProbe.positions[index + k] - v)), contact);
       assert.ok(depth > .06, `Paw actual contact (${x},${y}) presses visibly: ${depth}`);
-      await page.mouse.up(); await page.clock.runFor(1000); await page.clock.resume();
+      console.log(JSON.stringify({ model: 'paw', actualContact: [x, y], depth }));
+      await page.mouse.up();
+      for (let elapsed = 0; elapsed < 1000; elapsed += 50) await page.clock.fastForward(50);
+      await page.clock.resume();
       await page.locator('[name=color][value=mint]').check();
       await page.waitForFunction(() => window.styleProbe.positions.every((v, i) => Math.abs(v - window.styleProbe.rest[i]) < 1e-6));
       await page.locator('[name=color][value=rose]').check(); await page.waitForTimeout(700);
