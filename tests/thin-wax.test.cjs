@@ -233,3 +233,27 @@ test('irregular area distribution, rapid connected cracking and strain-limited s
   assert.ok(repeated.attachedCracked >= wave.attachedCracked - 1, 'Repeated presses cannot strip the deliberately retained majority');
   f.wax.dispose(); f.geometry.dispose();
 });
+
+test('random Voronoi cutting covers the complete real orb GLB surface with no intact-shell holes', async () => {
+  const f = await fixture(), snapshot = f.wax.getSurfaceSnapshot();
+  function triangleArea(positions, a, b, c) {
+    const x = [0, 1, 2].map(k => positions[b * 3 + k] - positions[a * 3 + k]);
+    const y = [0, 1, 2].map(k => positions[c * 3 + k] - positions[a * 3 + k]);
+    return Math.hypot(x[1] * y[2] - x[2] * y[1], x[2] * y[0] - x[0] * y[2], x[0] * y[1] - x[1] * y[0]) / 2;
+  }
+  let originalArea = 0, clippedArea = 0, triangles = 0;
+  const coveredByFace = new Float64Array(f.geometry.index.array.length / 3);
+  for (let i = 0; i < f.geometry.index.array.length; i += 3) originalArea += triangleArea(f.restPositions, ...f.geometry.index.array.slice(i, i + 3));
+  for (let i = 0; i < snapshot.indices.length; i += 3) {
+    const [a, b, c] = snapshot.indices.slice(i, i + 3);
+    if ([a, b, c].every(r => snapshot.layers[r] === 1)) { const area = triangleArea(snapshot.restSupportPositions, a, b, c); clippedArea += area; coveredByFace[snapshot.sourceFaces[i / 3]] += area; triangles++; }
+  }
+  const relativeError = Math.abs(clippedArea - originalArea) / originalArea;
+  assert.ok(triangles > f.geometry.index.array.length / 3);
+  assert.ok(relativeError < .000001, `Clipped ${clippedArea}, original ${originalArea}, relative missing/overlap area ${relativeError}`);
+  for (let face = 0; face < coveredByFace.length; face++) {
+    const original = triangleArea(f.restPositions, ...f.geometry.index.array.slice(face * 3, face * 3 + 3));
+    assert.ok(Math.abs(coveredByFace[face] - original) < .00000001, `Original triangle ${face} incomplete: ${coveredByFace[face]} vs ${original}`);
+  }
+  f.wax.dispose(); f.geometry.dispose();
+});

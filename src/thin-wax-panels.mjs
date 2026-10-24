@@ -14,8 +14,9 @@ function buildPanels(rest, index, count = 180) {
     const candidate = new THREE.Vector3(Math.sqrt(1 - y * y) * Math.cos(angle), y, Math.sqrt(1 - y * y) * Math.sin(angle));
     if (seeds.every(seed => seed.distanceToSquared(candidate) > .007)) seeds.push(candidate);
   }
-  const nearby = seeds.map((s, i) => seeds.map((t, j) => [j, s.distanceToSquared(t)]).sort((a, b) => a[1] - b[1]).slice(0, 22).map(x => x[0]));
-  const panels = seeds.map((seed, id) => ({ id, seed, vertices: [], triangles: [], map: new Map(), cracked: false, detached: false, dead: false, lift: 0, born: 0, burst: false, offset: new THREE.Vector3(), outward: seed.clone() }));
+  const nearby = seeds.map(s => seeds.map((t, j) => [j, s.distanceToSquared(t)]).sort((a, b) => a[1] - b[1]).map(x => x[0]));
+  const planes = seeds.map(seed => seeds.map(other => other.clone().sub(seed)));
+  const panels = seeds.map((seed, id) => ({ id, seed, vertices: [], triangles: [], sourceFaces: [], map: new Map(), cracked: false, detached: false, dead: false, lift: 0, born: 0, burst: false, offset: new THREE.Vector3(), outward: seed.clone() }));
   function clip(poly, plane) {
     const output = [];
     for (let i = 0; i < poly.length; i++) {
@@ -30,16 +31,24 @@ function buildPanels(rest, index, count = 180) {
     const center = points[0].clone().add(points[1]).add(points[2]).normalize();
     let nearest = 0; for (let s = 1; s < seeds.length; s++) if (center.dot(seeds[s]) > center.dot(seeds[nearest])) nearest = s;
     const initial = points.map((p, k) => ({ p, ids, weights: [+(k === 0), +(k === 1), +(k === 2)] }));
-    for (const s of nearby[nearest].slice(0, 12)) {
+    // Random spacing invalidates fixed-neighbor guesses. This quick rejection
+    // is conservative over the *whole source triangle*: a linear half-space
+    // excluding all three corners excludes every point inside that triangle.
+    // Every surviving cell is then clipped against every other seed.
+    for (let s = 0; s < seeds.length; s++) {
+      if (s !== nearest && points.every(p => p.dot(planes[s][nearest]) > 1e-10)) continue;
       let polygon = initial;
-      for (const other of nearby[s]) if (other !== s && polygon.length >= 3) polygon = clip(polygon, seeds[other].clone().sub(seeds[s]));
+      for (const other of nearby[s]) {
+        if (polygon.length < 3) break;
+        if (other !== s) polygon = clip(polygon, planes[s][other]);
+      }
       if (polygon.length < 3) continue;
       const panel = panels[s], local = polygon.map(vertex => {
         const key = vertex.p.toArray().map(x => Math.round(x * 1e7)).join(':');
         if (!panel.map.has(key)) { panel.map.set(key, panel.vertices.length); panel.vertices.push(vertex); }
         return panel.map.get(key);
       });
-      for (let k = 1; k < local.length - 1; k++) if (new Set([local[0], local[k], local[k + 1]]).size === 3) panel.triangles.push([local[0], local[k], local[k + 1]]);
+      for (let k = 1; k < local.length - 1; k++) if (new Set([local[0], local[k], local[k + 1]]).size === 3) { panel.triangles.push([local[0], local[k], local[k + 1]]); panel.sourceFaces.push(f / 3); }
     }
   }
   for (const panel of panels) {
@@ -60,15 +69,16 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
   if (rest.length !== source.length || referenceNormals.length !== normals.length) throw new RangeError('Thin wax original surface snapshot mismatch');
-  const panels = buildPanels(rest, geometry.index.array), records = [], indices = [];
+  const panels = buildPanels(rest, geometry.index.array), records = [], indices = [], sourceFaces = [];
   for (const panel of panels) {
     panel.start = records.length;
     for (let i = 0; i < panel.vertices.length; i++) records.push({ panel, vertex: i, layer: 0 }, { panel, vertex: i, layer: 1 });
-    for (const [a, b, c] of panel.triangles) { const offset = panel.start; indices.push(offset + a * 2 + 1, offset + b * 2 + 1, offset + c * 2 + 1, offset + c * 2, offset + b * 2, offset + a * 2); }
+    for (let t = 0; t < panel.triangles.length; t++) { const [a, b, c] = panel.triangles[t], offset = panel.start; indices.push(offset + a * 2 + 1, offset + b * 2 + 1, offset + c * 2 + 1, offset + c * 2, offset + b * 2, offset + a * 2); sourceFaces.push(panel.sourceFaces[t], -1); }
     for (const edge of panel.boundary) {
       const start = records.length;
       records.push({ panel, vertex: edge[0], layer: 0, edge }, { panel, vertex: edge[1], layer: 0, edge }, { panel, vertex: edge[1], layer: 1, edge }, { panel, vertex: edge[0], layer: 1, edge });
       indices.push(start, start + 1, start + 2, start, start + 2, start + 3);
+      sourceFaces.push(-1, -1);
     }
     panel.end = records.length;
   }
@@ -291,7 +301,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       map(vertex, rest, support); map(vertex, referenceNormals, normal).normalize();
       supports.set(support.toArray(), r * 3); referenceNormal.set(normal.toArray(), r * 3); damage[r] = +record.panel.cracked; layers[r] = record.edge ? -1 : record.layer; panelIds[r] = record.panel.id; detached[r] = +(record.panel.detached && !record.panel.dead);
     }
-    return { positions: output.slice(), normals: outputNormals.slice(), colors: colors.slice(), restSupportPositions: supports, restSupportNormals: referenceNormal, damage, layers, panelIds, detached };
+    return { positions: output.slice(), normals: outputNormals.slice(), colors: colors.slice(), indices: shell.index.array.slice(), sourceFaces: Int32Array.from(sourceFaces), restSupportPositions: supports, restSupportNormals: referenceNormal, damage, layers, panelIds, detached };
   }
   sync();
   return { group, begin, move, end, release: end, cancel: end, sync, step, reset, dispose, getState, getMetrics, getSurfaceSnapshot, setGravity(value) { gravity.copy(point(value)).normalize(); }, setReducedMotion(value) { reducedMotion = !!value; } };
