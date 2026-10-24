@@ -13,7 +13,7 @@ before(async () => {
   browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (existsSync(edge) ? edge : undefined) });
 });
 after(async () => { await browser?.close(); server?.kill(); });
-const diagnostics = page => page.locator('.toy-mount').evaluate(el => el.thinWaxDiagnostics());
+const diagnostics = (page, options = { measure: false }) => page.locator('.toy-mount').evaluate((el, options) => el.thinWaxDiagnostics(options), options);
 const depth = d => Math.max(...d.corePositions.filter((_, i) => i % 3 === 0).map((_, vertex) => Math.hypot(...[0, 1, 2].map(k => d.corePositions[vertex * 3 + k] - d.coreRestPositions[vertex * 3 + k]))));
 async function installWaxUploadProbe(page) {
   await page.addInitScript(() => {
@@ -61,32 +61,45 @@ function geometryOK(d) {
 for (const material of ['clay']) test(`thin wax + ${material}: actual core geometry, timing, release, recovery and independent colors`, { timeout: 90000 }, async t => {
   const page = await open(material);
   try {
-    const initial = await diagnostics(page); geometryOK(initial); assert.notEqual(initial.coreColor, initial.shellColor);
+    const initial = await diagnostics(page, { measure: true }); geometryOK(initial); assert.notEqual(initial.coreColor, initial.shellColor);
     await press(page); await page.waitForTimeout(300);
-    const short = await diagnostics(page); assert.ok(depth(short) > .001, 'Core actually indents beneath the shell'); assert.ok(short.thinWax.cracked > 0); assert.equal(short.thinWax.detached, 0); geometryOK(short);
+    const short = await diagnostics(page); assert.ok(depth(short) > .001, 'Core actually indents beneath the shell'); assert.ok(short.thinWax.cracked > 0); assert.equal(short.thinWax.detached, 0);
     await page.mouse.up(); await page.waitForTimeout(250);
     // Three separate short contacts must never accumulate a long hold.
     for (let i = 0; i < 2; i++) { await press(page); await page.waitForTimeout(250); await page.mouse.up(); await page.waitForTimeout(100); }
     const repeated = await diagnostics(page); assert.equal(repeated.thinWax.detached, 0, JSON.stringify(repeated.thinWax));
-    await press(page); await page.waitForTimeout(650);
-    assert.equal((await diagnostics(page)).thinWax.detached, 0);
-    await page.waitForTimeout(650);
-    const onset = await diagnostics(page); assert.ok(onset.thinWax.detached > 0); assert.ok(onset.thinWax.dwell > 1); assert.equal(onset.thinWax.firstBurst, 3); assert.ok(onset.thinWax.maxOutwardOffset > .02, 'First chips visibly separate outward'); geometryOK(onset);
-    await page.waitForTimeout(1500);
-    const continued = await diagnostics(page); assert.ok(continued.thinWax.detached > onset.thinWax.detached); assert.ok(continued.thinWax.detached <= 24); geometryOK(continued);
+    await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
+    await page.evaluate(() => {
+      window.waxTimedSamples = [];
+      window.addEventListener('pointerdown', () => {
+        const start = performance.now();
+        for (const targetMs of [650, 1050, 1600, 2600, 5000]) setTimeout(() => {
+          const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
+          window.waxTimedSamples.push({ targetMs, actualMs: performance.now() - start, thinWax: d.thinWax, coreState: d.coreState });
+        }, targetMs);
+      }, { capture: true, once: true });
+    });
+    await press(page); await page.waitForFunction(() => window.waxTimedSamples.length === 5, null, { timeout: 15000 });
+    const timed = await page.evaluate(() => window.waxTimedSamples), [beforeThreshold, onset, chain, saturated, held] = timed;
+    assert.equal(beforeThreshold.thinWax.detached, 0, JSON.stringify(beforeThreshold));
+    assert.ok(chain.thinWax.detached > 0 && chain.thinWax.dwell > 1, JSON.stringify(timed));
+    assert.ok(chain.thinWax.cracked >= 6 && chain.thinWax.cracked > chain.thinWax.detached * 2, 'The first local chain fracture cracks many more polygons than it drops: ' + JSON.stringify(timed));
+    assert.ok(held.thinWax.cracked - held.thinWax.detached >= 3, 'Long holding preserves visibly attached cracked plates');
+    assert.ok(held.thinWax.detached - saturated.thinWax.detached <= 1, 'Saturated pressure must not keep ejecting plates on a repeating timer: ' + JSON.stringify(timed));
+    assert.ok(held.thinWax.detached <= 24 && held.thinWax.detached < held.thinWax.panels / 4);
     await page.mouse.up(); const stopped = await diagnostics(page); await page.waitForTimeout(1200);
-    const released = await diagnostics(page); assert.equal(released.thinWax.detached, stopped.thinWax.detached); geometryOK(released);
+    const released = await diagnostics(page, { measure: true, exhaustive: true }); assert.equal(released.thinWax.detached, stopped.thinWax.detached); geometryOK(released);
     await page.waitForTimeout(3200);
     const cleaned = await diagnostics(page); assert.equal(cleaned.thinWax.living, 0); assert.equal(cleaned.thinWax.expired, cleaned.thinWax.detached); assert.equal(cleaned.thinWax.detached, released.thinWax.detached);
     assert.ok(cleaned.resources.geometries <= initial.resources.geometries, 'Expired chips do not allocate accumulating GPU geometries');
     assert.ok(await page.evaluate(() => window.styleProbe.draws > 0 && window.styleProbe.uploads > 1), 'Actual GPU mesh uploads and draw calls occurred');
     const gpuError = await page.evaluate(() => {
-      const d = document.querySelector('.toy-mount').thinWaxDiagnostics(), uploaded = window.styleProbe.positions;
+      const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }), uploaded = window.styleProbe.positions;
       if (uploaded.length !== d.corePositions.length) return Infinity;
       return Math.max(...uploaded.map((v, i) => Math.abs(v - d.corePositions[i])));
     });
     assert.ok(gpuError <= 1e-6, `Measured live core matches the actual GPU position upload: ${gpuError}`);
-    t.diagnostic(JSON.stringify({ material, shortDepth: depth(short), onset: onset.thinWax, continued: continued.thinWax, geometry: released.geometry }));
+    t.diagnostic(JSON.stringify({ material, shortDepth: depth(short), timed, geometry: released.geometry }));
   } finally { await page.close(); }
 });
 test('detached polygon keeps its actual GPU vertex distances while the live core keeps changing', { timeout: 60000 }, async t => {
@@ -94,7 +107,7 @@ test('detached polygon keeps its actual GPU vertex distances while the live core
   try {
     await press(page); await page.waitForTimeout(1200);
     await page.locator('.toy-mount').evaluate(el => {
-      const surface = el.thinWaxDiagnostics({ surface: true }).surface;
+      const surface = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
       function uploaded() {
         for (const values of window.waxUploadProbe.buffers.values()) {
           if (values.length !== surface.positions.length) continue;
@@ -106,11 +119,11 @@ test('detached polygon keeps its actual GPU vertex distances while the live core
       const first = surface.detached.findIndex(Boolean); if (first < 0) throw Error('No polygon has detached');
       const panel = surface.panelIds[first], ids = [];
       for (let i = 0; i < surface.panelIds.length; i++) if (surface.panelIds[i] === panel) ids.push(i);
-      window.rigidWaxBaseline = { panel, ids, positions: uploaded(), core: el.thinWaxDiagnostics().corePositions };
+      window.rigidWaxBaseline = { panel, ids, positions: uploaded(), core: el.thinWaxDiagnostics({ measure: false }).corePositions };
     });
     await page.waitForTimeout(400); await page.mouse.up(); await page.waitForTimeout(250);
     const measured = await page.locator('.toy-mount').evaluate(el => {
-      const before = window.rigidWaxBaseline, d = el.thinWaxDiagnostics({ surface: true }), current = d.surface;
+      const before = window.rigidWaxBaseline, d = el.thinWaxDiagnostics({ measure: false, surface: true }), current = d.surface;
       let gpu;
       for (const values of window.waxUploadProbe.buffers.values()) {
         if (values.length !== current.positions.length) continue;
@@ -132,10 +145,10 @@ test('detached polygon keeps its actual GPU vertex distances while the live core
 test('front damage leaves the untouched back shell positions and normals bitwise unchanged', { timeout: 60000 }, async t => {
   const page = await open();
   try {
-    await page.locator('.toy-mount').evaluate(el => { window.waxBackBaseline = el.thinWaxDiagnostics({ surface: true }).surface; });
+    await page.locator('.toy-mount').evaluate(el => { window.waxBackBaseline = el.thinWaxDiagnostics({ measure: false, surface: true }).surface; });
     await press(page); await page.waitForTimeout(2000); await page.mouse.up();
     const back = await page.locator('.toy-mount').evaluate(el => {
-      const before = window.waxBackBaseline, after = el.thinWaxDiagnostics({ surface: true }).surface;
+      const before = window.waxBackBaseline, after = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
       let samples = 0, positionError = 0, normalError = 0, damaged = 0;
       for (let i = 0; i < before.positions.length; i += 3) {
         if (before.restSupportPositions[i + 2] >= -.4) continue;
@@ -191,7 +204,7 @@ test('same recipe survives full workflow; restart, color and configuration reset
     assert.equal(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')), true, 'Navigation reuses the same live scene');
     await page.getByRole('button', { name: '重新开始', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().thinWax.detached === 0);
-    assert.equal((await diagnostics(page)).thinWax.cracked, 0); geometryOK(await diagnostics(page));
+    assert.equal((await diagnostics(page)).thinWax.cracked, 0); geometryOK(await diagnostics(page, { measure: true }));
     await press(page); await page.waitForTimeout(1400); await page.mouse.up();
     await page.locator('[name=shellColor][data-choice=sky]').check();
     await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().shellColor === 'sky');
@@ -200,7 +213,7 @@ test('same recipe survives full workflow; restart, color and configuration reset
     await page.waitForFunction(() => !document.querySelector('.toy-mount').thinWaxDiagnostics().enabled);
     await page.locator('[name=waxThickness][value=thin]').check();
     await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().enabled);
-    assert.equal((await diagnostics(page)).thinWax.detached, 0); geometryOK(await diagnostics(page));
+    assert.equal((await diagnostics(page)).thinWax.detached, 0); geometryOK(await diagnostics(page, { measure: true }));
   } finally { await page.close(); }
 });
 test('cancellation, blur, hidden document, hit loss and leave stop the same input lifecycle', { timeout: 90000 }, async () => {
@@ -239,6 +252,7 @@ test('cancellation, blur, hidden document, hit loss and leave stop the same inpu
     assert.equal(await page.locator('.toy-mount canvas').count(), 0);
   } finally { await page.close(); }
 });
+
 
 
 

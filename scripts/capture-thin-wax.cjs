@@ -9,7 +9,7 @@ const folder = path.resolve('artifacts/issue-38'), temporary = path.resolve('.tm
 const port = process.env.THIN_WAX_CAPTURE_PORT || '4229', base = `http://127.0.0.1:${port}`;
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const performanceOnly = process.argv.includes('--performance-only'), captureOnly = process.argv.includes('--capture-only');
-const diag = page => page.locator('.toy-mount').evaluate(el => el.thinWaxDiagnostics());
+const diag = (page, options = { measure: false }) => page.locator('.toy-mount').evaluate((el, options) => el.thinWaxDiagnostics(options), options);
 function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let depth = 0; for (let i = 0; i < corePositions.length; i += 3) depth = Math.max(depth, Math.hypot(...[0, 1, 2].map(k => corePositions[i + k] - coreRestPositions[i + k]))); return { ...rest, coreMaximumDisplacement: depth }; }
 (async () => {
   fs.mkdirSync(folder, { recursive: true }); fs.mkdirSync(temporary, { recursive: true });
@@ -42,7 +42,11 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           if (touch) await client.send('Input.dispatchTouchEvent', { type: { down: 'touchStart', move: 'touchMove', up: 'touchEnd' }[type], touchPoints: type === 'up' ? [] : [{ x: p.x, y: p.y, id: 0 }] });
           else if (type === 'down') { await page.mouse.move(p.x, p.y); await page.mouse.down(); } else if (type === 'move') await page.mouse.move(p.x, p.y); else await page.mouse.up();
         }
-        async function measure(stage) { const d = brief(await diag(page)); assert.ok(d.geometry.attachedMinGap >= -1e-5, JSON.stringify(d.geometry)); assert.ok(d.geometry.detachedMinSignedDistance == null || d.geometry.detachedMinSignedDistance >= -1e-5, JSON.stringify(d.geometry)); item.measurements.push({ stage, time: await page.evaluate(() => performance.now()), ...d }); return d; }
+        async function measure(stage, { geometry = false } = {}) {
+          const d = brief(await diag(page, { measure: geometry, exhaustive: geometry }));
+          if (geometry) { assert.ok(d.geometry.attachedMinGap >= d.geometry.gap - d.geometry.tolerance, JSON.stringify(d.geometry)); assert.equal(d.geometry.attachedViolations, 0); assert.equal(d.geometry.detachedViolations, 0); }
+          item.measurements.push({ stage, time: await page.evaluate(() => performance.now()), ...d }); return d;
+        }
         for (const theme of ['day', 'night']) {
           await page.getByRole('button', { name: '重新开始', exact: true }).click();
           await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().thinWax.detached === 0);
@@ -54,13 +58,31 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           await send('down'); await page.waitForTimeout(700); await send('up'); const lifting = await measure(`${theme}-lifting`); assert.equal(lifting.thinWax.detached, 0);
           await page.screenshot({ path: `${folder}/${name}-${theme}-lifting.png` });
           if (!touch) { await rotate(page, 48, 8); await page.screenshot({ path: `${folder}/${name}-${theme}-lifting-side.png` }); await rotate(page, -48, -8); }
-          await label('持续按压：跨过一秒，局部碎裂，再增加少量掉落');
-          await send('down'); await page.waitForTimeout(650); await measure(`${theme}-before-threshold`); await page.waitForTimeout(450); await page.screenshot({ path: `${folder}/${name}-${theme}-burst.png` }); await measure(`${theme}-onset`);
-          await page.waitForTimeout(1800); await measure(`${theme}-continued`); await page.screenshot({ path: `${folder}/${name}-${theme}-held.png` });
-          await label('松开：内芯恢复，破口保留，已掉碎片继续落下'); await send('up'); const stopped = await measure(`${theme}-mouseup`); await page.waitForTimeout(1600); const released = await measure(`${theme}-release`); assert.equal(released.thinWax.detached, stopped.thinWax.detached, 'Release never propagates new damage');
+          await label('持续挤压：局部瞬间连锁裂开，多数碎片仍附着，仅少量落下');
+          await page.evaluate(() => {
+            window.waxCaptureTimeline = [];
+            window.addEventListener('pointerdown', () => {
+              const start = performance.now();
+              for (const targetMs of [650, 1050, 1600, 2600, 5000]) setTimeout(() => {
+                const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
+                window.waxCaptureTimeline.push({ targetMs, actualMs: performance.now() - start, thinWax: d.thinWax, coreState: d.coreState });
+              }, targetMs);
+            }, { capture: true, once: true });
+          });
+          await send('down'); await page.waitForFunction(() => window.waxCaptureTimeline.length >= 2);
+          await page.screenshot({ path: `${folder}/${name}-${theme}-burst.png` });
+          await page.waitForFunction(() => window.waxCaptureTimeline.length === 5);
+          const timeline = await page.evaluate(() => window.waxCaptureTimeline);
+          item.measurements.push({ stage: `${theme}-continuous-timeline`, timeline });
+          assert.equal(timeline[0].thinWax.detached, 0);
+          assert.ok(timeline[2].thinWax.cracked > timeline[2].thinWax.detached * 2, 'Most chain-fractured wax remains attached');
+          assert.ok(timeline[4].thinWax.cracked - timeline[4].thinWax.detached >= 3);
+          assert.ok(timeline[4].thinWax.detached - timeline[3].thinWax.detached <= 1, 'Steady saturated pressure does not keep mechanically ejecting plates');
+          await page.screenshot({ path: `${folder}/${name}-${theme}-held.png` });
+          await label('松开：内芯按原规则恢复，附着裂片保留，少量碎屑继续下落'); await send('up'); const stopped = await measure(`${theme}-mouseup`); await page.waitForTimeout(800); const released = await measure(`${theme}-release`, { geometry: true }); assert.equal(released.thinWax.detached, stopped.thinWax.detached, 'Release never propagates new damage');
           await label('重复深压破损边缘，连续拖动'); await send('down'); await page.waitForTimeout(1400);
           for (let i = 1; i <= 12; i++) { await send('move', { x: hit.x + i * 2, y: hit.y - i }); await page.waitForTimeout(35); }
-          await measure(`${theme}-drag`); await send('up'); await page.waitForTimeout(700);
+          await measure(`${theme}-drag`); await send('up'); await page.waitForTimeout(700); await measure(`${theme}-drag-geometry`, { geometry: true });
           if (!touch) { await label('侧面旋转检查断面与内芯'); await rotate(page, 48, 8); await page.screenshot({ path: `${folder}/${name}-${theme}-side.png` }); await rotate(page, -48, -8); }
         }
         await label('同配方进入最终试捏，再返回：破损保留');
@@ -71,7 +93,7 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
         await measure('workflow-return');
         await label('重新开始：清空压痕、裂纹和碎片');
         await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
-        const restarted = await measure('restart'); assert.equal(restarted.thinWax.detached, 0);
+        const restarted = await measure('restart', { geometry: true }); assert.equal(restarted.thinWax.detached, 0);
         await page.screenshot({ path: `${folder}/${name}-restarted.png` });
         await label('切换厚度：中厚保持原占位；重新选薄创建新壳');
         if (await page.locator('[data-category=waxThickness]').isVisible()) await page.locator('[data-category=waxThickness]').click();
