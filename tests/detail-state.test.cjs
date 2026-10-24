@@ -229,48 +229,43 @@ test('音量初始静音、上次音量恢复、边界与清理', async () => {
 });
 
 
-test('七种新样式保留五步配方并通过已确认预设支持棉花糖，慢回弹仍限原圆球', async () => {
+test('八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观', async () => {
+  const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   const { createDetailController, styleNames } = await stateModule;
   const h = harness(createDetailController), c = h.controller;
   await c.load();
   assert.deepEqual(Object.keys(styleNames), ['orb', 'cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']);
-  for (const styleId of Object.keys(styleNames).filter(id => id !== 'orb')) {
-    c.setStep('core');
-    await c.select('coreMaterial', 'clay');
-    await c.select('styleId', styleId);
-    assert.equal(h.prepared.at(-1).styleId, styleId);
-    assert.equal(h.prepared.at(-1).feelId, 'clay');
-    await c.select('coreMaterial', 'marshmallow');
-    assert.equal(c.getState().recipe.coreMaterial, 'marshmallow');
-    assert.equal(h.prepared.at(-1).presetId, 'marshmallow');
-    assert.equal(h.prepared.at(-1).feelId, 'marshmallow');
-    await c.select('coreMaterial', 'butter');
-    assert.equal(c.getState().recipe.coreMaterial, 'marshmallow');
-    assert.match(c.getState().selectionNotice, /慢回弹暂未接入/);
-    await c.select('coreColor', 'mint');
-    await c.select('filling', 'rice');
-    c.setStep('shell'); await c.select('shellColor', 'sky');
-    c.setStep('decoration'); await c.select('decoration', 'three');
-    c.next(); c.next();
-    await new Promise(resolve => setImmediate(resolve));
-    assert.equal(c.getState().step, 'play');
-    assert.equal(h.prepared.at(-1).recipe.styleId, styleId);
-    assert.equal(h.prepared.at(-1).recipe.filling, 'rice');
-    assert.equal(h.prepared.at(-1).recipe.decoration, 'three');
-    assert.equal(h.prepared.at(-1).color, 'sky');
+  for (const styleId of Object.keys(styleNames)) {
+    assert.deepEqual(getSquishyStyle(styleId).supportedFeels, ['clay', 'marshmallow', 'slow-rebound']);
+    for (const material of ['clay', 'marshmallow', 'butter']) {
+      c.setStep('core'); await c.select('styleId', styleId); await c.select('coreMaterial', material);
+      const feel = material === 'butter' ? 'slow-rebound' : material;
+      assert.equal(c.getState().recipe.coreMaterial, material);
+      assert.equal(h.prepared.at(-1).styleId, styleId);
+      assert.equal(h.prepared.at(-1).presetId, feel);
+      assert.equal(h.prepared.at(-1).feelId, feel);
+      assert.equal(h.prepared.at(-1).appearanceId, material === 'butter' ? 'full-matte' : 'matte');
+      assert.equal(c.getState().selectionNotice, '');
+      await c.select('coreColor', 'mint'); await c.select('filling', 'rice');
+      c.setStep('shell'); await c.select('shellColor', 'sky');
+      c.setStep('decoration'); await c.select('decoration', 'three');
+      c.next(); c.next(); await new Promise(resolve => setImmediate(resolve));
+      const final = h.prepared.at(-1);
+      assert.equal(c.getState().step, 'play'); assert.equal(final.recipe.styleId, styleId);
+      assert.equal(final.recipe.coreMaterial, material); assert.equal(final.presetId, feel);
+      assert.equal(final.feelId, feel); assert.equal(final.appearanceId, material === 'butter' ? 'full-matte' : 'matte');
+      assert.equal(final.recipe.filling, 'rice'); assert.equal(final.recipe.decoration, 'three');
+      assert.equal(final.recipe.coreColor, 'mint'); assert.equal(final.color, 'sky');
+    }
   }
-  c.setStep('core'); await c.select('styleId', 'orb');
-  await c.select('coreMaterial', 'marshmallow');
-  await c.select('styleId', 'cloud');
-  assert.equal(c.getState().recipe.styleId, 'cloud');
-  assert.equal(c.getState().preview.presetId, 'marshmallow');
-  assert.equal(c.getState().preview.feelId, 'marshmallow');
-  assert.equal(c.getState().selectionNotice, '');
-  await c.select('styleId', 'orb'); await c.select('coreMaterial', 'butter');
-  await c.select('styleId', 'cloud');
-  assert.equal(c.getState().recipe.styleId, 'orb');
-  assert.equal(c.getState().preview.feelId, 'slow-rebound');
-  assert.match(c.getState().selectionNotice, /先选择黏土或棉花糖/);
+  c.setStep('core'); await c.select('coreMaterial', 'butter');
+  for (const styleId of ['orb', 'donut', 'paw', 'flower']) {
+    await c.select('styleId', styleId);
+    assert.equal(c.getState().recipe.styleId, styleId); assert.equal(c.getState().recipe.coreMaterial, 'butter');
+    assert.equal(c.getState().preview.presetId, 'slow-rebound');
+    assert.equal(c.getState().preview.appearanceId, 'full-matte');
+    assert.equal(c.getState().recipe.filling, 'rice'); assert.equal(c.getState().recipe.shellColor, 'sky');
+  }
   c.dispose();
 });
 
@@ -303,7 +298,7 @@ test('样式加载竞态只提交末次模型，失败保留已显示实例且�
   assert.deepEqual(released, ['orb', 'cloud', 'donut', 'star', 'paw']);
 });
 
-test('直达配方与步骤合法化，非法的新样式内芯明确告知而非静默替换', async () => {
+test('直达配方合法化保留各样式慢回弹，非法枚举回到默认值', async () => {
   const { createDetailController } = await stateModule;
   const renderer = { async prepare() { return { commit() {}, dispose() {} }; } };
   const audio = { ready: false, setVolume() {}, dispose() {} };
@@ -316,9 +311,18 @@ test('直达配方与步骤合法化，非法的新样式内芯明确告知而�
   c.dispose();
   const invalid = createDetailController({ renderer, audio, styleId: 'star', step: 'bad', recipe: { coreMaterial: 'butter', coreColor: 'bad' } });
   assert.equal(invalid.getState().step, 'core');
-  assert.equal(invalid.getState().recipe.coreMaterial, 'clay');
+  assert.equal(invalid.getState().recipe.coreMaterial, 'butter');
+  assert.equal(invalid.getState().preview.presetId, 'slow-rebound');
+  assert.equal(invalid.getState().preview.appearanceId, 'full-matte');
   assert.equal(invalid.getState().recipe.coreColor, 'rose');
-  assert.match(invalid.getState().selectionNotice, /已使用黏土/);
+  assert.equal(invalid.getState().selectionNotice, '');
+  await invalid.restoreLocation({ styleId: 'paw', step: 'shell', recipe: { coreMaterial: 'butter', shellColor: 'sky', filling: 'rice' } });
+  assert.equal(invalid.getState().recipe.styleId, 'paw');
+  assert.equal(invalid.getState().recipe.coreMaterial, 'butter');
+  assert.equal(invalid.getState().preview.presetId, 'slow-rebound');
+  assert.equal(invalid.getState().preview.appearanceId, 'full-matte');
+  assert.equal(invalid.getState().preview.color, 'sky');
+  assert.equal(invalid.getState().recipe.filling, 'rice');
   invalid.dispose();
 });
 

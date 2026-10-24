@@ -22,11 +22,9 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
   for (const [group, value] of Object.entries(initialRecipe)) {
     if (Object.hasOwn(groups[group] || {}, value)) recipe[group] = value;
   }
-  const incompatible = recipe.styleId !== 'orb' && recipe.coreMaterial === 'butter';
-  if (incompatible) recipe.coreMaterial = 'clay';
   let state = {
     step: steps.includes(step) ? step : 'core', resource: 'loading', configStatus: 'idle', configError: false,
-    recipe, selectionNotice: incompatible ? '新样式支持黏土和棉花糖，慢回弹暂未接入；已使用黏土。' : '',
+    recipe, selectionNotice: '',
     effectiveRecipe: null, preview: null,
     audio: { volume: 0, muted: true, lastNonZero: 50, ready: Boolean(audio.ready) },
   };
@@ -73,10 +71,8 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
       if (disposed) return Promise.resolve();
       const recipe = { ...defaultRecipe, styleId: Object.hasOwn(styleNames, styleId) ? styleId : 'orb' };
       for (const [group, value] of Object.entries(restored)) if (Object.hasOwn(groups[group] || {}, value)) recipe[group] = value;
-      const incompatible = recipe.styleId !== 'orb' && recipe.coreMaterial === 'butter';
-      if (incompatible) recipe.coreMaterial = 'clay';
       ++revision; pending?.abort(); pending = undefined; renderer.stopInput?.();
-      state = { ...state, recipe, step: steps.includes(step) ? step : 'core', selectionNotice: incompatible ? '新样式支持黏土和棉花糖，慢回弹暂未接入；已使用黏土。' : '' };
+      state = { ...state, recipe, step: steps.includes(step) ? step : 'core', selectionNotice: '' };
       refreshDerived();
       return prepare();
     },
@@ -84,10 +80,6 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
     previous() { const index = steps.indexOf(state.step); if (index > 0) setStep(steps[index - 1]); },
     select(group, value) {
       if (disposed || !Object.hasOwn(groups[group] || {}, value) || state.recipe[group] === value) return Promise.resolve();
-      if ((group === 'styleId' && value !== 'orb' && state.recipe.coreMaterial === 'butter') ||
-          (group === 'coreMaterial' && value === 'butter' && state.recipe.styleId !== 'orb')) {
-        state = { ...state, selectionNotice: '七种新样式支持黏土和棉花糖，慢回弹暂未接入。请先选择黏土或棉花糖，再切换样式。' }; emit(); return Promise.resolve();
-      }
       state = { ...state, recipe: { ...state.recipe, [group]: value }, selectionNotice: '' }; refreshDerived();
       return prepare();
     },
