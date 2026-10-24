@@ -9,3 +9,10 @@ export function getOrbAppearance(id = 'matte') {
   if (!Object.hasOwn(orbAppearances, id)) throw new RangeError(`Unknown orb appearance: ${id}`);
   return orbAppearances[id];
 }
+
+// Sculpted assets own their proportions. The legacy orb alone keeps its
+// approved full-matte silhouette; optical pigment remains independent.
+const sculptedScale = Object.freeze([1, 1, 1]);
+export function getModelPresentationScale(appearance, geometryAdapter) {
+  return geometryAdapter === 'surface' ? sculptedScale : appearance.scale;
+}

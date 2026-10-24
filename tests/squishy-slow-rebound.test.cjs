@@ -2,6 +2,20 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { readMesh } = require('./helpers/squishy-mesh.cjs');
 const ids = ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star'];
+test('sculpted models retain identical dimensions across all feels while the original orb keeps its approved scale', async () => {
+  const { getOrbAppearance, getModelPresentationScale } = await import('../src/orb-appearance.mjs');
+  const { getOrbPreset } = await import('../src/orb-presets.mjs');
+  const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
+  for (const id of ids) for (const feel of ['clay', 'marshmallow', 'slow-rebound']) {
+    const appearance = getOrbAppearance(getOrbPreset(feel).appearanceId);
+    const scale = getModelPresentationScale(appearance, getSquishyStyle(id).geometryAdapter);
+    assert.deepEqual(scale, [1, 1, 1], `${id}/${feel}`);
+    assert.ok(Object.isFrozen(scale));
+  }
+  const original = getOrbAppearance('full-matte');
+  assert.strictEqual(getModelPresentationScale(original, getSquishyStyle('orb').geometryAdapter), original.scale);
+  assert.deepEqual(original.scale, [1, 1.06, 1.1]);
+});
 function advance(d, n) { for (let i = 0; i < n; i++) d.step(1 / 60); }
 function maximum(a, b) { let result = 0; for (let i = 0; i < a.length; i += 3) result = Math.max(result, Math.hypot(a[i] - b[i], a[i + 1] - b[i + 1], a[i + 2] - b[i + 2])); return result; }
 for (const id of ids) test(`${id}×slow-rebound: local progressive pressure, shallow sliding and exact model recovery`, async () => {

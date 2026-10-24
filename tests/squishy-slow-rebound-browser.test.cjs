@@ -20,6 +20,8 @@ async function assertConfig(page, id) {
   assert.equal(await page.locator('.toy-mount').getAttribute('data-appearance-id'), 'full-matte');
   assert.match(await page.locator('.orb-input').getAttribute('aria-label'), /缓慢下陷，松开完整回弹/);
   assert.equal(new URL(page.url()).searchParams.get('coreMaterial'), 'butter');
+  const scale = await page.evaluate(() => [0, 4, 8].map(i => Math.hypot(...window.styleProbe.matrix.slice(i, i + 3))));
+  assert.ok(scale.every(value => Math.abs(value - 1) < 1e-6), `Slow rebound preserves the asset's dimensions on every axis: ${scale}`);
 }
 async function exactRest(page) {
   assert.equal(await page.evaluate(() => window.styleProbe.positions.every((v, i) => v === window.styleProbe.rest[i])), true, 'Every actual GPU position returns to this asset’s exact rest mesh');

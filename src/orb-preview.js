@@ -5,7 +5,7 @@ import { getOrbPreset } from './orb-presets.mjs';
 import { getOrbFeel } from './orb-feels.mjs';
 import { getSquishyStyle } from './squishy-styles.mjs';
 import { createSurfaceGeometry } from './surface-clay.mjs';
-import { getOrbAppearance } from './orb-appearance.mjs';
+import { getOrbAppearance, getModelPresentationScale } from './orb-appearance.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
@@ -78,7 +78,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       releaseObject(root);
       throw Object.assign(error, { code: 'UNAVAILABLE' });
     }
-    mesh.scale.multiply(new THREE.Vector3(...appearance.scale));
+    mesh.scale.multiply(new THREE.Vector3(...getModelPresentationScale(appearance, style.geometryAdapter)));
     const scene = new THREE.Scene();
     const pivot = new THREE.Group();
     const center = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
