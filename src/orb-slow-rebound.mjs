@@ -20,12 +20,22 @@ export const slowReboundParameters = Object.freeze({
   maximumContactStep: .10,
 });
 
-export function createSlowReboundDeformation(positions, normals, { reducedMotion = false } = {}) {
+export function createSlowReboundDeformation(positions, normals, { reducedMotion = false, surfaceGeometry } = {}) {
   const p = slowReboundParameters;
   const rest = positions.slice(), count = positions.length / 3;
   const offsets = new Float32Array(count), restoreOffsets = new Float32Array(count);
   const contactTime = new Float32Array(count);
   const directions = new Float32Array(rest.length), limits = new Float32Array(count);
+  const constrainOffsets = surfaceGeometry?.constrainOffsets;
+  const renderedOffsets = constrainOffsets ? new Float32Array(count) : null;
+  const surfaceInfluences = surfaceGeometry ? new Float64Array(count) : null;
+  let cachedSurfacePoint, cachedSurfaceNeighborhood;
+  function surfaceNeighborhood(point) {
+    if (!cachedSurfacePoint || point.some((value, k) => value !== cachedSurfacePoint[k])) {
+      cachedSurfacePoint = [...point]; cachedSurfaceNeighborhood = surfaceGeometry.neighborhood(point, p.radius);
+    }
+    return cachedSurfaceNeighborhood;
+  }
   const low = [Infinity, Infinity, Infinity], high = [-Infinity, -Infinity, -Infinity];
   for (let i = 0; i < rest.length; i++) {
     const k = i % 3; low[k] = Math.min(low[k], rest[i]); high[k] = Math.max(high[k], rest[i]);
@@ -34,8 +44,8 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
   const axes = low.map((v, k) => Math.max(.001, (high[k] - v) / 2));
   for (let i = 0; i < count; i++) {
     const j = i * 3, radius = Math.hypot(...origin.map((v, k) => rest[j + k] - v));
-    limits[i] = Math.min(p.maximumDepth, radius * p.radialLimit);
-    for (let k = 0; k < 3; k++) directions[j + k] = (rest[j + k] - origin[k]) / Math.max(.001, radius);
+    limits[i] = Math.min(p.maximumDepth, (surfaceGeometry ? surfaceGeometry.radii[i] : radius) * p.radialLimit);
+    for (let k = 0; k < 3; k++) directions[j + k] = surfaceGeometry ? surfaceGeometry.directions[j + k] : (rest[j + k] - origin[k]) / Math.max(.001, radius);
   }
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   let active = false, restoring = false, dirty = false, held = 0, strokeTravel = 0, lastMovement = -Infinity;
@@ -43,13 +53,22 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
   function endContact() { active = false; held = 0; strokeTravel = 0; lastMovement = -Infinity; pending = []; contactTime.fill(0); }
   function interruptRestore() { restoring = false; }
   function writePositions() {
+    let accepted = 1;
+    if (constrainOffsets) { accepted = constrainOffsets(renderedOffsets, offsets); renderedOffsets.set(offsets); }
     for (let i = 0; i < count; i++) {
       const j = i * 3;
       for (let k = 0; k < 3; k++) positions[j + k] = offsets[i] === 0 ? rest[j + k] : rest[j + k] - directions[j + k] * offsets[i];
     }
+    return accepted;
   }
   // Interpolate on the normalized rest ellipsoid, never through its interior.
   function segment(from, to) {
+    if (surfaceGeometry) {
+      const points = surfaceGeometry.path(from, to, p.pathSpacing);
+      let distance = 0, previous = from;
+      for (const point of points) { distance += Math.hypot(...point.map((v, k) => v - previous[k])); previous = point; }
+      return { distance, points };
+    }
     const a = from.map((v, k) => (v - origin[k]) / axes[k]);
     const b = to.map((v, k) => (v - origin[k]) / axes[k]);
     const ra = Math.hypot(...a), rb = Math.hypot(...b);
@@ -80,7 +99,7 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
     cancel: endContact,
     reset() {
       endContact(); restoring = false; offsets.fill(0); restoreOffsets.fill(0);
-      positions.set(rest); dirty = true;
+      positions.set(rest); renderedOffsets?.fill(0); dirty = true;
     },
     beginRestore() { endContact(); restoreOffsets.set(offsets); restoring = true; },
     applyRestore(progress) {
@@ -127,10 +146,20 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
         const dragging = strokeTravel >= p.dragThreshold && held - lastMovement <= p.dragGraceSeconds;
         motionTransition = active && dragging;
         const inwardSpeed = dragging ? p.dragSpeed : p.pressSpeed;
+        if (surfaceInfluences) {
+          surfaceInfluences.fill(0);
+          for (const path of contacts) for (const point of path.points) {
+            for (const [i, distance] of surfaceNeighborhood(point)) {
+              const q2 = distance ** 2 / p.radius ** 2;
+              if (q2 < 1) surfaceInfluences[i] += (1 - q2) ** 3 * path.distance / path.points.length;
+            }
+          }
+        }
         for (let i = 0; i < count; i++) {
           const j = i * 3;
           let influence = 0;
-          for (const path of contacts) for (const point of path.points) {
+          if (surfaceInfluences) influence = surfaceInfluences[i];
+          else for (const path of contacts) for (const point of path.points) {
             const q2 = ((rest[j] - point[0]) ** 2 + (rest[j + 1] - point[1]) ** 2 + (rest[j + 2] - point[2]) ** 2) / p.radius ** 2;
             if (q2 < 1) influence += (1 - q2) ** 3 * path.distance / path.points.length;
           }
@@ -151,7 +180,11 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
         }
       }
       for (let i = 0; i < count; i++) atRest &&= offsets[i] === 0;
-      if (changed) { writePositions(); dirty = false; }
+      if (changed) {
+        const accepted = writePositions();
+        if (constrainOffsets) { moving &&= accepted > 1e-5; atRest = offsets.every(value => value === 0); }
+        dirty = false;
+      }
       return { changed, atRest, needsFrame: moving || restoring || motionTransition };
     },
   };
