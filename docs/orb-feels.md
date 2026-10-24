@@ -68,6 +68,8 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 ## 非球形几何适配（Issue #30）
 
+慢回弹预览另支持当前输入射线的空间适配：`getPressDirection` 返回模型局部的向外单位方向，工厂将新增深度沿其反向累积，恢复沿历史位移返回。七款通过 `surfaceGeometry.contactRadius`/`createContactSafety` 限制沿射线的真实壳厚与面方向；原球提供独立 `getPressRadius`/`constrainPress`，保留原欧氏足迹。慢回弹专用 `continuousFootprint: true` 启用三角形内部距离。以上选项未提供时，三种工厂与固定交付基线逐帧严格相同；手感参数没有重新调节。新七模型的展示比例由资产决定，各质感统一 `[1,1,1]`，`full-matte` 光学不再拉伸雕刻模型。
+
 新七款支持 `clay`、`marshmallow` 和 `slow-rebound`。棉花糖明确复用 PR #32 的 `f9c223d87d52d603a721d726b54a0d5568c72956` 渐进局部按压版本；慢回弹复用 `aaaed2f19a5a2f3a34f4b9200d3189e2a9bed116` 主线已确认版本，参数见 `docs/issue-25-responsive-pressure.md`。统一调用 `createOrbPreview(mount, { styleId: 'donut', presetId: 'marshmallow' })`；黏土使用 `presetId: 'clay'`，慢回弹使用 `presetId: 'slow-rebound'` 并采用其默认 `full-matte` 外观。三者共用原 `prepare/commit/dispose` 生命周期。样式登记在 `src/squishy-styles.mjs`，与质感登记分开。
 
 `src/surface-clay.mjs` 向同一个 `getOrbFeel('clay').createDeformation` 传入可选 `surfaceGeometry`：只提供每顶点几何方向、可压入半径、表面邻域和路径采样。工厂的 `.66` 足迹、`.04` 采样间距、按压强度、5/s 响应、85% 留痕、释放与恢复逻辑未调参；未传此选项的圆球继续执行原分支。等价球空间查询有逐帧相等回归，原圆球测试原样保留。

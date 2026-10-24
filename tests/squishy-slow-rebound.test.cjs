@@ -77,3 +77,63 @@ for (const id of ids) test(`${id}×slow-rebound: local progressive pressure, sha
   d.applyRestore(1); d.step(1 / 60); assert.deepEqual(positions, rest);
   d.begin(a.point); advance(d, 60); d.release(); d.setReducedMotion(true); advance(d, 240); assert.deepEqual(positions, rest);
 });
+
+for (const id of [...ids, 'orb']) test(`${id} slow-rebound presses follow the input ray without centerward pinching`, async () => {
+  const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
+  const { createSurfaceGeometry, createOffsetSafety } = await import('../src/surface-clay.mjs');
+  const { createSlowReboundDeformation } = await import('../src/orb-slow-rebound.mjs');
+  const style = getSquishyStyle(id), mesh = readMesh(`.${style.modelUrl}`);
+  const rest = Float32Array.from(mesh.positions), positions = rest.slice(), normals = Float32Array.from(mesh.normals);
+  const contactGeometry = createSurfaceGeometry(rest, normals, mesh.indices, { ...style.geometryOptions, continuousFootprint: true });
+  const surface = id === 'orb' ? undefined : contactGeometry;
+  let ray = [0, 0, 1];
+  const d = createSlowReboundDeformation(positions, normals, { surfaceGeometry: surface, getPressDirection: () => ray,
+    ...(id === 'orb' ? { constrainPress: createOffsetSafety(rest, null, mesh.indices, { vectorOffsets: true }), getPressRadius: (i, direction) => contactGeometry.contactRadius(i, direction) } : {}) });
+  function hit(direction) {
+    let vertex = -1, score = -Infinity;
+    for (let i = 0; i < rest.length; i += 3) {
+      const facing = direction.reduce((n, v, k) => n + v * normals[i + k], 0);
+      // Off-center and genuinely facing the pointer: test star/flower lobes,
+      // pyramid slopes and the ring itself, rather than the empty center.
+      const value = rest[i] + .13 * rest[i + 1];
+      if (facing > .45 && value > score) { vertex = i; score = value; }
+    }
+    assert.ok(vertex >= 0); return { vertex, point: Array.from(rest.slice(vertex, vertex + 3)) };
+  }
+  function facesStayOriented() {
+    for (let t = 0; t < mesh.indices.length; t += 3) {
+      const [a, b, c] = mesh.indices.slice(t, t + 3).map(i => i * 3);
+      const cross = p => {
+        const u = [0, 1, 2].map(k => p[b + k] - p[a + k]), v = [0, 1, 2].map(k => p[c + k] - p[a + k]);
+        return [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+      };
+      const before = cross(rest), after = cross(positions);
+      const ratio = before.reduce((n, v, k) => n + v * after[k], 0) / before.reduce((n, v) => n + v * v, 0);
+      assert.ok(ratio >= .07999, `${id}: face ${t / 3} folded (${ratio})`);
+    }
+  }
+  const first = hit(ray); d.begin(first.point); advance(d, 60);
+  const depth = rest[first.vertex + 2] - positions[first.vertex + 2];
+  assert.ok(depth > .025, `${id}: edge must depress, got ${depth}`);
+  for (let i = 0; i < rest.length; i += 3) {
+    assert.equal(positions[i], rest[i], 'A frontal press cannot pull vertices sideways');
+    assert.equal(positions[i + 1], rest[i + 1], 'A frontal press cannot pull vertices toward the model center');
+    if (rest[i + 2] !== positions[i + 2]) {
+      const shellLimit = contactGeometry.contactRadius(i / 3, ray) * .50;
+      assert.ok(rest[i + 2] - positions[i + 2] <= shellLimit + 1e-6, `${id}: cannot pass through the opposite shell at vertex ${i / 3}`);
+    }
+  }
+  facesStayOriented();
+  d.release(); const beforeRotation = positions.slice();
+  ray = [.6, 0, .8];
+  assert.deepEqual(positions, beforeRotation, 'Changing the view preserves the old dent direction');
+  // A new rotated press on an existing dent must remain continuous, not reproject it.
+  const rotated = hit(ray); d.begin(rotated.point);
+  assert.deepEqual(positions, beforeRotation);
+  d.step(1 / 60);
+  assert.ok(maximum(beforeRotation, positions) < .02);
+  advance(d, 45); facesStayOriented();
+  d.cancel(); advance(d, 960); assert.deepEqual(positions, rest);
+  d.begin(first.point); advance(d, 30); d.beginRestore(); d.applyRestore(.5); d.step(0);
+  d.applyRestore(1); d.step(0); assert.deepEqual(positions, rest);
+});

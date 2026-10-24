@@ -1,0 +1,22 @@
+✔ cloud×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (10177.9231ms)
+✔ paw×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (13790.0302ms)
+✔ cylinder×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (8405.1297ms)
+✔ donut×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (10675.3087ms)
+{"model":"pyramid","pose":"initial","edgeDisplacementInView":[1.6637800470675757e-8,-4.56997939490833e-9,-0.38822078261167103]}
+{"model":"pyramid","pose":"rotated","edgeDisplacementInView":[-7.708507054893232e-9,-5.148314574654478e-8,-0.27078411440163563]}
+✔ pyramid×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (20772.4106ms)
+{"model":"flower","pose":"initial","edgeDisplacementInView":[0,1.8525821321446756e-8,-0.24029333794262664]}
+{"model":"flower","pose":"rotated","edgeDisplacementInView":[-3.3415789468804746e-8,-2.3932848591812217e-8,-0.19414445699275262]}
+✔ flower×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (22309.4364ms)
+{"model":"star","pose":"initial","edgeDisplacementInView":[0,-1.9077295299041452e-9,-0.17456314797123706]}
+{"model":"star","pose":"rotated","edgeDisplacementInView":[-2.6706671929499493e-8,-1.3312135838106087e-8,-0.11582709412518044]}
+✔ star×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (25329.8687ms)
+✔ phone native touch: donut and paw preserve slow recovery, touch cancellation and full-matte preset (22598.8628ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 135226.4243

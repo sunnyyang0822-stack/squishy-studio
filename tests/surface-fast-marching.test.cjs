@@ -51,3 +51,24 @@ test('三角形压力波不直接跨越薄壳内部命中相近背面', async ()
   assert.ok(neighborhood.size > 50);
   assert.equal(neighborhood.has(backCenter), false, 'No Euclidean shortcut through the interior');
 });
+
+test('slow-rebound opts into triangle-interior footprints without changing spatial limits or other feels', async () => {
+  const { createSurfaceGeometry } = await import('../src/surface-clay.mjs');
+  const mesh = box(), point = [0, 0, .25];
+  const graph = createSurfaceGeometry(mesh.positions, mesh.normals, mesh.indices);
+  const wave = createSurfaceGeometry(mesh.positions, mesh.normals, mesh.indices, { continuousFootprint: true });
+  const pawWave = createSurfaceGeometry(mesh.positions, mesh.normals, mesh.indices, { depthAxis: 2 });
+  assert.deepEqual(wave.directions, graph.directions);
+  assert.deepEqual(wave.radii, graph.radii, 'Footprint interpolation does not retune the physical depth limit');
+  assert.deepEqual(wave.neighborhood(point, 1.2), pawWave.neighborhood(point, 1.2));
+  assert.deepEqual(wave.path(point, [.6, .3, .25], .04), graph.path(point, [.6, .3, .25], .04));
+  let graphError = 0, waveError = 0, samples = 0;
+  const gd = new Map(graph.neighborhood(point, 1.2)), wd = new Map(wave.neighborhood(point, 1.2));
+  for (let y = 2; y <= 8; y++) for (let x = 2; x <= 8; x++) {
+    const vertex = (10 + y) * mesh.side + 10 + x, exact = Math.hypot(x / 10, y / 10);
+    if (!gd.has(vertex) || !wd.has(vertex)) continue;
+    graphError += Math.abs(gd.get(vertex) - exact); waveError += Math.abs(wd.get(vertex) - exact); samples++;
+  }
+  assert.ok(samples > 20);
+  assert.ok(waveError < graphError * .4, `Triangle footprints reduce directional error: ${waveError / samples} vs ${graphError / samples}`);
+});

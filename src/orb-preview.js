@@ -65,11 +65,18 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     }
     const geometry = mesh.geometry;
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+    const orbPressGeometry = feelId === 'slow-rebound' && !isSurface
+      ? createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array) : null;
+    const pressOptions = feelId === 'slow-rebound' ? {
+      getPressDirection: () => raycaster.ray.direction.clone().transformDirection(mesh.matrixWorld.clone().invert()).negate().toArray(),
+      ...(!isSurface ? { constrainPress: orbPressGeometry.createContactSafety(), getPressRadius: (i, direction) => orbPressGeometry.contactRadius(i, direction) } : {}),
+    } : {};
     let deformation;
     try {
       deformation = isSurface
-        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, style.geometryOptions), reducedMotion: motionPreference.matches })
-        : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches });
+        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, { ...style.geometryOptions, continuousFootprint: feelId === 'slow-rebound' }), reducedMotion: motionPreference.matches,
+          ...pressOptions })
+        : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches, ...pressOptions });
     } catch (error) { releaseObject(root); throw error; }
     let renderer;
     try {

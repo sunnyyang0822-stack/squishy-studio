@@ -29,6 +29,21 @@ async function exactRest(page) {
 async function assertRingIsolation(page, id) {
   if (id === 'donut') assert.equal(await page.evaluate(() => { const p = window.styleProbe; return p.positions.every((v, i) => p.rest[i - i % 3] >= -.35 || v === p.rest[i]); }), true, 'Ring pressure never crosses the empty hole');
 }
+async function assertPerpendicularEdge(page, id, pose) {
+  const samples = { star: [.85, .15], flower: [.78, .05], pyramid: [.36, -.25] };
+  if (!samples[id]) return;
+  const hit = await projectedSurfaceContact(page, ...samples[id]);
+  await page.mouse.move(hit.x, hit.y); await page.mouse.down(); await page.clock.runFor(1800);
+  const displacement = await page.evaluate(({ index }) => {
+    const p = window.styleProbe, delta = [0, 1, 2].map(k => p.positions[index + k] - p.rest[index + k]);
+    return [0, 1, 2].map(k => delta.reduce((sum, v, j) => sum + v * p.matrix[j * 4 + k], 0));
+  }, hit);
+  assert.ok(Math.hypot(displacement[0], displacement[1]) < 1e-5, `${id}/${pose}: pressure must descend perpendicular to the view, without pulling the edge toward the center: ${displacement}`);
+  assert.ok(displacement[2] < -.02, `${id}/${pose}: the actual edge contact must visibly indent: ${displacement}`);
+  console.log(JSON.stringify({ model: id, pose, edgeDisplacementInView: displacement }));
+  if (process.env.CAPTURE_PRESS_DIRECTION) await page.screenshot({ path: `artifacts/issue-30-paw/${id}-${pose}-perpendicular-press.png` });
+  await page.mouse.up(); await page.clock.runFor(14000); await exactRest(page);
+}
 for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']) test(`${id}×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle`, { timeout: 300000 }, async () => {
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
@@ -38,6 +53,7 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
     await page.goto(`${base}/squishy/cloud/?style=${id}&coreMaterial=butter`); await ready(page); await assertConfig(page, id);
     const canvas = await page.locator('.toy-mount canvas').elementHandle(), p = await contact(page, id);
     await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+    await assertPerpendicularEdge(page, id, 'initial');
     const uploads = await page.evaluate(() => window.styleProbe.uploads);
     await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.clock.runFor(80);
     const early = await stats(page); assert.ok(early.maximum > .00001 && early.maximum < .04, JSON.stringify(early));
@@ -67,6 +83,7 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
       assert.ok(Math.hypot(...current.map((v, k) => v - pivot[k])) < 1e-5, 'Actual mesh rotates around its immutable center');
     }
     await page.mouse.up(); assert.notDeepEqual(await page.evaluate(() => window.styleProbe.matrix), before);
+    await assertPerpendicularEdge(page, id, 'rotated');
     await page.clock.resume(); await page.reload(); await ready(page); await assertConfig(page, id); await exactRest(page);
     await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pagehide')));
     assert.equal(await page.locator('.toy-mount canvas').count(), 0);

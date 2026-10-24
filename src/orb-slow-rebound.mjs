@@ -20,13 +20,29 @@ export const slowReboundParameters = Object.freeze({
   maximumContactStep: .10,
 });
 
-export function createSlowReboundDeformation(positions, normals, { reducedMotion = false, surfaceGeometry } = {}) {
+export function createSlowReboundDeformation(positions, normals, { reducedMotion = false, surfaceGeometry, getPressDirection, constrainPress, getPressRadius } = {}) {
   const p = slowReboundParameters;
   const rest = positions.slice(), count = positions.length / 3;
   const offsets = new Float32Array(count), restoreOffsets = new Float32Array(count);
   const contactTime = new Float32Array(count);
   const directions = new Float32Array(rest.length), limits = new Float32Array(count);
-  const constrainOffsets = surfaceGeometry?.constrainOffsets;
+  // Optional spatial adapter: pressure travels along the input ray, never toward
+  // a non-spherical model's center. Stored vectors keep old dents stable on rotation.
+  const contactVectors = getPressDirection ? new Float32Array(rest.length) : null;
+  const previousVectors = contactVectors ? contactVectors.slice() : null;
+  const constrainContact = contactVectors ? (surfaceGeometry?.createContactSafety() ?? constrainPress) : null;
+  let pressDirection = [0, 0, 1];
+  const contactRadius = getPressRadius ?? (surfaceGeometry?.contactRadius ? (i, direction) => surfaceGeometry.contactRadius(i, direction) : null);
+  const rayLimits = contactVectors && contactRadius ? new Float32Array(count).fill(-1) : null;
+  function captureDirection() {
+    if (!contactVectors) return;
+    const value = getPressDirection(), length = Math.hypot(...value);
+    if (value.length !== 3 || !Number.isFinite(length) || length < 1e-6) throw new RangeError('Invalid press direction');
+    const normalized = value.map(n => n / length);
+    if (normalized.some((n, k) => Math.abs(n - pressDirection[k]) > 1e-7)) rayLimits?.fill(-1);
+    pressDirection = normalized;
+  }
+  const constrainOffsets = contactVectors ? null : surfaceGeometry?.constrainOffsets;
   const renderedOffsets = constrainOffsets ? new Float32Array(count) : null;
   const surfaceInfluences = surfaceGeometry ? new Float64Array(count) : null;
   let cachedSurfacePoint, cachedSurfaceNeighborhood;
@@ -54,10 +70,17 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
   function interruptRestore() { restoring = false; }
   function writePositions() {
     let accepted = 1;
+    if (contactVectors) {
+      // The accepted surface has a checked straight route to rest. Release and
+      // explicit restore only shorten that route; they need no new face solve.
+      if (active && !restoring && constrainContact) accepted = constrainContact(previousVectors, contactVectors);
+      for (let i = 0; i < count; i++) offsets[i] = Math.hypot(contactVectors[i * 3], contactVectors[i * 3 + 1], contactVectors[i * 3 + 2]);
+      previousVectors.set(contactVectors);
+    }
     if (constrainOffsets) { accepted = constrainOffsets(renderedOffsets, offsets); renderedOffsets.set(offsets); }
     for (let i = 0; i < count; i++) {
       const j = i * 3;
-      for (let k = 0; k < 3; k++) positions[j + k] = offsets[i] === 0 ? rest[j + k] : rest[j + k] - directions[j + k] * offsets[i];
+      for (let k = 0; k < 3; k++) positions[j + k] = offsets[i] === 0 ? rest[j + k] : rest[j + k] - (contactVectors ? contactVectors[j + k] : directions[j + k] * offsets[i]);
     }
     return accepted;
   }
@@ -93,19 +116,23 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
     return { distance, points };
   }
   return {
-    begin(point) { interruptRestore(); endContact(); active = true; center = [...point]; },
-    move(point) { if (active) pending.push([...point]); },
+    begin(point) { interruptRestore(); endContact(); active = true; center = [...point]; captureDirection(); },
+    move(point) { if (active) { pending.push([...point]); captureDirection(); } },
     release: endContact,
     cancel: endContact,
     reset() {
       endContact(); restoring = false; offsets.fill(0); restoreOffsets.fill(0);
-      positions.set(rest); renderedOffsets?.fill(0); dirty = true;
+      positions.set(rest); renderedOffsets?.fill(0); contactVectors?.fill(0); previousVectors?.fill(0); dirty = true;
     },
     beginRestore() { endContact(); restoreOffsets.set(offsets); restoring = true; },
     applyRestore(progress) {
       if (!restoring) return;
       const remaining = (1 - clamp(progress, 0, 1)) ** 3;
-      for (let i = 0; i < count; i++) offsets[i] = restoreOffsets[i] * remaining;
+      for (let i = 0; i < count; i++) {
+        const next = restoreOffsets[i] * remaining;
+        if (contactVectors) for (let k = 0; k < 3; k++) contactVectors[i * 3 + k] *= offsets[i] ? next / offsets[i] : 0;
+        offsets[i] = next;
+      }
       dirty = true;
       if (progress >= 1) restoring = false;
     },
@@ -163,7 +190,12 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
             const q2 = ((rest[j] - point[0]) ** 2 + (rest[j + 1] - point[1]) ** 2 + (rest[j + 2] - point[2]) ** 2) / p.radius ** 2;
             if (q2 < 1) influence += (1 - q2) ** 3 * path.distance / path.points.length;
           }
-          const target = Math.min(limits[i], dragging ? p.dragDepth : p.maximumDepth) * Math.min(1, influence), before = offsets[i];
+          let limit = limits[i];
+          if (rayLimits && influence > 0) {
+            if (rayLimits[i] < 0) rayLimits[i] = Math.min(p.maximumDepth, contactRadius(i, pressDirection) * p.radialLimit);
+            limit = Math.min(limit, rayLimits[i]);
+          }
+          const target = Math.min(limit, dragging ? p.dragDepth : p.maximumDepth) * Math.min(1, influence), before = offsets[i];
           // Each vertex yields gradually after local contact. A long hold at A
           // cannot give a freshly visited B the same fully yielded response.
           contactTime[i] = Math.min(p.contactRampSeconds, contactTime[i] * Math.exp(-p.contactMemoryDecay * dt * (1 - influence)) + dt * influence);
@@ -175,6 +207,12 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
           // Snap only a subpixel remainder to the exact original mesh. Active
           // near-equilibrium values also settle, so a held press can stop frames.
           offsets[i] = Math.abs(next - target) <= p.convergence ? target : next;
+          if (contactVectors && offsets[i] !== before) {
+            for (let k = 0; k < 3; k++) {
+              if (offsets[i] > before) contactVectors[j + k] += pressDirection[k] * (offsets[i] - before);
+              else contactVectors[j + k] *= before ? offsets[i] / before : 0;
+            }
+          }
           changed ||= offsets[i] !== before;
           moving ||= offsets[i] !== target;
         }
@@ -182,7 +220,7 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
       for (let i = 0; i < count; i++) atRest &&= offsets[i] === 0;
       if (changed) {
         const accepted = writePositions();
-        if (constrainOffsets) { moving &&= accepted > 1e-5; atRest = offsets.every(value => value === 0); }
+        if (constrainOffsets || contactVectors) { moving &&= accepted > 1e-5; atRest = offsets.every(value => value === 0); }
         dirty = false;
       }
       return { changed, atRest, needsFrame: moving || restoring || motionTransition };

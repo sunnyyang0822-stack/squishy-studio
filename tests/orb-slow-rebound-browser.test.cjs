@@ -6,6 +6,29 @@ const { chromium } = require('playwright');
 const { installOrbProbe, meshStats } = require('./helpers/orb-probe.cjs');
 const base = 'http://127.0.0.1:4205';
 let server, browser;
+test('慢回弹原圆球边缘沿按入方向凹陷，旋转后不向球心拉扯且完整恢复', { timeout: 120000 }, async () => {
+  const { installStyleProbe, ready, projectedSurfaceContact, rotate } = require('./helpers/squishy-browser.cjs');
+  const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  try {
+    await page.clock.install(); await installStyleProbe(page, getSquishyStyle('orb'));
+    await page.goto(`${base}/squishy/cloud/?style=orb&coreMaterial=butter`); await ready(page);
+    for (const pose of ['initial', 'rotated']) {
+      if (pose === 'rotated') await rotate(page, 55, 16);
+      const hit = await projectedSurfaceContact(page, .6, .05);
+      await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+      await page.mouse.move(hit.x, hit.y); await page.mouse.down(); await page.clock.runFor(1300);
+      const delta = await page.evaluate(({ index }) => {
+        const p = window.styleProbe, d = [0, 1, 2].map(k => p.positions[index + k] - p.rest[index + k]);
+        return [0, 1, 2].map(k => d.reduce((s, v, j) => s + v * p.matrix[j * 4 + k], 0));
+      }, hit);
+      assert.ok(Math.hypot(delta[0], delta[1]) < 1e-5 && delta[2] < -.02, `${pose}: ${delta}`);
+      await page.mouse.up(); await page.clock.runFor(14000);
+      assert.equal(await page.evaluate(() => window.styleProbe.positions.every((v, i) => v === window.styleProbe.rest[i])), true);
+      await page.clock.resume();
+    }
+  } finally { await page.close(); }
+});
 before(async () => {
   server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4205' } });
   for (let i = 0; i < 60; i++) { try { if ((await fetch(base)).ok) break; } catch {} await new Promise(r => setTimeout(r, 100)); }

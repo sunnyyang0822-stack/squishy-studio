@@ -25,10 +25,11 @@ class Heap {
 // independent per-vertex box, this keeps the correlated, broad clay footprint.
 // The rest face's projected signed area along a straight offset segment is a
 // quadratic polynomial. Its first zero bounds every intermediate position.
-export function createOffsetSafety(rest, directions, indices) {
+export function createOffsetSafety(rest, directions, indices, { vectorOffsets = false } = {}) {
   const count = rest.length / 3, faces = new Float64Array(indices.length / 3 * 4);
   const previous = new Float64Array(rest.length), delta = new Float64Array(rest.length);
-  const zeros = new Float32Array(count);
+  const slots = vectorOffsets ? rest.length : count;
+  const zeros = new Float32Array(slots);
   const incident = Array.from({ length: count }, () => []);
   const triangleCount = indices.length / 3;
   const queue = new Int32Array(triangleCount), queued = new Uint8Array(triangleCount), visits = new Uint8Array(triangleCount);
@@ -43,7 +44,9 @@ export function createOffsetSafety(rest, directions, indices) {
   }
   function segmentLimit(from, to, triangle = -1, margin = .08001) {
     function prepare(i) { for (let k = 0; k < 3; k++) {
-      const j = i * 3 + k; previous[j] = rest[j] - directions[j] * from[i]; delta[j] = -directions[j] * (to[i] - from[i]);
+      const j = i * 3 + k;
+      previous[j] = rest[j] - (vectorOffsets ? from[j] : directions[j] * from[i]);
+      delta[j] = vectorOffsets ? from[j] - to[j] : -directions[j] * (to[i] - from[i]);
     } }
     if (triangle >= 0) for (let k = 0; k < 3; k++) prepare(indices[triangle * 3 + k]);
     else for (let i = 0; i < count; i++) prepare(i);
@@ -80,7 +83,7 @@ export function createOffsetSafety(rest, directions, indices) {
   }
   return function constrainOffsets(from, candidate) {
     let proposed = 0;
-    for (let i = 0; i < count; i++) proposed = Math.max(proposed, Math.abs(candidate[i] - from[i]));
+    for (let i = 0; i < slots; i++) proposed = Math.max(proposed, Math.abs(candidate[i] - from[i]));
     if (proposed === 0) return 1;
     queued.fill(1); visits.fill(0);
     for (let t = 0; t < triangleCount; t++) queue[t] = t;
@@ -91,9 +94,10 @@ export function createOffsetSafety(rest, directions, indices) {
       const alpha = segmentLimit(from, candidate, t);
       const restAlpha = segmentLimit(zeros, candidate, t, .08);
       if (alpha === 1 && restAlpha === 1) continue;
-      const ids = [indices[t * 3], indices[t * 3 + 1], indices[t * 3 + 2]];
+      const vertices = [indices[t * 3], indices[t * 3 + 1], indices[t * 3 + 2]];
+      const ids = vectorOffsets ? vertices.flatMap(i => [i * 3, i * 3 + 1, i * 3 + 2]) : vertices;
       const before = ids.map(i => candidate[i]);
-      const assign = value => { for (let k = 0; k < 3; k++) { const i = ids[k]; candidate[i] = from[i] + (before[k] - from[i]) * value; } };
+      const assign = value => { for (let k = 0; k < ids.length; k++) { const i = ids[k]; candidate[i] = from[i] + (before[k] - from[i]) * value; } };
       let fraction = alpha;
       assign(fraction);
       // Each accepted face must also have a safe route to its own rest shape.
@@ -110,19 +114,19 @@ export function createOffsetSafety(rest, directions, indices) {
       // increments; it never scales or freezes a distant new footprint.
       if (fraction < 1e-5 || ++visits[t] >= 12 || ids.every((i, k) => candidate[i] === before[k])) assign(0);
       let changed = false;
-      for (let k = 0; k < 3; k++) if (candidate[ids[k]] !== before[k]) {
-        changed = true; for (const face of incident[ids[k]]) enqueue(face);
+      for (let k = 0; k < ids.length; k++) if (candidate[ids[k]] !== before[k]) {
+        changed = true; for (const face of incident[vectorOffsets ? Math.floor(ids[k] / 3) : ids[k]]) enqueue(face);
       }
       if (!changed) throw new RangeError('Offset safety could not repair a previously accepted face');
     }
     if (segmentLimit(from, candidate) < 1 || segmentLimit(zeros, candidate, -1, .08) < 1) throw new RangeError('Offset safety did not converge');
     let accepted = 0;
-    for (let i = 0; i < count; i++) accepted = Math.max(accepted, Math.abs(candidate[i] - from[i]));
+    for (let i = 0; i < slots; i++) accepted = Math.max(accepted, Math.abs(candidate[i] - from[i]));
     return Math.min(1, accepted / proposed);
   };
 }
 
-export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis } = {}) {
+export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis, continuousFootprint = false } = {}) {
   const rest = source.slice(), count = rest.length / 3;
   if (!indices?.length || sourceNormals.length !== rest.length) throw new TypeError('Surface clay requires indexed positions and normals');
   const directions = sourceNormals.slice(), radii = new Float32Array(count);
@@ -145,6 +149,41 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
     const u = radialVectors[a], v = radialVectors[b], w = radialVectors[c];
     return u[0] * (v[1] * w[2] - v[2] * w[1]) + u[1] * (v[2] * w[0] - v[0] * w[2]) + u[2] * (v[0] * w[1] - v[1] * w[0]) > 1e-10;
   });
+    // A small triangle BVH makes inward thickness queries O(log triangles).
+    function build(ids) {
+      const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+      for (const t of ids) for (const v of triangles[t]) for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], rest[v * 3 + k]); hi[k] = Math.max(hi[k], rest[v * 3 + k]); }
+      if (ids.length <= 12) return { lo, hi, ids };
+      const axis = [0, 1, 2].sort((a, b) => (hi[b] - lo[b]) - (hi[a] - lo[a]))[0];
+      ids.sort((a, b) => triangles[a].reduce((s, v) => s + rest[v * 3 + axis], 0) - triangles[b].reduce((s, v) => s + rest[v * 3 + axis], 0));
+      const mid = ids.length >> 1;
+      return { lo, hi, left: build(ids.slice(0, mid)), right: build(ids.slice(mid)) };
+    }
+    let thicknessTree;
+    function thickness(origin, ray) {
+      let best = Infinity;
+      function visit(node) {
+        let near = 0, far = best;
+        for (let k = 0; k < 3; k++) {
+          if (Math.abs(ray[k]) < 1e-10) { if (origin[k] < node.lo[k] - 1e-7 || origin[k] > node.hi[k] + 1e-7) return; }
+          else { let a = (node.lo[k] - origin[k]) / ray[k], b = (node.hi[k] - origin[k]) / ray[k]; if (a > b) [a, b] = [b, a]; near = Math.max(near, a); far = Math.min(far, b); if (far < near) return; }
+        }
+        if (!node.ids) { visit(node.left); visit(node.right); return; }
+        for (const id of node.ids) {
+          const [a, b, c] = triangles[id].map(point);
+          const e = b.map((v, k) => v - a[k]), f = c.map((v, k) => v - a[k]);
+          const h = [ray[1] * f[2] - ray[2] * f[1], ray[2] * f[0] - ray[0] * f[2], ray[0] * f[1] - ray[1] * f[0]];
+          const det = e.reduce((s, v, k) => s + v * h[k], 0); if (Math.abs(det) < 1e-10) continue;
+          const s = origin.map((v, k) => v - a[k]);
+          const u = s.reduce((sum, v, k) => sum + v * h[k], 0) / det; if (u < -1e-6 || u > 1.000001) continue;
+          const q = [s[1] * e[2] - s[2] * e[1], s[2] * e[0] - s[0] * e[2], s[0] * e[1] - s[1] * e[0]];
+          const v = ray.reduce((sum, n, k) => sum + n * q[k], 0) / det; if (v < -1e-6 || u + v > 1.000001) continue;
+          const t = f.reduce((sum, n, k) => sum + n * q[k], 0) / det;
+          if (t > 1e-5) best = Math.min(best, t);
+        }
+      }
+      visit(thicknessTree ??= build(triangles.map((_, i) => i))); return best;
+    }
   if (starConvex) {
     for (let i = 0; i < count; i++) { const radius = Math.hypot(...radialVectors[i]); radii[i] = radius; for (let k = 0; k < 3; k++) directions[i * 3 + k] = radialVectors[i][k] / radius; }
   } else {
@@ -173,41 +212,6 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
         const length = Math.hypot(...v);
         for (let k = 0; k < 3; k++) directions[i * 3 + k] = v[k] / length;
       }
-    }
-    // A small triangle BVH makes inward thickness queries O(log triangles).
-    function build(ids) {
-      const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
-      for (const t of ids) for (const v of triangles[t]) for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], rest[v * 3 + k]); hi[k] = Math.max(hi[k], rest[v * 3 + k]); }
-      if (ids.length <= 12) return { lo, hi, ids };
-      const axis = [0, 1, 2].sort((a, b) => (hi[b] - lo[b]) - (hi[a] - lo[a]))[0];
-      ids.sort((a, b) => triangles[a].reduce((s, v) => s + rest[v * 3 + axis], 0) - triangles[b].reduce((s, v) => s + rest[v * 3 + axis], 0));
-      const mid = ids.length >> 1;
-      return { lo, hi, left: build(ids.slice(0, mid)), right: build(ids.slice(mid)) };
-    }
-    const tree = build(triangles.map((_, i) => i));
-    function thickness(origin, ray) {
-      let best = Infinity;
-      function visit(node) {
-        let near = 0, far = best;
-        for (let k = 0; k < 3; k++) {
-          if (Math.abs(ray[k]) < 1e-10) { if (origin[k] < node.lo[k] - 1e-7 || origin[k] > node.hi[k] + 1e-7) return; }
-          else { let a = (node.lo[k] - origin[k]) / ray[k], b = (node.hi[k] - origin[k]) / ray[k]; if (a > b) [a, b] = [b, a]; near = Math.max(near, a); far = Math.min(far, b); if (far < near) return; }
-        }
-        if (!node.ids) { visit(node.left); visit(node.right); return; }
-        for (const id of node.ids) {
-          const [a, b, c] = triangles[id].map(point);
-          const e = b.map((v, k) => v - a[k]), f = c.map((v, k) => v - a[k]);
-          const h = [ray[1] * f[2] - ray[2] * f[1], ray[2] * f[0] - ray[0] * f[2], ray[0] * f[1] - ray[1] * f[0]];
-          const det = e.reduce((s, v, k) => s + v * h[k], 0); if (Math.abs(det) < 1e-10) continue;
-          const s = origin.map((v, k) => v - a[k]);
-          const u = s.reduce((sum, v, k) => sum + v * h[k], 0) / det; if (u < -1e-6 || u > 1.000001) continue;
-          const q = [s[1] * e[2] - s[2] * e[1], s[2] * e[0] - s[0] * e[2], s[0] * e[1] - s[1] * e[0]];
-          const v = ray.reduce((sum, n, k) => sum + n * q[k], 0) / det; if (v < -1e-6 || u + v > 1.000001) continue;
-          const t = f.reduce((sum, n, k) => sum + n * q[k], 0) / det;
-          if (t > 1e-5) best = Math.min(best, t);
-        }
-      }
-      visit(tree); return best;
     }
     for (let i = 0; i < count; i++) {
       const p = point(i), normal = Array.from(directions.slice(i * 3, i * 3 + 3)), length = Math.hypot(...normal);
@@ -274,8 +278,9 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
   // The padded paw's pressure wave crosses triangle interiors rather than
   // following only mesh-edge directions. This causal first-order fast marching
   // approximation stays on connected faces; it cannot jump a toe gap or hole.
-  // Other models and stroke routing retain the original graph search.
-  const waveFaces = depthAxis === undefined ? null : Array.from({ length: count }, () => []);
+  // Opt-in slow-rebound models share this wave; stroke routing and defaults
+  // retain the original graph search.
+  const waveFaces = depthAxis === undefined && !continuousFootprint ? null : Array.from({ length: count }, () => []);
   const waveMetrics = waveFaces ? new Float64Array(triangles.length * 9) : null;
   if (waveFaces) for (let t = 0; t < triangles.length; t++) {
     const ids = triangles[t];
@@ -332,6 +337,14 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
     return { found, previous, distances, seed, offset };
   }
   return {
+    createContactSafety: () => createOffsetSafety(rest, null, indices, { vectorOffsets: true }),
+    // Half the real shell chord along this input ray. Back-facing vertices are
+    // outside this contact even if a surface neighborhood wraps over a rim.
+    contactRadius(i, outward) {
+      if (outward.reduce((sum, value, k) => sum + value * sourceNormals[i * 3 + k], 0) <= 1e-6) return 0;
+      const chord = thickness(point(i), outward.map(value => -value));
+      return Number.isFinite(chord) ? chord / 2 : 0;
+    },
     directions, radii, parameterization: starConvex ? 'star-convex' : 'normal-thickness',
     ...(depthAxis !== undefined && !starConvex ? { constrainOffsets: createOffsetSafety(rest, directions, indices) } : {}),
     neighborhood(p, radius) { return waveFaces ? waveNeighborhood(p, radius) : search(p, radius).found; },
