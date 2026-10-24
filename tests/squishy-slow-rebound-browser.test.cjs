@@ -26,6 +26,16 @@ async function assertConfig(page, id) {
 async function exactRest(page) {
   assert.equal(await page.evaluate(() => window.styleProbe.positions.every((v, i) => v === window.styleProbe.rest[i])), true, 'Every actual GPU position returns to this asset’s exact rest mesh');
 }
+async function finishRecovery(page) {
+  const before = await stats(page);
+  // Observe a full second of actual rAF/GPU recovery, then advance the idle
+  // tail. Replaying ~875 software-rendered frames is not needed to verify the
+  // final exact rest; CPU tests and wall-clock recordings cover that trajectory.
+  await page.clock.runFor(1000);
+  const partial = await stats(page);
+  assert.ok(partial.maximum > 0 && partial.maximum < before.maximum, 'Actual GPU recovery remains gradual throughout its first second');
+  await page.clock.fastForward(13000); await exactRest(page);
+}
 async function assertRingIsolation(page, id) {
   if (id === 'donut') assert.equal(await page.evaluate(() => { const p = window.styleProbe; return p.positions.every((v, i) => p.rest[i - i % 3] >= -.35 || v === p.rest[i]); }), true, 'Ring pressure never crosses the empty hole');
 }
@@ -42,7 +52,7 @@ async function assertPerpendicularEdge(page, id, pose) {
   assert.ok(displacement[2] < -.02, `${id}/${pose}: the actual edge contact must visibly indent: ${displacement}`);
   console.log(JSON.stringify({ model: id, pose, edgeDisplacementInView: displacement }));
   if (process.env.CAPTURE_PRESS_DIRECTION) await page.screenshot({ path: `artifacts/issue-30-paw/${id}-${pose}-perpendicular-press.png` });
-  await page.mouse.up(); await page.clock.runFor(14000); await exactRest(page);
+  await page.mouse.up(); await finishRecovery(page);
 }
 for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']) test(`${id}×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle`, { timeout: 300000 }, async () => {
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
@@ -66,7 +76,7 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
     await page.mouse.move(p.x + 12, p.y - 5, { steps: 6 }); await page.clock.runFor(200); await page.mouse.up();
     const released = await stats(page); await page.clock.runFor(300); const recovering = await stats(page);
     assert.ok(recovering.maximum > .001 && recovering.maximum < released.maximum * .98, 'Release recovers gradually without instantly clearing or retaining a plastic dent');
-    await page.clock.runFor(14000); await exactRest(page);
+    await finishRecovery(page);
     console.log(`${id}: press, drag and natural recovery passed`);
     await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.clock.runFor(500);
     const beforeCancel = await stats(page); assert.ok(beforeCancel.maximum > .02);
@@ -119,7 +129,7 @@ test('phone native touch: donut and paw preserve slow recovery, touch cancellati
       await touch('touchMove', p.x + 7, p.y - 3); await page.clock.runFor(150); await touch('touchEnd');
       const released = await stats(page); await page.clock.runFor(300); const recovering = await stats(page);
       assert.ok(recovering.maximum > .001 && recovering.maximum < released.maximum);
-      await page.clock.runFor(14000); await exactRest(page);
+      await finishRecovery(page);
       await touch('touchStart'); await page.clock.runFor(500); const before = await stats(page);
       await touch('touchCancel'); await page.clock.runFor(150); const cancelled = await stats(page);
       assert.ok(cancelled.maximum > 0 && cancelled.maximum < before.maximum);

@@ -23,7 +23,14 @@ test('慢回弹原圆球边缘沿按入方向凹陷，旋转后不向球心拉�
         return [0, 1, 2].map(k => d.reduce((s, v, j) => s + v * p.matrix[j * 4 + k], 0));
       }, hit);
       assert.ok(Math.hypot(delta[0], delta[1]) < 1e-5 && delta[2] < -.02, `${pose}: ${delta}`);
-      await page.mouse.up(); await page.clock.runFor(14000);
+      await page.mouse.up(); await page.clock.runFor(1000);
+      const recovering = await page.evaluate(() => {
+        const p = window.styleProbe; let maximum = 0;
+        for (let i = 0; i < p.rest.length; i += 3) maximum = Math.max(maximum, Math.hypot(...[0, 1, 2].map(k => p.positions[i + k] - p.rest[i + k])));
+        return maximum;
+      });
+      assert.ok(recovering > 0 && recovering < Math.abs(delta[2]), 'Actual GPU recovery progresses gradually before its idle tail');
+      await page.clock.fastForward(13000);
       assert.equal(await page.evaluate(() => window.styleProbe.positions.every((v, i) => v === window.styleProbe.rest[i])), true);
       await page.clock.resume();
     }
