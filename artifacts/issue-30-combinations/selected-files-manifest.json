@@ -694,23 +694,23 @@
     },
     {
       "path": "artifacts/issue-30-combinations/video-encoding.json",
-      "bytes": 19575,
-      "sha256": "ece36bd8bbf88380fab004fbce667a2d21b12a691efe1eaae5623528a444db31"
+      "bytes": 19088,
+      "sha256": "aa4407a67cfd435032462f77a471921b31401d44a2330de3eba7664f9c9babc1"
     },
     {
       "path": "artifacts/issue-30-combinations/clay-current-capture.txt",
-      "bytes": 395,
-      "sha256": "76a76c075a48349f43c42263cee6736e558d1b3cdd264b17b12843aa07e02cd1"
+      "bytes": 388,
+      "sha256": "fd6abbf45ed278f86ab1d17c14a2f06f19d53215796a40f594a366373546cb6d"
     },
     {
       "path": "artifacts/issue-30-combinations/marshmallow-current-capture.txt",
-      "bytes": 444,
-      "sha256": "c7f9460bfb7efdc582a5f24f1595c76ffac2e725f907e7ea2a6da1aca8234241"
+      "bytes": 437,
+      "sha256": "109d74d986e43e0973942542314ac1d1173ab56f799538db9d94da208db4c4ed"
     },
     {
       "path": "artifacts/issue-30-combinations/slow-rebound-current-capture.txt",
-      "bytes": 451,
-      "sha256": "09a872f569a2deebe8042eb3179f4dd8879951ce5933d6e1074f26e362204d2d"
+      "bytes": 444,
+      "sha256": "fa7b23b1c1dfc329ebe12401b6023cf13fd4a1586f6c970add64025da04ccb33"
     }
   ]
 }
