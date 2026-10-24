@@ -10,6 +10,7 @@ import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
 import { orbColors } from '../detail/orb-colors.mjs';
+import { createThinWax } from './thin-wax.mjs';
 
 const abortError = () => new DOMException('Aborted', 'AbortError');
 function releaseObject(root) {
@@ -22,7 +23,7 @@ function releaseObject(root) {
 }
 
 // One renderer per page. Frames run only while deformation is changing or the
-// viewport needs redrawing. Audio and shell fracture are outside this adapter.
+// viewport needs redrawing. Shell damage shares this input and render clock.
 export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, feelId, styleId = 'orb', appearanceId } = {}) {
   const preset = presetId === undefined ? null : getOrbPreset(presetId);
   feelId ??= preset?.feelId ?? 'clay';
@@ -45,6 +46,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     old.events.abort();
     old.input.dispose();
     old.rotation.dispose();
+    old.disposeWax();
     old.restSurface.geometry.dispose();
     old.resize.disconnect();
     old.theme.disconnect();
@@ -56,6 +58,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     old.renderer.domElement.remove();
     old.surface.remove();
     delete mount.dataset.renderCount;
+    if (mount.thinWaxDiagnostics === old.diagnostics) delete mount.thinWaxDiagnostics;
   }
 
   function build(root, initialColor) {
@@ -64,6 +67,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       releaseObject(root); throw new Error('Invalid squishy surface');
     }
     const geometry = mesh.geometry;
+    let wax, recipeKey, activeConfig, shellVisible = false;
+    const gravity = new THREE.Vector3();
+    function disposeWax() { wax?.dispose(); wax = undefined; }
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
     const orbPressGeometry = feelId === 'slow-rebound' && !isSurface
       ? createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array) : null;
@@ -136,8 +142,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     const frontFill = isSurface ? new THREE.DirectionalLight(0xffffff, .95) : null;
     if (frontFill) { frontFill.position.copy(camera.position); scene.add(frontFill); }
     const events = new AbortController();
-    // Diffuse, solid surface. Colors share the existing geometry and material;
-    // no new GLBs, textures, transparent shells or layered draw calls.
+    // Core pigment stays independent from the optional solid wax coating.
     const sourceMaterial = mesh.material;
     mesh.material = getOrbPreset(feelId).createMaterial(sourceMaterial);
     mesh.material.vertexColors = true;
@@ -183,7 +188,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (!hit) return null;
       return mesh.worldToLocal(hit.point).toArray();
     }
-    const current = { renderer, scene, environment, camera, events, restSurface, surface, frame: 0, count: 0, lastTime: null, width: 0, height: 0 };
+    const current = { renderer, scene, environment, camera, events, restSurface, surface, disposeWax, frame: 0, count: 0, lastTime: null, width: 0, height: 0 };
     let restorePose;
     let daylight = document.documentElement.dataset.theme !== 'night', colorLightingDirty = true;
     const initialOrientation = new THREE.Quaternion();
@@ -259,7 +264,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         if (progress === 1) restorePose = undefined;
       }
       const step = deformation.step(dt);
-      const needsFrame = step.needsFrame || colorStep.needsFrame;
+      let needsFrame = step.needsFrame || colorStep.needsFrame;
       current.lastTime = needsFrame ? time : null;
       if (colorStep.changed || step.changed || colorLightingDirty) {
         const positions = geometry.attributes.position.array;
@@ -301,6 +306,15 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         }
         geometry.computeBoundingSphere();
       }
+      if (wax && shellVisible) {
+        if (step.changed) wax.sync();
+        pivot.updateMatrixWorld(true);
+        gravity.set(0, -1, 0).transformDirection(mesh.matrixWorld.clone().invert());
+        wax.setGravity?.(gravity.toArray());
+        const shellStep = wax.step(dt);
+        needsFrame ||= shellStep.needsFrame;
+      }
+      current.lastTime = needsFrame ? time : null;
       try {
         renderer.render(scene, camera);
         mount.dataset.renderCount = String(++current.count);
@@ -313,6 +327,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
     }
     current.input = bindOrbInput({ surface, hitTest, deformation, invalidate, onBegin: interruptRestore,
+      onContact(point, phase) { if (shellVisible) wax?.[phase === 'begin' ? 'begin' : 'move'](point); },
+      onEnd() { wax?.end(); },
+      endOnMiss: () => shellVisible,
       keyboardPoint: isSurface ? box => {
         // A ring has no surface at its projected center. Keyboard input must
         // select a real visible surface instead of pressing the empty hole.
@@ -371,9 +388,35 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       coating.select(new THREE.Color(next.hex).toArray(), heights, { restart: restore });
       renderer.domElement.setAttribute('aria-label', `${next.name}${isSurface ? style.name : '圆球'}，${interactionLabel}`);
     };
-    current.restore = () => current.selectColor(selectedColor.id, { restore: true });
+    current.restore = () => { wax?.reset(); current.selectColor(selectedColor.id, { restore: true }); };
+    current.configure = config => {
+      const thinRecipe = style.id === 'orb' && feelId === 'clay' && config.shellMaterial === 'wax' && config.waxThickness === 'thin';
+      const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
+      if (wax || thinRecipe) current.input.cancel();
+      if (changed && (wax || thinRecipe)) { disposeWax(); current.selectColor(config.coreColor || config.color, { restore: true }); }
+      recipeKey = config.recipeKey;
+      activeConfig = { ...config };
+      shellVisible = thinRecipe && config.mode !== 'core' && config.mode !== 'hidden';
+      if (thinRecipe && !wax) {
+        const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
+        wax = createThinWax({ geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches });
+        mesh.add(wax.group);
+      }
+      if (wax) { wax.group.visible = shellVisible; if (shellVisible) wax.sync(); }
+      // Navigating a fixed thin-wax recipe never recolors or repairs its core.
+      current.selectColor(thinRecipe ? config.coreColor : config.color);
+      current.diagnostics = () => ({
+        enabled: Boolean(wax && shellVisible), configKey: recipeKey,
+        coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor,
+        corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions),
+        coreState: deformation.getState(), thinWax: wax?.getState(), geometry: wax?.getMetrics(),
+        resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries },
+      });
+      mount.thinWaxDiagnostics = current.diagnostics;
+    };
     motionPreference.addEventListener('change', event => {
       deformation.setReducedMotion(event.matches); coating.setReducedMotion(event.matches); invalidate();
+      wax?.setReducedMotion?.(event.matches);
       if (restorePose) beginRestore();
     }, { signal: events.signal });
     current.resize = new ResizeObserver(invalidate);
@@ -436,7 +479,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
           mount.dataset.color = config.color || orbColors[0].id;
           mount.dataset.style = style.id;
           mount.dataset.feelId = feelId;
-          prepared.selectColor(config.color);
+          prepared.configure(config);
           prepared.invalidate();
         },
         // Preference handles share the page scene; only the adapter owns GPU resources.
