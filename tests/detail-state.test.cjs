@@ -43,7 +43,7 @@ test('五步、默认配方；黏土、棉花糖和慢回弹独立映射，制�
   assert.equal(c.getState().preview.mode, 'hidden');
   assert.equal(h.stopped, 1);
   c.next(); assert.equal(c.getState().step, 'play');
-  assert.equal(h.restored, 0);
+  assert.equal(h.restored, 1);
   c.previous(); assert.equal(c.getState().step, 'making');
   c.setStep('invalid'); assert.equal(c.getState().step, 'making');
   c.dispose();
@@ -104,6 +104,43 @@ test('同配方前后导航不修复损伤，壳设置或隐藏内芯色变化�
   c.setStep('shell'); await settle();
   assert.equal(h.prepared.at(-1).mode, 'shell');
   c.dispose();
+});
+
+test('重新开始仅作用于已就绪的圆球黏土薄蜡，不改变配方或步骤', async () => {
+  const { createDetailController, canRestartThinWax, defaultRecipe } = await stateModule;
+  const h = harness(createDetailController), c = h.controller;
+  c.restart(); assert.equal(h.restored, 0);
+  await c.load(); c.restart(); assert.equal(h.restored, 0);
+  await c.select('waxThickness', 'thin');
+  c.restart(); assert.equal(h.restored, 0, '裸芯试捏不显示重开');
+  c.setStep('shell');
+  c.restart(); assert.equal(h.restored, 0, '配置提交前不得恢复旧实例');
+  await new Promise(resolve => setImmediate(resolve));
+  const before = c.getState(), count = h.prepared.length;
+  c.restart();
+  assert.equal(h.restored, 1);
+  assert.equal(h.prepared.length, count);
+  assert.deepEqual(c.getState(), before);
+  for (const step of ['core', 'making']) assert.equal(canRestartThinWax(step, before.recipe), false);
+  for (const step of ['shell', 'decoration', 'play']) assert.equal(canRestartThinWax(step, before.recipe), true);
+  for (const override of [{ styleId: 'donut' }, { coreMaterial: 'marshmallow' }, { coreMaterial: 'butter' }, { waxThickness: 'medium' }, { shellMaterial: 'sugar' }]) {
+    assert.equal(canRestartThinWax('play', { ...defaultRecipe, waxThickness: 'thin', ...override }), false);
+  }
+  c.rendererUnavailable(); c.restart(); assert.equal(h.restored, 1);
+  c.dispose(); c.restart(); assert.equal(h.restored, 1);
+});
+
+test('薄蜡范围之外的制作结束保留原有自动恢复', async () => {
+  const { createDetailController } = await stateModule;
+  for (const [group, value] of [['waxThickness', 'medium'], ['coreMaterial', 'marshmallow'], ['coreMaterial', 'butter'], ['styleId', 'donut'], ['shellMaterial', 'polish']]) {
+    const h = harness(createDetailController), c = h.controller;
+    await c.load(); await c.select('waxThickness', 'thin'); await c.select(group, value);
+    c.setStep('making'); c.setStep('play');
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(h.restored, 1, `${group}=${value}`);
+    c.restart(); assert.equal(h.restored, 1);
+    c.dispose();
+  }
 });
 
 test('填充物与装饰单选，内外颜色独立，往返和最终体验保留配方', async () => {

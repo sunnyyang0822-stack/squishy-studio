@@ -1,4 +1,4 @@
-import { createDetailController, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames, styleNames, defaultRecipe } from './state.mjs';
+import { createDetailController, canRestartThinWax, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames, styleNames, defaultRecipe } from './state.mjs';
 import { orbColors } from './orb-colors.mjs';
 import { createModelPreview, createSilentAudio } from './adapters.js';
 
@@ -20,6 +20,10 @@ const options = document.querySelector('.step-options');
 const retry = document.querySelector('.retry-button');
 const back = document.querySelector('.step-back');
 const next = document.querySelector('.step-next');
+const restart = document.createElement('button');
+restart.type = 'button'; restart.className = 'thin-wax-restart';
+restart.textContent = '重新开始'; restart.hidden = true;
+document.querySelector('.step-navigation').insertBefore(restart, next);
 const listeners = new AbortController();
 const on = (target, event, fn) => target.addEventListener(event, fn, { signal: listeners.signal });
 const groups = [
@@ -151,6 +155,8 @@ controller = createDetailController({
     back.textContent = step === 'making' || step === 'play' ? '返回修改' : '上一步';
     next.hidden = step === 'play';
     next.textContent = step === 'making' ? '开始捏捏' : '下一步';
+    restart.hidden = !canRestartThinWax(step, recipe);
+    restart.disabled = resource !== 'ready' || state.configStatus === 'updating' || state.configError;
     document.querySelector('.configuration-summary').textContent = `当前${stepNames[step]}，${styleNames[recipe.styleId]}：内芯${coreNames[recipe.coreMaterial]}、${colorNames[recipe.coreColor]}，填充${fillingNames[recipe.filling]}；外壳${materialNames[recipe.shellMaterial]}、${colorNames[recipe.shellColor]}；装饰${decorationNames[recipe.decoration]}`;
     document.querySelector('.configuration-error').hidden = !state.configError;
   },
@@ -167,6 +173,7 @@ on(styleSelect, 'change', () => void controller.select('styleId', styleSelect.va
 on(back, 'click', () => navigate(controller.getState().step === 'play' ? 'decoration' : steps[steps.indexOf(controller.getState().step) - 1]));
 on(next, 'click', () => navigate(steps[steps.indexOf(controller.getState().step) + 1]));
 on(retry, 'click', () => void controller.retry());
+on(restart, 'click', () => controller.restart());
 on(desktopLayout, 'change', () => showGroups(controller.getState()));
 on(window, 'popstate', () => {
   void controller.restoreLocation(readLocation());

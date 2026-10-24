@@ -27,6 +27,37 @@ async function show(page, id) {
   if (await button.isVisible()) await button.click();
 }
 const current = (page, id) => page.locator(`.workflow-progress li[data-step="${id}"]`).getAttribute('aria-current');
+
+test('重新开始仅在圆球黏土薄蜡的外壳、装饰和体验显示，保持当前配方与步骤', async () => {
+  const page = await browser.newPage();
+  await page.goto(base + path + '?style=orb&step=shell&waxThickness=thin&coreColor=mint&shellColor=sky');
+  await ready(page);
+  const restart = page.getByRole('button', { name: '重新开始', exact: true });
+  assert.equal(await restart.isVisible(), true);
+  const original = page.url();
+  await restart.click();
+  assert.equal(page.url(), original);
+  assert.equal(await current(page, 'shell'), 'step');
+  await next(page);
+  assert.equal(await restart.isVisible(), true);
+  await next(page);
+  assert.equal(await restart.isVisible(), false);
+  await page.getByRole('button', { name: '开始捏捏' }).click();
+  assert.equal(await restart.isVisible(), true);
+  for (const config of [
+    'style=orb&waxThickness=thin',
+    'style=orb&step=play',
+    'style=orb&step=play&waxThickness=thin&coreMaterial=marshmallow',
+    'style=orb&step=play&waxThickness=thin&coreMaterial=butter',
+    'style=donut&step=play&waxThickness=thin',
+    'style=orb&step=play&waxThickness=thin&shellMaterial=sugar',
+  ]) {
+    await page.goto(base + path + '?' + config); await ready(page);
+    assert.equal(await restart.isVisible(), false, config);
+    assert.equal(await page.locator('.step-back').count(), 1);
+  }
+  await page.close();
+});
 async function assertThreeAcross(page, name) {
   const boxes = await group(page, name).getByRole('radio').evaluateAll(inputs => inputs.map(input => input.getBoundingClientRect().toJSON()));
   assert.equal(boxes.length, 3, name);

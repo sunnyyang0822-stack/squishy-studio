@@ -13,6 +13,8 @@ export const styleNames = Object.freeze(Object.fromEntries(Object.entries(squish
 export const defaultRecipe = Object.freeze({ styleId: 'orb', coreMaterial: 'clay', coreColor: 'rose', filling: 'none', shellMaterial: 'wax', shellColor: 'rose', waxThickness: 'medium', decoration: 'one' });
 const groups = Object.freeze({ styleId: styleNames, coreMaterial: coreNames, coreColor: colorNames, filling: fillingNames, shellMaterial: materialNames, shellColor: colorNames, waxThickness: thicknessNames, decoration: decorationNames });
 export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shellMaterial === 'wax' ? recipe.waxThickness : null });
+export const isThinWaxRecipe = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
+export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && ['shell', 'decoration', 'play'].includes(step);
 // Fixed ordering makes identity independent of URL/object property order. Mode is
 // deliberately separate: navigating the same recipe must not repair its shell.
 export const recipeKeyFor = recipe => JSON.stringify(Object.keys(defaultRecipe).map(key => effectiveRecipe(recipe)[key]));
@@ -71,12 +73,19 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
   }
   function setStep(step) {
     if (disposed || !steps.includes(step) || state.step === step) return;
+    const wasMaking = state.step === 'making';
     state = { ...state, step }; refreshDerived();
     if (step === 'making') { ++revision; pending?.abort(); pending = undefined; renderer.stopInput?.(); emit(); return; }
-    void prepare();
+    const preserveDamage = isThinWaxRecipe(state.recipe);
+    if (wasMaking && step === 'play' && !preserveDamage) renderer.restore?.();
+    void prepare(step === 'play' && !preserveDamage);
   }
   return {
     getState: snapshot, load: () => prepare(true), retry: () => prepare(true), setStep,
+    restart() {
+      if (disposed || pending || state.resource !== 'ready' || state.configError || !canRestartThinWax(state.step, state.recipe)) return;
+      renderer.restore?.();
+    },
     restoreLocation({ styleId = 'orb', recipe: restored = {}, step = 'core' }) {
       if (disposed) return Promise.resolve();
       const recipe = { ...defaultRecipe, styleId: Object.hasOwn(styleNames, styleId) ? styleId : 'orb' };
