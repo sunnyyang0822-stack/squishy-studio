@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-23T15:44:29.164Z",
+  "feelIds": [
+    "clay"
+  ],
+  "modelUrl": "/assets/models/squishy-paw.glb",
+  "glbSha256": "0fef462aa97cd1bc51f86eff5057a149b206c8ade4a7ee47ac6bea60062fd86b",
+  "glbBytes": 522136,
+  "runtimeSha256": {
+    "src/surface-clay.mjs": "cabe221076e1e987920b97cc7feb9ca986d396dbc357aa2b0f28e9b2c2ea77dd",
+    "src/orb-deformation.mjs": "51bfcca81c28b0705ab82695d8ec35d218e2e7e6dbfbe1501bec958bae6a6510"
+  },
+  "method": "CPU simulation of actual exported GLB, fixed 60 Hz. 13 independent visible front/back/side contact vertices; 2.7 s holds for explicitly selected feels (clay); 8 repeated 4 s clay holds at each region. End-held and end-released states checked after every stroke. This is not browser or physical-device performance evidence.",
+  "parameterization": "normal-thickness",
+  "topology": {
+    "vertices": 14468,
+    "edges": 43398,
+    "faces": 28932,
+    "euler": 2,
+    "boundaryOrNonmanifold": 0,
+    "components": 1,
+    "degenerate": 0
+  },
+  "restGeometry": {
+    "minFaceRadialDeterminant": -0.0004942749030001068,
+    "minRadialNormalCosine": -0.7787265540124165
+  },
+  "samples": [
+    {
+      "name": "主垫中央",
+      "view": "front",
+      "requestedXY": [
+        0,
+        -0.4
+      ],
+      "vertex": 7235,
+      "hit": [
+        0.016560416668653488,
+        -0.41086074709892273,
+        0.6030451059341431
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.3111461102962494,
+          "retainedDepth": 0.26447418332099915,
+          "retainedRatio": 0.8499999664761586,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "心形左肩",
+      "view": "front",
+      "requestedXY": [
+        -0.3,
+        -0.42
+      ],
+      "vertex": 359,
+      "hit": [
+        -0.29564231634140015,
+        -0.41084912419319153,
+        0.572014570236206
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.30435872077941895,
+          "retainedDepth": 0.25870490074157715,
+          "retainedRatio": 0.8499999608326355,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "心形右肩",
+      "view": "front",
+      "requestedXY": [
+        0.3,
+        -0.42
+      ],
+      "vertex": 7641,
+      "hit": [
+        0.2955882251262665,
+        -0.4108114242553711,
+        0.5718933343887329
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.3043196499347687,
+          "retainedDepth": 0.25867170095443726,
+          "retainedRatio": 0.8499999951034508,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "主垫下缘",
+      "view": "front",
+      "requestedXY": [
+        0,
+        -0.72
+      ],
+      "vertex": 915,
+      "hit": [
+        -0.008989553898572922,
+        -0.7092957496643066,
+        0.17200078070163727
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.21852901476050327,
+          "retainedDepth": 0.18574966268980603,
+          "retainedRatio": 0.8500000006561063,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "左外趾垫",
+      "view": "front",
+      "requestedXY": [
+        -0.76,
+        0.43
+      ],
+      "vertex": 1823,
+      "hit": [
+        -0.7533143162727356,
+        0.42571455240249634,
+        0.36674606800079346
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.24419960379600525,
+          "retainedDepth": 0.2075696587562561,
+          "retainedRatio": 0.8499999816938755,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "左内趾垫",
+      "view": "front",
+      "requestedXY": [
+        -0.3,
+        0.78
+      ],
+      "vertex": 2645,
+      "hit": [
+        -0.2973695397377014,
+        0.7742639183998108,
+        0.3665279746055603
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.24666742980480194,
+          "retainedDepth": 0.20966731011867523,
+          "retainedRatio": 0.8499999788565259,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "右内趾垫",
+      "view": "front",
+      "requestedXY": [
+        0.3,
+        0.78
+      ],
+      "vertex": 9342,
+      "hit": [
+        0.2973697781562805,
+        0.7742639183998108,
+        0.3665280342102051
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.24666744470596313,
+          "retainedDepth": 0.20966732501983643,
+          "retainedRatio": 0.8499999879180156,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "右外趾垫",
+      "view": "front",
+      "requestedXY": [
+        0.76,
+        0.43
+      ],
+      "vertex": 10177,
+      "hit": [
+        0.7533144354820251,
+        0.42571455240249634,
+        0.36674606800079346
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.24419960379600525,
+          "retainedDepth": 0.2075696587562561,
+          "retainedRatio": 0.8499999816938755,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "左趾连接",
+      "view": "front",
+      "requestedXY": [
+        -0.53,
+        0.42
+      ],
+      "vertex": 2889,
+      "hit": [
+        -0.5281135439872742,
+        0.4295197129249573,
+        0.24188213050365448
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.19412480294704437,
+          "retainedDepth": 0.16500608623027802,
+          "retainedRatio": 0.850000019190182,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "右趾连接",
+      "view": "front",
+      "requestedXY": [
+        0.53,
+        0.42
+      ],
+      "vertex": 9739,
+      "hit": [
+        0.5281137824058533,
+        0.4295197129249573,
+        0.24188213050365448
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.19412480294704437,
+          "retainedDepth": 0.16500608623027802,
+          "retainedRatio": 0.850000019190182,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "掌背",
+      "view": "back",
+      "requestedXY": [
+        0,
+        -0.38
+      ],
+      "vertex": 12500,
+      "hit": [
+        0.017042316496372223,
+        -0.3778536021709442,
+        -0.6347464323043823
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.31752216815948486,
+          "retainedDepth": 0.2698938548564911,
+          "retainedRatio": 0.8500000375436116,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "左侧厚边",
+      "view": "side",
+      "requestedXY": [
+        -1.02,
+        0.3
+      ],
+      "vertex": 1589,
+      "hit": [
+        -1.049622893333435,
+        0.2983868718147278,
+        -0.0017511099576950073
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.07929306845052421,
+          "retainedDepth": 0.067399094652153,
+          "retainedRatio": 0.849999829357183,
+          "restoresExactRest": true
+        }
+      }
+    },
+    {
+      "name": "底部厚边",
+      "view": "side",
+      "requestedXY": [
+        0,
+        -1.08
+      ],
+      "vertex": 1097,
+      "hit": [
+        -0.01745222508907318,
+        -1.1024165153503418,
+        -0.09991753101348877
+      ],
+      "feels": {
+        "clay": {
+          "holdSeconds": 2.7,
+          "contactDepth": 0.06687061678440505,
+          "retainedDepth": 0.05684001244612415,
+          "retainedRatio": 0.8499998232314773,
+          "restoresExactRest": true
+        }
+      }
+    }
+  ],
+  "repeated": {
+    "regions": 13,
+    "strokesPerRegion": 8,
+    "strokes": 104,
+    "checkedStates": 208,
+    "minRadialScale": null,
+    "minFaceDeterminant": null,
+    "minProjectedAreaRatio": 0.080007965907511,
+    "changedVerticesOutsideFootprint": 0
+  },
+  "constraintCpuTiming": {
+    "method": "Wall time inside each geometry-only offset projection during this CPU simulation; excludes browser rendering and is not FPS or a physical-phone result.",
+    "calls": 36520,
+    "medianMs": 2.982899999988149,
+    "p95Ms": 3.6202999999950407,
+    "maxMs": 9.746399999996356
+  },
+  "safetyArgument": "Each actual proposed offset increment is projected before the first quadratic root at which any triangle would lose the original .08 rest-normal projected-area margin. The entire accepted segment and its straight route to rest are checked, not just endpoints. Original ray thickness and curvature bounds remain. This verifies local triangle nonfolding; it is not a general pairwise nonadjacent-triangle collision proof."
+}

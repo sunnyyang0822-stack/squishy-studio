@@ -1,0 +1,15 @@
+✔ cloud×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (635.862ms)
+✔ paw×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (11645.5618ms)
+✔ cylinder×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (671.4891ms)
+✔ donut×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (1150.0699ms)
+✔ pyramid×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (442.183ms)
+✔ flower×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (896.5503ms)
+✔ star×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (731.0769ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16264.6516

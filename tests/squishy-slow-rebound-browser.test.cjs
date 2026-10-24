@@ -18,6 +18,7 @@ async function assertConfig(page, id) {
   assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id);
   assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'slow-rebound');
   assert.equal(await page.locator('.toy-mount').getAttribute('data-appearance-id'), 'full-matte');
+  assert.match(await page.locator('.orb-input').getAttribute('aria-label'), /缓慢下陷，松开完整回弹/);
   assert.equal(new URL(page.url()).searchParams.get('coreMaterial'), 'butter');
 }
 async function exactRest(page) {

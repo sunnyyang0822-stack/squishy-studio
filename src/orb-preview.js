@@ -156,7 +156,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     surface.type = 'button'; surface.className = 'orb-input';
     surface.setAttribute('aria-label', feel.id === 'slow-rebound' ? '按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车' : '按住并拖动圆球，松开保留凹痕；也可按住空格或回车');
     if (feelId === 'marshmallow') surface.setAttribute('aria-label', '棉花糖，按住逐渐局部压陷，滑动留浅痕，松开完全保留；空格或回车也可按压，换色可复原');
-    if (isSurface && feelId !== 'marshmallow') surface.setAttribute('aria-label', `按住并拖动${style.name}，松开保留凹痕；也可按住空格或回车`);
+    if (isSurface && feelId !== 'marshmallow') surface.setAttribute('aria-label', feelId === 'slow-rebound'
+      ? `按住并拖动${style.name}，缓慢下陷，松开完整回弹；也可按住空格或回车`
+      : `按住并拖动${style.name}，松开保留凹痕；也可按住空格或回车`);
     surface.setAttribute('aria-pressed', 'false');
     const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
     root.updateMatrixWorld(true); camera.updateMatrixWorld(true);

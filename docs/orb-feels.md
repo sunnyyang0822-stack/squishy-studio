@@ -68,7 +68,7 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 ## 非球形几何适配（Issue #30）
 
-新七款支持 `clay` 和 `marshmallow`，后者明确复用 PR #32 的 `f9c223d87d52d603a721d726b54a0d5568c72956` 渐进局部按压版本。统一调用 `createOrbPreview(mount, { styleId: 'donut', presetId: 'marshmallow' })`（黏土使用 `presetId: 'clay'`），再走原 `prepare/commit/dispose` 生命周期。样式登记在 `src/squishy-styles.mjs`，与质感登记分开。
+新七款支持 `clay`、`marshmallow` 和 `slow-rebound`。棉花糖明确复用 PR #32 的 `f9c223d87d52d603a721d726b54a0d5568c72956` 渐进局部按压版本；慢回弹复用 `aaaed2f19a5a2f3a34f4b9200d3189e2a9bed116` 主线已确认版本，参数见 `docs/issue-25-responsive-pressure.md`。统一调用 `createOrbPreview(mount, { styleId: 'donut', presetId: 'marshmallow' })`；黏土使用 `presetId: 'clay'`，慢回弹使用 `presetId: 'slow-rebound'` 并采用其默认 `full-matte` 外观。三者共用原 `prepare/commit/dispose` 生命周期。样式登记在 `src/squishy-styles.mjs`，与质感登记分开。
 
 `src/surface-clay.mjs` 向同一个 `getOrbFeel('clay').createDeformation` 传入可选 `surfaceGeometry`：只提供每顶点几何方向、可压入半径、表面邻域和路径采样。工厂的 `.66` 足迹、`.04` 采样间距、按压强度、5/s 响应、85% 留痕、释放与恢复逻辑未调参；未传此选项的圆球继续执行原分支。等价球空间查询有逐帧相等回归，原圆球测试原样保留。
 
@@ -76,7 +76,11 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 棉花糖同样接收可选 `surfaceGeometry`：方向与安全厚度来自真实几何，当前接触区及待处理路径都用真实表面邻域，避免甜甜圈跨孔相互按压。`.40` 足迹、`.04` 路径采样、8/s 响应、2 秒局部压力进程、`.06` 浅滑痕、40ms 单帧保护、停住后下一帧局部加深与旧轨逐值冻结均保留。猫爪的实际位移安全约束只缩减违规三角形关联的新增位移，未改变材料压力或卸载规则。几何安全厚度可能限制薄处最终深度。
 
-`node scripts/check-marshmallow-baseline.cjs` 对固定 PR #32 head 验证正常/减少动态下原圆球逐帧位置、状态与返回值严格相等；七模型 CPU/GPU 用真实 GLB 检查渐进过程、局部驻留、保持与显式恢复，见 `tests/squishy-marshmallow*.test.cjs`。本轮不启用新模型的慢回弹。
+`node scripts/check-marshmallow-baseline.cjs` 对固定 PR #32 head 验证正常/减少动态下原圆球逐帧位置、状态与返回值严格相等；七模型 CPU/GPU 用真实 GLB 检查渐进过程、局部驻留、保持与显式恢复，见 `tests/squishy-marshmallow*.test.cjs`。
+
+慢回弹同样只新增可选几何方向、安全厚度、沿面路径及邻域查询，不修改 `slowReboundParameters`。`node scripts/check-slow-rebound-baseline.cjs` 对固定主线验证正常/减少动态、30/60/120Hz 共2622操作，参数对象及逐帧位置/状态/返回值严格相等。七模型对应 `tests/squishy-slow-rebound*.test.cjs`，检查局部渐进、浅滑痕、取消后继续恢复、自然精确回到各自原始模型，以及 `full-matte` 配方/相机/旋转/清理。薄处达到几何安全上限后继续驻留不会越过该边界。
+
+猫爪采用三角形内部传播的一阶 Fast Marching 邻域，减少只沿网格边传播造成的压痕细褶；压力半径、模板时序与回弹参数不变。此近似保留钝角/非因果更新的单边回退，其他六款仍走原邻域及路径分支。局部实际位移安全投影保留原8%有向面积裕量，危险面只约束自身附近增量。细节、失败案例和证据见 `docs/issue-30-paw-revision.md`。
 
 这套适配已针对本次资产验证，不承诺任意输入网格都兼容。详细数学前提、已发现的失败案例、视觉证据与有限验证范围见 [独立验证](issue-30-validation.md) 和 [交付说明](issue-30-clay-styles.md)。
 

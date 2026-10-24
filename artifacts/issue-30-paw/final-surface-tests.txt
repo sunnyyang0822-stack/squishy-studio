@@ -1,0 +1,38 @@
+✔ cloud×marshmallow preset: gradual local press, shallow trail, immediate dwell, frozen old trail and unload (171.6906ms)
+✔ paw×marshmallow preset: gradual local press, shallow trail, immediate dwell, frozen old trail and unload (1937.1284ms)
+✔ cylinder×marshmallow preset: gradual local press, shallow trail, immediate dwell, frozen old trail and unload (111.8092ms)
+✔ donut×marshmallow preset: gradual local press, shallow trail, immediate dwell, frozen old trail and unload (583.5189ms)
+✔ pyramid×marshmallow preset: gradual local press, shallow trail, immediate dwell, frozen old trail and unload (91.1862ms)
+✔ flower×marshmallow preset: gradual local press, shallow trail, immediate dwell, frozen old trail and unload (168.8587ms)
+✔ star×marshmallow preset: gradual local press, shallow trail, immediate dwell, frozen old trail and unload (124.5639ms)
+✔ 猫爪：四趾、心形主垫、连接处和背面均在指下明显压入 (7643.8506ms)
+✔ 等价球空间查询严格保留模板逐帧阻力、85%留痕、取消和恢复时序 (2.5201ms)
+✔ cloud：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (65.2346ms)
+✔ paw：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (2221.1459ms)
+✔ cylinder：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (53.4544ms)
+✔ donut：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (547.1989ms)
+✔ pyramid：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (32.8526ms)
+✔ flower：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (70.3832ms)
+✔ star：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (51.7612ms)
+✔ cloud：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (601.0601ms)
+✔ paw：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (34950.6606ms)
+✔ cylinder：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (537.973ms)
+✔ donut：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (928.2555ms)
+✔ pyramid：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (353.8708ms)
+✔ flower：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (708.9489ms)
+✔ star：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (579.8021ms)
+✔ 甜甜圈内圈压痕不跨孔牵扯另一侧，中孔射线仍畅通 (482.059ms)
+✔ 掌垫沿三角形内部传播，比边图更接近已知平面距离；其他模型仍为原边图 (18.6003ms)
+✔ 三角形压力波不直接跨越薄壳内部命中相近背面 (5.8289ms)
+✔ 实际位移安全段检查首个折叠根，不能只接受同样合法的终点 (7.3526ms)
+✔ clay：未限制的可选几何hook逐帧保留模板结果及生命周期 (5.0495ms)
+✔ clay：真实厚猫爪所有输入生命周期保留原三角形面积安全裕量 (4356.3704ms)
+✔ 猫爪旧足迹长按饱和后，同一滑动仍可压入远处掌垫及背面 (4243.084ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 49932.1759

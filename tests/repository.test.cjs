@@ -5,6 +5,8 @@ const { readFileSync } = require('node:fs');
 test('PR 检查安装依赖和浏览器并执行完整测试', async () => {
   const workflow = readFileSync('.github/workflows/ci.yml', 'utf8');
   assert.match(workflow, /pull_request:/);
+  assert.ok(workflow.includes('group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}'));
+  assert.match(workflow, /cancel-in-progress: true/);
   assert.match(workflow, /npm ci/);
   assert.match(workflow, /playwright install --with-deps chromium/);
   assert.match(workflow, /node-version: '22'/);
