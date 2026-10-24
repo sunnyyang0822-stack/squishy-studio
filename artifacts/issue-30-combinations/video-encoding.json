@@ -1,0 +1,488 @@
+{
+  "bundleSHA256": "1c90a123e4149feed209a3793946479a1ec47c790f65610e401a209c439c3827",
+  "videos": [
+    {
+      "feelId": "clay",
+      "styleId": "cloud",
+      "video": "clay/cloud-clay-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/clay/cloud-clay-interaction.webm",
+      "original": {
+        "sha256": "94775cb59170805c58703795d9ceac59d5ab887daf7f28f1e91e40d98e70431e",
+        "bytes": 3894760,
+        "durationSeconds": 25.4,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "3440498baaa430b9baef7e5ef83e65a865ef31c7f0e1b879355d29a0714f893d",
+        "bytes": 317785,
+        "durationSeconds": 25.42,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "clay",
+      "styleId": "cylinder",
+      "video": "clay/cylinder-clay-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/clay/cylinder-clay-interaction.webm",
+      "original": {
+        "sha256": "38b99bbd2465fa262857a552718e701c71c9f13de7302f4f19bc4ffc2a4b4cde",
+        "bytes": 3694605,
+        "durationSeconds": 25.12,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "58fbfdb50513fef5ed233c9a1d16b5849570712aabb1de3929da22f868cf3e81",
+        "bytes": 289174,
+        "durationSeconds": 25.13,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "clay",
+      "styleId": "donut",
+      "video": "clay/donut-clay-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/clay/donut-clay-interaction.webm",
+      "original": {
+        "sha256": "b6fbb99420aaf55f1ba4f4613b669cbd0a5cfd684844591236f0851eff7788cc",
+        "bytes": 4471115,
+        "durationSeconds": 28.4,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "fbaf810a2f14c4fcfbc9d857fef4bd1c7a510e831eb5f72c770b49ed2b774aa7",
+        "bytes": 349411,
+        "durationSeconds": 28.42,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "clay",
+      "styleId": "flower",
+      "video": "clay/flower-clay-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/clay/flower-clay-interaction.webm",
+      "original": {
+        "sha256": "a94933622ff25e717bd1b2835732436f42e04b541c13b1ea20fbfac99ac15387",
+        "bytes": 3938719,
+        "durationSeconds": 24.6,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "d4c197ade2cfd05f852d879df728745b35c31b38f593b9ed13414364db1880a1",
+        "bytes": 308672,
+        "durationSeconds": 24.63,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "clay",
+      "styleId": "paw",
+      "video": "clay/paw-clay-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/clay/paw-clay-interaction.webm",
+      "original": {
+        "sha256": "e7ce18fd0178bfcdc6440c7320f6f6b2f335e2dc4c2c40998055479cbb08fa2f",
+        "bytes": 3895513,
+        "durationSeconds": 23.88,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "f7f2ae1bd91c1f3c336e676c62ad534d61e9bafb6013c211c6b448bde4ae7dd2",
+        "bytes": 330885,
+        "durationSeconds": 23.92,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "clay",
+      "styleId": "pyramid",
+      "video": "clay/pyramid-clay-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/clay/pyramid-clay-interaction.webm",
+      "original": {
+        "sha256": "fea4853efceed5faf6c6b680ac9aa5833b1d3ecfbf4bb3915f22430c5032c31e",
+        "bytes": 3936917,
+        "durationSeconds": 26.2,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "ef9354183626db94edf61368224c0dace17026d7efc6a21dfca0e339fc9c5605",
+        "bytes": 294344,
+        "durationSeconds": 26.21,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "clay",
+      "styleId": "star",
+      "video": "clay/star-clay-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/clay/star-clay-interaction.webm",
+      "original": {
+        "sha256": "13a8e549339db4fb615c183699d3e6ab330813f982383fdfbcf0356d0999eca1",
+        "bytes": 3905908,
+        "durationSeconds": 24.6,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "dc0bcdd7e8e5a51e1f14dced25d6e4ceceee9e9b9a11fc1e82c75d0a07d2e5d2",
+        "bytes": 278006,
+        "durationSeconds": 24.63,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "marshmallow",
+      "styleId": "cloud",
+      "video": "marshmallow/cloud-marshmallow-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/marshmallow/cloud-marshmallow-interaction.webm",
+      "original": {
+        "sha256": "702bfe60255d890ecf59a53e04763885c6b29052eb9b7f5099a2b0a6d8d89c64",
+        "bytes": 3773334,
+        "durationSeconds": 25.08,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "fa16a7348f7783822216bc8d10739ad0372e419faae39d5b8866038715f5e1cf",
+        "bytes": 274373,
+        "durationSeconds": 25.08,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "marshmallow",
+      "styleId": "cylinder",
+      "video": "marshmallow/cylinder-marshmallow-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/marshmallow/cylinder-marshmallow-interaction.webm",
+      "original": {
+        "sha256": "73cde9ca716fba3f878f407c95aafd0b632514c993fc9737b858f82e28921a91",
+        "bytes": 3272269,
+        "durationSeconds": 23.24,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "be228488da42752ad753daffaf28bff38b05420982480ac2163462e54a0f2dcf",
+        "bytes": 263339,
+        "durationSeconds": 23.25,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "marshmallow",
+      "styleId": "donut",
+      "video": "marshmallow/donut-marshmallow-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/marshmallow/donut-marshmallow-interaction.webm",
+      "original": {
+        "sha256": "f8de8a6b51c5551d3a60ba99bf42b9a80bcf1ffd496da5ea1f3884504c15f192",
+        "bytes": 3510817,
+        "durationSeconds": 22.24,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "347d6c818dcdbce9bc30ea77514d131c2afb9641b5116f7a4a6619e2e72abc3e",
+        "bytes": 282872,
+        "durationSeconds": 22.25,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "marshmallow",
+      "styleId": "flower",
+      "video": "marshmallow/flower-marshmallow-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/marshmallow/flower-marshmallow-interaction.webm",
+      "original": {
+        "sha256": "636b77e99eac4cad870f967db0b12e0a58aa66bfd743334bf77de25eb040c495",
+        "bytes": 3856065,
+        "durationSeconds": 24.48,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "d40bdbe0bf01cc8b54bed18e893f1f7655d479b0ad8d9bdeeb8c8d6929dc9335",
+        "bytes": 308524,
+        "durationSeconds": 24.5,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "marshmallow",
+      "styleId": "paw",
+      "video": "marshmallow/paw-marshmallow-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/marshmallow/paw-marshmallow-interaction.webm",
+      "original": {
+        "sha256": "e35bc8bbe031b4bb3a7f12a7e2bbe83c7fb47c06d8f5c1c320e9ffba7b9b2096",
+        "bytes": 3804614,
+        "durationSeconds": 23.36,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "2d43dcf16e93c1ffc5c1303d899f832b396435d9c100204f037d66ceb1a72fb1",
+        "bytes": 317107,
+        "durationSeconds": 23.38,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "marshmallow",
+      "styleId": "pyramid",
+      "video": "marshmallow/pyramid-marshmallow-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/marshmallow/pyramid-marshmallow-interaction.webm",
+      "original": {
+        "sha256": "b114b4ee88d88fc609f1640f862039b70d37dd8b2dde845cad7c7df661dfb1db",
+        "bytes": 3570923,
+        "durationSeconds": 24.16,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "25c3496eaf3d95b43893dec3cc2d4e54df88479d07dfd8399f9591d4b16fe7cc",
+        "bytes": 272186,
+        "durationSeconds": 24.17,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "marshmallow",
+      "styleId": "star",
+      "video": "marshmallow/star-marshmallow-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/marshmallow/star-marshmallow-interaction.webm",
+      "original": {
+        "sha256": "9cd4ae5bc471e2ed22ed79fa128242a49d81925cb0abe5bd51ef50539b603010",
+        "bytes": 3605950,
+        "durationSeconds": 23.24,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "96cd15ca8411eeb7afe10f528be468158f5c69f680bbb6c5a33bfaaf1ee8dc8a",
+        "bytes": 284225,
+        "durationSeconds": 23.25,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "slow-rebound",
+      "styleId": "cloud",
+      "video": "slow-rebound/cloud-slow-rebound-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/slow-rebound/cloud-slow-rebound-interaction.webm",
+      "original": {
+        "sha256": "2cc0398231edb33fb0bb1cd9771a09acc9328f719bf0c588ca60a73454166f16",
+        "bytes": 7106813,
+        "durationSeconds": 61.52,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "38106d6622fe985055871d315398799239858e19090d0bca69546c8fb43837cf",
+        "bytes": 495026,
+        "durationSeconds": 61.54,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "slow-rebound",
+      "styleId": "cylinder",
+      "video": "slow-rebound/cylinder-slow-rebound-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/slow-rebound/cylinder-slow-rebound-interaction.webm",
+      "original": {
+        "sha256": "7ffdee95b02eb4aae9b637cbd67d6086426a3c8be05cf1e2afe0486cb058360f",
+        "bytes": 7305185,
+        "durationSeconds": 62.96,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "2a2f5c2260c02122b47707c4ecd1cfbb2b208344bb4d089af35ab9de545e2682",
+        "bytes": 478696,
+        "durationSeconds": 63.0,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "slow-rebound",
+      "styleId": "donut",
+      "video": "slow-rebound/donut-slow-rebound-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/slow-rebound/donut-slow-rebound-interaction.webm",
+      "original": {
+        "sha256": "95863b80a3a0d15a13721091d5fb6c3774b5b65adff3b7a4340d5a8793ccb69c",
+        "bytes": 6949587,
+        "durationSeconds": 57.16,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "59e1ae206a4ff95b1eb1f8e6a68b474d39b7a20e6fb17f6d6f16e695bf0a7ef8",
+        "bytes": 455262,
+        "durationSeconds": 57.17,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "slow-rebound",
+      "styleId": "flower",
+      "video": "slow-rebound/flower-slow-rebound-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/slow-rebound/flower-slow-rebound-interaction.webm",
+      "original": {
+        "sha256": "2d7d0cbb7d7b85f3fc7963b03dc34103a70d1286489a38e3538f20c6222e690c",
+        "bytes": 6890498,
+        "durationSeconds": 57.04,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "2b6c5a8ca4c4176c223a4ea4515395d9850272b63ccaa347064852ad33f00f3e",
+        "bytes": 467526,
+        "durationSeconds": 57.04,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "slow-rebound",
+      "styleId": "paw",
+      "video": "slow-rebound/paw-slow-rebound-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/slow-rebound/paw-slow-rebound-interaction.webm",
+      "original": {
+        "sha256": "abf5b37ec7241ffcde456e307bc8663a35d416984e8ddf989f023807bc945efd",
+        "bytes": 7496370,
+        "durationSeconds": 59.84,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "5847492c0a5c24f50fcc6abe3cee504334b42b81afa42d04b424448980bc8b54",
+        "bytes": 538080,
+        "durationSeconds": 59.88,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "slow-rebound",
+      "styleId": "pyramid",
+      "video": "slow-rebound/pyramid-slow-rebound-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/slow-rebound/pyramid-slow-rebound-interaction.webm",
+      "original": {
+        "sha256": "2c7637e2aa2f1e953a781c097d9c60b9742c6037a16f5e0f8bffed5fc1bb40a1",
+        "bytes": 6919591,
+        "durationSeconds": 57.16,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "b74e55cf6ec2756b447babc6a2c8852e1aabec0acdfe4c06df0492441f940211",
+        "bytes": 432418,
+        "durationSeconds": 57.17,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    },
+    {
+      "feelId": "slow-rebound",
+      "styleId": "star",
+      "video": "slow-rebound/star-slow-rebound-interaction.webm",
+      "originalArchive": "artifacts-local/issue-30-original-recordings/slow-rebound/star-slow-rebound-interaction.webm",
+      "original": {
+        "sha256": "88f16e652d8738d28d154507ec6134626040569d24e410b51aebb581bb223679",
+        "bytes": 7202154,
+        "durationSeconds": 58.2,
+        "width": 1440,
+        "height": 900,
+        "fps": 25.0
+      },
+      "delivery": {
+        "sha256": "8f9930ee99afec3087040b891214d8e6620bffee6b096f5c4ca901fd78d753a7",
+        "bytes": 465205,
+        "durationSeconds": 58.21,
+        "width": 1440,
+        "height": 900,
+        "fps": 24.0
+      },
+      "encoding": "VP9 crf36 b:v0 24fps threads1; cpu-used4 (cloud-marshmallow trial default cpu-used); full dimensions and duration; no cuts, reorder or playback speed change"
+    }
+  ]
+}

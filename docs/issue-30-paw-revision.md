@@ -52,7 +52,9 @@
 
 最终方向相关 CPU **56/56**、七款 GPU/触屏 **8/8**、原圆球 GPU **8/8** 全部通过，原有断言保留。证据见 `final-direction-cpu-tests.txt`、`final-perpendicular-browser-tests.txt`、`final-orb-direction-browser-tests.txt`；三种默认工厂与固定基线 **3054 / 2224 / 2622** 操作严格等价，见 `final-direction-baselines.txt`。原圆球慢回弹的生产预览按用户本轮授权启用方向接口；无此选项的原工厂行为与全部原参数保持不变。
 
-此前 `artifacts/issue-30-combinations/` 的完整三质感捕获绑定旧运行包 `0aff…`，早于比例和按压方向修订；另有一个 `4ad…` 的中断慢回弹批次。它们仅为历史证据，不能作为本轮最终 21 组合通过的依据。最终需在方向修复、重新构建后，对七模型×三质感统一重新捕获，所有 manifest 绑定同一最终运行包 SHA256，并重新生成逐项验证表。目前最终 21 项状态为**待重新验证**。
+最终 **21/21 组合全部通过**，已在比例和方向修复后重新完整捕获，三个 manifest 均绑定 `1c90a123e4149feed209a3793946479a1ec47c790f65610e401a209c439c3827`。覆盖84组桌面/触屏昼夜交互及168组旋转光照检查；慢回弹在换色前等待自然精确恢复。旋转表面亮度P05最低118.4258/255，黑色像素比例最高0。完整逐项结果见 [21组合表](../artifacts/issue-30-combinations/validation.md)。旧 `0aff…`、`4ad…` 批次未混入本次结果。
+
+Git交付每组合4张实际按压的桌面/触屏昼夜截图及操作录像，另含七款黏土的正侧背底视图；全部捕获元数据、选中文件哈希清单和编码来源一并保留。录像使用VP9、24fps压缩编码，保持原分辨率、操作顺序与播放速度，容器时长误差控制在一帧内；原始录像留在本地 `artifacts-local/issue-30-original-recordings/`，不作为临时文件提交。`video-encoding.json` 记录两端SHA、字节数、尺寸、时长。未入Git的重复截图也保留本地；`selected-files-manifest.json` 列明实际交付文件。
 
 ## 实际验证命令与版本
 
