@@ -37,14 +37,51 @@ async function open(coreMaterial = 'clay', style = 'orb') {
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   await installStyleProbe(page, getSquishyStyle(style));
   await installWaxUploadProbe(page);
+  await page.addInitScript(() => {
+    // Observe completed real render callbacks; neither clocks nor animation
+    // deltas are replaced. Transport latency cannot delay these samples.
+    window.waxFrameObservers = new Set();
+    const frame = window.requestAnimationFrame.bind(window);
+    window.requestAnimationFrame = callback => frame(time => {
+      callback(time);
+      for (const observer of [...window.waxFrameObservers]) observer(time);
+    });
+  });
   await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${coreMaterial}&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell`);
   await ready(page);
   await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.().enabled);
+  if (process.env.THIN_WAX_CPU_RATE) {
+    const session = await page.context().newCDPSession(page);
+    await session.send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.THIN_WAX_CPU_RATE) });
+  }
   return page;
 }
 async function press(page, style = 'orb') {
   const hit = await projectedSurfaceContact(page, style === 'donut' ? .72 : style === 'paw' ? -.24 : 0, style === 'paw' ? -.46 : .03);
   await page.mouse.move(hit.x, hit.y); await page.mouse.down(); return hit;
+}
+async function shortContact(page, action = 'pointerup', milliseconds = 180) {
+  await page.evaluate(({ action, milliseconds }) => {
+    window.waxShortContact = null;
+    window.addEventListener('pointerdown', event => {
+      const start = performance.now(), surface = document.querySelector('.orb-input');
+      setTimeout(() => {
+        const before = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
+        const elapsed = performance.now() - start, captured = surface.hasPointerCapture(event.pointerId);
+        if (action === 'hidden') { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); }
+        else if (action === 'miss') window.dispatchEvent(new PointerEvent('pointermove', { pointerId: event.pointerId, clientX: 5, clientY: 5 }));
+        else window.dispatchEvent(action === 'blur' ? new Event('blur') : new PointerEvent(action, { pointerId: event.pointerId }));
+        window.waxShortContact = { before, elapsed, captured, trustedDown: event.isTrusted };
+      }, milliseconds);
+    }, { capture: true, once: true });
+  }, { action, milliseconds });
+  await press(page);
+  await page.waitForFunction(() => window.waxShortContact !== null);
+  await page.mouse.up();
+  const result = await page.evaluate(() => window.waxShortContact);
+  assert.ok(result.elapsed < 500, `A short contact really ended before the fracture threshold: ${result.elapsed}ms`);
+  assert.equal(result.trustedDown, true); assert.equal(result.captured, true);
+  return result;
 }
 function geometryOK(d) {
   assert.ok(d.geometry, 'A real geometry measurement must be available');
@@ -92,11 +129,12 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
   const page = await open(material);
   try {
     const initial = await diagnostics(page, { measure: true }); geometryOK(initial); assert.notEqual(initial.coreColor, initial.shellColor);
-    await press(page); await page.waitForTimeout(300);
-    const short = await diagnostics(page); assert.ok(depth(short) > .001, 'Core actually indents beneath the shell'); assert.ok(short.thinWax.cracked > 0); assert.equal(short.thinWax.detached, 0);
-    await page.mouse.up(); await page.waitForTimeout(250);
+    const shortSample = await shortContact(page), short = shortSample.before;
+    t.diagnostic(JSON.stringify({ shortContact: { elapsed: shortSample.elapsed, captured: shortSample.captured, trustedDown: shortSample.trustedDown } }));
+    assert.ok(depth(short) > .001, 'Core actually indents beneath the shell'); assert.ok(short.thinWax.cracked > 0); assert.equal(short.thinWax.detached, 0);
+    await page.waitForTimeout(250);
     // Three separate short contacts must never accumulate a long hold.
-    for (let i = 0; i < 2; i++) { await press(page); await page.waitForTimeout(250); await page.mouse.up(); await page.waitForTimeout(100); }
+    for (let i = 0; i < 2; i++) { await shortContact(page); await page.waitForTimeout(100); }
     const repeated = await diagnostics(page); assert.equal(repeated.thinWax.detached, 0, JSON.stringify(repeated.thinWax));
     await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
     await page.evaluate(() => {
@@ -142,47 +180,69 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
     for (const pose of [[0, 0], [70, 40], [-65, -45]]) {
       await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
       if (pose.some(Boolean)) await rotate(page, ...pose);
-      await press(page);
-      await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax.detached > 0);
-      await page.mouse.up();
-      const falling = await page.locator('.toy-mount').evaluate(async el => {
-        // Contact correction can slide a shard along the live core. Select a
-        // real free-flight interval below the actual core AABB, after the
-        // landing-posture rotation has completed, rather than calling that
-        // necessary contact response sideways gravity.
-        await new Promise(resolve => setTimeout(resolve, 300));
-        let first, id, coreBottom, bounds;
-        for (let attempt = 0; attempt < 45; attempt++) {
-          const d = el.thinWaxDiagnostics({ measure: false, surface: true }), m = d.debrisStage.matrixWorld;
-          first = d.surface; coreBottom = Infinity;
+      await page.locator('.toy-mount').evaluate(el => {
+        window.waxFlight = null;
+        let lastRender, pointerId, released = false, panelIds;
+        const baselines = new Map(), metadata = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
+        const records = new Map(), uniqueRecords = new Map();
+        for (let i = 0; i < metadata.panelIds.length; i++) {
+          const id = metadata.panelIds[i]; if (!records.has(id)) { records.set(id, []); uniqueRecords.set(id, new Map()); }
+          records.get(id).push(i);
+          if (metadata.layers[i] === 0) uniqueRecords.get(id).set(metadata.restSupportPositions.slice(i * 3, i * 3 + 3).join(','), i);
+        }
+        let gpu;
+        for (const values of window.waxUploadProbe.buffers.values()) {
+          if (values.length !== metadata.positions.length) continue;
+          let same = true; for (let i = 0; i < values.length; i++) if (Math.abs(values[i] - metadata.positions[i]) > 1e-6) { same = false; break; }
+          if (same) { gpu = values; break; }
+        }
+        if (!gpu) throw Error('No actual GPU shell position upload for free-flight observation');
+        window.addEventListener('pointerdown', e => { pointerId = e.pointerId; }, { capture: true, once: true });
+        const observe = () => {
+          if (lastRender === el.dataset.renderCount) return; lastRender = el.dataset.renderCount;
+          const d = el.thinWaxDiagnostics({ measure: false });
+          if (!d.thinWax.detached) return;
+          if (!released) {
+            released = true;
+            const first = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
+            panelIds = [...new Set(first.panelIds.filter((id, i) => first.detached[i]))];
+            window.dispatchEvent(new PointerEvent('pointerup', { pointerId }));
+          }
+          const m = d.debrisStage.matrixWorld; let coreBottom = Infinity;
           for (let i = 0; i < d.corePositions.length; i += 3) coreBottom = Math.min(coreBottom, m[1] * d.corePositions[i] + m[5] * d.corePositions[i + 1] + m[9] * d.corePositions[i + 2] + m[13]);
-          const candidates = new Map();
-          for (let i = 0; i < first.panelIds.length; i++) if (first.detached[i] && !first.settled[i]) {
-            const panel = first.panelIds[i], b = candidates.get(panel) || { minY: Infinity, maxY: -Infinity };
-            b.minY = Math.min(b.minY, first.worldPositions[i * 3 + 1]); b.maxY = Math.max(b.maxY, first.worldPositions[i * 3 + 1]); candidates.set(panel, b);
+          const world = i => [0, 1, 2].map(k => m[k] * gpu[i * 3] + m[4 + k] * gpu[i * 3 + 1] + m[8 + k] * gpu[i * 3 + 2] + m[12 + k]);
+          for (const id of panelIds) {
+            let minY = Infinity, maxY = -Infinity;
+            for (const i of records.get(id)) { const y = world(i)[1]; minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
+            // Only pairs with BOTH ends below the actual live core and above
+            // tray collection are admissible. No wall-time sleep or assumed
+            // frame rate chooses the window; rotating corner offsets cancel
+            // in the centroid of unique real body vertices.
+            if (maxY >= coreBottom - .02 || maxY <= -1 || minY <= d.debrisStage.floorY + .05) { baselines.delete(id); continue; }
+            const ids = [...uniqueRecords.get(id).values()], center = [0, 0, 0];
+            for (const i of ids) { const p = world(i); for (let k = 0; k < 3; k++) center[k] += p[k] / ids.length; }
+            const before = baselines.get(id);
+            if (before) {
+              const down = before.center[1] - center[1];
+              if (down > .02) {
+                const final = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
+                window.waxFlight = { panel: id, vertices: ids.length, elapsed: performance.now() - before.time, coreBottom: before.coreBottom,
+                  bounds: before.bounds, finalCoreBottom: coreBottom, finalTop: maxY, finalMinY: minY,
+                  landed: final.panelIds.some((panel, i) => panel === id && final.settled[i]), actualGPU: true,
+                  down, lateral: Math.hypot(center[0] - before.center[0], center[2] - before.center[2]) };
+                window.waxFrameObservers.delete(observe); return;
+              }
+            } else baselines.set(id, { center, bounds: { minY, maxY }, coreBottom, time: performance.now() });
           }
-          const candidate = [...candidates].find(([, b]) => b.maxY < coreBottom - .02 && b.minY > -.55);
-          if (candidate) { [id, bounds] = candidate; break; }
-          await new Promise(resolve => setTimeout(resolve, 8));
-        }
-        if (id === undefined) throw Error('No actual airborne shard clears the live core AABB before landing');
-        function center(surface) {
-          const result = [0, 0, 0], unique = new Set(); let count = 0;
-          for (let i = 0; i < surface.panelIds.length; i++) if (surface.panelIds[i] === id && surface.layers[i] === 0) {
-            const key = surface.restSupportPositions.slice(i * 3, i * 3 + 3).join(','); if (unique.has(key)) continue; unique.add(key);
-            count++; for (let k = 0; k < 3; k++) result[k] += surface.worldPositions[i * 3 + k];
-          }
-          return { center: result.map(v => v / count), count };
-        }
-        const before = center(first), start = performance.now();
-        await new Promise(resolve => setTimeout(resolve, 30));
-        const final = el.thinWaxDiagnostics({ measure: false, surface: true }).surface, after = center(final);
-        const landed = final.panelIds.some((panel, i) => panel === id && final.settled[i]);
-        let finalTop = -Infinity;
-        for (let i = 0; i < final.panelIds.length; i++) if (final.panelIds[i] === id) finalTop = Math.max(finalTop, final.worldPositions[i * 3 + 1]);
-        return { panel: id, vertices: before.count, elapsed: performance.now() - start, coreBottom, bounds, finalTop, landed, down: before.center[1] - after.center[1], lateral: Math.hypot(after.center[0] - before.center[0], after.center[2] - before.center[2]) };
+        };
+        window.waxFrameObservers.add(observe);
       });
+      await press(page);
+      await page.waitForFunction(() => window.waxFlight !== null, null, { timeout: 15000 });
       await page.mouse.up();
+      const falling = await page.evaluate(() => window.waxFlight);
+      t.diagnostic(JSON.stringify({ pose, freeFlight: falling }));
+      assert.equal(falling.actualGPU, true);
       assert.equal(falling.landed, false, 'Direction is measured before any floor or pile contact');
       assert.ok(falling.finalTop > -1, 'Direction is measured above the low tray-collection region');
       assert.ok(falling.vertices > 20 && falling.down > .02, JSON.stringify({ pose, ...falling }));
@@ -218,10 +278,11 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
 test('detached polygon keeps its actual GPU vertex distances while the live core keeps changing', { timeout: 60000 }, async t => {
   const page = await open();
   try {
-    await press(page); await page.waitForTimeout(1200);
     await page.locator('.toy-mount').evaluate(el => {
-      const surface = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
-      function uploaded() {
+      window.waxRigidResult = null;
+      let baseline, pointerId, lastRender;
+      window.addEventListener('pointerdown', e => { pointerId = e.pointerId; }, { capture: true, once: true });
+      function uploaded(surface) {
         for (const values of window.waxUploadProbe.buffers.values()) {
           if (values.length !== surface.positions.length) continue;
           let same = true; for (let i = 0; i < values.length; i++) if (Math.abs(values[i] - surface.positions[i]) > 1e-6) { same = false; break; }
@@ -229,30 +290,36 @@ test('detached polygon keeps its actual GPU vertex distances while the live core
         }
         throw Error('The diagnostic shell does not match any actual GPU position buffer');
       }
-      const first = surface.detached.findIndex(Boolean); if (first < 0) throw Error('No polygon has detached');
-      const panel = surface.panelIds[first], ids = [];
-      for (let i = 0; i < surface.panelIds.length; i++) if (surface.panelIds[i] === panel) ids.push(i);
-      window.rigidWaxBaseline = { panel, ids, positions: uploaded(), core: el.thinWaxDiagnostics({ measure: false }).corePositions };
+      const observe = () => {
+        if (lastRender === el.dataset.renderCount) return; lastRender = el.dataset.renderCount;
+        const state = el.thinWaxDiagnostics({ measure: false });
+        if (!state.thinWax.detached) return;
+        const d = el.thinWaxDiagnostics({ measure: false, surface: true });
+        if (!baseline) {
+          const first = d.surface.detached.findIndex(Boolean), panel = d.surface.panelIds[first], ids = [];
+          for (let i = 0; i < d.surface.panelIds.length; i++) if (d.surface.panelIds[i] === panel) ids.push(i);
+          baseline = { panel, ids, positions: uploaded(d.surface), core: d.corePositions, time: performance.now() };
+          window.dispatchEvent(new PointerEvent('pointerup', { pointerId }));
+          return;
+        }
+        let coreChange = 0;
+        for (let i = 0; i < baseline.core.length; i++) coreChange = Math.max(coreChange, Math.abs(baseline.core[i] - d.corePositions[i]));
+        if (coreChange <= .005) return;
+        const gpu = uploaded(d.surface), anchor = baseline.ids[0]; let distanceError = 0;
+        const distance = (array, a, b) => Math.hypot(...[0, 1, 2].map(k => array[a * 3 + k] - array[b * 3 + k]));
+        for (const id of baseline.ids) distanceError = Math.max(distanceError, Math.abs(distance(baseline.positions, anchor, id) - distance(gpu, anchor, id)));
+        window.waxRigidResult = { panel: baseline.panel, sampledVertices: baseline.ids.length, distanceError, coreChange, elapsed: performance.now() - baseline.time,
+          geometry: el.thinWaxDiagnostics({ measure: true, exhaustive: true }).geometry };
+        window.waxFrameObservers.delete(observe);
+      };
+      window.waxFrameObservers.add(observe);
     });
-    await page.waitForTimeout(400); await page.mouse.up(); await page.waitForTimeout(250);
-    const measured = await page.locator('.toy-mount').evaluate(el => {
-      const before = window.rigidWaxBaseline, d = el.thinWaxDiagnostics({ measure: false, surface: true }), current = d.surface;
-      let gpu;
-      for (const values of window.waxUploadProbe.buffers.values()) {
-        if (values.length !== current.positions.length) continue;
-        let same = true; for (let i = 0; i < values.length; i++) if (Math.abs(values[i] - current.positions[i]) > 1e-6) { same = false; break; }
-        if (same) { gpu = values; break; }
-      }
-      if (!gpu) throw Error('Updated polygon geometry was not uploaded to GPU');
-      const distance = (array, a, b) => Math.hypot(...[0, 1, 2].map(k => array[a * 3 + k] - array[b * 3 + k]));
-      let distanceError = 0, coreChange = 0;
-      const anchor = before.ids[0];
-      for (const id of before.ids) distanceError = Math.max(distanceError, Math.abs(distance(before.positions, anchor, id) - distance(gpu, anchor, id)));
-      for (let i = 0; i < before.core.length; i++) coreChange = Math.max(coreChange, Math.abs(before.core[i] - d.corePositions[i]));
-      return { panel: before.panel, sampledVertices: before.ids.length, distanceError, coreChange };
-    });
-    assert.ok(measured.sampledVertices > 10); assert.ok(measured.coreChange > .005); assert.ok(measured.distanceError < 1e-5, JSON.stringify(measured));
-    const liveGeometry = await diagnostics(page, { measure: true, exhaustive: true });
+    await press(page);
+    await page.waitForFunction(() => window.waxRigidResult !== null, null, { timeout: 15000 });
+    await page.mouse.up();
+    const measured = await page.evaluate(() => window.waxRigidResult);
+    assert.ok(measured.sampledVertices > 10, JSON.stringify(measured)); assert.ok(measured.coreChange > .005, JSON.stringify(measured)); assert.ok(measured.distanceError < 1e-5, JSON.stringify(measured));
+    const liveGeometry = { geometry: measured.geometry };
     assert.ok(liveGeometry.geometry.detachedSamples > 0, 'Collision measurement includes still-living detached geometry during core recovery');
     geometryOK(liveGeometry);
     t.diagnostic(JSON.stringify({ ...measured, liveRecoveryGeometry: liveGeometry.geometry }));
@@ -332,35 +399,41 @@ test('same recipe survives full workflow; restart, color and configuration reset
     assert.equal((await diagnostics(page)).thinWax.detached, 0); geometryOK(await diagnostics(page, { measure: true }));
   } finally { await page.close(); }
 });
-test('cancellation, blur, hidden document, hit loss and leave stop the same input lifecycle', { timeout: 90000 }, async () => {
+test('cancellation, blur, hidden document, hit loss and leave stop the same input lifecycle', { timeout: 90000 }, async t => {
   const page = await open();
   try {
     for (const event of ['pointercancel', 'blur', 'hidden']) {
-      await press(page); await page.waitForTimeout(250);
-      await page.evaluate(event => {
-        if (event === 'hidden') { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); }
-        else window.dispatchEvent(event === 'pointercancel' ? new PointerEvent(event, { pointerId: 1 }) : new Event(event));
-      }, event);
+      const contact = await shortContact(page, event);
+      t.diagnostic(JSON.stringify({ action: event, elapsed: contact.elapsed, captured: contact.captured, trustedDown: contact.trustedDown }));
       await page.mouse.up(); await page.waitForTimeout(1100);
       assert.equal((await diagnostics(page)).thinWax.detached, 0, event);
       assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'false', event);
       if (event === 'hidden') await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange')); });
     }
-    await press(page); await page.waitForTimeout(250); await page.mouse.move(5, 5); await page.waitForTimeout(1200); await page.mouse.up();
+    await shortContact(page, 'miss'); await page.mouse.move(5, 5); await page.waitForTimeout(1200); await page.mouse.up();
     assert.equal((await diagnostics(page)).thinWax.detached, 0, 'No damage keeps running at a stale hit');
     await press(page); await page.waitForTimeout(1250);
     const fresh = await projectedSurfaceContact(page, .6, .03);
-    await page.mouse.move(fresh.x, fresh.y);
-    const swept = await page.locator('.toy-mount').evaluate(async el => {
+    await page.locator('.toy-mount').evaluate((el, fresh) => {
       // Full triangle diagnostics can take hundreds of milliseconds on a
       // software GPU. Sample the two endpoints in the browser itself and
       // release within this task, so transport overhead cannot become dwell.
-      const before = el.thinWaxDiagnostics({ measure: false }).thinWax;
-      await new Promise(resolve => setTimeout(resolve, 180));
-      window.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
-      const after = el.thinWaxDiagnostics({ measure: false }).thinWax;
-      return { before, after };
-    });
+      window.waxSweep = null;
+      window.addEventListener('pointermove', event => {
+        if (Math.hypot(event.clientX - fresh.x, event.clientY - fresh.y) > 2) return;
+        // This bubble listener runs after the product window pointermove handler.
+        const start = performance.now(), before = el.thinWaxDiagnostics({ measure: false }).thinWax;
+        setTimeout(() => {
+          window.dispatchEvent(new PointerEvent('pointerup', { pointerId: event.pointerId }));
+          window.waxSweep = { before, after: el.thinWaxDiagnostics({ measure: false }).thinWax, elapsed: performance.now() - start };
+        }, 120);
+      }, { once: true });
+    }, fresh);
+    await page.mouse.move(fresh.x, fresh.y);
+    await page.waitForFunction(() => window.waxSweep !== null);
+    const swept = await page.evaluate(() => window.waxSweep);
+    t.diagnostic(JSON.stringify({ sweep: swept }));
+    assert.ok(swept.elapsed < 500, `Fresh-region contact really ended before fracture: ${swept.elapsed}ms`);
     assert.ok(swept.before.dwell < .5, 'Crossing into a fresh region resets local continuous dwell');
     assert.equal(swept.after.detached, swept.before.detached, 'A long hold cannot immediately shatter a newly swept region');
     await page.mouse.up();

@@ -92,10 +92,14 @@ CPU 采样与源码确认瓶颈是碰撞查询反复读取 5120 个芯三角面�
 
 临时产物只放工作树 `.tmp/`，不提交。性能优化未减少真实碰撞采样、碎片总量、阴影或网格精度；首次落稳缓存问题已修复并由真实顶点与堆顶回归覆盖。旧 c9039c0 的录屏被新版替换，历史日志保留但不作为当前性能结果。视觉仍待用户查验。
 
-历史 GitHub 计费阻塞见 [github-checks.txt](../artifacts/issue-38/github-checks.txt)；当前提交检查核对记录在 PR 正文及检查页。保持草稿，不修改计费、额度或 CI 规则，不合并。
+历史 GitHub 计费阻塞见 [github-checks.txt](../artifacts/issue-38/github-checks.txt)。用户改为公开仓库后，运行 40183694597 的第 2 次尝试已启动真实托管 Runner：28 个实际测试作业通过，薄蜡浏览器分片出现 4 个采样时序失败，总汇因该分片失败而失败；不再是计费拦截。[原始失败断言](../artifacts/issue-38/public-ci-initial-failures.txt) 保留了实际输出。
+
+本轮只修测试采样，不改产品源码或运行包：真实鼠标按下前装页面观察器，按下后在页面内计时结束短按，并检查实际时长低于 500ms、可信按下事件和 Pointer Capture。GPU 刚片检查在实际芯恢复超过原有 `0.005` 变化阈值的渲染帧读取真实上传缓冲；自由下落逐帧只取两端都低于当前真实芯 AABB、又高于收盘面的完整刚片，不再凭 Playwright 往返后固定等待选窗口；滑动在产品处理同一个真实移动事件后立即记录当地驻留。未伪造产品时钟、加速动画、放宽距离/方向/穿模断言或跳过失败用例。当前提交的最终检查结果见 PR 正文及检查页。保持草稿，不修改计费、额度或 CI 规则，不合并。
+
+本地本轮复测：几何与时钟 `25/25`、退出 0、32.123 秒；最终浏览器普通速度 `8/8`、退出 0、52.838 秒，实际短按 180.9ms、可信按下并持有捕获；CPU 四倍节流 `8/8`、退出 0、65.478 秒，实际短按 227.9ms。CPU 节流后仅额外增加最终实际 settled 标记读取和诊断输出，由最终普通速度全套覆盖。原始输出见 [几何](../artifacts/issue-38/public-ci-geometry-tests.txt)、[普通浏览器](../artifacts/issue-38/public-ci-browser-normal.txt)、[CPU 降速浏览器](../artifacts/issue-38/public-ci-browser-cpu4.txt)、[复测口径](../artifacts/issue-38/public-ci-followup.txt)。既有录屏的运行包哈希不变，无需把测试修复伪装为新产品效果重录。
 
 ## 分支与回滚
 
-明确基线 `origin/main 2440cdc`，分支 `codex/issue-38-thin-wax`，工作树 `D:/squishy-studio/.worktrees/issue-38-thin-wax`。[草稿 PR #39](https://github.com/sunnyyang0822-stack/squishy-studio/pull/39) 指向 main；仓库保持 Private，不改共享历史，不自动关闭 Issue #38。用户查验及必需检查通过前不合并。
+明确基线 `origin/main 2440cdc`，分支 `codex/issue-38-thin-wax`，工作树 `D:/squishy-studio/.worktrees/issue-38-thin-wax`。[草稿 PR #39](https://github.com/sunnyyang0822-stack/squishy-studio/pull/39) 指向 main。用户于 2026-10-26 明确告知已主动将仓库改为 Public，以使用公开仓库标准托管 Runner；本轮按该最新指示保留公开状态，不自动改回 Private。此前文档中的 Private 是历史状态。不改共享历史，不自动关闭 Issue #38。用户查验及必需检查通过前不合并。
 
 本次单独回滚：通过普通 PR revert `ui: enlarge thin-wax orb framing and lengthen tray` 对应提交，可恢复 cf10bbd 的构图并保留碰撞性能优化。整体回滚则撤销本分支相对基线的薄蜡模块、场景/流程接入和构建产物，执行 `npm run build`；没有配方存储迁移，不回滚其他协作者成果。不要强推 main。当前外壳只针对黏土圆球；其他样式、其他内芯及中/厚蜡须另行验证后再启用。
