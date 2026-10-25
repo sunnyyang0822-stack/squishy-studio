@@ -200,6 +200,7 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
       await page.locator('.toy-mount').evaluate(el => {
         window.waxFlight = null;
         window.waxFlightTrace = [];
+        window.waxFlightContact = null;
         let lastRender, pointerId, released = false, panelIds;
         const baselines = new Map(), metadata = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
         const records = new Map(), uniqueRecords = new Map();
@@ -215,7 +216,17 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
           if (same) { gpu = values; break; }
         }
         if (!gpu) throw Error('No actual GPU shell position upload for free-flight observation');
-        window.addEventListener('pointerdown', e => { pointerId = e.pointerId; }, { capture: true, once: true });
+        window.addEventListener('pointerdown', e => {
+          pointerId = e.pointerId;
+          // Bubble after the product handler: measure its actual ray hit,
+          // rather than treating the intended screen coordinate as evidence.
+          const d = el.thinWaxDiagnostics({ measure: false }), m = d.debrisStage.matrixWorld, local = d.coreState.center;
+          const world = [0, 1, 2].map(k => m[k] * local[0] + m[4 + k] * local[1] + m[8 + k] * local[2] + m[12 + k]);
+          let coreBottom = Infinity;
+          for (let i = 0; i < d.corePositions.length; i += 3) coreBottom = Math.min(coreBottom, m[1] * d.corePositions[i] + m[5] * d.corePositions[i + 1] + m[9] * d.corePositions[i + 2] + m[13]);
+          window.waxFlightContact = { world, coreBottom, clearance: world[1] - coreBottom, trustedDown: e.isTrusted,
+            captured: document.querySelector('.orb-input').hasPointerCapture(e.pointerId) };
+        }, { once: true });
         const observe = () => {
           if (lastRender === el.dataset.renderCount) return; lastRender = el.dataset.renderCount;
           const d = el.thinWaxDiagnostics({ measure: false });
@@ -262,7 +273,15 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
         };
         window.waxFrameObservers.add(observe);
       });
-      await press(page);
+      // A low real contact reduces the fall distance before the chip clears
+      // the core, so the unchanged free-flight region contains more frames.
+      // Use projected ORB bounds; the canvas also contains the collection tray.
+      const orb = await page.locator('.orb-input').boundingBox();
+      await page.mouse.move(orb.x + orb.width / 2, orb.y + orb.height * .98); await page.mouse.down();
+      const contact = await page.evaluate(() => window.waxFlightContact);
+      t.diagnostic(JSON.stringify({ pose, lowWorldContact: contact }));
+      assert.ok(contact && contact.trustedDown && contact.captured, 'A real captured pointer must hit the visible lower orb');
+      assert.ok(contact.clearance >= 0 && contact.clearance < .35, `The measured world hit is close to the core bottom: ${JSON.stringify(contact)}`);
       try { await page.waitForFunction(() => window.waxFlight !== null, null, { timeout: 15000 }); }
       catch (error) {
         t.diagnostic(JSON.stringify({ pose, missingFreeFlightWindow: await page.evaluate(() => window.waxFlightTrace) }));

@@ -110,6 +110,8 @@ CPU 采样与源码确认瓶颈是碰撞查询反复读取 5120 个芯三角面�
 
 专项验证：默认 DPR1 自由下落 1/1、17.78 秒；SwiftShader＋CPU4＋DPR0.25 自由下落 1/1、27.56 秒，实际缓冲 197×189，均退出 0。DPR0.5 压力对照也通过，未复现云端超时；这些运行不可作为分辨率降低带来定量性能提升的证据。见 [默认专项](../artifacts/issue-38/flight-default-dpr.txt)、[软件四倍 CPU 专项](../artifacts/issue-38/flight-swiftshader-cpu4-quarter.txt)、[半分辨率对照](../artifacts/issue-38/flight-swiftshader-cpu4-half.txt)。
 
+`651c88c` 云端仍只有自由下落采样失败；新增逐帧证据确认三个首发片各自仅有一帧落在完整合法窗口，下一帧即越过收盘边界。后续仅该用例改用真实球投影框下方的按压点，并读取产品实际 ray hit 世界坐标，新增可信输入/Pointer Capture 与触点距芯底 <0.35 的约束；不是修改重力、球位、盘位或扩大验收窗口。三姿态实测距芯底 0.175/0.157/0.192，减少脱芯前落差，从而保留更多低速自由下落取样时间。其他测试仍原按压入口。默认专项 1/1、16.94 秒；SwiftShader＋CPU4＋DPR0.25 专项 1/1、25.46 秒，均退出 0，后者原窗口真实 GPU 下落 0.144/0.399/0.136、侧移均 <0.0031。见 [默认低位按压](../artifacts/issue-38/flight-low-contact-default.txt)、[软件压力低位按压](../artifacts/issue-38/flight-low-contact-swiftshader-cpu4.txt)。最终 CI 结果见 PR 检查；上述前序失败明确保留。
+
 ## 分支与回滚
 
 明确基线 `origin/main 2440cdc`，分支 `codex/issue-38-thin-wax`，工作树 `D:/squishy-studio/.worktrees/issue-38-thin-wax`。[草稿 PR #39](https://github.com/sunnyyang0822-stack/squishy-studio/pull/39) 指向 main。用户于 2026-10-26 明确告知已主动将仓库改为 Public，以使用公开仓库标准托管 Runner；本轮按该最新指示保留公开状态，不自动改回 Private。此前文档中的 Private 是历史状态。不改共享历史，不自动关闭 Issue #38。用户查验及必需检查通过前不合并。
