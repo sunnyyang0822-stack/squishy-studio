@@ -209,8 +209,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     function interruptRestore() { deformation.interruptRestore(); restorePose = undefined; }
     function resize(width, height) {
       current.width = width; current.height = height;
-      const halfHeight = shellVisible ? Math.max(1.8, 1.62 * height / width) : Math.max(isSurface ? 1.6 : 1.43, (isSurface ? 1.48 : 1.25) * height / width);
-      camera.lookAt(0, shellVisible ? -.25 : -.02, 0);
+      const halfHeight = shellVisible ? Math.max(2.1, 1.62 * height / width) : Math.max(isSurface ? 1.6 : 1.43, (isSurface ? 1.48 : 1.25) * height / width);
+      camera.lookAt(0, shellVisible ? .05 : -.02, 0);
       camera.top = halfHeight; camera.bottom = -halfHeight;
       camera.left = -halfHeight * width / height; camera.right = -camera.left;
       camera.updateProjectionMatrix();
@@ -413,7 +413,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }
-      if (wax) { wax.group.visible = shellVisible; if (shellVisible) wax.sync(); }
+      pivot.position.y = center.y + (shellVisible ? .7 : 0);
+      pivot.updateMatrixWorld(true);
+      if (wax) { wax.setWorldMatrix(mesh.matrixWorld); wax.group.visible = shellVisible; if (shellVisible) wax.sync(); }
       debrisTray.visible = shellVisible; floor.visible = !shellVisible;
       debrisTray.material.color.set(daylight ? 0xf2e6de : 0x514754);
       Object.assign(key.shadow.camera, shellVisible ? { left: -2.4, right: 2.4, top: 2.4, bottom: -2.4 } : { left: -1.65, right: 1.65, top: 1.65, bottom: -1.65 }); key.shadow.camera.updateProjectionMatrix();

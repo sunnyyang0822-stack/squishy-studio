@@ -97,4 +97,7 @@ test('successive real polygon bodies accumulate above earlier surfaces and reset
   const saved = bodies.map(f.snapshot); f.advance(10); assert.deepEqual(bodies.map(f.snapshot), saved);
   f.debris.reset(); assert.deepEqual(f.debris.state(), { floorY: -1.35, radius: .42, moving: 0, settled: 0, minY: null, maxRadius: 0, pileTop: -1.35, gridCells: 0 });
   assert.equal(f.debris.get(0), undefined);
+  const fresh = f.add(0, undefined, [.06, .2, 0]); f.advance(2);
+  assert.ok(fresh.settled); assert.equal(f.debris.state().settled, 1);
+  assert.ok(f.debris.state().pileTop < state.pileTop - f.thickness, 'Reset invalidates cached tall-pile support before an ID is reused');
 });

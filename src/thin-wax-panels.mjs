@@ -110,11 +110,12 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const visibleCrackEdges = new Set();
   const debris = createWaxDebris({ thickness: config.thickness, reducedMotion });
   const worldMatrix = new THREE.Matrix4(), worldInverse = new THREE.Matrix4(), worldLinear = new THREE.Matrix3();
+  let worldRevision = 0;
   worldLinear.setFromMatrix4(worldMatrix);
   function setWorldMatrix(value) {
     const next = value?.isMatrix4 ? value : new THREE.Matrix4().fromArray(value);
     if (worldMatrix.equals(next)) return;
-    worldMatrix.copy(next); worldInverse.copy(next).invert(); worldLinear.setFromMatrix4(next); dirty = true;
+    worldMatrix.copy(next); worldInverse.copy(next).invert(); worldLinear.setFromMatrix4(next); worldRevision++; dirty = true;
   }
   let active = false, disposed = false, contact, anchor, since = 0, now = clock(), totalDetached = 0, dirty = true, sweepSamples = 0, stroke, chainWaves = 0, lastDamageTime = null;
   const point = value => Array.isArray(value) || ArrayBuffer.isView(value) ? new THREE.Vector3(...value) : new THREE.Vector3(value.x, value.y, value.z);
@@ -207,6 +208,9 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   }
   function renderDetached(panel, mapped) {
     let body = debris.get(panel.id);
+    // Settled geometry is immutable in world space. Reuse its uploaded values
+    // only while the transform is unchanged AND the live core cannot reach it.
+    if (body?.settled && panel.renderedSettled && panel.renderWorldRevision === worldRevision && panel.renderBounds && !collisions.intersectsBox(panel.renderBounds)) return;
     if (!body) {
       const points = mapped.map(v => v.p.clone().addScaledVector(v.n, config.gap + .006).applyMatrix4(worldMatrix));
       const normals = mapped.map(v => v.n.clone().transformDirection(worldMatrix));
@@ -241,6 +245,9 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         const direction = worldCorrection.clone().normalize(); body.velocity.addScaledVector(direction, -Math.min(0, body.velocity.dot(direction)));
       }
     }
+    panel.renderBounds ||= new THREE.Box3(); panel.renderBounds.makeEmpty();
+    for (const vertex of mapped) panel.renderBounds.expandByPoint(vertex.rendered);
+    panel.renderBounds.expandByScalar(config.thickness + .005); panel.renderWorldRevision = worldRevision; panel.renderedSettled = body.settled;
     writePanel(panel, mapped);
   }
   function sync() {
@@ -249,6 +256,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     for (const panel of panels) {
       if (panel.dead) { for (let r = panel.start; r < panel.end; r++) output.fill(0, r * 3, r * 3 + 3); continue; }
       const mapped = panel.mapped ||= panel.vertices.map(() => ({ p: vec(), n: vec(), target: vec(), targetNormal: vec(), support: vec() }));
+      if (panel.detached && debris.get(panel.id)) { renderDetached(panel, mapped); continue; }
       for (let i = 0; i < panel.vertices.length; i++) { map(panel.vertices[i], source, mapped[i].p); map(panel.vertices[i], normals, mapped[i].n).normalize(); mapped[i].support.copy(mapped[i].p).addScaledVector(mapped[i].n, config.gap); }
       const center = vec(); for (const vertex of mapped) center.add(vertex.p); center.multiplyScalar(1 / mapped.length);
       const outward = vec(); for (const vertex of mapped) outward.add(vertex.n); outward.normalize();

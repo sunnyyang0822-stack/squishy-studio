@@ -58,6 +58,32 @@ function geometryOK(d) {
   assert.ok(d.geometry.attachedMinSignedDistance >= -d.geometry.tolerance, JSON.stringify(d.geometry));
   assert.ok(d.geometry.detachedMinSignedDistance == null || d.geometry.detachedMinSignedDistance >= -1e-5, JSON.stringify(d.geometry));
 }
+test('thin-wax elevation separates the real core from the tray without moving the bare core or clipping either viewport', { timeout: 60000 }, async t => {
+  const measurements = [];
+  for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
+    const page = await open();
+    try {
+      await page.setViewportSize(viewport); await page.waitForTimeout(150);
+      const shell = await diagnostics(page);
+      const m = shell.debrisStage.matrixWorld; let coreBottom = Infinity;
+      for (let i = 0; i < shell.corePositions.length; i += 3) coreBottom = Math.min(coreBottom, m[1] * shell.corePositions[i] + m[5] * shell.corePositions[i + 1] + m[9] * shell.corePositions[i + 2] + m[13]);
+      assert.ok(coreBottom - shell.debrisStage.floorY > .9, `The actual elevated core leaves room for falling chips: ${coreBottom}`);
+      assert.equal(shell.debrisStage.floorY, -1.35);
+      assert.ok(shell.debrisStage.projectedTray.every(p => Math.abs(p[0]) < 1 && Math.abs(p[1]) < 1));
+      const canvas = await page.locator('.toy-mount canvas').boundingBox(), input = await page.locator('.orb-input').boundingBox();
+      assert.ok(input.x >= canvas.x - 1 && input.y >= canvas.y - 1 && input.x + input.width <= canvas.x + canvas.width + 1 && input.y + input.height <= canvas.y + canvas.height + 1, 'The entire projected orb remains in the render viewport');
+      await page.locator('.step-back').click();
+      const bare = await diagnostics(page); assert.equal(bare.enabled, false);
+      const elevation = m[13] - bare.debrisStage.matrixWorld[13];
+      assert.ok(Math.abs(elevation - .7) < 1e-6, `Only the thin-wax stage adds .7 world units: ${elevation}`);
+      await page.locator('.step-next').click();
+      const restored = await diagnostics(page); assert.equal(restored.enabled, true);
+      assert.ok(Math.abs(restored.debrisStage.matrixWorld[13] - m[13]) < 1e-6, 'Navigation restores the same elevated placement');
+      measurements.push({ viewport, coreBottom, floorY: shell.debrisStage.floorY, elevation, projectedTray: shell.debrisStage.projectedTray });
+    } finally { await page.close(); }
+  }
+  t.diagnostic(JSON.stringify(measurements));
+});
 for (const material of ['clay']) test(`thin wax + ${material}: actual core geometry, timing, release, recovery and independent colors`, { timeout: 90000 }, async t => {
   const page = await open(material);
   try {
@@ -114,10 +140,28 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
       if (pose.some(Boolean)) await rotate(page, ...pose);
       await press(page);
       await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax.detached > 0);
+      await page.mouse.up();
       const falling = await page.locator('.toy-mount').evaluate(async el => {
-        const first = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
-        const index = first.detached.findIndex((v, i) => v && !first.settled[i]); if (index < 0) throw Error('No airborne shard to measure');
-        const id = first.panelIds[index];
+        // Contact correction can slide a shard along the live core. Select a
+        // real free-flight interval below the actual core AABB, after the
+        // landing-posture rotation has completed, rather than calling that
+        // necessary contact response sideways gravity.
+        await new Promise(resolve => setTimeout(resolve, 300));
+        let first, id, coreBottom, bounds;
+        for (let attempt = 0; attempt < 45; attempt++) {
+          const d = el.thinWaxDiagnostics({ measure: false, surface: true }), m = d.debrisStage.matrixWorld;
+          first = d.surface; coreBottom = Infinity;
+          for (let i = 0; i < d.corePositions.length; i += 3) coreBottom = Math.min(coreBottom, m[1] * d.corePositions[i] + m[5] * d.corePositions[i + 1] + m[9] * d.corePositions[i + 2] + m[13]);
+          const candidates = new Map();
+          for (let i = 0; i < first.panelIds.length; i++) if (first.detached[i] && !first.settled[i]) {
+            const panel = first.panelIds[i], b = candidates.get(panel) || { minY: Infinity, maxY: -Infinity };
+            b.minY = Math.min(b.minY, first.worldPositions[i * 3 + 1]); b.maxY = Math.max(b.maxY, first.worldPositions[i * 3 + 1]); candidates.set(panel, b);
+          }
+          const candidate = [...candidates].find(([, b]) => b.maxY < coreBottom - .02 && b.minY > -.55);
+          if (candidate) { [id, bounds] = candidate; break; }
+          await new Promise(resolve => setTimeout(resolve, 8));
+        }
+        if (id === undefined) throw Error('No actual airborne shard clears the live core AABB before landing');
         function center(surface) {
           const result = [0, 0, 0], unique = new Set(); let count = 0;
           for (let i = 0; i < surface.panelIds.length; i++) if (surface.panelIds[i] === id && surface.layers[i] === 0) {
@@ -127,11 +171,16 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
           return { center: result.map(v => v / count), count };
         }
         const before = center(first), start = performance.now();
-        await new Promise(resolve => setTimeout(resolve, 140));
-        const after = center(el.thinWaxDiagnostics({ measure: false, surface: true }).surface);
-        return { panel: id, vertices: before.count, elapsed: performance.now() - start, down: before.center[1] - after.center[1], lateral: Math.hypot(after.center[0] - before.center[0], after.center[2] - before.center[2]) };
+        await new Promise(resolve => setTimeout(resolve, 30));
+        const final = el.thinWaxDiagnostics({ measure: false, surface: true }).surface, after = center(final);
+        const landed = final.panelIds.some((panel, i) => panel === id && final.settled[i]);
+        let finalTop = -Infinity;
+        for (let i = 0; i < final.panelIds.length; i++) if (final.panelIds[i] === id) finalTop = Math.max(finalTop, final.worldPositions[i * 3 + 1]);
+        return { panel: id, vertices: before.count, elapsed: performance.now() - start, coreBottom, bounds, finalTop, landed, down: before.center[1] - after.center[1], lateral: Math.hypot(after.center[0] - before.center[0], after.center[2] - before.center[2]) };
       });
       await page.mouse.up();
+      assert.equal(falling.landed, false, 'Direction is measured before any floor or pile contact');
+      assert.ok(falling.finalTop > -1, 'Direction is measured above the low tray-collection region');
       assert.ok(falling.vertices > 20 && falling.down > .02, JSON.stringify({ pose, ...falling }));
       assert.ok(falling.lateral < .08, 'Toy orientation cannot turn gravity sideways: ' + JSON.stringify({ pose, ...falling }));
       await page.waitForFunction(() => { const s = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax; return s.living === 0 && s.settled > 0; }, null, { timeout: 6000 });

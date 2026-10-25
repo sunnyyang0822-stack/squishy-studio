@@ -8,7 +8,13 @@ export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwe
 function collisionTree(geometry) {
   const p = geometry.attributes.position, index = geometry.index.array;
   const a = new THREE.Vector3(), b = a.clone(), c = a.clone(), hit = a.clone();
-  const triangleBox = i => new THREE.Box3().setFromPoints([a.fromBufferAttribute(p, index[i]), b.fromBufferAttribute(p, index[i + 1]), c.fromBufferAttribute(p, index[i + 2])]);
+  // Read the live mesh once per refit, rather than nine attribute reads for
+  // every triangle visited by every fragment sample during this frame.
+  const faces = Array.from({ length: index.length / 3 }, (_, face) => {
+    const i = face * 3, triangle = new THREE.Triangle(new THREE.Vector3().fromBufferAttribute(p, index[i]), new THREE.Vector3().fromBufferAttribute(p, index[i + 1]), new THREE.Vector3().fromBufferAttribute(p, index[i + 2]));
+    return { triangle, normal: triangle.getNormal(new THREE.Vector3()) };
+  });
+  const triangleBox = i => { const t = faces[i / 3].triangle; return new THREE.Box3().setFromPoints([t.a, t.b, t.c]); };
   function build(ids) {
     const box = new THREE.Box3(); for (const i of ids) box.union(triangleBox(i));
     if (ids.length <= 12) return { box, ids };
@@ -20,7 +26,11 @@ function collisionTree(geometry) {
   const root = build(Array.from({ length: index.length / 3 }, (_, i) => i * 3));
   function refit(node = root) {
     node.box.makeEmpty();
-    if (node.ids) for (const i of node.ids) node.box.expandByPoint(a.fromBufferAttribute(p, index[i])).expandByPoint(b.fromBufferAttribute(p, index[i + 1])).expandByPoint(c.fromBufferAttribute(p, index[i + 2]));
+    if (node.ids) for (const i of node.ids) {
+      const face = faces[i / 3], t = face.triangle;
+      t.a.fromBufferAttribute(p, index[i]); t.b.fromBufferAttribute(p, index[i + 1]); t.c.fromBufferAttribute(p, index[i + 2]); t.getNormal(face.normal);
+      node.box.expandByPoint(t.a).expandByPoint(t.b).expandByPoint(t.c);
+    }
     else { refit(node.left); refit(node.right); node.box.union(node.left.box).union(node.right.box); }
   }
   const ray = new THREE.Ray();
@@ -30,22 +40,27 @@ function collisionTree(geometry) {
     function visit(node) {
       if (!ray.intersectsBox(node.box)) return;
       if (node.ids) for (const i of node.ids) {
-        a.fromBufferAttribute(p, index[i]); b.fromBufferAttribute(p, index[i + 1]); c.fromBufferAttribute(p, index[i + 2]);
-        if (ray.intersectTriangle(a, b, c, false, hit)) { const distance = hit.distanceTo(origin); if (distance > 1e-6) nearest = Math.min(nearest, distance); }
+        const t = faces[i / 3].triangle;
+        if (ray.intersectTriangle(t.a, t.b, t.c, false, hit)) { const distance = hit.distanceTo(origin); if (distance > 1e-6) nearest = Math.min(nearest, distance); }
       } else { visit(node.left); visit(node.right); }
     }
     visit(root); return nearest;
   }
-  const triangle = new THREE.Triangle(), closest = new THREE.Vector3(), faceNormal = new THREE.Vector3();
+  const closest = new THREE.Vector3();
   function signedDistance(point, outwardNormal) {
     let distance = Infinity, signed = Infinity;
     function visit(node) {
       if (node.box.distanceToPoint(point) > distance) return;
       if (node.ids) for (const i of node.ids) {
-        triangle.set(a.fromBufferAttribute(p, index[i]), b.fromBufferAttribute(p, index[i + 1]), c.fromBufferAttribute(p, index[i + 2]));
-        triangle.closestPointToPoint(point, closest); const d = closest.distanceTo(point);
-        if (d < distance) { distance = d; triangle.getNormal(faceNormal); outwardNormal?.copy(faceNormal); signed = (point.x - closest.x) * faceNormal.x + (point.y - closest.y) * faceNormal.y + (point.z - closest.z) * faceNormal.z < 0 ? -d : d; }
-      } else { visit(node.left); visit(node.right); }
+        const face = faces[i / 3];
+        face.triangle.closestPointToPoint(point, closest); const d = closest.distanceTo(point);
+        if (d < distance) { distance = d; outwardNormal?.copy(face.normal); signed = (point.x - closest.x) * face.normal.x + (point.y - closest.y) * face.normal.y + (point.z - closest.z) * face.normal.z < 0 ? -d : d; }
+      } else {
+        // The first nearby hit prunes far branches. The nearest surface and
+        // signed-distance calculation stay exact against the same triangles.
+        if (node.left.box.distanceToPoint(point) <= node.right.box.distanceToPoint(point)) { visit(node.left); visit(node.right); }
+        else { visit(node.right); visit(node.left); }
+      }
     }
     visit(root); return signed;
   }

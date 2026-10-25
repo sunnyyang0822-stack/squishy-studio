@@ -10,7 +10,15 @@ const port = process.env.THIN_WAX_CAPTURE_PORT || '4229', base = `http://127.0.0
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const performanceOnly = process.argv.includes('--performance-only'), captureOnly = process.argv.includes('--capture-only');
 const diag = (page, options = { measure: false }) => page.locator('.toy-mount').evaluate((el, options) => el.thinWaxDiagnostics(options), options);
-function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let depth = 0; for (let i = 0; i < corePositions.length; i += 3) depth = Math.max(depth, Math.hypot(...[0, 1, 2].map(k => corePositions[i + k] - coreRestPositions[i + k]))); return { ...rest, coreMaximumDisplacement: depth }; }
+function brief(d) {
+  const { corePositions, coreRestPositions, ...rest } = d; let depth = 0, coreWorldBottom = Infinity;
+  const matrix = d.debrisStage.matrixWorld;
+  for (let i = 0; i < corePositions.length; i += 3) {
+    depth = Math.max(depth, Math.hypot(...[0, 1, 2].map(k => corePositions[i + k] - coreRestPositions[i + k])));
+    coreWorldBottom = Math.min(coreWorldBottom, matrix[1] * corePositions[i] + matrix[5] * corePositions[i + 1] + matrix[9] * corePositions[i + 2] + matrix[13]);
+  }
+  return { ...rest, coreMaximumDisplacement: depth, coreWorldBottom, coreTrayClearance: coreWorldBottom - d.debrisStage.floorY };
+}
 (async () => {
   fs.mkdirSync(folder, { recursive: true }); fs.mkdirSync(temporary, { recursive: true });
   const report = performanceOnly ? JSON.parse(fs.readFileSync(`${folder}/validation.json`, 'utf8')) : { recordedAt: new Date().toISOString(), visualAcceptance: 'pending user review; numeric checks are insufficient for visual acceptance', speed: 'normal wall time; no accelerated clocks', physicalPhone: false, mobile: 'Chromium 390×844 mobile viewport: CDP touch pressure with existing mouse-only background rotation; touch background scrolling remains native', bundleSha256: digest('assets/orb-preview.js'), cases: [], errors: [], exitCode: 1 };
@@ -57,6 +65,9 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           await page.getByRole('button', { name: '重新开始', exact: true }).click();
           await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().thinWax.detached === 0);
           await page.waitForTimeout(750);
+          const placement = await measure(`${theme}-elevated-placement`);
+          assert.ok(placement.coreTrayClearance > .9, 'The real core is visibly separated from the tray');
+          assert.ok(placement.debrisStage.projectedTray.every(p => Math.abs(p[0]) < 1 && Math.abs(p[1]) < 1), 'The entire tray stays inside the camera');
           await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme); await label(`${theme} / ${style} / ${feel}：短按裂缝`);
           await page.screenshot({ path: `${folder}/${name}-${theme}-intact.png` });
           await send('down'); await page.waitForTimeout(260); await send('up'); await measure(`${theme}-short`); await page.waitForTimeout(250);
@@ -121,6 +132,7 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           assert.equal(accumulated.thinWax.detached, accumulated.thinWax.settled); assert.equal(accumulated.thinWax.expired, 0);
           assert.ok(accumulated.geometry.debris.minY >= accumulated.geometry.debris.floorY - 1e-5, 'Every accumulated piece stays above the real collection floor');
           assert.ok(accumulated.geometry.debris.maxRadius <= accumulated.geometry.debris.radius + 1e-5, 'The full accumulated pile remains inside the tray after rotated re-pressing: ' + JSON.stringify(accumulated.geometry.debris));
+          assert.ok(accumulated.coreWorldBottom - accumulated.geometry.debris.pileTop > .1, 'The visible settled pile leaves a gap below the real core');
           await page.screenshot({ path: `${folder}/${name}-${theme}-pile-added.png` });
         }
         await label('同配方进入最终试捏，再返回：破损保留');

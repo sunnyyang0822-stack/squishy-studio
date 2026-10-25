@@ -278,7 +278,8 @@ test('live chips stay capped at 24 while continued deep pressure can strip each 
 });
 
 test('repeated local presses can strip the complete real shell once without duplicate cells or regrowth', async t => {
-  const f = await fixture(), initial = f.wax.getSurfaceSnapshot(), centers = new Map();
+  const f = await fixture(); f.wax.setWorldMatrix(new f.THREE.Matrix4().makeTranslation(0, .7, 0));
+  const initial = f.wax.getSurfaceSnapshot(), centers = new Map();
   for (let r = 0; r < initial.layers.length; r++) if (initial.layers[r] === 1) {
     const id = initial.panelIds[r], value = centers.get(id) || { sum: [0, 0, 0], count: 0 };
     for (let k = 0; k < 3; k++) value.sum[k] += initial.restSupportPositions[r * 3 + k];
@@ -300,12 +301,18 @@ test('repeated local presses can strip the complete real shell once without dupl
   assert.equal(debris.moving, 0); assert.equal(debris.settled, centers.size);
   assert.ok(debris.minY >= debris.floorY - 1e-5 && debris.maxRadius <= debris.radius + .02, JSON.stringify(debris));
   assert.equal(finalMetrics.detachedViolations, 0, 'The complete persistent pile must remain outside the core');
-  let physicalMaxRadius = 0, physicalSamples = 0;
+  let physicalMaxRadius = 0, physicalSamples = 0, physicalPileTop = -Infinity;
   for (let r = 0; r < pile.settled.length; r++) if (pile.settled[r]) {
     physicalMaxRadius = Math.max(physicalMaxRadius, Math.hypot(pile.worldPositions[r * 3], pile.worldPositions[r * 3 + 2])); physicalSamples++;
+    physicalPileTop = Math.max(physicalPileTop, pile.worldPositions[r * 3 + 1]);
   }
+  let coreBottom = Infinity;
+  for (let i = 1; i < f.restPositions.length; i += 3) coreBottom = Math.min(coreBottom, f.restPositions[i] + .7);
+  const pileCoreGap = coreBottom - physicalPileTop;
+  t.diagnostic(JSON.stringify({ completeShellPanels: centers.size, debris, physicalMaxRadius, physicalSamples, coreBottom, physicalPileTop, pileCoreGap }));
+  assert.ok(physicalPileTop <= debris.pileTop + .002, 'Frozen rendering must contain the final settled pose, not an earlier airborne pose');
+  assert.ok(pileCoreGap > .1, `The complete 180-piece pile must leave a visible gap below the elevated core: ${pileCoreGap}`);
   assert.ok(physicalMaxRadius <= debris.radius + 1e-5, `Every actual inner, outer and wall vertex stays inside the tray: ${physicalMaxRadius}`);
-  t.diagnostic(JSON.stringify({ completeShellPanels: centers.size, debris, physicalMaxRadius, physicalSamples }));
   f.wax.reset(); assert.equal(f.wax.getState().detached, 0); assert.equal(f.wax.getState().cracked, 0);
   f.wax.dispose(); f.geometry.dispose();
 });
