@@ -1,11 +1,11 @@
-Bundle SHA-256: 02b5a36d77841d73dccf71072e617b530847e2ef0ae6cb5c6112887d852044f1
-npm run build: exit 0 -> elevated-build.txt
-node --test tests/thin-wax.test.cjs tests/thin-wax-debris.test.cjs: 25/25 exit 0, 38938.9392ms -> elevated-geometry-tests.txt
-node --test tests/thin-wax-browser.test.cjs: 8/8 exit 0, 53803.2607ms -> elevated-browser-tests.txt
-node --test --test-concurrency=1 tests/orb-deformation.test.cjs tests/orb-shell-input.test.cjs tests/orb-presets.test.cjs tests/orb-color-kernel.test.cjs tests/detail-state.test.cjs: 37/37 exit 0, 2044.6786ms -> elevated-core-regression.txt
-Before mutation: node .tmp/issue-38/profile-wax.cjs .tmp/issue-38/before-spacing-performance.json: exit 0; then separate --profile run exit 0 for diagnosis. Temporary script uses the same fresh-390x844/350ms-ready/4s-CDP-touch/MutationObserver procedure now checked in as benchmark-thin-wax.cjs. Baseline commit c9039c0.
-node scripts/benchmark-thin-wax.cjs artifacts/issue-38/elevated-performance-after.json: exit 0, no other browser/test process. All intervals retained.
-node scripts/capture-thin-wax.cjs --capture-only: exit 0; desktop/mobile day/night including real ball/pile clearance assertions.
-node scripts/capture-thin-wax.cjs --performance-only: exit 0 after recordings/tests stopped; bundle hash equality verified.
-Browser commands use project .tmp/runtime as TEMP/TMP, host Edge outside restricted launch sandbox; no browser profile directories committed.
-Historical source/scene/full-suite logs are not presented as current tests. Visual acceptance pending user review; PR remains draft.
+Bundle SHA-256: 3e8000326e0d4fd5bb87e5d25160be700460ded022c31500fedfa9528d6e785c
+npm run build:orb: exit 0 -> larger-layout-build.txt
+node .tmp/issue-38/layout-check.cjs: exit 0 -> larger-layout-measurements.txt; equivalent viewport and dominance assertions are checked in tests/thin-wax-browser.test.cjs.
+node --test tests/thin-wax-browser.test.cjs: 8/8 exit 0, 54404.8268ms -> larger-layout-browser-tests.txt.
+node .tmp/issue-38/layout-rotation.cjs: exit 0 -> larger-layout-rotation.txt (mouse background drag ~90deg, actual orb input remains inside canvas).
+node scripts/capture-thin-wax.cjs --capture-only: exit 0; desktop/mobile day/night, same layout bundle.
+node scripts/capture-thin-wax.cjs --performance-only: exit 0 after capture/tests stopped; same bundle hash.
+Performance: {"samples":570,"medianMs":6.400000000372529,"p95Ms":10.199999999254942,"maximumMs":18.100000001490116,"maximumCountJump":1,"measurement":"MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
+Host Edge launch uses TEMP/TMP inside project .tmp/runtime; no temporary/profile files committed.
+No deformation, core-feel, damage, fragment-physics or collection-radius changes in this commit. Earlier cf10bbd 25 geometry+37 core regression and earlier full-suite logs are historical, not rerun as current results.
+PR remains draft and unmerged pending user visual review and GitHub checks.

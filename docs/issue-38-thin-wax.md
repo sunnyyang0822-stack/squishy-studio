@@ -6,7 +6,11 @@
 
 ## 球盘间距与掉片性能优化
 
-仅有效薄蜡组合将球体旋转中心的世界 Y 提高 `0.7`，盘面仍为 `-1.35`。裸芯步骤回到原始中心，不改内芯坐标、形变参数、裂纹时钟或落片重力。摄像机薄蜡视图半高至少 `2.1`、观察目标 Y=`0.05`，同时容纳抬升球体与承接盘。完整 180 片落稳后扫描真实内外表面和侧壁，验证堆顶与真实球底间距，不以盘面到球底的空场间距代替。
+仅有效薄蜡组合将球体旋转中心的世界 Y 提高 `0.7`，盘面仍为 `-1.35`。裸芯步骤回到原始中心，不改内芯坐标、形变参数、裂纹时钟或落片重力。完整 180 片落稳后扫描真实内外表面和侧壁，验证堆顶与真实球底间距，不以盘面到球底的空场间距代替。
+
+最新构图按用户要求推近镜头，使球重新成为主体：薄蜡视图半高 `max(1.76, 1.5 × height/width)`，观察目标 Y=`-0.02`。盘子横向缩放 `min(1.24, camera.right × 0.97 / 1.42)`，Z 半径与盘面高度不变；窄屏为两端保留约 3% 边距。碎片物理收集半径仍为 `1.35`，仅延长盘面，未缩放内芯或修改掉落几何。
+
+1280×900 下球的实际交互投影宽 `360.8→430.5px`（约 +19%），占展示区宽约 54.4%；390×844 下 `221.0→238.7px`，占展示区约 66.7%。盘子 X 半长桌面 `1.7608`、手机 `1.455`（原 `1.42`），分别占展示区宽约 95.9%、97%。完整球与盘仍在视野内；额外鼠标旋转 90° 的球体投影也未裁切。原始量测见 [构图数据](../artifacts/issue-38/larger-layout-measurements.txt) 和 [90°走查](../artifacts/issue-38/larger-layout-rotation.txt)。
 
 CPU 采样与源码确认瓶颈是碰撞查询反复读取 5120 个芯三角面的顶点，以及最近面遍历先扫描较远分支。现在每次 BVH refit 仅更新一次三角面及法线，后续查询复用当帧数据；按子树包围盒距离优先访问近处，使已有最近距离及早剪枝。查询仍对真实芯三角面求精确最近点，不使用球形代理或减少防穿模采样。
 
@@ -72,19 +76,19 @@ CPU 采样与源码确认瓶颈是碰撞查询反复读取 5120 个芯三角面�
 
 ## 复现、证据与验证范围
 
-本次真实命令、退出码和输出路径见 [commands.txt](../artifacts/issue-38/commands.txt)。运行包 SHA-256：`02b5a36d77841d73dccf71072e617b530847e2ef0ae6cb5c6112887d852044f1`；最新录屏、对照复测和独立性能使用同一包。
+本次真实命令、退出码和输出路径见 [commands.txt](../artifacts/issue-38/commands.txt)。运行包 SHA-256：`3e8000326e0d4fd5bb87e5d25160be700460ded022c31500fedfa9528d6e785c`；最新录屏、对照复测和独立性能使用同一包。
 
-- 构建 `npm run build`、源几何/碎片 25/25（38.939 秒）、浏览器 8/8（53.803 秒）、内芯/输入/换色核/预设/配方状态 37/37（2.045 秒），均退出 0。见 [构建](../artifacts/issue-38/elevated-build.txt)、[几何](../artifacts/issue-38/elevated-geometry-tests.txt)、[浏览器](../artifacts/issue-38/elevated-browser-tests.txt)、[核回归](../artifacts/issue-38/elevated-core-regression.txt)。
+- 本次构建 `npm run build:orb`、浏览器 8/8（54.405 秒）、桌面/手机构图量测及约 90° 旋转走查，全部退出 0。新增球体占比（桌面 >53%、手机 >65%）与盘面占比（>92.5%）、真实盘长 >1.42、全景未裁切断言。见 [构建](../artifacts/issue-38/larger-layout-build.txt)、[浏览器](../artifacts/issue-38/larger-layout-browser-tests.txt)、[量测](../artifacts/issue-38/larger-layout-measurements.txt)、[旋转](../artifacts/issue-38/larger-layout-rotation.txt)。此前 cf10bbd 的几何25/25、核回归37/37为历史记录；本次没有修改形变或碎片算法，未重复运行这些纯几何专项。
 - 新增：桌面/手机视口薄蜡中心精确上移 0.7、裸芯中心保持、整球与整盘投影未裁切；全壳 180 片真实顶点到芯底间隙；第一次落稳输出与物理最终姿态一致；reset 后同 ID 新片不沿用旧支撑缓存。
 - 三姿态世界下落检查只取整片低于实际芯 AABB 且始终高于低位收盘面的自由窗口，明确排除贴芯避让和受控收盘侧移；侧移门槛仍为 0.08。落稳后转球误差 ≤2.39e-7。深按/恢复/拖动仍用真实面、边和侧壁穷尽距离检查。
-- 14 次正常速录屏几何扫描穿透违规 0；附着支撑最小 `0.0039999432`、实际芯面最小距离 `0.0036727308`、厚度最大误差 `2.334e-7`。这些是采样时点数据，不是连续时间无交叉的数学证明。
+- 14 次正常速录屏几何扫描穿透违规 0；附着支撑最小 `0.0039999432`、实际芯面最小距离 `0.0036213018`、厚度最大误差 `2.353e-7`。这些是采样时点数据，不是连续时间无交叉的数学证明。
 - 正常速度视频：[桌面昼夜](../artifacts/issue-38/orb-clay-desktop.webm)、[390×844 模拟手机昼夜](../artifacts/issue-38/orb-clay-mobile.webm)。含短按、0.5 秒起掉、继续深按、拖动、侧面、旋转后按压、新片落到已有堆上、导航、重开及切配置。模拟手机仍为触摸捏压/鼠标背景转球，保留触屏留白滚动。
-- 最终视频旋转后：桌面昼夜各 30 片、模拟手机昼夜各 33 片落稳；球底到物理支撑堆顶间隙约 `0.665–0.720`，全部盘内。整层 180 片另测真实外表面最高点，间隙约 `0.526`。辅助图：[桌面间距与堆积](../artifacts/issue-38/orb-clay-desktop-day-pile-added.png)、[模拟手机夜间](../artifacts/issue-38/orb-clay-mobile-night-pile-added.png)。
+- 最终视频旋转后：桌面昼夜各 30 片、模拟手机昼夜各 33 片落稳；球底到物理支撑堆顶间隙约 `0.627–0.754`，全部盘内。整层 180 片另测真实外表面最高点，间隙约 `0.526`。辅助图：[桌面间距与堆积](../artifacts/issue-38/orb-clay-desktop-day-pile-added.png)、[模拟手机夜间](../artifacts/issue-38/orb-clay-mobile-night-pile-added.png)。
 - Edge/Chromium `156.0.4314.42`，Windows 开发机，桌面 1280×900/触摸模拟 390×844，昼夜。无手机真机、Safari、低端 GPU 验证；其他质感/造型未启用薄蜡。原场景回归 22/22 为此前 c9039c0 的历史记录，全仓库 239/239 为此前 330500a 的历史记录，本次没有重跑全仓库。
 
-同场景性能对照：新的 `scripts/benchmark-thin-wax.cjs` 可重复测量已启动走查服务下的 4 秒真实触摸按压。优化前 c9039c0 的等价临时脚本记录 222 个间隔，中位 7.6ms、P95 75.3ms、最大 98.9ms、超过 33.34ms 共 36 个；优化后 549 个间隔，中位 6.7ms、P95 10.6ms、最大 22.1ms、超过 33.34ms 为 0。P95 降低约 86%。[优化前全部样本及独立 CPU 采样摘要](../artifacts/issue-38/elevated-performance-before.json)、[优化后全部样本](../artifacts/issue-38/elevated-performance-after.json)、[对照口径](../artifacts/issue-38/elevated-performance-comparison.json)。
+前一提交 cf10bbd 的碰撞优化性能对照（历史数据）：新的 `scripts/benchmark-thin-wax.cjs` 可重复测量已启动走查服务下的 4 秒真实触摸按压。优化前 c9039c0 的等价临时脚本记录 222 个间隔，中位 7.6ms、P95 75.3ms、最大 98.9ms、超过 33.34ms 共 36 个；优化后 549 个间隔，中位 6.7ms、P95 10.6ms、最大 22.1ms、超过 33.34ms 为 0。P95 降低约 86%。[优化前全部样本及独立 CPU 采样摘要](../artifacts/issue-38/elevated-performance-before.json)、[优化后全部样本](../artifacts/issue-38/elevated-performance-after.json)、[对照口径](../artifacts/issue-38/elevated-performance-comparison.json)。
 
-录屏后的另一轮独立测量：553 个样本，中位 6.7ms、P95 10.4ms、最大 14.6ms，最大计数跳变 1。所有浏览器/Node 测试均停止，无录屏或 CPU/GPU 探针，保留全部慢样本；这些是开发机渲染完成回调间隔，不转换为手机 FPS，不代表真机性能验收。
+当前放大构图录屏后的独立测量：570 个样本，中位 6.4ms、P95 10.2ms、最大 18.1ms，最大计数跳变 1。所有浏览器/Node 测试均停止，无录屏或 CPU/GPU 探针，保留全部慢样本；这些是开发机渲染完成回调间隔，不转换为手机 FPS，不代表真机性能验收。
 
 临时产物只放工作树 `.tmp/`，不提交。性能优化未减少真实碰撞采样、碎片总量、阴影或网格精度；首次落稳缓存问题已修复并由真实顶点与堆顶回归覆盖。旧 c9039c0 的录屏被新版替换，历史日志保留但不作为当前性能结果。视觉仍待用户查验。
 
@@ -94,4 +98,4 @@ CPU 采样与源码确认瓶颈是碰撞查询反复读取 5120 个芯三角面�
 
 明确基线 `origin/main 2440cdc`，分支 `codex/issue-38-thin-wax`，工作树 `D:/squishy-studio/.worktrees/issue-38-thin-wax`。[草稿 PR #39](https://github.com/sunnyyang0822-stack/squishy-studio/pull/39) 指向 main；仓库保持 Private，不改共享历史，不自动关闭 Issue #38。用户查验及必需检查通过前不合并。
 
-本次单独回滚：通过普通 PR revert `perf: elevate thin-wax orb and cache exact core collision queries` 对应提交，可恢复 c9039c0 的球高与查询实现。整体回滚则撤销本分支相对基线的薄蜡模块、场景/流程接入和构建产物，执行 `npm run build`；没有配方存储迁移，不回滚其他协作者成果。不要强推 main。当前外壳只针对黏土圆球；其他样式、其他内芯及中/厚蜡须另行验证后再启用。
+本次单独回滚：通过普通 PR revert `ui: enlarge thin-wax orb framing and lengthen tray` 对应提交，可恢复 cf10bbd 的构图并保留碰撞性能优化。整体回滚则撤销本分支相对基线的薄蜡模块、场景/流程接入和构建产物，执行 `npm run build`；没有配方存储迁移，不回滚其他协作者成果。不要强推 main。当前外壳只针对黏土圆球；其他样式、其他内芯及中/厚蜡须另行验证后再启用。

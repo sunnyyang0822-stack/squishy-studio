@@ -209,11 +209,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     function interruptRestore() { deformation.interruptRestore(); restorePose = undefined; }
     function resize(width, height) {
       current.width = width; current.height = height;
-      const halfHeight = shellVisible ? Math.max(2.1, 1.62 * height / width) : Math.max(isSurface ? 1.6 : 1.43, (isSurface ? 1.48 : 1.25) * height / width);
-      camera.lookAt(0, shellVisible ? .05 : -.02, 0);
+      const halfHeight = shellVisible ? Math.max(1.76, 1.5 * height / width) : Math.max(isSurface ? 1.6 : 1.43, (isSurface ? 1.48 : 1.25) * height / width);
+      camera.lookAt(0, -.02, 0);
       camera.top = halfHeight; camera.bottom = -halfHeight;
       camera.left = -halfHeight * width / height; camera.right = -camera.left;
       camera.updateProjectionMatrix();
+      // Bring the orb forward in the composition, then use the horizontal
+      // margins for a longer tray. Leave room for its ends on narrow screens.
+      debrisTray.scale.x = shellVisible ? Math.min(1.24, camera.right * .97 / 1.42) : 1;
       renderer.setSize(width, height, false);
       updateBounds();
       current.input.resize();
@@ -434,8 +437,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions),
         coreState: deformation.getState(), thinWax: wax?.getState(), geometry: measure ? wax?.getMetrics({ exhaustive }) : undefined,
         surface: surface ? wax?.getSurfaceSnapshot?.() : undefined,
-        debrisStage: { visible: debrisTray.visible, floorY: -1.35, radius: 1.35, matrixWorld: mesh.matrixWorld.toArray(),
-          projectedTray: [[-1.42, -1.35, 0], [1.42, -1.35, 0], [0, -1.35, 1.42], [0, -1.35, -1.42]].map(p => new THREE.Vector3(...p).project(camera).toArray()) },
+        debrisStage: { visible: debrisTray.visible, floorY: -1.35, radius: 1.35, trayHalfLength: 1.42 * debrisTray.scale.x, matrixWorld: mesh.matrixWorld.toArray(),
+          projectedTray: [[-1.42 * debrisTray.scale.x, -1.35, 0], [1.42 * debrisTray.scale.x, -1.35, 0], [0, -1.35, 1.42], [0, -1.35, -1.42]].map(p => new THREE.Vector3(...p).project(camera).toArray()) },
         resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries },
       });
       mount.thinWaxDiagnostics = current.diagnostics;

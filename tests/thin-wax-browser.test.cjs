@@ -71,6 +71,10 @@ test('thin-wax elevation separates the real core from the tray without moving th
       assert.equal(shell.debrisStage.floorY, -1.35);
       assert.ok(shell.debrisStage.projectedTray.every(p => Math.abs(p[0]) < 1 && Math.abs(p[1]) < 1));
       const canvas = await page.locator('.toy-mount canvas').boundingBox(), input = await page.locator('.orb-input').boundingBox();
+      const orbWidthFraction = input.width / canvas.width;
+      assert.ok(orbWidthFraction > (viewport.width > 600 ? .53 : .65), `The orb occupies the main view: ${orbWidthFraction}`);
+      assert.ok(shell.debrisStage.trayHalfLength > 1.42, 'The actual tray is longer than the original circular base');
+      assert.ok(shell.debrisStage.projectedTray[1][0] - shell.debrisStage.projectedTray[0][0] > 1.85, 'The elongated tray spans most of the stage width');
       assert.ok(input.x >= canvas.x - 1 && input.y >= canvas.y - 1 && input.x + input.width <= canvas.x + canvas.width + 1 && input.y + input.height <= canvas.y + canvas.height + 1, 'The entire projected orb remains in the render viewport');
       await page.locator('.step-back').click();
       const bare = await diagnostics(page); assert.equal(bare.enabled, false);
