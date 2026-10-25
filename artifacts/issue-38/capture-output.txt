@@ -1,2 +1,5 @@
 orb-clay-desktop: recorded
 orb-clay-mobile: recorded
+captureExitCode=0
+performanceExitCode=0
+standalonePerformanceExitCode=0

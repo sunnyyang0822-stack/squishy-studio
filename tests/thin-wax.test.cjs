@@ -14,7 +14,7 @@ async function fixture() {
   const deformation = getOrbFeel('clay').createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array);
   const baselinePositions = Float32Array.from(data.positions);
   const baseline = getOrbFeel('clay').createDeformation(baselinePositions, Float32Array.from(data.normals));
-  return { wax, geometry, deformation, baseline, baselinePositions, restPositions: Float32Array.from(data.positions), parameters: thinWaxParameters, advance(seconds) { now += seconds; return wax.step(seconds); }, setTime(value) { now = value; }, begin(point = [0, 0, .9]) { deformation.begin(point); baseline.begin(point); wax.begin(point); } };
+  return { THREE, wax, geometry, deformation, baseline, baselinePositions, restPositions: Float32Array.from(data.positions), parameters: thinWaxParameters, advance(seconds) { now += seconds; return wax.step(seconds); }, setTime(value) { now = value; }, begin(point = [0, 0, .9]) { deformation.begin(point); baseline.begin(point); wax.begin(point); } };
 }
 
 test('thin wax is a separate closed-volume shell with independently owned color and measured nonzero thickness', async () => {
@@ -46,8 +46,9 @@ test('actual continuous dwell exceeds 0.5 seconds; one brittle local wave retain
   assert.ok(afterImpulse.maxOutwardOffset < .04, 'Small clearance plus projected gravity, no outward ejection');
   f.advance(.30); assert.equal(f.wax.getState().detached, initial.detached, 'Held clock alone must not eject another plate');
   assert.ok(f.wax.getState().detached < f.wax.getMetrics().patches / 20, 'Local chips, not whole-shell explosion');
-  f.wax.end(); const count = f.wax.getState().detached; f.advance(5);
+  f.wax.end(); const count = f.wax.getState().detached; settle(f, 5);
   assert.equal(f.wax.getState().detached, count); assert.equal(f.wax.getState().living, 0);
+  assert.equal(f.wax.getState().settled, count); assert.equal(f.wax.getState().expired, 0);
   f.wax.dispose();
 });
 
@@ -67,6 +68,43 @@ test('released wax chips fall promptly under gravity instead of ejecting sideway
   const metrics = f.wax.getMetrics({ exhaustive: true });
   assert.equal(metrics.detachedViolations, 0); assert.equal(metrics.attachedViolations, 0);
   f.wax.dispose(); f.geometry.dispose();
+});
+
+test('actual detached world vertices fall down after toy rotation, then remain fixed on the floor while the toy turns', async t => {
+  for (const rotation of [[0, 0, 0], [0, 0, Math.PI / 2], [Math.PI / 2, .55, -.4]]) {
+    const f = await fixture(), matrix = new f.THREE.Matrix4().makeRotationFromEuler(new f.THREE.Euler(...rotation));
+    f.wax.setWorldMatrix(matrix); f.wax.begin([0, 0, .9]); f.advance(.501); f.wax.end();
+    const before = f.wax.getSurfaceSnapshot(), panel = before.panelIds[before.detached.findIndex(Boolean)];
+    f.advance(.12); const falling = f.wax.getSurfaceSnapshot();
+    let count = 0, downward = 0, lateral = 0; const unique = new Set();
+    for (let r = 0; r < before.layers.length; r++) if (before.panelIds[r] === panel && before.layers[r] === 0) {
+      const key = before.restSupportPositions.slice(r * 3, r * 3 + 3).join(','); if (unique.has(key)) continue; unique.add(key);
+      downward += before.worldPositions[r * 3 + 1] - falling.worldPositions[r * 3 + 1];
+      lateral += Math.hypot(falling.worldPositions[r * 3] - before.worldPositions[r * 3], falling.worldPositions[r * 3 + 2] - before.worldPositions[r * 3 + 2]); count++;
+    }
+    assert.ok(count > 20); assert.ok(downward / count > .02, `Contact-constrained world Y falling under rotation ${rotation}: ${downward / count}`);
+    // Rotation toward a flat landing posture can move individual corners;
+    // direction is checked with unique actual vertices above. Core collision
+    // correction may slow this contact phase; free-flight speed has its own
+    // strict kernel test instead of assuming an unimpeded ballistic path here.
+    assert.ok(lateral / count < .2);
+    t.diagnostic(JSON.stringify({ rotation, uniqueVertices: count, meanWorldYDrop: downward / count, meanCornerLateral: lateral / count }));
+    settle(f, 3); const landed = f.wax.getSurfaceSnapshot(), state = f.wax.getState();
+    assert.equal(state.living, 0); assert.equal(state.expired, 0); assert.equal(state.settled, state.detached);
+    const floor = f.wax.getMetrics().debris;
+    assert.ok(floor.minY >= floor.floorY - 1e-5, JSON.stringify(floor)); assert.ok(floor.maxRadius <= floor.radius + .02);
+    f.wax.setWorldMatrix(new f.THREE.Matrix4().makeRotationFromEuler(new f.THREE.Euler(-1.1, .8, 1.5))); f.advance(.05);
+    const turned = f.wax.getSurfaceSnapshot(); let maximumError = 0, settledSamples = 0;
+    for (let r = 0; r < landed.layers.length; r++) if (landed.settled[r]) {
+      for (let k = 0; k < 3; k++) maximumError = Math.max(maximumError, Math.abs(landed.worldPositions[r * 3 + k] - turned.worldPositions[r * 3 + k]));
+      settledSamples++;
+    }
+    assert.ok(settledSamples > 100); assert.ok(maximumError < 1e-6, `The floor pile cannot rotate with the toy: ${maximumError}`);
+    const amount = f.wax.getState().detached; settle(f, 5); assert.equal(f.wax.getState().detached, amount); assert.equal(f.wax.getState().settled, amount);
+    f.wax.reset(); const empty = f.wax.getMetrics().debris;
+    assert.equal(f.wax.getState().settled, 0); assert.equal(empty.moving, 0); assert.equal(empty.settled, 0); assert.equal(empty.gridCells, 0);
+    f.wax.dispose(); f.geometry.dispose();
+  }
 });
 
 test('actual clay dent and dragged deformation all receive local crack geometry before any chip can fall', async () => {
@@ -150,12 +188,13 @@ test('deep clay press and recovery keep original core behavior and measured shel
   f.wax.dispose();
 });
 
-test('bounded lifetime, unique chips, reduced motion and idempotent cleanup', async () => {
+test('bounded moving budget, persistent settled chips, reduced motion and idempotent cleanup', async () => {
   const f = await fixture(); f.wax.setReducedMotion(true); f.wax.setGravity([0, -1, 0]); f.wax.begin([0, 0, .9]);
   for (let i = 0; i < 60; i++) f.advance(.5);
   assert.ok(f.wax.getState().detached <= f.parameters.maxFragments);
   assert.ok(f.wax.getState().firstBurst >= 1 && f.wax.getState().firstBurst <= 3);
-  f.wax.end(); f.advance(4); assert.equal(f.wax.getState().living, 0);
+  f.wax.end(); settle(f, 4); assert.equal(f.wax.getState().living, 0);
+  assert.equal(f.wax.getState().settled, f.wax.getState().detached); assert.equal(f.wax.getState().expired, 0);
   let geometries = 0, materials = 0;
   f.wax.group.children[0].geometry.addEventListener('dispose', () => geometries++);
   f.wax.group.children[0].material.addEventListener('dispose', () => materials++);
@@ -177,6 +216,9 @@ function frames(f, count) {
     f.geometry.computeVertexNormals(); f.advance(1 / 60); f.wax.sync();
   }
 }
+function settle(f, seconds = 4) {
+  for (let remaining = seconds; remaining > 1e-9; remaining -= 1 / 30) f.advance(Math.min(remaining, 1 / 30));
+}
 function assertExhaustiveClearance(f, context) {
   const m = f.wax.getMetrics({ exhaustive: true });
   assert.equal(m.attachedViolations, 0, `${context}: ${JSON.stringify(m)}`);
@@ -189,8 +231,8 @@ function assertExhaustiveClearance(f, context) {
   return m;
 }
 
-for (const gravity of [[0, -1, 0], [1, 0, 0], [0, 0, 1]]) test(`broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity ${gravity}`, async () => {
-  const f = await fixture(); f.wax.setGravity(gravity);
+for (const rotation of [[0, 0, 0], [0, 0, Math.PI / 2], [Math.PI / 2, .55, -.4]]) test(`broken rims remain outside the live clay after world rotation ${rotation}`, async () => {
+  const f = await fixture(); f.wax.setWorldMatrix(new f.THREE.Matrix4().makeRotationFromEuler(new f.THREE.Euler(...rotation)));
   const center = frontContact(f, 0, 0), edge = frontContact(f, .18, .04);
   f.begin(center); frames(f, 165);
   assert.ok(f.wax.getState().detached >= 1 && f.wax.getState().detached <= f.parameters.maxLocalFragments); assertExhaustiveClearance(f, 'first deep crater');
@@ -213,6 +255,9 @@ for (const gravity of [[0, -1, 0], [1, 0, 0], [0, 0, 1]]) test(`broken rim repea
 
 test('live chips stay capped at 24 while continued deep pressure can strip each local cohort', async () => {
   const f = await fixture(), positions = f.geometry.attributes.position.array;
+  // A high source placement keeps the whole stress cohort airborne long
+  // enough to exercise the moving ceiling rather than relying on a TTL.
+  f.wax.setWorldMatrix(new f.THREE.Matrix4().makeTranslation(0, 100, 0));
   for (const contact of [[0, 0, .9], [0, 0, -.9], [.9, 0, 0]]) {
     f.wax.begin(contact); f.advance(.501);
     for (let i = 0; i < 6; i++) {
@@ -224,15 +269,15 @@ test('live chips stay capped at 24 while continued deep pressure can strip each 
     f.wax.end();
   }
   assert.equal(f.wax.getState().living, 24, 'Exercise the actual live-fragment ceiling');
-  f.advance(4); assert.equal(f.wax.getState().living, 0);
+  settle(f, 8); assert.equal(f.wax.getState().living, 0);
   const removed = f.wax.getState().detached;
   f.wax.begin([0, -.9, 0]); f.advance(.501); f.wax.end();
   assert.ok(f.wax.getState().detached > removed, 'Freed live capacity permits new shards without resurrecting old ones');
-  assert.equal(f.wax.getState().detached, f.wax.getState().living + f.wax.getState().expired);
+  assert.equal(f.wax.getState().detached, f.wax.getState().living + f.wax.getState().settled); assert.equal(f.wax.getState().expired, 0);
   f.wax.dispose(); f.geometry.dispose();
 });
 
-test('repeated local presses can strip the complete real shell once without duplicate cells or regrowth', async () => {
+test('repeated local presses can strip the complete real shell once without duplicate cells or regrowth', async t => {
   const f = await fixture(), initial = f.wax.getSurfaceSnapshot(), centers = new Map();
   for (let r = 0; r < initial.layers.length; r++) if (initial.layers[r] === 1) {
     const id = initial.panelIds[r], value = centers.get(id) || { sum: [0, 0, 0], count: 0 };
@@ -242,14 +287,25 @@ test('repeated local presses can strip the complete real shell once without dupl
   for (const value of centers.values()) {
     f.wax.begin(value.sum.map(x => x / value.count)); f.advance(.501); f.wax.end();
     const state = f.wax.getState(); assert.ok(state.living <= 24);
-    assert.equal(state.detached, state.living + state.expired);
+    assert.equal(state.detached, state.living + state.settled); assert.equal(state.expired, 0);
   }
   assert.equal(f.wax.getState().detached, centers.size, 'All 180 real patches can be stripped through local interaction');
-  f.advance(4); const removed = f.wax.getState().detached;
-  f.wax.begin([0, 0, .9]); f.advance(2); f.wax.end();
+  settle(f, 4); const removed = f.wax.getState().detached;
+  f.wax.begin([0, 0, .9]); settle(f, 2); f.wax.end();
   assert.equal(f.wax.getState().detached, removed); assert.equal(f.wax.getState().living, 0);
-  assert.equal(f.wax.getState().expired, removed);
-  const empty = f.wax.getSurfaceSnapshot(); assert.ok(empty.positions.every(value => value === 0), 'Removed coat stays absent');
+  assert.equal(f.wax.getState().expired, 0); assert.equal(f.wax.getState().settled, removed);
+  const pile = f.wax.getSurfaceSnapshot(); assert.ok(pile.positions.some(value => value !== 0), 'Stripped shell remains as real mesh pieces in the pile');
+  assert.ok(pile.settled.every(Boolean));
+  const finalMetrics = f.wax.getMetrics({ exhaustive: true }), debris = finalMetrics.debris;
+  assert.equal(debris.moving, 0); assert.equal(debris.settled, centers.size);
+  assert.ok(debris.minY >= debris.floorY - 1e-5 && debris.maxRadius <= debris.radius + .02, JSON.stringify(debris));
+  assert.equal(finalMetrics.detachedViolations, 0, 'The complete persistent pile must remain outside the core');
+  let physicalMaxRadius = 0, physicalSamples = 0;
+  for (let r = 0; r < pile.settled.length; r++) if (pile.settled[r]) {
+    physicalMaxRadius = Math.max(physicalMaxRadius, Math.hypot(pile.worldPositions[r * 3], pile.worldPositions[r * 3 + 2])); physicalSamples++;
+  }
+  assert.ok(physicalMaxRadius <= debris.radius + 1e-5, `Every actual inner, outer and wall vertex stays inside the tray: ${physicalMaxRadius}`);
+  t.diagnostic(JSON.stringify({ completeShellPanels: centers.size, debris, physicalMaxRadius, physicalSamples }));
   f.wax.reset(); assert.equal(f.wax.getState().detached, 0); assert.equal(f.wax.getState().cracked, 0);
   f.wax.dispose(); f.geometry.dispose();
 });

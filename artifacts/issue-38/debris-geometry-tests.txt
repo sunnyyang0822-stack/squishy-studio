@@ -1,0 +1,36 @@
+✔ released bodies fall faster in world Y for three differently rotated source surfaces (29.2248ms)
+✔ floor contact preserves real bodies past the former lifetime and settled vertices remain exact (3.3189ms)
+✔ a body created at the end of a coarse frame cannot integrate motion before its birth (0.3424ms)
+✔ successive real polygon bodies accumulate above earlier surfaces and reset clears the support field (6.3649ms)
+✔ thin wax is a separate closed-volume shell with independently owned color and measured nonzero thickness (539.2492ms)
+✔ actual continuous dwell exceeds 0.5 seconds; one brittle local wave retains most plates and releases only a few small chips (571.2095ms)
+✔ released wax chips fall promptly under gravity instead of ejecting sideways (946.3499ms)
+✔ actual detached world vertices fall down after toy rotation, then remain fixed on the floor while the toy turns (2592.0331ms)
+ℹ {"rotation":[0,0,0],"uniqueVertices":42,"meanWorldYDrop":0.12298324848970446,"meanCornerLateral":0.06619204014601919}
+ℹ {"rotation":[0,0,1.5707963267948966],"uniqueVertices":42,"meanWorldYDrop":0.07350189309744608,"meanCornerLateral":0.10245171459415155}
+ℹ {"rotation":[1.5707963267948966,0.55,-0.4],"uniqueVertices":42,"meanWorldYDrop":0.13551533506030128,"meanCornerLateral":0.05890962007662631}
+✔ actual clay dent and dragged deformation all receive local crack geometry before any chip can fall (1354.822ms)
+✔ additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone (985.5309ms)
+✔ short taps, cancellation, hit loss and sliding cannot borrow previous dwell time (153.652ms)
+✔ deep clay press and recovery keep original core behavior and measured shell clearance (12061.7847ms)
+✔ bounded moving budget, persistent settled chips, reduced motion and idempotent cleanup (214.0561ms)
+✔ broken rims remain outside the live clay after world rotation 0,0,0 (19180.5672ms)
+✔ broken rims remain outside the live clay after world rotation 0,0,1.5707963267948966 (19624.9762ms)
+✔ broken rims remain outside the live clay after world rotation 1.5707963267948966,0.55,-0.4 (16496.3809ms)
+✔ live chips stay capped at 24 while continued deep pressure can strip each local cohort (5877.8094ms)
+✔ repeated local presses can strip the complete real shell once without duplicate cells or regrowth (7117.5424ms)
+ℹ {"completeShellPanels":180,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":180,"minY":-1.348,"maxRadius":1.295915585738315,"pileTop":-0.6920854949460187,"gridCells":2194}}
+✔ one local press leaves remote real render positions, normals and colors exactly unchanged (5158.2402ms)
+✔ creating a shell over an old bare-core dent retains original contact coordinates (1128.7081ms)
+✔ detached curved plates retain frozen edge lengths while the original core continues deforming (7957.7422ms)
+✔ irregular area distribution, rapid connected cracking and strain-limited saturation replace regular scales and timed emptying (479.1186ms)
+✔ random Voronoi cutting covers the complete real orb GLB surface with no intact-shell holes (223.9864ms)
+✔ retained shells open connected partial boundary chains while unbroken boundary bridges remain geometrically closed (1144.3756ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 103911.2033

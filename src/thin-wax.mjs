@@ -1,7 +1,7 @@
 import { createVoronoiWax } from './thin-wax-panels.mjs';
 import * as THREE from 'three';
 
-export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwell: .5, localRadius: .16, chainDuration: .063, visibleDeformation: .004, extraFractureDelay: .06, extraFractureStrain: .015, maxLocalFragments: 180, maxFragments: 180, maxLivingFragments: 24, lifetime: 3 });
+export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwell: .5, localRadius: .16, chainDuration: .063, visibleDeformation: .004, extraFractureDelay: .06, extraFractureStrain: .015, maxLocalFragments: 180, maxFragments: 180, maxLivingFragments: 24 });
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.
@@ -37,19 +37,19 @@ function collisionTree(geometry) {
     visit(root); return nearest;
   }
   const triangle = new THREE.Triangle(), closest = new THREE.Vector3(), faceNormal = new THREE.Vector3();
-  function signedDistance(point) {
+  function signedDistance(point, outwardNormal) {
     let distance = Infinity, signed = Infinity;
     function visit(node) {
       if (node.box.distanceToPoint(point) > distance) return;
       if (node.ids) for (const i of node.ids) {
         triangle.set(a.fromBufferAttribute(p, index[i]), b.fromBufferAttribute(p, index[i + 1]), c.fromBufferAttribute(p, index[i + 2]));
         triangle.closestPointToPoint(point, closest); const d = closest.distanceTo(point);
-        if (d < distance) { distance = d; triangle.getNormal(faceNormal); signed = (point.x - closest.x) * faceNormal.x + (point.y - closest.y) * faceNormal.y + (point.z - closest.z) * faceNormal.z < 0 ? -d : d; }
+        if (d < distance) { distance = d; triangle.getNormal(faceNormal); outwardNormal?.copy(faceNormal); signed = (point.x - closest.x) * faceNormal.x + (point.y - closest.y) * faceNormal.y + (point.z - closest.z) * faceNormal.z < 0 ? -d : d; }
       } else { visit(node.left); visit(node.right); }
     }
     visit(root); return signed;
   }
-  return { refit, sweep, signedDistance };
+  return { refit, sweep, signedDistance, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
 export function createThinWax(options = {}) { return createVoronoiWax(options, thinWaxParameters, collisionTree); }

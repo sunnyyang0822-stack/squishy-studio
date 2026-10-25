@@ -68,7 +68,6 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     }
     const geometry = mesh.geometry;
     let wax, recipeKey, activeConfig, shellVisible = false;
-    const gravity = new THREE.Vector3();
     function disposeWax() { wax?.dispose(); wax = undefined; }
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
     const orbPressGeometry = feelId === 'slow-rebound' && !isSurface
@@ -142,6 +141,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = restingFloor;
     scene.add(floor);
+    const debrisTray = new THREE.Mesh(new THREE.CylinderGeometry(1.42, 1.42, .045, 64), new THREE.MeshStandardMaterial({ color: 0xf2e6de, roughness: .96, metalness: 0 }));
+    debrisTray.name = 'Thin_Wax_Collection_Tray'; debrisTray.position.y = -1.35 - .0225;
+    debrisTray.receiveShadow = true; debrisTray.visible = false; scene.add(debrisTray);
 
     const camera = new THREE.OrthographicCamera(-2, 2, 1.6, -1.6, .1, 30);
     camera.position.set(...style.camera);
@@ -207,7 +209,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     function interruptRestore() { deformation.interruptRestore(); restorePose = undefined; }
     function resize(width, height) {
       current.width = width; current.height = height;
-      const halfHeight = Math.max(isSurface ? 1.6 : 1.43, (isSurface ? 1.48 : 1.25) * height / width);
+      const halfHeight = shellVisible ? Math.max(1.8, 1.62 * height / width) : Math.max(isSurface ? 1.6 : 1.43, (isSurface ? 1.48 : 1.25) * height / width);
+      camera.lookAt(0, shellVisible ? -.25 : -.02, 0);
       camera.top = halfHeight; camera.bottom = -halfHeight;
       camera.left = -halfHeight * width / height; camera.right = -camera.left;
       camera.updateProjectionMatrix();
@@ -315,8 +318,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       }
       if (wax && shellVisible) {
         pivot.updateMatrixWorld(true);
-        gravity.set(0, -1, 0).transformDirection(mesh.matrixWorld.clone().invert());
-        wax.setGravity?.(gravity.toArray());
+        wax.setWorldMatrix(mesh.matrixWorld);
         const shellStep = wax.step(dt);
         if (step.changed && !shellStep.changed) wax.sync();
         needsFrame ||= shellStep.needsFrame;
@@ -360,6 +362,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     const turn = new THREE.Quaternion(), worldPoint = new THREE.Vector3();
     current.rotation = bindOrbRotation({ isSqueezing: current.input.isActive, rotate(dx, dy) {
       interruptRestore();
+      up.set(0, 1, 0).applyQuaternion(camera.quaternion); right.set(1, 0, 0).applyQuaternion(camera.quaternion);
       pivot.quaternion.premultiply(turn.setFromAxisAngle(up, dx));
       pivot.quaternion.premultiply(turn.setFromAxisAngle(right, dy));
       updateBounds();
@@ -369,7 +372,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         worldPoint.fromBufferAttribute(positions, i).applyMatrix4(mesh.matrixWorld);
         lowest = Math.min(lowest, worldPoint.y);
       }
-      floor.position.y = lowest - .003;
+      if (!shellVisible) floor.position.y = lowest - .003;
       invalidate();
     } });
     current.selectColor = (id, { restore = false } = {}) => {
@@ -408,8 +411,13 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
         wax = createThinWax({ geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches });
         mesh.add(wax.group);
+        pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }
       if (wax) { wax.group.visible = shellVisible; if (shellVisible) wax.sync(); }
+      debrisTray.visible = shellVisible; floor.visible = !shellVisible;
+      debrisTray.material.color.set(daylight ? 0xf2e6de : 0x514754);
+      Object.assign(key.shadow.camera, shellVisible ? { left: -2.4, right: 2.4, top: 2.4, bottom: -2.4 } : { left: -1.65, right: 1.65, top: 1.65, bottom: -1.65 }); key.shadow.camera.updateProjectionMatrix();
+      if (current.width && current.height) resize(current.width, current.height);
       const shadowsChanged = renderer.shadowMap.enabled !== shellVisible;
       renderer.shadowMap.enabled = shellVisible;
       key.castShadow = shellVisible;
@@ -424,6 +432,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions),
         coreState: deformation.getState(), thinWax: wax?.getState(), geometry: measure ? wax?.getMetrics({ exhaustive }) : undefined,
         surface: surface ? wax?.getSurfaceSnapshot?.() : undefined,
+        debrisStage: { visible: debrisTray.visible, floorY: -1.35, radius: 1.35, matrixWorld: mesh.matrixWorld.toArray(),
+          projectedTray: [[-1.42, -1.35, 0], [1.42, -1.35, 0], [0, -1.35, 1.42], [0, -1.35, -1.42]].map(p => new THREE.Vector3(...p).project(camera).toArray()) },
         resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries },
       });
       mount.thinWaxDiagnostics = current.diagnostics;
@@ -437,6 +447,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     current.resize.observe(mount);
     current.theme = new MutationObserver(() => {
       daylight = document.documentElement.dataset.theme !== 'night';
+      debrisTray.material.color.set(daylight ? 0xf2e6de : 0x514754);
       colorLightingDirty = true; invalidate();
     });
     current.theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

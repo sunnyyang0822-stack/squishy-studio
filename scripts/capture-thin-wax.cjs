@@ -13,7 +13,7 @@ const diag = (page, options = { measure: false }) => page.locator('.toy-mount').
 function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let depth = 0; for (let i = 0; i < corePositions.length; i += 3) depth = Math.max(depth, Math.hypot(...[0, 1, 2].map(k => corePositions[i + k] - coreRestPositions[i + k]))); return { ...rest, coreMaximumDisplacement: depth }; }
 (async () => {
   fs.mkdirSync(folder, { recursive: true }); fs.mkdirSync(temporary, { recursive: true });
-  const report = performanceOnly ? JSON.parse(fs.readFileSync(`${folder}/validation.json`, 'utf8')) : { recordedAt: new Date().toISOString(), visualAcceptance: 'pending user review; numeric checks are insufficient for visual acceptance', speed: 'normal wall time; no accelerated clocks', physicalPhone: false, mobile: 'Chromium 390×844 CDP touch emulation on this desktop', bundleSha256: digest('assets/orb-preview.js'), cases: [], errors: [], exitCode: 1 };
+  const report = performanceOnly ? JSON.parse(fs.readFileSync(`${folder}/validation.json`, 'utf8')) : { recordedAt: new Date().toISOString(), visualAcceptance: 'pending user review; numeric checks are insufficient for visual acceptance', speed: 'normal wall time; no accelerated clocks', physicalPhone: false, mobile: 'Chromium 390×844 mobile viewport: CDP touch pressure with existing mouse-only background rotation; touch background scrolling remains native', bundleSha256: digest('assets/orb-preview.js'), cases: [], errors: [], exitCode: 1 };
   assert.equal(report.bundleSha256, digest('assets/orb-preview.js'), 'Performance and visual evidence must use the same bundle');
   const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: port } }); let browser;
   try {
@@ -28,19 +28,25 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
       if (!squishyStyles[style].supportedFeels.includes(feel)) continue;
       const name = `${style}-${material}-${touch ? 'mobile' : 'desktop'}`, viewport = touch ? { width: 390, height: 844 } : { width: 1280, height: 900 };
       const context = await browser.newContext({ viewport, hasTouch: touch, isMobile: touch, recordVideo: { dir: temporary, size: viewport } });
-      const page = await context.newPage(), video = page.video(), item = { name, style, feel, modelSha256: digest(`assets/models/squishy-${style}.glb`), viewport, measurements: [] }; report.cases.push(item);
+      const page = await context.newPage(), video = page.video(), item = { name, style, feel, input: { pressure: touch ? 'CDP touch emulation' : 'mouse', rotation: 'existing mouse-only background drag', touchRotationSupported: false }, modelSha256: digest(`assets/models/squishy-${style}.glb`), viewport, measurements: [] }; report.cases.push(item);
       page.on('pageerror', e => report.errors.push({ name, error: e.message }));
       try {
         await installStyleProbe(page, squishyStyles[style]);
         await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${material}&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell`); await ready(page);
         await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.().enabled);
         await page.evaluate(() => { const el = document.createElement('div'); el.id = 'wax-capture-label'; el.style.cssText = 'position:fixed;top:90px;left:12px;z-index:1000;background:#fffE;color:#412f46;padding:8px;font:13px sans-serif;pointer-events:none'; document.body.append(el); });
-        const label = text => page.locator('#wax-capture-label').evaluate((el, text) => el.textContent = text + ' · 正常速度', text);
+        const label = text => page.locator('#wax-capture-label').evaluate((el, text) => el.textContent = text + ' · 正常速度', text + (touch ? ' · 模拟手机视口：触摸捏压/鼠标转球' : ''));
         const client = touch ? await context.newCDPSession(page) : null;
         const hit = await projectedSurfaceContact(page, style === 'donut' ? .72 : style === 'paw' ? -.24 : 0, style === 'paw' ? -.46 : .03);
         async function send(type, p = hit) {
           if (touch) await client.send('Input.dispatchTouchEvent', { type: { down: 'touchStart', move: 'touchMove', up: 'touchEnd' }[type], touchPoints: type === 'up' ? [] : [{ x: p.x, y: p.y, id: 0 }] });
           else if (type === 'down') { await page.mouse.move(p.x, p.y); await page.mouse.down(); } else if (type === 'move') await page.mouse.move(p.x, p.y); else await page.mouse.up();
+        }
+        async function turn(dx, dy) {
+          // The product deliberately preserves native touch scrolling in the
+          // background. Mobile recordings label this mouse-assisted rotation;
+          // all pressure and squeezing above still use native CDP touch input.
+          return rotate(page, dx, dy);
         }
         async function measure(stage, { geometry = false } = {}) {
           const d = brief(await diag(page, { measure: geometry, exhaustive: geometry }));
@@ -50,6 +56,7 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
         for (const theme of ['day', 'night']) {
           await page.getByRole('button', { name: '重新开始', exact: true }).click();
           await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().thinWax.detached === 0);
+          await page.waitForTimeout(750);
           await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme); await label(`${theme} / ${style} / ${feel}：短按裂缝`);
           await page.screenshot({ path: `${folder}/${name}-${theme}-intact.png` });
           await send('down'); await page.waitForTimeout(260); await send('up'); await measure(`${theme}-short`); await page.waitForTimeout(250);
@@ -85,6 +92,36 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           for (let i = 1; i <= 12; i++) { await send('move', { x: hit.x + i * 2, y: hit.y - i }); await page.waitForTimeout(35); }
           await measure(`${theme}-drag`); await send('up'); await page.waitForTimeout(700); await measure(`${theme}-drag-geometry`, { geometry: true });
           if (!touch) { await label('侧面旋转检查断面与内芯'); await rotate(page, 48, 8); await page.screenshot({ path: `${folder}/${name}-${theme}-side.png` }); await rotate(page, -48, -8); }
+          await label('碎片更快向世界下方落下，留在下方堆叠；转球不带动落片');
+          await page.waitForFunction(() => { const s = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax; return s.living === 0 && s.settled > 0; }, null, { timeout: 8000 });
+          await page.locator('.toy-mount').evaluate(el => {
+            const d = el.thinWaxDiagnostics({ measure: false, surface: true });
+            window.waxCapturePile = { positions: d.surface.worldPositions, settled: d.surface.settled, amount: d.thinWax.settled, matrix: d.debrisStage.matrixWorld };
+          });
+          await page.screenshot({ path: `${folder}/${name}-${theme}-pile.png` });
+          await turn(55, -28); await page.waitForTimeout(1000);
+          const pile = await page.locator('.toy-mount').evaluate(el => {
+            const before = window.waxCapturePile, d = el.thinWaxDiagnostics({ measure: false, surface: true }); let error = 0, samples = 0, matrixChange = 0;
+            for (let r = 0; r < before.settled.length; r++) if (before.settled[r]) { samples++; for (let k = 0; k < 3; k++) error = Math.max(error, Math.abs(before.positions[r * 3 + k] - d.surface.worldPositions[r * 3 + k])); }
+            for (let k = 0; k < before.matrix.length; k++) matrixChange = Math.max(matrixChange, Math.abs(before.matrix[k] - d.debrisStage.matrixWorld[k]));
+            return { samples, worldVertexError: error, matrixChange, before: before.amount, state: d.thinWax, stage: d.debrisStage };
+          });
+          assert.ok(pile.samples > 100 && pile.matrixChange > .01); assert.ok(pile.worldVertexError < 1e-6, JSON.stringify(pile));
+          assert.equal(pile.state.settled, pile.before); assert.equal(pile.state.expired, 0); assert.equal(pile.state.detached, pile.state.living + pile.state.settled);
+          assert.ok(pile.stage.projectedTray.every(p => Math.abs(p[0]) < 1.02 && Math.abs(p[1]) < 1.02), 'Collection tray is visible in the actual viewport');
+          item.measurements.push({ ...pile, debrisStage: pile.stage, stage: `${theme}-persistent-world-pile` });
+          await page.screenshot({ path: `${folder}/${name}-${theme}-pile-turned.png` });
+          await label('转球后继续按：新落片仍向世界下方掉落，落到已有堆上');
+          await turn(35, -15);
+          const inputBox = await page.locator('.orb-input').boundingBox(), newHit = { x: inputBox.x + inputBox.width / 2, y: inputBox.y + inputBox.height / 2 };
+          await send('down', newHit); await page.waitForTimeout(1000); await send('up');
+          await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax.living === 0, null, { timeout: 8000 });
+          const accumulated = await measure(`${theme}-rotated-new-fall`, { geometry: true });
+          assert.ok(accumulated.thinWax.settled > pile.before, 'A fresh rotated contact adds real new pieces to the existing pile');
+          assert.equal(accumulated.thinWax.detached, accumulated.thinWax.settled); assert.equal(accumulated.thinWax.expired, 0);
+          assert.ok(accumulated.geometry.debris.minY >= accumulated.geometry.debris.floorY - 1e-5, 'Every accumulated piece stays above the real collection floor');
+          assert.ok(accumulated.geometry.debris.maxRadius <= accumulated.geometry.debris.radius + 1e-5, 'The full accumulated pile remains inside the tray after rotated re-pressing: ' + JSON.stringify(accumulated.geometry.debris));
+          await page.screenshot({ path: `${folder}/${name}-${theme}-pile-added.png` });
         }
         await label('同配方进入最终试捏，再返回：破损保留');
         const preserved = (await diag(page)).thinWax.detached;
@@ -94,7 +131,7 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
         await measure('workflow-return');
         await label('重新开始：清空压痕、裂纹和碎片');
         await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
-        const restarted = await measure('restart', { geometry: true }); assert.equal(restarted.thinWax.detached, 0);
+        const restarted = await measure('restart', { geometry: true }); assert.equal(restarted.thinWax.detached, 0); assert.equal(restarted.thinWax.settled, 0); assert.equal(restarted.geometry.debris.gridCells, 0);
         await page.screenshot({ path: `${folder}/${name}-restarted.png` });
         await label('切换厚度：中厚保持原占位；重新选薄创建新壳');
         if (await page.locator('[data-category=waxThickness]').isVisible()) await page.locator('[data-category=waxThickness]').click();

@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
-const { installStyleProbe, ready, projectedSurfaceContact } = require('./helpers/squishy-browser.cjs');
+const { installStyleProbe, ready, projectedSurfaceContact, rotate } = require('./helpers/squishy-browser.cjs');
 const port = process.env.THIN_WAX_TEST_PORT || '4228', base = `http://127.0.0.1:${port}`;
 let server, browser;
 before(async () => {
@@ -94,8 +94,8 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
     await page.mouse.up(); const stopped = await diagnostics(page); await page.waitForTimeout(1200);
     const released = await diagnostics(page, { measure: true, exhaustive: true }); assert.equal(released.thinWax.detached, stopped.thinWax.detached); geometryOK(released);
     await page.waitForTimeout(3200);
-    const cleaned = await diagnostics(page); assert.equal(cleaned.thinWax.living, 0); assert.equal(cleaned.thinWax.expired, cleaned.thinWax.detached); assert.equal(cleaned.thinWax.detached, released.thinWax.detached);
-    assert.ok(cleaned.resources.geometries <= initial.resources.geometries, 'Expired chips do not allocate accumulating GPU geometries');
+    const cleaned = await diagnostics(page); assert.equal(cleaned.thinWax.living, 0); assert.equal(cleaned.thinWax.expired, 0); assert.equal(cleaned.thinWax.settled, cleaned.thinWax.detached); assert.equal(cleaned.thinWax.detached, released.thinWax.detached);
+    assert.ok(cleaned.resources.geometries <= initial.resources.geometries, 'Settled chips remain in the shared bounded geometry');
     assert.ok(await page.evaluate(() => window.styleProbe.draws > 0 && window.styleProbe.uploads > 1), 'Actual GPU mesh uploads and draw calls occurred');
     const gpuError = await page.evaluate(() => {
       const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }), uploaded = window.styleProbe.positions;
@@ -104,6 +104,62 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
     });
     assert.ok(gpuError <= 1e-6, `Measured live core matches the actual GPU position upload: ${gpuError}`);
     t.diagnostic(JSON.stringify({ material, shortDepth: depth(short), timed, geometry: released.geometry }));
+  } finally { await page.close(); }
+});
+test('rotated real interaction falls in world Y, lands visibly, and its persistent pile never turns with the toy', { timeout: 90000 }, async t => {
+  const page = await open(), measurements = [];
+  try {
+    for (const pose of [[0, 0], [70, 40], [-65, -45]]) {
+      await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
+      if (pose.some(Boolean)) await rotate(page, ...pose);
+      await press(page);
+      await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax.detached > 0);
+      const falling = await page.locator('.toy-mount').evaluate(async el => {
+        const first = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
+        const index = first.detached.findIndex((v, i) => v && !first.settled[i]); if (index < 0) throw Error('No airborne shard to measure');
+        const id = first.panelIds[index];
+        function center(surface) {
+          const result = [0, 0, 0], unique = new Set(); let count = 0;
+          for (let i = 0; i < surface.panelIds.length; i++) if (surface.panelIds[i] === id && surface.layers[i] === 0) {
+            const key = surface.restSupportPositions.slice(i * 3, i * 3 + 3).join(','); if (unique.has(key)) continue; unique.add(key);
+            count++; for (let k = 0; k < 3; k++) result[k] += surface.worldPositions[i * 3 + k];
+          }
+          return { center: result.map(v => v / count), count };
+        }
+        const before = center(first), start = performance.now();
+        await new Promise(resolve => setTimeout(resolve, 140));
+        const after = center(el.thinWaxDiagnostics({ measure: false, surface: true }).surface);
+        return { panel: id, vertices: before.count, elapsed: performance.now() - start, down: before.center[1] - after.center[1], lateral: Math.hypot(after.center[0] - before.center[0], after.center[2] - before.center[2]) };
+      });
+      await page.mouse.up();
+      assert.ok(falling.vertices > 20 && falling.down > .02, JSON.stringify({ pose, ...falling }));
+      assert.ok(falling.lateral < .08, 'Toy orientation cannot turn gravity sideways: ' + JSON.stringify({ pose, ...falling }));
+      await page.waitForFunction(() => { const s = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax; return s.living === 0 && s.settled > 0; }, null, { timeout: 6000 });
+      const landed = await page.locator('.toy-mount').evaluate(el => {
+        const d = el.thinWaxDiagnostics({ measure: true, exhaustive: true, surface: true });
+        window.worldPileBaseline = { positions: d.surface.worldPositions, settled: d.surface.settled, matrix: d.debrisStage.matrixWorld, amount: d.thinWax.settled };
+        return { geometry: d.geometry, state: d.thinWax, stage: d.debrisStage };
+      });
+      geometryOK(landed);
+      assert.ok(landed.geometry.debris.minY >= landed.stage.floorY - 1e-5, JSON.stringify(landed.geometry.debris));
+      assert.ok(landed.geometry.debris.maxRadius <= landed.stage.radius + .02);
+      assert.equal(landed.state.expired, 0); assert.equal(landed.state.detached, landed.state.settled);
+      assert.equal(landed.stage.visible, true);
+      assert.ok(landed.stage.projectedTray.every(p => Math.abs(p[0]) < 1.02 && Math.abs(p[1]) < 1.02), 'The tray must fit the actual camera viewport');
+      await rotate(page, 55, -28); await page.waitForTimeout(1600);
+      const stationary = await page.locator('.toy-mount').evaluate(el => {
+        const before = window.worldPileBaseline, d = el.thinWaxDiagnostics({ measure: false, surface: true }); let worldError = 0, samples = 0, matrixChange = 0;
+        for (let i = 0; i < before.settled.length; i++) if (before.settled[i]) { samples++; for (let k = 0; k < 3; k++) worldError = Math.max(worldError, Math.abs(before.positions[i * 3 + k] - d.surface.worldPositions[i * 3 + k])); }
+        for (let i = 0; i < before.matrix.length; i++) matrixChange = Math.max(matrixChange, Math.abs(before.matrix[i] - d.debrisStage.matrixWorld[i]));
+        return { worldError, samples, matrixChange, before: before.amount, after: d.thinWax.settled, detached: d.thinWax.detached, expired: d.thinWax.expired };
+      });
+      assert.ok(stationary.samples > 100 && stationary.matrixChange > .01); assert.ok(stationary.worldError < 1e-6, JSON.stringify(stationary));
+      assert.equal(stationary.before, stationary.after); assert.equal(stationary.detached, stationary.after); assert.equal(stationary.expired, 0);
+      measurements.push({ pose, falling, debris: landed.geometry.debris, stationary });
+    }
+    await page.getByRole('button', { name: '重新开始', exact: true }).click();
+    const reset = await diagnostics(page, { measure: true }); assert.equal(reset.thinWax.settled, 0); assert.equal(reset.thinWax.detached, 0); assert.equal(reset.geometry.debris.gridCells, 0);
+    t.diagnostic(JSON.stringify(measurements));
   } finally { await page.close(); }
 });
 test('detached polygon keeps its actual GPU vertex distances while the live core keeps changing', { timeout: 60000 }, async t => {
