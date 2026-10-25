@@ -123,7 +123,8 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
     assert.equal(await page.locator('.workflow-progress li[aria-current=step]').getAttribute('data-step'), step);
   }
   await page.waitForSelector('.step-panel[data-step=core]'); await ready(page);
-  assert.equal(await page.locator('[name=styleId]').inputValue(), id, 'Returning to edit retains style');
+  assert.equal(new URL(page.url()).searchParams.get('style'), id, 'Returning to edit retains style in the URL');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id, 'Returning to edit retains the rendered style');
   await page.reload(); await ready(page); assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id, 'Refresh restores style from URL');
   await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pagehide')));
   await page.waitForFunction(() => window.styleProbe.contexts.every(gl => gl.isContextLost())); assert.equal(await page.locator('.toy-mount canvas').count(), 0);
@@ -137,14 +138,20 @@ test('新增模型加载失败可重试，快速样式切换只提交最后选�
   await page.route(`**${style.modelUrl}`, route => route.fulfill({ contentType: 'text/html', body: '<html>not a model</html>' }));
   await page.goto(`${base}/squishy/cloud/?style=donut`); await page.waitForSelector('[data-state=error]');
   await page.unroute(`**${style.modelUrl}`); await page.locator('.retry-button').click(); await page.waitForSelector('[data-state=ready]');
-  const inputs = page.locator('[name=styleId]');
-  assert.ok(await inputs.locator('option').count() >= 8, 'All styles available in production UI');
+  assert.equal(await page.locator('[name=styleId]').count(), 0, 'Style selector has been removed');
   await page.route(`**${getSquishyStyle('cloud').modelUrl}`, async route => {
     await new Promise(resolve => setTimeout(resolve, 500));
     try { await route.continue(); } catch { /* Aborted old selection has no live route. */ }
   });
-  await inputs.selectOption('cloud');
-  await inputs.selectOption('star');
+  // Real same-document back/forward navigation still exercises the current
+  // controller's latest-request guard after removing the style dropdown.
+  await page.evaluate(() => {
+    history.pushState(null, '', '?style=cloud');
+    history.pushState(null, '', '?style=star');
+  });
+  const cloudRequest = page.waitForRequest(request => request.url().endsWith('/squishy-cloud.glb'));
+  await page.goBack(); await cloudRequest;
+  await page.goForward();
   await page.waitForFunction(() => document.querySelector('.toy-mount').dataset.style === 'star' && document.querySelector('.toy-stage').dataset.state === 'ready');
   await page.waitForTimeout(700); assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), 'star');
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);

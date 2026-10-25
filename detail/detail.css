@@ -15,12 +15,12 @@
 .detail-page button { font: inherit; color: inherit; cursor: pointer; }
 .detail-page a { color: inherit; text-decoration: none; }
 .detail-page :is(button,a,input):focus-visible { outline: 3px solid #08a7bb; outline-offset: 3px; }
-.detail-topbar { flex: 0 0 auto; width: min(1480px,100%); margin: 0 auto; padding: max(16px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) 0 max(24px,env(safe-area-inset-left)); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-.detail-back, .detail-brand { min-height: 44px; display: inline-flex; align-items: center; }
+.detail-topbar { flex: 0 0 auto; width: min(1480px,100%); margin: 0 auto; padding: max(16px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) 0 max(24px,env(safe-area-inset-left)); display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 32px; }
+.detail-back, .detail-brand { min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; }
 .detail-back { gap: 10px; font-size: 14px; }
 .detail-back span { font-size: 24px; }
 .detail-brand { font-family: Fredoka,sans-serif; font-size: 20px; }
-.workflow-progress { flex: 0 0 auto; width: min(1480px,100%); margin: 0 auto; padding: 6px 24px; }
+.workflow-progress { width: 100%; max-width: 900px; min-width: 0; margin: 0 auto; padding: 0; }
 .workflow-progress ol { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 0; list-style: none; padding: 0; margin: 0; }
 .workflow-progress li { min-width: 0; text-align: center; }
 .workflow-progress li + li { margin-left: -5px; }
@@ -88,9 +88,10 @@
 }
 @media (hover:hover) and (pointer:fine) { .detail-back:hover { color: var(--detail-accent); } .text-choice:hover .text-face, .color-choice:hover .color-face, .retry-button:hover { border-color: var(--detail-accent); } }
 @media (max-width: 760px) {
-  .detail-topbar { padding: max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left)); }
+  .detail-topbar { padding: max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left)); gap: 4px 16px; }
+  .detail-brand { grid-column: 3; grid-row: 1; }
   .detail-brand { font-size: 16px; }
-  .workflow-progress { padding: 4px 16px; }
+  .workflow-progress { grid-column: 1 / -1; grid-row: 2; padding: 4px 0; }
   .progress-label { padding: 2px 4px; font-size: 10px; }
   .progress-track { height: 7px; }
   .detail-main { min-height: 0; padding: 6px 16px max(12px,env(safe-area-inset-bottom)); grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(180px,1fr) auto; gap: 8px; }
@@ -122,9 +123,7 @@
 }
 @media (prefers-reduced-motion: no-preference) { .step-navigation button, .retry-button { transition: transform 140ms cubic-bezier(.23,1,.32,1); } .step-navigation button:active, .retry-button:active { transform: scale(.97); } }
 
-.style-picker { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--subtle); font-size: 13px; }
-.style-picker select { min-width: 0; max-width: 150px; min-height: 44px; padding: 6px 10px; border: 1px solid var(--detail-border); border-radius: 12px; color: var(--ink); background: var(--detail-panel); font: inherit; }
 .style-notice { margin: 8px 0 0; color: var(--subtle); font-size: 12px; line-height: 1.5; }
 .text-choice:has(input:disabled) { opacity: .45; cursor: default; }
 .text-choice input:disabled { cursor: default; }
-@media (max-width: 480px) { .style-picker { gap: 4px; } .style-picker > span { display: none; } .style-picker select { max-width: 108px; padding: 4px; } .detail-topbar { gap: 8px; } .detail-brand { font-size: 13px; } }
+@media (max-width: 480px) { .detail-brand { font-size: 13px; } }
