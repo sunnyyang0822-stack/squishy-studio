@@ -29,6 +29,9 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - name: Run real WebGL tests with full Chromium
+        env:
+          # Only thin-wax browser tests read this; preserve CSS size and real clocks.
+          THIN_WAX_TEST_DPR: "0.5"
         # Match local Chrome/Edge's new headless mode instead of headless shell.
         run: |
           export PLAYWRIGHT_BROWSER_PATH="$(node -p "require('playwright').chromium.executablePath()")"

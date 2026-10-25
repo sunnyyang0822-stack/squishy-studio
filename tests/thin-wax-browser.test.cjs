@@ -5,12 +5,13 @@ const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
 const { installStyleProbe, ready, projectedSurfaceContact, rotate } = require('./helpers/squishy-browser.cjs');
 const port = process.env.THIN_WAX_TEST_PORT || '4228', base = `http://127.0.0.1:${port}`;
-let server, browser;
+let server, browser, reportedRenderProfile = false;
 before(async () => {
   server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: port } });
   for (let i = 0; i < 80; i++) { try { if ((await fetch(base)).ok) break; } catch {} await new Promise(r => setTimeout(r, 100)); }
   const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
-  browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (existsSync(edge) ? edge : undefined) });
+  browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (existsSync(edge) ? edge : undefined),
+    args: process.env.THIN_WAX_SOFTWARE_GL === '1' ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] : [] });
 });
 after(async () => { await browser?.close(); server?.kill(); });
 const diagnostics = (page, options = { measure: false }) => page.locator('.toy-mount').evaluate((el, options) => el.thinWaxDiagnostics(options), options);
@@ -33,7 +34,10 @@ async function installWaxUploadProbe(page) {
   });
 }
 async function open(coreMaterial = 'clay', style = 'orb') {
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  // CI software rasterization may need fewer pixels to observe real subsecond
+  // interactions. CSS layout, meshes, shadows, depth and clocks stay intact.
+  const deviceScaleFactor = Number(process.env.THIN_WAX_TEST_DPR || 1);
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor });
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   await installStyleProbe(page, getSquishyStyle(style));
   await installWaxUploadProbe(page);
@@ -50,6 +54,16 @@ async function open(coreMaterial = 'clay', style = 'orb') {
   await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${coreMaterial}&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell`);
   await ready(page);
   await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.().enabled);
+  if (!reportedRenderProfile) {
+    reportedRenderProfile = true;
+    console.log(JSON.stringify({ browserRasterEnvironment: await page.evaluate(() => {
+      const canvas = document.querySelector('.toy-mount canvas'), gl = canvas.getContext('webgl2');
+      const debug = gl.getExtension('WEBGL_debug_renderer_info');
+      return { devicePixelRatio, viewport: [innerWidth, innerHeight], cssCanvas: [canvas.clientWidth, canvas.clientHeight],
+        drawingBuffer: [gl.drawingBufferWidth, gl.drawingBufferHeight], renderer: gl.getParameter(debug ? debug.UNMASKED_RENDERER_WEBGL : gl.RENDERER),
+        measuredPerformance: false, resources: document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).resources };
+    }) }));
+  }
   if (process.env.THIN_WAX_CPU_RATE) {
     const session = await page.context().newCDPSession(page);
     await session.send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.THIN_WAX_CPU_RATE) });
@@ -60,7 +74,7 @@ async function press(page, style = 'orb') {
   const hit = await projectedSurfaceContact(page, style === 'donut' ? .72 : style === 'paw' ? -.24 : 0, style === 'paw' ? -.46 : .03);
   await page.mouse.move(hit.x, hit.y); await page.mouse.down(); return hit;
 }
-async function shortContact(page, action = 'pointerup', milliseconds = 180) {
+async function shortContact(page, action = 'pointerup', milliseconds = 60) {
   await page.evaluate(({ action, milliseconds }) => {
     window.waxShortContact = null;
     window.addEventListener('pointerdown', event => {
@@ -81,6 +95,7 @@ async function shortContact(page, action = 'pointerup', milliseconds = 180) {
   const result = await page.evaluate(() => window.waxShortContact);
   assert.ok(result.elapsed < 500, `A short contact really ended before the fracture threshold: ${result.elapsed}ms`);
   assert.equal(result.trustedDown, true); assert.equal(result.captured, true);
+  assert.ok(depth(result.before) > .001, 'A short contact includes real nonzero core deformation before ending');
   return result;
 }
 function geometryOK(d) {
