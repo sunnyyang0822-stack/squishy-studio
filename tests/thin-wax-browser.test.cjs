@@ -73,7 +73,7 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
       window.waxTimedSamples = [];
       window.addEventListener('pointerdown', () => {
         const start = performance.now();
-        for (const targetMs of [600, 760, 1100, 2600, 5000]) setTimeout(() => {
+        for (const targetMs of [400, 560, 900, 2600, 5000]) setTimeout(() => {
           const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
           window.waxTimedSamples.push({ targetMs, actualMs: performance.now() - start, thinWax: d.thinWax, coreState: d.coreState });
         }, targetMs);
@@ -82,14 +82,15 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
     await press(page); await page.waitForFunction(() => window.waxTimedSamples.length === 5, null, { timeout: 15000 });
     const timed = await page.evaluate(() => window.waxTimedSamples), [beforeThreshold, onset, chain, saturated, held] = timed;
     assert.equal(beforeThreshold.thinWax.detached, 0, JSON.stringify(beforeThreshold));
-    assert.ok(onset.thinWax.detached > 0, 'Fragments already start at the 760ms page-local sample: ' + JSON.stringify(onset));
-    assert.ok(chain.thinWax.detached > 0 && chain.thinWax.dwell > .7, JSON.stringify(timed));
-    assert.ok(chain.thinWax.cracked >= 6 && chain.thinWax.cracked > chain.thinWax.detached * 2, 'The first local chain fracture cracks many more polygons than it drops: ' + JSON.stringify(timed));
-    assert.ok(chain.thinWax.attachedPartialBranches >= 4, 'Most attached cracked plates expose partial connected branches rather than complete polygon outlines');
+    assert.ok(onset.thinWax.detached > 0, 'Fragments already start at the 560ms page-local sample: ' + JSON.stringify(onset));
+    assert.ok(chain.thinWax.detached > 0 && chain.thinWax.dwell > .5, JSON.stringify(timed));
+    assert.ok(chain.thinWax.cracked >= 6 && chain.thinWax.cracked > chain.thinWax.detached, 'The first local chain fracture cracks many more polygons than it drops: ' + JSON.stringify(timed));
+    assert.ok(onset.thinWax.attachedPartialBranches >= 4, 'Most attached cracked plates expose partial connected branches rather than complete polygon outlines');
     assert.ok(chain.thinWax.visibleLongCrackEdges < chain.thinWax.cracked * 3, 'Local damage does not trace every polygon edge');
     assert.ok(held.thinWax.cracked - held.thinWax.detached >= 3, 'Long holding preserves visibly attached cracked plates');
-    assert.ok(held.thinWax.detached - saturated.thinWax.detached <= 1, 'Saturated pressure must not keep ejecting plates on a repeating timer: ' + JSON.stringify(timed));
-    assert.ok(held.thinWax.detached <= 24 && held.thinWax.detached < held.thinWax.panels / 4);
+    assert.ok(held.thinWax.detached > onset.thinWax.detached, 'Further indentation releases additional chips');
+    assert.equal(held.thinWax.localDetached, held.thinWax.localDamaged, 'Deep enough pressure can clear the whole local cohort');
+    assert.ok(held.thinWax.living <= 24 && held.thinWax.detached < held.thinWax.panels / 4);
     await page.mouse.up(); const stopped = await diagnostics(page); await page.waitForTimeout(1200);
     const released = await diagnostics(page, { measure: true, exhaustive: true }); assert.equal(released.thinWax.detached, stopped.thinWax.detached); geometryOK(released);
     await page.waitForTimeout(3200);
@@ -226,7 +227,7 @@ test('cancellation, blur, hidden document, hit loss and leave stop the same inpu
   const page = await open();
   try {
     for (const event of ['pointercancel', 'blur', 'hidden']) {
-      await press(page); await page.waitForTimeout(400);
+      await press(page); await page.waitForTimeout(250);
       await page.evaluate(event => {
         if (event === 'hidden') { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); }
         else window.dispatchEvent(event === 'pointercancel' ? new PointerEvent(event, { pointerId: 1 }) : new Event(event));
@@ -236,7 +237,7 @@ test('cancellation, blur, hidden document, hit loss and leave stop the same inpu
       assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'false', event);
       if (event === 'hidden') await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange')); });
     }
-    await press(page); await page.waitForTimeout(500); await page.mouse.move(5, 5); await page.waitForTimeout(1200); await page.mouse.up();
+    await press(page); await page.waitForTimeout(250); await page.mouse.move(5, 5); await page.waitForTimeout(1200); await page.mouse.up();
     assert.equal((await diagnostics(page)).thinWax.detached, 0, 'No damage keeps running at a stale hit');
     await press(page); await page.waitForTimeout(1250);
     const fresh = await projectedSurfaceContact(page, .6, .03);

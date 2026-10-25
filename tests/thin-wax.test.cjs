@@ -35,13 +35,13 @@ test('thin wax is a separate closed-volume shell with independently owned color 
   wax.dispose(); geometry.dispose();
 });
 
-test('actual continuous dwell exceeds 0.7 seconds; one brittle local wave retains most plates and releases only a few small chips', async () => {
+test('actual continuous dwell exceeds 0.5 seconds; one brittle local wave retains most plates and releases only a few small chips', async () => {
   const f = await fixture(); f.begin();
-  f.advance(.699); assert.equal(f.wax.getState().detached, 0);
+  f.advance(.499); assert.equal(f.wax.getState().detached, 0);
   f.advance(.001); assert.equal(f.wax.getState().detached, 0);
-  f.advance(.001); const initial = f.wax.getState(); assert.ok(initial.detached >= 1 && initial.detached <= 3); assert.equal(initial.firstBurst, initial.detached);
+  f.advance(.001); const initial = f.wax.getState(); assert.ok(initial.detached === 3); assert.equal(initial.firstBurst, initial.detached);
   assert.ok(initial.burstInitialOutwardSpeed <= .2, 'No outward ejection impulse');
-  assert.ok(initial.localDamaged >= 6); assert.ok(initial.localRetainedFraction >= .6);
+  assert.equal(initial.maxDetachedPerContact, 180); assert.ok(initial.localDamaged >= 6); assert.ok(initial.localRetainedFraction >= .6);
   f.advance(.14); const afterImpulse = f.wax.getState();
   assert.ok(afterImpulse.maxOutwardOffset < .04, 'Small clearance plus projected gravity, no outward ejection');
   f.advance(.30); assert.equal(f.wax.getState().detached, initial.detached, 'Held clock alone must not eject another plate');
@@ -52,7 +52,7 @@ test('actual continuous dwell exceeds 0.7 seconds; one brittle local wave retain
 });
 
 test('released wax chips fall promptly under gravity instead of ejecting sideways', async () => {
-  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(.701);
+  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(.501);
   const before = f.wax.getSurfaceSnapshot();
   const panel = before.panelIds[before.detached.findIndex(Boolean)];
   f.wax.end(); f.advance(.4);
@@ -91,7 +91,7 @@ test('actual clay dent and dragged deformation all receive local crack geometry 
     assert.ok(region.slit > .00025, `Panel ${id} must visibly separate along an edge, not just carry a damage flag: ${region.slit}`);
   }
   assert.ok(deformed >= 6, `Exercise the dent rim and dragged trail, not just the clicked cell: ${deformed}`);
-  assert.equal(f.wax.getState().detached, 0, 'Visible deformation cracks do not bypass the 0.7-second fragment threshold');
+  assert.equal(f.wax.getState().detached, 0, 'Visible deformation cracks do not bypass the 0.5-second fragment threshold');
   f.wax.end(); const stopped = f.wax.getState().cracked;
   f.deformation.release(); f.baseline.release(); frames(f, 20);
   assert.equal(f.wax.getState().cracked, stopped, 'No damage propagation after release');
@@ -100,14 +100,14 @@ test('actual clay dent and dragged deformation all receive local crack geometry 
 });
 
 test('additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone', async () => {
-  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(.701);
-  assert.equal(f.wax.getState().detached, 2);
+  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(.501);
+  assert.equal(f.wax.getState().detached, 3);
   const positions = f.geometry.attributes.position.array;
   for (let i = 0; i < positions.length; i += 3) if (positions[i + 2] > .7 && Math.hypot(positions[i], positions[i + 1]) < .3) positions[i + 2] -= .025;
   f.geometry.computeVertexNormals(); f.advance(.058);
-  assert.equal(f.wax.getState().detached, 2, 'Keep a small separation between first break and further strain response');
-  f.advance(.003); assert.equal(f.wax.getState().detached, 3, 'Small further indentation responds immediately after 0.76s');
-  f.advance(1); assert.equal(f.wax.getState().detached, 3, 'No continued stripping from a held timer');
+  assert.equal(f.wax.getState().detached, 3, 'Keep a small separation between first break and further strain response');
+  f.advance(.003); assert.equal(f.wax.getState().detached, 4, 'Small further indentation responds immediately after 0.56s');
+  f.advance(1); assert.equal(f.wax.getState().detached, 4, 'No continued stripping from a held timer');
   const metrics = f.wax.getMetrics({ exhaustive: true }); assert.equal(metrics.detachedViolations, 0);
   f.wax.dispose(); f.geometry.dispose();
 });
@@ -116,7 +116,7 @@ test('short taps, cancellation, hit loss and sliding cannot borrow previous dwel
   const f = await fixture();
   for (let i = 0; i < 8; i++) { f.wax.begin([0, 0, .9]); f.advance(.3); f.wax.cancel(); f.advance(.01); }
   assert.equal(f.wax.getState().detached, 0); assert.ok(f.wax.getState().cracked > 0);
-  f.wax.begin([0, 0, .9]); f.advance(.6); f.wax.move([.3, 0, .85]); f.advance(.4);
+  f.wax.begin([0, 0, .9]); f.advance(.4); f.wax.move([.3, 0, .85]); f.advance(.35);
   assert.equal(f.wax.getState().detached, 0);
   f.wax.move(null); f.advance(3); assert.equal(f.wax.getState().detached, 0);
   assert.equal(f.wax.getState().active, false); f.wax.dispose();
@@ -142,6 +142,7 @@ test('deep clay press and recovery keep original core behavior and measured shel
   assert.ok(exhaustive.detachedInteriorSamples > 0);
   f.wax.end(); f.deformation.release(); f.baseline.release();
   const damaged = f.wax.getState().detached;
+  assert.ok(damaged > 9, 'Real continuing clay pressure extends release into the deformed rim beyond the first nine cells');
   for (let i = 0; i < 120; i++) { f.deformation.step(1 / 60); f.baseline.step(1 / 60); f.geometry.computeVertexNormals(); f.advance(1 / 60); f.wax.sync(); }
   assert.equal(f.wax.getState().detached, damaged);
   assert.deepEqual(f.geometry.attributes.position.array, f.baselinePositions, 'Wax never writes core positions; exact original clay result');
@@ -192,7 +193,7 @@ for (const gravity of [[0, -1, 0], [1, 0, 0], [0, 0, 1]]) test(`broken rim repea
   const f = await fixture(); f.wax.setGravity(gravity);
   const center = frontContact(f, 0, 0), edge = frontContact(f, .18, .04);
   f.begin(center); frames(f, 165);
-  assert.ok(f.wax.getState().detached >= 1 && f.wax.getState().detached <= 3); assertExhaustiveClearance(f, 'first deep crater');
+  assert.ok(f.wax.getState().detached >= 1 && f.wax.getState().detached <= f.parameters.maxLocalFragments); assertExhaustiveClearance(f, 'first deep crater');
   f.wax.end(); f.deformation.release(); f.baseline.release(); frames(f, 6);
   const firstDamage = f.wax.getState().detached;
   // The next press straddles existing broken rims and the sloped crater. Its
@@ -210,24 +211,46 @@ for (const gravity of [[0, -1, 0], [1, 0, 0], [0, 0, 1]]) test(`broken rim repea
   f.wax.dispose(); f.geometry.dispose();
 });
 
-test('the actual 24-chip budget is reached across fresh locations and cannot be reused after expiry or repeated pressure', async () => {
-  const f = await fixture();
-  let previous = 0;
-  for (let i = 0; i < 60 && f.wax.getState().detached < f.parameters.maxFragments; i++) {
-    const y = 1 - 2 * (i % 30 + .5) / 30, angle = i * 2.399963229728653;
-    const p = [Math.sqrt(1 - y * y) * Math.cos(angle) * .9, y * .9, Math.sqrt(1 - y * y) * Math.sin(angle) * .9];
-    f.wax.begin(p); f.advance(1.01); f.wax.end();
-    const state = f.wax.getState();
-    assert.ok(state.detached >= previous && state.detached <= 24);
-    assert.equal(state.detached, state.living + state.expired, 'Each counted chip has one unique living or expired patch');
-    previous = state.detached;
+test('live chips stay capped at 24 while continued deep pressure can strip each local cohort', async () => {
+  const f = await fixture(), positions = f.geometry.attributes.position.array;
+  for (const contact of [[0, 0, .9], [0, 0, -.9], [.9, 0, 0]]) {
+    f.wax.begin(contact); f.advance(.501);
+    for (let i = 0; i < 6; i++) {
+      for (let k = 0; k < positions.length; k++) positions[k] *= .97;
+      f.geometry.computeVertexNormals(); f.advance(.061);
+      assert.ok(f.wax.getState().living <= 24);
+    }
+    if (f.wax.getState().detached < 24) assert.equal(f.wax.getState().localDetached, f.wax.getState().localDamaged, 'Continued real indentation can remove every local shard');
+    f.wax.end();
   }
-  assert.equal(f.wax.getState().detached, 24, 'Test exercises the ceiling, not merely an unfulfilled upper bound');
-  f.advance(4); assert.equal(f.wax.getState().expired, 24); assert.equal(f.wax.getState().living, 0);
-  for (const p of [[0, 0, .9], [.9, 0, 0], [0, 0, -.9]]) { f.wax.begin(p); f.advance(3); f.wax.end(); }
-  assert.equal(f.wax.getState().detached, 24); assert.equal(f.wax.getState().expired, 24);
-  assert.equal(f.wax.getState().living, 0, 'Expiry cannot resurrect or duplicate a detached patch');
-  f.wax.reset(); assert.equal(f.wax.getState().detached, 0); assert.equal(f.wax.getState().expired, 0);
+  assert.equal(f.wax.getState().living, 24, 'Exercise the actual live-fragment ceiling');
+  f.advance(4); assert.equal(f.wax.getState().living, 0);
+  const removed = f.wax.getState().detached;
+  f.wax.begin([0, -.9, 0]); f.advance(.501); f.wax.end();
+  assert.ok(f.wax.getState().detached > removed, 'Freed live capacity permits new shards without resurrecting old ones');
+  assert.equal(f.wax.getState().detached, f.wax.getState().living + f.wax.getState().expired);
+  f.wax.dispose(); f.geometry.dispose();
+});
+
+test('repeated local presses can strip the complete real shell once without duplicate cells or regrowth', async () => {
+  const f = await fixture(), initial = f.wax.getSurfaceSnapshot(), centers = new Map();
+  for (let r = 0; r < initial.layers.length; r++) if (initial.layers[r] === 1) {
+    const id = initial.panelIds[r], value = centers.get(id) || { sum: [0, 0, 0], count: 0 };
+    for (let k = 0; k < 3; k++) value.sum[k] += initial.restSupportPositions[r * 3 + k];
+    value.count++; centers.set(id, value);
+  }
+  for (const value of centers.values()) {
+    f.wax.begin(value.sum.map(x => x / value.count)); f.advance(.501); f.wax.end();
+    const state = f.wax.getState(); assert.ok(state.living <= 24);
+    assert.equal(state.detached, state.living + state.expired);
+  }
+  assert.equal(f.wax.getState().detached, centers.size, 'All 180 real patches can be stripped through local interaction');
+  f.advance(4); const removed = f.wax.getState().detached;
+  f.wax.begin([0, 0, .9]); f.advance(2); f.wax.end();
+  assert.equal(f.wax.getState().detached, removed); assert.equal(f.wax.getState().living, 0);
+  assert.equal(f.wax.getState().expired, removed);
+  const empty = f.wax.getSurfaceSnapshot(); assert.ok(empty.positions.every(value => value === 0), 'Removed coat stays absent');
+  f.wax.reset(); assert.equal(f.wax.getState().detached, 0); assert.equal(f.wax.getState().cracked, 0);
   f.wax.dispose(); f.geometry.dispose();
 });
 
@@ -281,7 +304,7 @@ test('irregular area distribution, rapid connected cracking and strain-limited s
   const f = await fixture(), metrics = f.wax.getMetrics();
   assert.ok(metrics.panelAreaCV > .35, `Unequal rendered plate area CV ${metrics.panelAreaCV}`);
   assert.ok(metrics.panelAreaRange[1] / metrics.panelAreaRange[0] > 5);
-  f.wax.begin([0, 0, .9]); f.advance(.69); const before = f.wax.getState();
+  f.wax.begin([0, 0, .9]); f.advance(.49); const before = f.wax.getState();
   assert.equal(before.detached, 0); assert.ok(before.cracked < 4);
   f.advance(.02); const wave = f.wax.getState();
   assert.equal(wave.chainWaveCount, 1); assert.ok(wave.cracked - before.cracked >= 5);
@@ -291,7 +314,7 @@ test('irregular area distribution, rapid connected cracking and strain-limited s
   assert.equal(f.wax.getState().detached, detached, 'Elapsed time cannot sequentially empty the cracked region');
   assert.equal(f.wax.getState().cracked, cracked); assert.equal(f.wax.getState().chainWaveCount, 1);
   f.wax.end(); f.wax.begin([0, 0, .9]); f.advance(1.1); const repeated = f.wax.getState();
-  assert.ok(repeated.attachedCracked >= wave.attachedCracked - 1, 'Repeated presses cannot strip the deliberately retained majority');
+  assert.ok(repeated.detached > wave.detached, 'Repeated valid presses can release more of the already cracked local shell');
   f.wax.dispose(); f.geometry.dispose();
 });
 

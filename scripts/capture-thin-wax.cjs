@@ -54,16 +54,16 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           await page.screenshot({ path: `${folder}/${name}-${theme}-intact.png` });
           await send('down'); await page.waitForTimeout(260); await send('up'); await measure(`${theme}-short`); await page.waitForTimeout(250);
           await page.screenshot({ path: `${folder}/${name}-${theme}-crack.png` });
-          await label('按住600ms：保持局部起裂，尚不脱落');
-          await send('down'); await page.waitForTimeout(600); await send('up'); const lifting = await measure(`${theme}-lifting`); assert.equal(lifting.thinWax.detached, 0);
+          await label('按住350ms：保持局部起裂，尚不脱落');
+          await send('down'); await page.waitForTimeout(350); await send('up'); const lifting = await measure(`${theme}-lifting`); assert.equal(lifting.thinWax.detached, 0);
           await page.screenshot({ path: `${folder}/${name}-${theme}-lifting.png` });
           if (!touch) { await rotate(page, 48, 8); await page.screenshot({ path: `${folder}/${name}-${theme}-lifting-side.png` }); await rotate(page, -48, -8); }
-          await label('持续挤压：局部瞬间连锁裂开，多数碎片仍附着，仅少量落下');
+          await label('持续挤压：约0.5秒开始掉片，继续深按逐步剥落受力区域');
           await page.evaluate(() => {
             window.waxCaptureTimeline = [];
             window.addEventListener('pointerdown', () => {
               const start = performance.now();
-              for (const targetMs of [600, 760, 1100, 2600, 5000]) setTimeout(() => {
+              for (const targetMs of [400, 560, 900, 2600, 5000]) setTimeout(() => {
                 const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
                 window.waxCaptureTimeline.push({ targetMs, actualMs: performance.now() - start, thinWax: d.thinWax, coreState: d.coreState });
               }, targetMs);
@@ -75,9 +75,10 @@ function brief(d) { const { corePositions, coreRestPositions, ...rest } = d; let
           const timeline = await page.evaluate(() => window.waxCaptureTimeline);
           item.measurements.push({ stage: `${theme}-continuous-timeline`, timeline });
           assert.equal(timeline[0].thinWax.detached, 0);
-          assert.ok(timeline[2].thinWax.cracked > timeline[2].thinWax.detached * 2, 'Most chain-fractured wax remains attached');
+          assert.ok(timeline[2].thinWax.cracked > timeline[2].thinWax.detached, 'Most chain-fractured wax remains attached');
           assert.ok(timeline[4].thinWax.cracked - timeline[4].thinWax.detached >= 3);
-          assert.ok(timeline[4].thinWax.detached - timeline[3].thinWax.detached <= 1, 'Steady saturated pressure does not keep mechanically ejecting plates');
+          assert.ok(timeline[4].thinWax.detached > timeline[1].thinWax.detached, 'Continuing indentation keeps releasing chips');
+          assert.equal(timeline[4].thinWax.localDetached, timeline[4].thinWax.localDamaged, 'The local coat can be completely stripped');
           await page.screenshot({ path: `${folder}/${name}-${theme}-held.png` });
           await label('松开：内芯按原规则恢复，附着裂片保留，少量碎屑继续下落'); await send('up'); const stopped = await measure(`${theme}-mouseup`); await page.waitForTimeout(800); const released = await measure(`${theme}-release`, { geometry: true }); assert.equal(released.thinWax.detached, stopped.thinWax.detached, 'Release never propagates new damage');
           await label('重复深压破损边缘，连续拖动'); await send('down'); await page.waitForTimeout(1400);

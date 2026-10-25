@@ -1,7 +1,7 @@
 import { createVoronoiWax } from './thin-wax-panels.mjs';
 import * as THREE from 'three';
 
-export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwell: .7, localRadius: .16, chainDuration: .063, visibleDeformation: .004, extraFractureDelay: .06, extraFractureStrain: .015, maxLocalFragments: 3, maxFragments: 24, lifetime: 3 });
+export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwell: .5, localRadius: .16, chainDuration: .063, visibleDeformation: .004, extraFractureDelay: .06, extraFractureStrain: .015, maxLocalFragments: 180, maxFragments: 180, maxLivingFragments: 24, lifetime: 3 });
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.

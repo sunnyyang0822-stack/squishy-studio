@@ -1,9 +1,12 @@
-Runtime bundle SHA-256: 77ad8fd4801e89712eea462c3cc2d446ba445e2cc9104c09eb50a969ab50bc8f
+Runtime bundle SHA-256: 0fb94f2e8ecc7af6bf9549dc6e5f8e5741a4931dd2aeffc094304b14a7456e8e
 npm run build:orb: exit 0
-node --test tests/thin-wax.test.cjs tests/orb-shell-input.test.cjs: 19/19 exit 0, 65212.8177ms
-node --test tests/thin-wax-browser.test.cjs: 6/6 exit 0, 43786.4663ms
+node --test tests/thin-wax.test.cjs tests/orb-shell-input.test.cjs: 20/20 exit 0, 55637.125ms
+node --test tests/thin-wax-browser.test.cjs: 6/6 exit 0, 42798.8128ms
+Browser: 156.0.4314.42
+Sandbox capture attempt: Edge exited during launch; no product assertions executed.
+Final browser runs outside that sandbox with TEMP and TMP set to the worktree's .tmp/runtime directory.
 node scripts/capture-thin-wax.cjs --capture-only: exit 0
 node scripts/capture-thin-wax.cjs --performance-only: exit 0
-Performance: {"samples": 382, "medianMs": 10.800000000745058, "p95Ms": 13.199999999254942, "maximumMs": 17.40000000037253, "maximumCountJump": 1, "measurement": "MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
-Prior commit 330500a full suite: 239/239 exit 0, historical baseline only.
+Performance: {"samples": 262, "medianMs": 12.399999999906868, "p95Ms": 27.100000000093132, "maximumMs": 29.799999999813735, "maximumCountJump": 1, "measurement": "MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
+Prior commit 330500a full suite: 239/239 exit 0, historical baseline only; latest change validated with relevant source and browser suites.
 Visual acceptance pending user review. PR remains draft.
