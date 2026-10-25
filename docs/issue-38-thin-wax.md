@@ -106,6 +106,10 @@ CPU 采样与源码确认瓶颈是碰撞查询反复读取 5120 个芯三角面�
 
 受控 SwiftShader 对照保持同一 CSS 画布 791×758、4 draw/77,200 triangles，DPR1 实际缓冲 790×757，DPR0.5 为 395×378。两组本地实际短按约 68ms，未复现云端 500ms 阻塞，不能宣称本地已复现或证明手机性能。软件 DPR0.5 的短按、三姿态自由下落、取消/失焦/后台、真实 GPU 刚片恢复 4 项通过，原始命令与退出码见 [软件渲染专项](../artifacts/issue-38/public-ci-browser-swiftshader-half.txt)、[DPR 对照](../artifacts/issue-38/public-ci-swiftshader-dpr-probe.txt)。同四项在默认 DPR1、Intel D3D11 上也通过（4/4、退出 0、38.43 秒），实际短按 70.6ms，见 [默认分辨率专项](../artifacts/issue-38/public-ci-browser-default-dpr.txt)。最终云端结果以 PR 检查为准；既有正常 DPR 录屏与性能数据不使用这一测试环境设置。
 
+`0139798` 云端薄蜡 8 项中的 7 项通过，仅第三旋转姿态的自由下落两帧取样超时。前两姿态真实 GPU 向下位移 0.6588/0.5996，帧间隔 176.8/161ms；短按实际 279.4ms、取消及恢复检查通过。后续只给该自由下落用例设置 `THIN_WAX_FLIGHT_DPR=0.25`，其余薄蜡测试仍 DPR0.5，布局用例不缩小 CSS，默认本地仍 DPR1。每类环境单独输出真实渲染缓冲尺寸，窗口失败保留有限帧边界证据。未延长/放宽自由下落空间窗口，仍要求两端完全低于当时芯 AABB、未落地且高于收盘区。
+
+专项验证：默认 DPR1 自由下落 1/1、17.78 秒；SwiftShader＋CPU4＋DPR0.25 自由下落 1/1、27.56 秒，实际缓冲 197×189，均退出 0。DPR0.5 压力对照也通过，未复现云端超时；这些运行不可作为分辨率降低带来定量性能提升的证据。见 [默认专项](../artifacts/issue-38/flight-default-dpr.txt)、[软件四倍 CPU 专项](../artifacts/issue-38/flight-swiftshader-cpu4-quarter.txt)、[半分辨率对照](../artifacts/issue-38/flight-swiftshader-cpu4-half.txt)。
+
 ## 分支与回滚
 
 明确基线 `origin/main 2440cdc`，分支 `codex/issue-38-thin-wax`，工作树 `D:/squishy-studio/.worktrees/issue-38-thin-wax`。[草稿 PR #39](https://github.com/sunnyyang0822-stack/squishy-studio/pull/39) 指向 main。用户于 2026-10-26 明确告知已主动将仓库改为 Public，以使用公开仓库标准托管 Runner；本轮按该最新指示保留公开状态，不自动改回 Private。此前文档中的 Private 是历史状态。不改共享历史，不自动关闭 Issue #38。用户查验及必需检查通过前不合并。

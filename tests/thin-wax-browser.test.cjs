@@ -5,7 +5,8 @@ const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
 const { installStyleProbe, ready, projectedSurfaceContact, rotate } = require('./helpers/squishy-browser.cjs');
 const port = process.env.THIN_WAX_TEST_PORT || '4228', base = `http://127.0.0.1:${port}`;
-let server, browser, reportedRenderProfile = false;
+let server, browser;
+const reportedRenderProfiles = new Set();
 before(async () => {
   server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: port } });
   for (let i = 0; i < 80; i++) { try { if ((await fetch(base)).ok) break; } catch {} await new Promise(r => setTimeout(r, 100)); }
@@ -33,10 +34,10 @@ async function installWaxUploadProbe(page) {
     };
   });
 }
-async function open(coreMaterial = 'clay', style = 'orb') {
+async function open(coreMaterial = 'clay', style = 'orb', { flight = false } = {}) {
   // CI software rasterization may need fewer pixels to observe real subsecond
   // interactions. CSS layout, meshes, shadows, depth and clocks stay intact.
-  const deviceScaleFactor = Number(process.env.THIN_WAX_TEST_DPR || 1);
+  const deviceScaleFactor = Number((flight && process.env.THIN_WAX_FLIGHT_DPR) || process.env.THIN_WAX_TEST_DPR || 1);
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor });
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   await installStyleProbe(page, getSquishyStyle(style));
@@ -54,9 +55,10 @@ async function open(coreMaterial = 'clay', style = 'orb') {
   await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${coreMaterial}&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell`);
   await ready(page);
   await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.().enabled);
-  if (!reportedRenderProfile) {
-    reportedRenderProfile = true;
-    console.log(JSON.stringify({ browserRasterEnvironment: await page.evaluate(() => {
+  const profileKey = `${flight ? 'flight' : 'default'}:${deviceScaleFactor}`;
+  if (!reportedRenderProfiles.has(profileKey)) {
+    reportedRenderProfiles.add(profileKey);
+    console.log(JSON.stringify({ testRasterProfile: profileKey, browserRasterEnvironment: await page.evaluate(() => {
       const canvas = document.querySelector('.toy-mount canvas'), gl = canvas.getContext('webgl2');
       const debug = gl.getExtension('WEBGL_debug_renderer_info');
       return { devicePixelRatio, viewport: [innerWidth, innerHeight], cssCanvas: [canvas.clientWidth, canvas.clientHeight],
@@ -190,13 +192,14 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
   } finally { await page.close(); }
 });
 test('rotated real interaction falls in world Y, lands visibly, and its persistent pile never turns with the toy', { timeout: 90000 }, async t => {
-  const page = await open(), measurements = [];
+  const page = await open('clay', 'orb', { flight: true }), measurements = [];
   try {
     for (const pose of [[0, 0], [70, 40], [-65, -45]]) {
       await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
       if (pose.some(Boolean)) await rotate(page, ...pose);
       await page.locator('.toy-mount').evaluate(el => {
         window.waxFlight = null;
+        window.waxFlightTrace = [];
         let lastRender, pointerId, released = false, panelIds;
         const baselines = new Map(), metadata = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
         const records = new Map(), uniqueRecords = new Map();
@@ -217,6 +220,9 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
           if (lastRender === el.dataset.renderCount) return; lastRender = el.dataset.renderCount;
           const d = el.thinWaxDiagnostics({ measure: false });
           if (!d.thinWax.detached) return;
+          // Preserve the final airborne transitions if every candidate lands
+          // before a measurable pair exists; idle settled frames add no data.
+          if (released && d.thinWax.living === 0) return;
           if (!released) {
             released = true;
             const first = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
@@ -226,6 +232,8 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
           const m = d.debrisStage.matrixWorld; let coreBottom = Infinity;
           for (let i = 0; i < d.corePositions.length; i += 3) coreBottom = Math.min(coreBottom, m[1] * d.corePositions[i] + m[5] * d.corePositions[i + 1] + m[9] * d.corePositions[i + 2] + m[13]);
           const world = i => [0, 1, 2].map(k => m[k] * gpu[i * 3] + m[4 + k] * gpu[i * 3 + 1] + m[8 + k] * gpu[i * 3 + 2] + m[12 + k]);
+          const frameEvidence = { time: performance.now(), renderCount: lastRender, coreBottom, panels: [] };
+          window.waxFlightTrace.push(frameEvidence); if (window.waxFlightTrace.length > 8) window.waxFlightTrace.shift();
           for (const id of panelIds) {
             let minY = Infinity, maxY = -Infinity;
             for (const i of records.get(id)) { const y = world(i)[1]; minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
@@ -233,7 +241,9 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
             // tray collection are admissible. No wall-time sleep or assumed
             // frame rate chooses the window; rotating corner offsets cancel
             // in the centroid of unique real body vertices.
-            if (maxY >= coreBottom - .02 || maxY <= -1 || minY <= d.debrisStage.floorY + .05) { baselines.delete(id); continue; }
+            const reason = maxY >= coreBottom - .02 ? 'touches-core-AABB' : maxY <= -1 ? 'tray-collection-region' : minY <= d.debrisStage.floorY + .05 ? 'floor-contact-region' : 'eligible-free-flight';
+            frameEvidence.panels.push({ id, minY, maxY, reason });
+            if (reason !== 'eligible-free-flight') { baselines.delete(id); continue; }
             const ids = [...uniqueRecords.get(id).values()], center = [0, 0, 0];
             for (const i of ids) { const p = world(i); for (let k = 0; k < 3; k++) center[k] += p[k] / ids.length; }
             const before = baselines.get(id);
@@ -253,7 +263,11 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
         window.waxFrameObservers.add(observe);
       });
       await press(page);
-      await page.waitForFunction(() => window.waxFlight !== null, null, { timeout: 15000 });
+      try { await page.waitForFunction(() => window.waxFlight !== null, null, { timeout: 15000 }); }
+      catch (error) {
+        t.diagnostic(JSON.stringify({ pose, missingFreeFlightWindow: await page.evaluate(() => window.waxFlightTrace) }));
+        throw error;
+      }
       await page.mouse.up();
       const falling = await page.evaluate(() => window.waxFlight);
       t.diagnostic(JSON.stringify({ pose, freeFlight: falling }));
