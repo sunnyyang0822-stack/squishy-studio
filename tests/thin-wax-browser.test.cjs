@@ -34,7 +34,7 @@ async function installWaxUploadProbe(page) {
     };
   });
 }
-async function open(coreMaterial = 'clay', style = 'orb', { flight = false } = {}) {
+async function open(coreMaterial = 'clay', style = 'orb', { flight = false, step = 'shell' } = {}) {
   // CI software rasterization may need fewer pixels to observe real subsecond
   // interactions. CSS layout, meshes, shadows, depth and clocks stay intact.
   const deviceScaleFactor = Number((flight && process.env.THIN_WAX_FLIGHT_DPR) || process.env.THIN_WAX_TEST_DPR || 1);
@@ -52,7 +52,7 @@ async function open(coreMaterial = 'clay', style = 'orb', { flight = false } = {
       for (const observer of [...window.waxFrameObservers]) observer(time);
     });
   });
-  await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${coreMaterial}&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell`);
+  await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${coreMaterial}&coreColor=mint&shellColor=rose&waxThickness=thin&step=${step}`);
   await ready(page);
   await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.().enabled);
   const profileKey = `${flight ? 'flight' : 'default'}:${deviceScaleFactor}`;
@@ -112,32 +112,36 @@ function geometryOK(d) {
   assert.ok(d.geometry.attachedMinSignedDistance >= -d.geometry.tolerance, JSON.stringify(d.geometry));
   assert.ok(d.geometry.detachedMinSignedDistance == null || d.geometry.detachedMinSignedDistance >= -1e-5, JSON.stringify(d.geometry));
 }
-test('thin-wax elevation separates the real core from the tray without moving the bare core or clipping either viewport', { timeout: 60000 }, async t => {
+test('making preview exactly matches bare-core screen size and placement without a collection tray', { timeout: 60000 }, async t => {
   const measurements = [];
   for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
     const page = await open();
     try {
       await page.setViewportSize(viewport); await page.waitForTimeout(150);
       const shell = await diagnostics(page);
-      const m = shell.debrisStage.matrixWorld; let coreBottom = Infinity;
-      for (let i = 0; i < shell.corePositions.length; i += 3) coreBottom = Math.min(coreBottom, m[1] * shell.corePositions[i] + m[5] * shell.corePositions[i + 1] + m[9] * shell.corePositions[i + 2] + m[13]);
-      assert.ok(coreBottom - shell.debrisStage.floorY > .9, `The actual elevated core leaves room for falling chips: ${coreBottom}`);
-      assert.equal(shell.debrisStage.floorY, -1.35);
-      assert.ok(shell.debrisStage.projectedTray.every(p => Math.abs(p[0]) < 1 && Math.abs(p[1]) < 1));
+      assert.equal(shell.debrisStage.visible, false); assert.equal(shell.debrisStage.collectionEnabled, false);
+      assert.equal(shell.thinWax.collectionEnabled, false);
       const canvas = await page.locator('.toy-mount canvas').boundingBox(), input = await page.locator('.orb-input').boundingBox();
-      const orbWidthFraction = input.width / canvas.width;
-      assert.ok(orbWidthFraction > (viewport.width > 600 ? .53 : .65), `The orb occupies the main view: ${orbWidthFraction}`);
-      assert.ok(shell.debrisStage.trayHalfLength > 1.42, 'The actual tray is longer than the original circular base');
-      assert.ok(shell.debrisStage.projectedTray[1][0] - shell.debrisStage.projectedTray[0][0] > 1.85, 'The elongated tray spans most of the stage width');
-      assert.ok(input.x >= canvas.x - 1 && input.y >= canvas.y - 1 && input.x + input.width <= canvas.x + canvas.width + 1 && input.y + input.height <= canvas.y + canvas.height + 1, 'The entire projected orb remains in the render viewport');
+      const orbWidthFraction = input.width / canvas.width, centerY = (input.y + input.height / 2 - canvas.y) / canvas.height;
+      assert.ok(input.x >= canvas.x - 1 && input.y >= canvas.y - 1 && input.x + input.width <= canvas.x + canvas.width + 1 && input.y + input.height <= canvas.y + canvas.height + 1, 'The complete projected orb stays inside the canvas');
       await page.locator('.step-back').click();
+      await page.waitForTimeout(150);
       const bare = await diagnostics(page); assert.equal(bare.enabled, false);
-      const elevation = m[13] - bare.debrisStage.matrixWorld[13];
-      assert.ok(Math.abs(elevation - .7) < 1e-6, `Only the thin-wax stage adds .7 world units: ${elevation}`);
+      const bareCanvas = await page.locator('.toy-mount canvas').boundingBox(), bareInput = await page.locator('.orb-input').boundingBox();
+      for (const axis of ['x', 'y', 'width', 'height']) {
+        assert.ok(Math.abs(input[axis] - bareInput[axis]) < 1, `Shell and bare-core projected ${axis} align: ${input[axis]} vs ${bareInput[axis]}`);
+        assert.ok(Math.abs(canvas[axis] - bareCanvas[axis]) < 1, `Both steps keep the same canvas ${axis}`);
+      }
+      assert.ok(Math.abs(bare.debrisStage.matrixWorld[13]) < 1e-6, 'Bare clay keeps its confirmed original world placement');
+      const elevation = shell.debrisStage.matrixWorld[13] - bare.debrisStage.matrixWorld[13];
+      assert.ok(Math.abs(elevation - .4) < 1e-6);
       await page.locator('.step-next').click();
       const restored = await diagnostics(page); assert.equal(restored.enabled, true);
-      assert.ok(Math.abs(restored.debrisStage.matrixWorld[13] - m[13]) < 1e-6, 'Navigation restores the same elevated placement');
-      measurements.push({ viewport, coreBottom, floorY: shell.debrisStage.floorY, elevation, projectedTray: shell.debrisStage.projectedTray });
+      assert.ok(Math.abs(restored.debrisStage.matrixWorld[13] - shell.debrisStage.matrixWorld[13]) < 1e-6);
+      await page.waitForTimeout(150);
+      const returnedInput = await page.locator('.orb-input').boundingBox();
+      for (const axis of ['x', 'y', 'width', 'height']) assert.ok(Math.abs(returnedInput[axis] - input[axis]) < 1, 'Returning to shell keeps the exact projected bounds');
+      measurements.push({ viewport, orbWidthFraction, centerY, elevation, shellInput: input, bareInput, returnedInput, trayVisible: shell.debrisStage.visible });
     } finally { await page.close(); }
   }
   t.diagnostic(JSON.stringify(measurements));
@@ -179,7 +183,7 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
     await page.mouse.up(); const stopped = await diagnostics(page); await page.waitForTimeout(1200);
     const released = await diagnostics(page, { measure: true, exhaustive: true }); assert.equal(released.thinWax.detached, stopped.thinWax.detached); geometryOK(released);
     await page.waitForTimeout(3200);
-    const cleaned = await diagnostics(page); assert.equal(cleaned.thinWax.living, 0); assert.equal(cleaned.thinWax.expired, 0); assert.equal(cleaned.thinWax.settled, cleaned.thinWax.detached); assert.equal(cleaned.thinWax.detached, released.thinWax.detached);
+    const cleaned = await diagnostics(page); assert.equal(cleaned.thinWax.living, 0); assert.equal(cleaned.thinWax.settled, 0); assert.equal(cleaned.thinWax.expired, cleaned.thinWax.detached); assert.equal(cleaned.thinWax.detached, released.thinWax.detached);
     assert.ok(cleaned.resources.geometries <= initial.resources.geometries, 'Settled chips remain in the shared bounded geometry');
     assert.ok(await page.evaluate(() => window.styleProbe.draws > 0 && window.styleProbe.uploads > 1), 'Actual GPU mesh uploads and draw calls occurred');
     const gpuError = await page.evaluate(() => {
@@ -191,8 +195,81 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
     t.diagnostic(JSON.stringify({ material, shortDepth: depth(short), timed, geometry: released.geometry }));
   } finally { await page.close(); }
 });
+test('making preview lets actual GPU chips leave the viewport, cleans bodies, and preserves its holes across navigation', { timeout: 60000 }, async t => {
+  const page = await open();
+  try {
+    await page.locator('.toy-mount').evaluate(el => {
+      window.waxPreviewFall = null;
+      let pointerId, lastRender, tracked, initialTop, offscreen = false, frames = [];
+      const metadata = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
+      let gpu;
+      for (const values of window.waxUploadProbe.buffers.values()) {
+        if (values.length !== metadata.positions.length) continue;
+        if (values.every((v, i) => Math.abs(v - metadata.positions[i]) < 1e-6)) { gpu = values; break; }
+      }
+      if (!gpu) throw Error('Preview shell must match a real GPU position upload');
+      window.addEventListener('pointerdown', e => { pointerId = e.pointerId; }, { capture: true, once: true });
+      const transform = (m, p) => [0, 1, 2, 3].map(k => m[k] * p[0] + m[4 + k] * p[1] + m[8 + k] * p[2] + m[12 + k] * p[3]);
+      const observe = () => {
+        if (lastRender === el.dataset.renderCount) return; lastRender = el.dataset.renderCount;
+        const d = el.thinWaxDiagnostics({ measure: false }), state = d.thinWax;
+        if (!state.detached) return;
+        if (!tracked) {
+          const current = el.thinWaxDiagnostics({ measure: false, surface: true }).surface;
+          const ids = new Set(current.panelIds.filter((id, i) => current.detached[i]));
+          tracked = []; for (let i = 0; i < current.panelIds.length; i++) if (ids.has(current.panelIds[i])) tracked.push(i);
+          window.dispatchEvent(new PointerEvent('pointerup', { pointerId }));
+        }
+        if (state.expired === state.detached && state.living === 0) {
+          const zeroVertices = tracked.every(i => gpu[i * 3] === 0 && gpu[i * 3 + 1] === 0 && gpu[i * 3 + 2] === 0);
+          window.waxPreviewHoles = tracked;
+          window.waxPreviewFall = { state, stage: d.debrisStage, offscreen, initialTop, frames, zeroVertices, holeVertices: tracked.length };
+          window.waxFrameObservers.delete(observe); return;
+        }
+        let maxWorldY = -Infinity, maxNdcY = -Infinity;
+        for (const i of tracked) {
+          if (gpu[i * 3] === 0 && gpu[i * 3 + 1] === 0 && gpu[i * 3 + 2] === 0) continue;
+          const world = transform(d.debrisStage.matrixWorld, [gpu[i * 3], gpu[i * 3 + 1], gpu[i * 3 + 2], 1]);
+          const clip = transform(d.debrisStage.projectionMatrix, transform(d.debrisStage.viewMatrix, world));
+          maxWorldY = Math.max(maxWorldY, world[1]); maxNdcY = Math.max(maxNdcY, clip[1] / clip[3]);
+        }
+        if (initialTop === undefined) initialTop = maxWorldY;
+        offscreen ||= maxNdcY < -1.02;
+        frames.push({ time: performance.now(), maxWorldY, maxNdcY, expired: state.expired, living: state.living });
+        if (frames.length > 8) frames.shift();
+      };
+      window.waxFrameObservers.add(observe);
+    });
+    await press(page);
+    await page.waitForFunction(() => window.waxPreviewFall !== null, null, { timeout: 15000 }); await page.mouse.up();
+    const fall = await page.evaluate(() => window.waxPreviewFall);
+    assert.equal(fall.stage.visible, false); assert.equal(fall.stage.collectionEnabled, false);
+    assert.equal(fall.state.collectionEnabled, false); assert.equal(fall.state.settled, 0);
+    assert.ok(fall.state.expired > 0); assert.equal(fall.state.expired, fall.state.detached);
+    assert.equal(fall.state.debris.moving + fall.state.debris.settled, 0); assert.equal(fall.state.debris.gridCells, 0);
+    assert.ok(fall.offscreen, 'Every tracked GPU chip passes below the actual camera viewport before cleanup');
+    assert.ok(fall.stage.projectedDiscardPlane.every(p => p[1] < -1), 'The actual configured discard plane projects below the complete viewport');
+    assert.ok(fall.frames.some(f => f.maxWorldY < fall.initialTop - .2));
+    assert.ok(fall.holeVertices > 100 && fall.zeroVertices, 'Expired pieces leave degenerate GPU triangles instead of regrowing the shell');
+    const before = fall.state;
+    await page.locator('.step-next').click(); await page.locator('.step-back').click();
+    const preserved = await page.locator('.toy-mount').evaluate(el => {
+      const d = el.thinWaxDiagnostics({ measure: false, surface: true });
+      return { state: d.thinWax, holes: window.waxPreviewHoles.every(i => [0, 1, 2].every(k => d.surface.positions[i * 3 + k] === 0)) };
+    });
+    assert.equal(preserved.state.detached, before.detached); assert.equal(preserved.state.expired, before.expired);
+    assert.equal(preserved.state.cracked, before.cracked); assert.equal(preserved.state.living, 0); assert.equal(preserved.holes, true);
+    assert.equal(preserved.state.debris.gridCells, 0);
+    await page.getByRole('button', { name: '重新开始', exact: true }).click();
+    const reset = await diagnostics(page);
+    assert.equal(reset.thinWax.detached, 0); assert.equal(reset.thinWax.expired, 0); assert.equal(reset.thinWax.cracked, 0);
+    assert.equal(reset.thinWax.debris.moving + reset.thinWax.debris.settled, 0); assert.equal(reset.thinWax.debris.gridCells, 0);
+    t.diagnostic(JSON.stringify(fall));
+  } finally { await page.close(); }
+});
+
 test('rotated real interaction falls in world Y, lands visibly, and its persistent pile never turns with the toy', { timeout: 90000 }, async t => {
-  const page = await open('clay', 'orb', { flight: true }), measurements = [];
+  const page = await open('clay', 'orb', { flight: true, step: 'play' }), measurements = [];
   try {
     for (const pose of [[0, 0], [70, 40], [-65, -45]]) {
       await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);

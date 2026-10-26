@@ -52,7 +52,33 @@ function buildPanels(rest, index, count = 180) {
       for (let k = 1; k < local.length - 1; k++) if (new Set([local[0], local[k], local[k + 1]]).size === 3) { panel.triangles.push([local[0], local[k], local[k + 1]]); panel.sourceFaces.push(f / 3); }
     }
   }
+  // A spatial Voronoi cone can intersect a nonconvex surface in disconnected
+  // islands (notably both sides of a donut tube). Each island is a separate
+  // physical plate; a detached body must never span empty space through a hole.
+  let nextPanelId = count;
+  const connectedPanels = [];
   for (const panel of panels) {
+    if (!panel.triangles.length) continue;
+    const incident = Array.from({ length: panel.vertices.length }, () => []);
+    panel.triangles.forEach((triangle, t) => triangle.forEach(v => incident[v].push(t)));
+    const visited = new Uint8Array(panel.triangles.length); let component = 0;
+    for (let seed = 0; seed < panel.triangles.length; seed++) if (!visited[seed]) {
+      const queue = [seed], triangles = []; visited[seed] = 1;
+      while (queue.length) { const t = queue.pop(); triangles.push(t); for (const v of panel.triangles[t]) for (const neighbor of incident[v]) if (!visited[neighbor]) { visited[neighbor] = 1; queue.push(neighbor); } }
+      if (triangles.length === panel.triangles.length) { connectedPanels.push({ ...panel, cellId: panel.id }); break; }
+      const ids = [...new Set(triangles.flatMap(t => panel.triangles[t]))], remap = new Map(ids.map((v, i) => [v, i]));
+      connectedPanels.push({ ...panel, id: component++ ? nextPanelId++ : panel.id, cellId: panel.id, vertices: ids.map(v => panel.vertices[v]), triangles: triangles.map(t => panel.triangles[t].map(v => remap.get(v))), sourceFaces: triangles.map(t => panel.sourceFaces[t]) });
+    }
+  }
+  const splitSurface = connectedPanels.length !== panels.filter(p => p.triangles.length).length;
+  const edgeOwners = new Map();
+  const edgeKey = (panel, edge) => edge.map(i => panel.vertices[i].p.toArray().map(x => Math.round(x * 1e6)).join(':')).sort().join('|');
+  if (splitSurface) for (const panel of connectedPanels) {
+    const boundary = new Map();
+    for (const tri of panel.triangles) for (let k = 0; k < 3; k++) { const a = tri[k], b = tri[(k + 1) % 3], key = a < b ? `${a}:${b}` : `${b}:${a}`; if (boundary.has(key)) boundary.delete(key); else boundary.set(key, [a, b]); }
+    for (const edge of boundary.values()) { const key = edgeKey(panel, edge); if (!edgeOwners.has(key)) edgeOwners.set(key, []); edgeOwners.get(key).push(panel.id); }
+  }
+  for (const panel of connectedPanels) {
     const edges = new Map();
     for (const tri of panel.triangles) for (let k = 0; k < 3; k++) { const a = tri[k], b = tri[(k + 1) % 3], key = a < b ? `${a}:${b}` : `${b}:${a}`; if (edges.has(key)) edges.delete(key); else edges.set(key, [a, b]); }
     panel.boundary = [...edges.values()];
@@ -62,8 +88,9 @@ function buildPanels(rest, index, count = 180) {
     for (const edge of panel.boundary) {
       const midpoint = panel.vertices[edge[0]].p.clone().add(panel.vertices[edge[1]].p).multiplyScalar(.5);
       let neighbor = -1, nearest = Infinity;
-      for (let j = 0; j < seeds.length; j++) if (j !== panel.id) { const distance = Math.abs(midpoint.dot(planes[panel.id][j])) / planes[panel.id][j].length(); if (distance < nearest) { nearest = distance; neighbor = j; } }
-      const key = panel.id < neighbor ? `${panel.id}:${neighbor}` : `${neighbor}:${panel.id}`;
+      for (let j = 0; j < seeds.length; j++) if (j !== panel.cellId) { const distance = Math.abs(midpoint.dot(planes[panel.cellId][j])) / planes[panel.cellId][j].length(); if (distance < nearest) { nearest = distance; neighbor = j; } }
+      if (splitSurface) neighbor = edgeOwners.get(edgeKey(panel, edge))?.find(id => id !== panel.id) ?? -1;
+      const key = splitSurface ? neighbor < 0 ? `boundary:${panel.id}:${edgeKey(panel, edge)}` : panel.id < neighbor ? `${panel.id}:${neighbor}` : `${neighbor}:${panel.id}` : panel.cellId < neighbor ? `${panel.cellId}:${neighbor}` : `${neighbor}:${panel.cellId}`;
       if (!groups.has(key)) groups.set(key, { key, neighbor, edges: [], center: new THREE.Vector3(), samples: 0 });
       const group = groups.get(key); group.edges.push(edge); group.center.add(midpoint); group.samples++;
     }
@@ -74,17 +101,31 @@ function buildPanels(rest, index, count = 180) {
     panel.center = new THREE.Vector3(); for (const vertex of panel.vertices) panel.center.add(vertex.p); panel.center.multiplyScalar(1 / panel.vertices.length);
     panel.pivot = panel.vertices[panel.boundary[0]?.[0] || 0]?.p.clone() || panel.center.clone();
     panel.axis = panel.seed.clone().cross(panel.pivot.clone().sub(panel.center)).normalize();
+    panel.complexSurface = splitSurface;
     delete panel.map;
   }
-  return panels.filter(p => p.triangles.length);
+  return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
   if (rest.length !== source.length || referenceNormals.length !== normals.length) throw new RangeError('Thin wax original surface snapshot mismatch');
-  const panels = buildPanels(rest, geometry.index.array), records = [], indices = [], sourceFaces = [];
+  let seedCount = 180, panels = buildPanels(rest, geometry.index.array);
+  for (let attempt = 0; panels.length > config.maxFragments && attempt < 5; attempt++) {
+    seedCount = Math.max(48, Math.floor(seedCount * config.maxFragments / panels.length * .95));
+    panels = buildPanels(rest, geometry.index.array, seedCount);
+  }
+  if (panels.length > config.maxFragments) throw new RangeError('Wax surface cannot be split into connected plates within the fragment budget');
+  const records = [], indices = [], sourceFaces = [];
+  for (const panel of panels) {
+    const average = new THREE.Vector3(), localNormals = panel.vertices.map(vertex => {
+      const normal = new THREE.Vector3(); for (let k = 0; k < 3; k++) normal.addScaledVector(new THREE.Vector3().fromArray(referenceNormals, vertex.ids[k] * 3), vertex.weights[k]);
+      normal.normalize(); average.add(normal); return normal;
+    });
+    average.normalize(); panel.supportOnly = localNormals.some(normal => normal.dot(average) < .55);
+  }
   for (const panel of panels) {
     panel.start = records.length;
     for (let i = 0; i < panel.vertices.length; i++) records.push({ panel, vertex: i, layer: 0 }, { panel, vertex: i, layer: 1 });
@@ -108,7 +149,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const group = new THREE.Group(); group.name = 'Thin_Wax_Voronoi'; group.add(mesh);
   const collisions = makeCollisionTree(geometry);
   const visibleCrackEdges = new Set();
-  const debris = createWaxDebris({ thickness: config.thickness, reducedMotion });
+  const debris = createWaxDebris({ thickness: config.thickness, reducedMotion, collectionEnabled });
   const worldMatrix = new THREE.Matrix4(), worldInverse = new THREE.Matrix4(), worldLinear = new THREE.Matrix3();
   let worldRevision = 0;
   worldLinear.setFromMatrix4(worldMatrix);
@@ -117,7 +158,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     if (worldMatrix.equals(next)) return;
     worldMatrix.copy(next); worldInverse.copy(next).invert(); worldLinear.setFromMatrix4(next); worldRevision++; dirty = true;
   }
-  let active = false, disposed = false, contact, anchor, since = 0, now = clock(), totalDetached = 0, dirty = true, sweepSamples = 0, stroke, chainWaves = 0, lastDamageTime = null;
+  let active = false, disposed = false, contact, anchor, since = 0, now = clock(), totalDetached = 0, dirty = true, sweepSamples = 0, stroke, chainWaves = 0, lastDamageTime = null, attachedCorrectionMax = 0, attachedCorrectionTotalMax = 0, attachedCorrectedSamples = 0;
   const point = value => Array.isArray(value) || ArrayBuffer.isView(value) ? new THREE.Vector3(...value) : new THREE.Vector3(value.x, value.y, value.z);
   const vec = () => new THREE.Vector3();
   function map(vertex, array, out) {
@@ -270,7 +311,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       let safetyLift = 0;
       for (let i = 0; i < mapped.length; i++) {
         const vertex = mapped[i];
-        if (panel.cracked && panel.loose) {
+        if (panel.cracked && panel.loose && !panel.supportOnly) {
           vertex.target.copy(panel.vertices[i].p).sub(panel.center).applyQuaternion(orientation).add(center).sub(pivot).applyQuaternion(hingeRotation).add(pivot);
           map(panel.vertices[i], referenceNormals, vertex.targetNormal).normalize().applyQuaternion(orientation).applyQuaternion(hingeRotation);
           const normalProjection = vertex.targetNormal.dot(vertex.n);
@@ -308,7 +349,55 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
           for (let k = 0; k < 3; k++) constrain(supports[k].clone().add(supports[(k + 1) % 3]).multiplyScalar(.5), targets[k].clone().add(targets[(k + 1) % 3]).multiplyScalar(.5));
         }
       }
-      for (const vertex of mapped) { vertex.rendered ||= vec(); vertex.renderedNormal ||= vec(); vertex.rendered.copy(vertex.support).lerp(vertex.target, fraction); vertex.renderedNormal.copy(vertex.n).lerp(vertex.targetNormal, fraction).normalize(); }
+      for (const vertex of mapped) {
+        vertex.rendered ||= vec(); vertex.renderedNormal ||= vec(); vertex.rendered.copy(vertex.support).lerp(vertex.target, fraction); vertex.renderedNormal.copy(vertex.n).lerp(vertex.targetNormal, fraction).normalize();
+        // A true tangent crack on a curved/nonconvex patch must retain the
+        // source-normal clearance. This no-op for safe vertices keeps the
+        // original orb path unchanged while protecting thin connections.
+        const clearance = vertex.rendered.clone().sub(vertex.p).dot(vertex.n);
+        if (clearance < config.gap - .000001) vertex.rendered.addScaledVector(vertex.n, config.gap - clearance + .000001);
+      }
+      if (panel.complexSurface && mapped.some((vertex, i) => vertex.p.distanceToSquared(panel.vertices[i].p) > 1e-14)) {
+        const beforeCorrection = mapped.map(vertex => vertex.rendered.clone());
+        // A deep concave connection can intersect a fracture wall even when
+        // every inner support vertex has positive clearance. Correct only the
+        // affected attached edge vertices using the actual nearest core face.
+        const hitNormal = vec();
+        for (let attempt = 0; attempt < 4; attempt++) {
+          let changed = false;
+          for (const [a, b] of panel.boundary) {
+            const va = mapped[a], vb = mapped[b];
+            for (const weight of [1 / 3, 2 / 3]) {
+              const sample = va.rendered.clone().lerp(vb.rendered, weight).addScaledVector(va.renderedNormal.clone().lerp(vb.renderedNormal, weight).normalize(), config.thickness * weight);
+              const distance = collisions.signedDistance(sample, hitNormal);
+              if (distance < .0005) {
+                const shift = hitNormal.clone().multiplyScalar(.0008 - distance);
+                attachedCorrectionMax = Math.max(attachedCorrectionMax, shift.length()); attachedCorrectedSamples++;
+                for (const vertex of [va, vb]) {
+                  vertex.rendered.add(shift); const clearance = vertex.rendered.clone().sub(vertex.p).dot(vertex.n);
+                  if (clearance < config.gap) vertex.rendered.addScaledVector(vertex.n, config.gap - clearance + .000001);
+                }
+                changed = true;
+              }
+            }
+          }
+          for (const triangle of panel.triangles) {
+            const affected = triangle.map(i => mapped[i]), sample = affected[0].rendered.clone().add(affected[1].rendered).add(affected[2].rendered).multiplyScalar(1 / 3);
+            const distance = collisions.signedDistance(sample, hitNormal);
+            if (distance < .0005) {
+              const shift = hitNormal.clone().multiplyScalar(.0008 - distance);
+              attachedCorrectionMax = Math.max(attachedCorrectionMax, shift.length()); attachedCorrectedSamples++;
+              for (const vertex of affected) {
+                vertex.rendered.add(shift); const clearance = vertex.rendered.clone().sub(vertex.p).dot(vertex.n);
+                if (clearance < config.gap) vertex.rendered.addScaledVector(vertex.n, config.gap - clearance + .000001);
+              }
+              changed = true;
+            }
+          }
+          if (!changed) break;
+        }
+        for (let i = 0; i < mapped.length; i++) attachedCorrectionTotalMax = Math.max(attachedCorrectionTotalMax, mapped[i].rendered.distanceTo(beforeCorrection[i]));
+      }
       writePanel(panel, mapped);
     }
     shell.attributes.position.needsUpdate = true; shell.attributes.normal.needsUpdate = true; dirty = false;
@@ -316,7 +405,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   function step(dt, time = clock()) {
     if (disposed) return { changed: false, needsFrame: false }; now = time;
     function detach(batch, burst) {
-      let living = panels.filter(p => p.detached && !debris.get(p.id)?.settled).length;
+      let living = panels.filter(p => p.detached && !p.dead && !debris.get(p.id)?.settled).length;
       for (let b = 0; b < batch.length; b++) {
         const panel = batch[b];
         if (totalDetached >= Math.min(config.maxFragments, panels.length) || living >= config.maxLivingFragments) break;
@@ -367,21 +456,23 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       }
     }
     const falling = debris.advance(dt, now);
+    for (const id of debris.drainExpired()) { const panel = panels.find(p => p.id === id); if (panel) { panel.dead = true; panel.frozen = null; panel.mapped = null; panel.renderBounds = null; dirty = true; } }
     if (falling) dirty = living = true;
 
     const changed = dirty; if (changed) sync(); return { changed, needsFrame: active || living };
   }
-  function reset() { end(); debris.reset(); totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
-  function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !debris.get(p.id)?.settled).length, settled: debris.state().settled, expired: 0, debris: debris.state(), firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: 0, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: config.maxLocalFragments, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
+  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
+  function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead && !debris.get(p.id)?.settled).length, settled: debris.state().settled, expired: panels.filter(p => p.dead).length, collectionEnabled: debris.isCollectionEnabled(), debris: debris.state(), firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: 0, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: config.maxLocalFragments, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, minSigned = Infinity, maxThicknessError = 0, attachedSamples = 0, attachedSurfaceSamples = 0, attachedViolations = 0, detachedSamples = 0, detachedInteriorSamples = 0, detachedMin = Infinity, detachedViolations = 0, wallSamples = 0;
-    const normal = vec(), sourcePoint = vec();
+    const normal = vec(), sourcePoint = vec(); let currentPanelId, worstAttachedSample = null;
     const sample = (position, detached, interior = false) => {
       const distance = collisions.signedDistance(position);
       if (detached) { detachedMin = Math.min(detachedMin, distance); if (interior) detachedInteriorSamples++; else detachedSamples++; if (distance < -.00001) detachedViolations++; }
-      else { minSigned = Math.min(minSigned, distance); attachedSurfaceSamples++; if (distance < -.00001) attachedViolations++; }
+      else { if (distance < minSigned) worstAttachedSample = { panelId: currentPanelId, point: position.toArray(), distance }; minSigned = Math.min(minSigned, distance); attachedSurfaceSamples++; if (distance < -.00001) attachedViolations++; }
     };
     for (const panel of panels) if (!panel.dead) {
+      currentPanelId = panel.id;
       for (let i = 0; i < panel.vertices.length; i++) {
         const r = panel.start + i * 2, inner = vec().fromArray(output, r * 3), outer = vec().fromArray(output, (r + 1) * 3);
         if (panel.detached) sample(inner, true);
@@ -402,22 +493,23 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     const areas = panels.map(p => p.area), averageArea = areas.reduce((a, b) => a + b, 0) / areas.length;
     const panelAreaCV = Math.sqrt(areas.reduce((sum, area) => sum + (area - averageArea) ** 2, 0) / areas.length) / averageArea;
-    return { thickness: config.thickness, gap: config.gap, tolerance: .00001, attachedMinGap: minGap, attachedMinSignedDistance: minSigned, maxThicknessError, attachedSamples, attachedSurfaceSamples, attachedViolations, detachedSweepSamples: sweepSamples, detachedMinSignedDistance: Number.isFinite(detachedMin) ? detachedMin : null, detachedSamples, detachedInteriorSamples, detachedViolations, wallSamples, drawCalls: 1, shellVertices: records.length, shellTriangles: indices.length / 3, patches: panels.length, debris: debris.state(), panelAreaCV, panelAreaRange: [Math.min(...areas), Math.max(...areas)], method: 'Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks' };
+    return { thickness: config.thickness, gap: config.gap, tolerance: .00001, attachedMinGap: minGap, attachedMinSignedDistance: minSigned, worstAttachedSample, attachedCorrectionMax, attachedCorrectionTotalMax, attachedCorrectedSamples, maxThicknessError, attachedSamples, attachedSurfaceSamples, attachedViolations, detachedSweepSamples: sweepSamples, detachedMinSignedDistance: Number.isFinite(detachedMin) ? detachedMin : null, detachedSamples, detachedInteriorSamples, detachedViolations, wallSamples, drawCalls: 1, shellVertices: records.length, shellTriangles: indices.length / 3, patches: panels.length, debris: debris.state(), panelAreaCV, panelAreaRange: [Math.min(...areas), Math.max(...areas)], method: 'Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks' };
   }
   function dispose() { if (disposed) return; end(); debris.reset(); disposed = true; shell.dispose(); material.dispose(); group.removeFromParent(); }
   function getSurfaceSnapshot() {
-    const worldPositions = new Float32Array(output.length), worldNormals = new Float32Array(output.length), settled = new Uint8Array(records.length), supports = new Float32Array(output.length), sourceSupports = new Float32Array(output.length), damage = new Uint8Array(records.length), referenceNormal = new Float32Array(output.length), layers = new Int8Array(records.length), panelIds = new Uint16Array(records.length), detached = new Uint8Array(records.length), loose = new Uint8Array(records.length), boundaryVertex = new Uint8Array(records.length), openBoundary = new Uint8Array(records.length);
+    const worldPositions = new Float32Array(output.length), worldNormals = new Float32Array(output.length), settled = new Uint8Array(records.length), supports = new Float32Array(output.length), sourceSupports = new Float32Array(output.length), sourceUnmoved = new Uint8Array(records.length), damage = new Uint8Array(records.length), referenceNormal = new Float32Array(output.length), layers = new Int8Array(records.length), panelIds = new Uint16Array(records.length), detached = new Uint8Array(records.length), loose = new Uint8Array(records.length), boundaryVertex = new Uint8Array(records.length), openBoundary = new Uint8Array(records.length);
     const support = vec(), normal = vec();
     for (let r = 0; r < records.length; r++) {
       const record = records[r], vertex = record.panel.vertices[record.vertex];
+      sourceUnmoved[r] = +vertex.ids.every(id => source[id * 3] === rest[id * 3] && source[id * 3 + 1] === rest[id * 3 + 1] && source[id * 3 + 2] === rest[id * 3 + 2]);
       const worldPoint = vec().fromArray(output, r * 3).applyMatrix4(worldMatrix), worldNormal = vec().fromArray(outputNormals, r * 3).transformDirection(worldMatrix);
       worldPositions.set(worldPoint.toArray(), r * 3); worldNormals.set(worldNormal.toArray(), r * 3); settled[r] = +Boolean(debris.get(record.panel.id)?.settled);
       map(vertex, rest, support); map(vertex, referenceNormals, normal).normalize();
       supports.set(support.toArray(), r * 3); map(vertex, source, support); sourceSupports.set(support.toArray(), r * 3); referenceNormal.set(normal.toArray(), r * 3); damage[r] = +record.panel.cracked; layers[r] = record.edge ? -1 : record.layer; panelIds[r] = record.panel.id; detached[r] = +(record.panel.detached && !record.panel.dead);
       loose[r] = +record.panel.loose; boundaryVertex[r] = record.panel.boundaryVertexMask[record.vertex]; openBoundary[r] = record.panel.openVertexMask[record.vertex];
     }
-    return { worldPositions, worldNormals, settled, positions: output.slice(), normals: outputNormals.slice(), colors: colors.slice(), indices: shell.index.array.slice(), sourceFaces: Int32Array.from(sourceFaces), restSupportPositions: supports, sourceSupportPositions: sourceSupports, restSupportNormals: referenceNormal, damage, layers, panelIds, detached, loose, boundaryVertex, openBoundary };
+    return { worldPositions, worldNormals, settled, positions: output.slice(), normals: outputNormals.slice(), colors: colors.slice(), indices: shell.index.array.slice(), sourceFaces: Int32Array.from(sourceFaces), restSupportPositions: supports, sourceSupportPositions: sourceSupports, sourceUnmoved, restSupportNormals: referenceNormal, damage, layers, panelIds, detached, loose, boundaryVertex, openBoundary };
   }
   sync();
-  return { group, begin, move, end, release: end, cancel: end, sync, step, reset, dispose, getState, getMetrics, getSurfaceSnapshot, setWorldMatrix, setGravity(value) { if (point(value).normalize().distanceTo(new THREE.Vector3(0, -1, 0)) > 1e-6) throw new RangeError('Wax debris gravity is world down; rotate the core with setWorldMatrix'); }, setReducedMotion(value) { reducedMotion = !!value; debris.setReducedMotion(value); } };
+  return { group, begin, move, end, release: end, cancel: end, sync, step, reset, dispose, getState, getMetrics, getSurfaceSnapshot, setWorldMatrix, setCollectionEnabled(value) { debris.setCollectionEnabled(value); dirty = true; }, setGravity(value) { if (point(value).normalize().distanceTo(new THREE.Vector3(0, -1, 0)) > 1e-6) throw new RangeError('Wax debris gravity is world down; rotate the core with setWorldMatrix'); }, setReducedMotion(value) { reducedMotion = !!value; debris.setReducedMotion(value); } };
 }

@@ -8,6 +8,9 @@ const { installStyleProbe, ready, projectedSurfaceContact, rotate } = require('.
 const folder = path.resolve('artifacts/issue-38'), temporary = path.resolve('.tmp/issue-38-video');
 const port = process.env.THIN_WAX_CAPTURE_PORT || '4229', base = `http://127.0.0.1:${port}`;
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const collectionCapture = process.env.THIN_WAX_CAPTURE_COLLECTION === '1';
+const captureMode = collectionCapture ? 'collection' : 'preview', captureStep = collectionCapture ? 'play' : 'shell';
+const reportFile = `${folder}/${captureMode}-validation.json`;
 const performanceOnly = process.argv.includes('--performance-only'), captureOnly = process.argv.includes('--capture-only');
 const diag = (page, options = { measure: false }) => page.locator('.toy-mount').evaluate((el, options) => el.thinWaxDiagnostics(options), options);
 function brief(d) {
@@ -21,7 +24,7 @@ function brief(d) {
 }
 (async () => {
   fs.mkdirSync(folder, { recursive: true }); fs.mkdirSync(temporary, { recursive: true });
-  const report = performanceOnly ? JSON.parse(fs.readFileSync(`${folder}/validation.json`, 'utf8')) : { recordedAt: new Date().toISOString(), visualAcceptance: 'pending user review; numeric checks are insufficient for visual acceptance', speed: 'normal wall time; no accelerated clocks', physicalPhone: false, mobile: 'Chromium 390×844 mobile viewport: CDP touch pressure with existing mouse-only background rotation; touch background scrolling remains native', bundleSha256: digest('assets/orb-preview.js'), cases: [], errors: [], exitCode: 1 };
+  const report = performanceOnly ? JSON.parse(fs.readFileSync(reportFile, 'utf8')) : { mode: captureMode, initialStep: captureStep, recordedAt: new Date().toISOString(), visualAcceptance: 'pending user review; numeric checks are insufficient for visual acceptance', speed: 'normal wall time; no accelerated clocks', physicalPhone: false, mobile: 'Chromium 390×844 mobile viewport: CDP touch pressure with existing mouse-only background rotation; touch background scrolling remains native', bundleSha256: digest('assets/orb-preview.js'), cases: [], errors: [], exitCode: 1 };
   assert.equal(report.bundleSha256, digest('assets/orb-preview.js'), 'Performance and visual evidence must use the same bundle');
   const server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: port } }); let browser;
   try {
@@ -34,13 +37,13 @@ function brief(d) {
     for (const style of styles) for (const material of ['clay']) for (const touch of [false, true]) {
       const feel = material === 'butter' ? 'slow-rebound' : material;
       if (!squishyStyles[style].supportedFeels.includes(feel)) continue;
-      const name = `${style}-${material}-${touch ? 'mobile' : 'desktop'}`, viewport = touch ? { width: 390, height: 844 } : { width: 1280, height: 900 };
+      const name = `${style}-${material}-${captureMode}-${touch ? 'mobile' : 'desktop'}`, viewport = touch ? { width: 390, height: 844 } : { width: 1280, height: 900 };
       const context = await browser.newContext({ viewport, hasTouch: touch, isMobile: touch, recordVideo: { dir: temporary, size: viewport } });
       const page = await context.newPage(), video = page.video(), item = { name, style, feel, input: { pressure: touch ? 'CDP touch emulation' : 'mouse', rotation: 'existing mouse-only background drag', touchRotationSupported: false }, modelSha256: digest(`assets/models/squishy-${style}.glb`), viewport, measurements: [] }; report.cases.push(item);
       page.on('pageerror', e => report.errors.push({ name, error: e.message }));
       try {
         await installStyleProbe(page, squishyStyles[style]);
-        await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${material}&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell`); await ready(page);
+        await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${material}&coreColor=mint&shellColor=rose&waxThickness=thin&step=${captureStep}`); await ready(page);
         await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.().enabled);
         await page.evaluate(() => { const el = document.createElement('div'); el.id = 'wax-capture-label'; el.style.cssText = 'position:fixed;top:90px;left:12px;z-index:1000;background:#fffE;color:#412f46;padding:8px;font:13px sans-serif;pointer-events:none'; document.body.append(el); });
         const label = text => page.locator('#wax-capture-label').evaluate((el, text) => el.textContent = text + ' · 正常速度', text + (touch ? ' · 模拟手机视口：触摸捏压/鼠标转球' : ''));
@@ -66,8 +69,9 @@ function brief(d) {
           await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().thinWax.detached === 0);
           await page.waitForTimeout(750);
           const placement = await measure(`${theme}-elevated-placement`);
-          assert.ok(placement.coreTrayClearance > .9, 'The real core is visibly separated from the tray');
-          assert.ok(placement.debrisStage.projectedTray.every(p => Math.abs(p[0]) < 1 && Math.abs(p[1]) < 1), 'The entire tray stays inside the camera');
+          assert.equal(placement.debrisStage.visible, collectionCapture);
+          assert.equal(placement.debrisStage.collectionEnabled, collectionCapture);
+          if (collectionCapture) assert.ok(placement.debrisStage.projectedTray.every(p => Math.abs(p[0]) < 1 && Math.abs(p[1]) < 1), 'The entire tray stays inside the camera');
           await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme); await label(`${theme} / ${style} / ${feel}：短按裂缝`);
           await page.screenshot({ path: `${folder}/${name}-${theme}-intact.png` });
           await send('down'); await page.waitForTimeout(260); await send('up'); await measure(`${theme}-short`); await page.waitForTimeout(250);
@@ -103,6 +107,7 @@ function brief(d) {
           for (let i = 1; i <= 12; i++) { await send('move', { x: hit.x + i * 2, y: hit.y - i }); await page.waitForTimeout(35); }
           await measure(`${theme}-drag`); await send('up'); await page.waitForTimeout(700); await measure(`${theme}-drag-geometry`, { geometry: true });
           if (!touch) { await label('侧面旋转检查断面与内芯'); await rotate(page, 48, 8); await page.screenshot({ path: `${folder}/${name}-${theme}-side.png` }); await rotate(page, -48, -8); }
+          if (collectionCapture) {
           await label('碎片更快向世界下方落下，留在下方堆叠；转球不带动落片');
           await page.waitForFunction(() => { const s = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax; return s.living === 0 && s.settled > 0; }, null, { timeout: 8000 });
           await page.locator('.toy-mount').evaluate(el => {
@@ -134,12 +139,28 @@ function brief(d) {
           assert.ok(accumulated.geometry.debris.maxRadius <= accumulated.geometry.debris.radius + 1e-5, 'The full accumulated pile remains inside the tray after rotated re-pressing: ' + JSON.stringify(accumulated.geometry.debris));
           assert.ok(accumulated.coreWorldBottom - accumulated.geometry.debris.pileTop > .1, 'The visible settled pile leaves a gap below the real core');
           await page.screenshot({ path: `${folder}/${name}-${theme}-pile-added.png` });
+          } else {
+            await label('制作预览不承接碎片：持续向下掉出画面，裂口保留');
+            await page.waitForFunction(() => {
+              const s = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax;
+              return s.living === 0 && s.expired === s.detached && s.expired > 0;
+            }, null, { timeout: 15000 });
+            const cleared = await measure(`${theme}-fallthrough-cleanup`, { geometry: true });
+            assert.equal(cleared.thinWax.settled, 0); assert.equal(cleared.geometry.debris.gridCells, 0);
+            assert.equal(cleared.geometry.debris.moving + cleared.geometry.debris.settled, 0);
+            assert.equal(cleared.debrisStage.visible, false);
+            await page.screenshot({ path: `${folder}/${name}-${theme}-cleared.png` });
+          }
         }
-        await label('同配方进入最终试捏，再返回：破损保留');
+        await label('同配方外壳与装饰步骤往返：损伤保留，碎片不复活');
         const preserved = (await diag(page)).thinWax.detached;
-        for (let i = 0; i < 3; i++) await page.locator('.step-next').click();
-        await page.waitForTimeout(400); assert.equal((await diag(page)).thinWax.detached, preserved);
-        await page.locator('.step-back').click(); await page.locator('.step-back').click();
+        if (collectionCapture) {
+          await page.locator('.step-back').click(); await page.locator('.step-back').click();
+          await page.locator('.step-next').click(); await page.locator('.step-next').click(); await page.locator('.step-next').click();
+        } else {
+          await page.locator('.step-next').click(); await page.locator('.step-back').click();
+        }
+        assert.equal((await diag(page)).thinWax.detached, preserved);
         await measure('workflow-return');
         await label('重新开始：清空压痕、裂纹和碎片');
         await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
@@ -167,7 +188,7 @@ function brief(d) {
     const perfContext = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
     try {
       const page = await perfContext.newPage();
-      await page.goto(`${base}/squishy/cloud/?style=orb&coreMaterial=clay&waxThickness=thin&step=shell`);
+      await page.goto(`${base}/squishy/cloud/?style=orb&coreMaterial=clay&waxThickness=thin&step=${captureStep}`);
       await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.().enabled);
       await page.evaluate(() => {
         const mount = document.querySelector('.toy-mount'); window.waxPerformance = { intervals: [], jumps: [], last: null, count: Number(mount.dataset.renderCount) };
@@ -185,5 +206,5 @@ function brief(d) {
     }
     assert.deepEqual(report.errors, []); report.exitCode = 0;
   } catch (error) { report.exitCode = 1; report.failure = error.stack; throw error; }
-  finally { fs.writeFileSync(`${folder}/validation.json`, JSON.stringify(report, null, 2) + '\n'); await browser?.close(); server.kill(); }
+  finally { fs.writeFileSync(reportFile, JSON.stringify(report, null, 2) + '\n'); await browser?.close(); server.kill(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

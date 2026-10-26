@@ -1,10 +1,13 @@
 import * as THREE from 'three';
 
+export const waxFallthroughPolicy = Object.freeze({ discardBelowY: -4, maxLifetime: 8 });
+
 // World-space rigid curved chips and a bounded, conservative support grid.
 // The grid is collision data only; the rendered pile keeps the real wax meshes.
-export function createWaxDebris({ thickness, floorY = -1.35, radius = 1.35, reducedMotion = false } = {}) {
+export function createWaxDebris({ thickness, floorY = -1.35, radius = 1.35, reducedMotion = false, collectionEnabled = true, fallLifetime = waxFallthroughPolicy.maxLifetime } = {}) {
   let highestSupport = floorY;
   const bodies = new Map(), heights = new Map(), cell = .045;
+  const seen = new Set(), expired = [];
   const up = new THREE.Vector3(0, 1, 0), identity = new THREE.Quaternion();
   const hash = id => { const v = Math.sin((id + 1) * 127.1) * 43758.5453; return v - Math.floor(v); };
   const key = (x, z) => `${x}:${z}`;
@@ -50,6 +53,8 @@ export function createWaxDebris({ thickness, floorY = -1.35, radius = 1.35, redu
   }
   function add(id, vertices, normals, triangles, time) {
     if (bodies.has(id)) return bodies.get(id);
+    if (seen.has(id)) return undefined;
+    seen.add(id);
     const position = new THREE.Vector3(); for (const vertex of vertices) position.add(vertex); position.multiplyScalar(1 / vertices.length);
     const normal = new THREE.Vector3(); for (const n of normals) normal.add(n); normal.normalize();
     const random = hash(id), lean = new THREE.Vector3((random - .5) * .20, 1, (hash(id + 71) - .5) * .20).normalize();
@@ -74,6 +79,10 @@ export function createWaxDebris({ thickness, floorY = -1.35, radius = 1.35, redu
       body.rotation.slerpQuaternions(identity, body.landingRotation, Math.min(1, age / (reducedMotion ? .12 : .38)));
       let vertices = points(body, body.world), bounds = physicalBounds(body, vertices), lowest = bounds.bottom;
       const top = bounds.top;
+      if (!collectionEnabled) {
+        if (top < waxFallthroughPolicy.discardBelowY || simulationTime - body.born >= fallLifetime) { bodies.delete(body.id); expired.push(body.id); }
+        continue;
+      }
       // Confine only after the whole chip clears the core. A turned toy cannot
       // drag the pile, and collection cannot pull a falling chip through it.
       if (top < -1.015) {
@@ -136,5 +145,14 @@ export function createWaxDebris({ thickness, floorY = -1.35, radius = 1.35, redu
       maxRadius: vertices.length ? Math.max(...vertices.map(v => Math.hypot(v.x, v.z))) : 0,
       pileTop: Math.max(floorY, ...[...heights.values()]), gridCells: heights.size };
   }
-  return { add, advance, get: id => bodies.get(id), points, state, reset() { bodies.clear(); heights.clear(); highestSupport = floorY; }, setReducedMotion(value) { reducedMotion = !!value; } };
+  function setCollectionEnabled(value) {
+    value = !!value; if (value === collectionEnabled) return;
+    collectionEnabled = value;
+    heights.clear(); highestSupport = floorY;
+    if (!value) for (const body of bodies.values()) {
+      body.settled = false; body.contactTime = null; body.slideTarget = null;
+      body.velocity.y = Math.min(body.velocity.y, -.42);
+    }
+  }
+  return { add, advance, get: id => bodies.get(id), points, state, setCollectionEnabled, isCollectionEnabled: () => collectionEnabled, drainExpired() { return expired.splice(0); }, reset() { bodies.clear(); heights.clear(); seen.clear(); expired.length = 0; highestSupport = floorY; }, setReducedMotion(value) { reducedMotion = !!value; } };
 }

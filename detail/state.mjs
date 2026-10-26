@@ -13,14 +13,17 @@ export const styleNames = Object.freeze(Object.fromEntries(Object.entries(squish
 export const defaultRecipe = Object.freeze({ styleId: 'orb', coreMaterial: 'clay', coreColor: 'rose', filling: 'none', shellMaterial: 'wax', shellColor: 'rose', waxThickness: 'medium', decoration: 'one' });
 const groups = Object.freeze({ styleId: styleNames, coreMaterial: coreNames, coreColor: colorNames, filling: fillingNames, shellMaterial: materialNames, shellColor: colorNames, waxThickness: thicknessNames, decoration: decorationNames });
 export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shellMaterial === 'wax' ? recipe.waxThickness : null });
-export const isThinWaxRecipe = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
-export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && ['shell', 'decoration', 'play'].includes(step);
+export const isThinWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && squishyStyles[recipe.styleId].supportedFeels.includes('clay') && recipe.coreMaterial === 'clay' && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
+export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && recipe.styleId === 'orb');
 // Fixed ordering makes identity independent of URL/object property order. Mode is
 // deliberately separate: navigating the same recipe must not repair its shell.
 export const recipeKeyFor = recipe => JSON.stringify(Object.keys(defaultRecipe).map(key => effectiveRecipe(recipe)[key]));
 export const previewFor = (step, recipe) => ({
   presetId: recipe.coreMaterial === 'butter' ? 'slow-rebound' : recipe.coreMaterial,
   mode: step === 'core' ? 'core' : step === 'making' ? 'hidden' : 'shell',
+  // Making previews have no collection tray. Leave the existing final view
+  // contract unchanged for its separate owner. This is not recipe identity.
+  ...(step === 'play' ? {} : { waxCollection: false }),
   feelId: recipe.coreMaterial === 'butter' ? 'slow-rebound' : recipe.coreMaterial === 'marshmallow' ? 'marshmallow' : 'clay',
   appearanceId: recipe.coreMaterial === 'butter' ? 'full-matte' : 'matte',
   color: step === 'core' ? recipe.coreColor : recipe.shellColor,
@@ -52,7 +55,7 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
     if (disposed) return;
     if (state.step === 'making') { emit(); return; }
     const target = { ...state.preview, recipe: structuredClone(state.effectiveRecipe) };
-    if (!force && !pending && !state.configError && applied && applied.mode === target.mode && applied.recipeKey === target.recipeKey && state.resource === 'ready') { emit(); return; }
+    if (!force && !pending && !state.configError && applied && applied.mode === target.mode && applied.waxCollection === target.waxCollection && applied.recipeKey === target.recipeKey && state.resource === 'ready') { emit(); return; }
     const ownRevision = ++revision;
     pending?.abort();
     const request = new AbortController(); pending = request;
@@ -76,8 +79,13 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
     const wasMaking = state.step === 'making';
     state = { ...state, step }; refreshDerived();
     if (step === 'making') { ++revision; pending?.abort(); pending = undefined; renderer.stopInput?.(); emit(); return; }
-    const preserveDamage = isThinWaxRecipe(state.recipe);
-    if (wasMaking && step === 'play' && !preserveDamage) renderer.restore?.();
+    const preserveDamage = isThinWaxRecipe(state.recipe) && (step !== 'play' || state.recipe.styleId === 'orb');
+    if (wasMaking && step === 'play' && !preserveDamage) {
+      // Non-orb final presentation keeps its legacy core restore without
+      // repairing the same recipe's temporarily hidden preview shell.
+      if (isThinWaxRecipe(state.recipe) && state.recipe.styleId !== 'orb') renderer.restore?.({ preserveShell: true });
+      else renderer.restore?.();
+    }
     void prepare(step === 'play' && !preserveDamage);
   }
   return {

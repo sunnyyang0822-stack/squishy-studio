@@ -28,7 +28,7 @@ async function show(page, id) {
 }
 const current = (page, id) => page.locator(`.workflow-progress li[data-step="${id}"]`).getAttribute('aria-current');
 
-test('重新开始仅在圆球黏土薄蜡的外壳、装饰和体验显示，保持当前配方与步骤', async () => {
+test('重新开始仅在黏土薄蜡制作步骤显示，圆球保留既有体验入口，保持配方与步骤', async () => {
   const page = await browser.newPage();
   await page.goto(base + path + '?style=orb&step=shell&waxThickness=thin&coreColor=mint&shellColor=sky');
   await ready(page);
@@ -55,6 +55,35 @@ test('重新开始仅在圆球黏土薄蜡的外壳、装饰和体验显示，�
     await page.goto(base + path + '?' + config); await ready(page);
     assert.equal(await restart.isVisible(), false, config);
     assert.equal(await page.locator('.step-back').count(), 1);
+  }
+  await page.close();
+});
+
+test('八种样式黏土从内芯下一步保留薄蜡配方与独立颜色，不改默认中蜡', async () => {
+  const page = await browser.newPage();
+  for (const style of ['orb', 'cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']) {
+    await page.goto(base + path + `?style=${style}&coreColor=mint&shellColor=sky`); await ready(page);
+    assert.equal(await current(page, 'core'), 'step');
+    assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).isVisible(), false);
+    assert.equal(await page.locator('.toy-mount').getAttribute('data-color'), 'mint');
+    assert.equal(new URL(page.url()).searchParams.has('waxThickness'), false, 'Default medium stays implicit');
+    await next(page);
+    assert.equal(await current(page, 'shell'), 'step');
+    await show(page, 'waxThickness');
+    assert.equal(await choice(page, '蜡的厚度', '中').isChecked(), true);
+    await choice(page, '蜡的厚度', '薄').check();
+    await page.waitForFunction(() => document.querySelector('.thin-wax-restart')?.disabled === false);
+    const params = new URL(page.url()).searchParams;
+    assert.equal(params.get('style'), style); assert.equal(params.get('step'), 'shell');
+    assert.equal(params.get('waxThickness'), 'thin'); assert.equal(params.get('coreColor'), 'mint'); assert.equal(params.get('shellColor'), 'sky');
+    assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), style);
+    assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'clay');
+    assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).isVisible(), true);
+    await page.getByRole('button', { name: '上一步', exact: true }).click();
+    await page.waitForFunction(() => document.querySelector('.toy-mount')?.dataset.color === 'mint');
+    await next(page);
+    await page.waitForFunction(() => document.querySelector('.thin-wax-restart')?.disabled === false);
+    assert.equal(new URL(page.url()).searchParams.get('waxThickness'), 'thin');
   }
   await page.close();
 });

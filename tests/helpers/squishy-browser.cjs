@@ -15,7 +15,7 @@ async function installStyleProbe(page, style) {
       let arrayBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
       let drawFramebuffer = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
       let readFramebuffer = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
-      const names = new Map(), matrices = new Map();
+      const names = new Map(), matrices = new Map(), projections = new Map();
       for (const method of ['useProgram', 'bindBuffer', 'bindFramebuffer', 'bufferData', 'bufferSubData', 'getUniformLocation', 'uniformMatrix4fv', 'drawElements']) {
         const native = gl[method].bind(gl);
         gl[method] = function(...a) {
@@ -28,6 +28,7 @@ async function installStyleProbe(page, style) {
           }
           if (method === 'getUniformLocation' && result) names.set(result, a[1]);
           if (method === 'uniformMatrix4fv' && names.get(a[0]) === 'modelViewMatrix') matrices.set(currentProgram, Array.from(a[2]));
+          if (method === 'uniformMatrix4fv' && names.get(a[0]) === 'projectionMatrix') projections.set(currentProgram, Array.from(a[2]));
           if (method === 'bufferData' && a[0] === gl.ARRAY_BUFFER && a[1]?.length === rest.length && rest.every((v, i) => Math.abs(a[1][i] - v) < 1e-6)) {
             positionBuffer = arrayBuffer; p.positions = Array.from(a[1]); p.uploads++;
           }
@@ -44,6 +45,9 @@ async function installStyleProbe(page, style) {
             for (let i = 0; i < length; i++) p.normals[a[1] / 4 + i] = data[offset + i];
           }
           if (method === 'drawElements' && a[1] === drawCount) {
+            if (!drawFramebuffer && !readFramebuffer) {
+              p.mainMatrix = matrices.get(currentProgram)?.slice(); p.projection = projections.get(currentProgram)?.slice();
+            }
             p.matrix = matrices.get(currentProgram)?.slice();
             const now = performance.now(); if (lastDraw && now - lastDraw < 250) p.intervals.push(now - lastDraw); lastDraw = now;
             p.draws++; p.matrices.push(p.matrix); if (p.matrices.length > 20) p.matrices.shift();

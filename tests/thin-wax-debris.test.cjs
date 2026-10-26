@@ -15,6 +15,30 @@ async function fixture(options = {}) {
   const snapshot = body => debris.points(body).map(p => p.toArray());
   return { THREE, debris, thickness, add, advance, snapshot, get time() { return time; } };
 }
+
+test('collection disabled falls below the former floor, expires offscreen and cannot respawn the same body', async () => {
+  const f = await fixture({ collectionEnabled: false }), body = f.add(3);
+  f.advance(.65); assert.ok(body.position.y < -1.35); assert.equal(body.settled, false);
+  assert.equal(f.debris.state().gridCells, 0); assert.equal(f.debris.state().settled, 0);
+  f.advance(2); assert.equal(f.debris.get(3), undefined); assert.deepEqual(f.debris.drainExpired(), [3]);
+  assert.equal(f.add(3), undefined, 'An expired fragment ID cannot be generated twice');
+  f.debris.setCollectionEnabled(true); assert.equal(f.debris.get(3), undefined);
+  f.debris.reset(); assert.ok(f.add(3), 'Explicit reset permits a new recipe instance');
+});
+
+test('disabling a populated collection releases settled bodies and clears every support cell', async () => {
+  const f = await fixture(), body = f.add(9); f.advance(2); assert.ok(body.settled);
+  const y = body.position.y; assert.ok(f.debris.state().gridCells > 0);
+  f.debris.setCollectionEnabled(false); assert.equal(body.settled, false); assert.equal(f.debris.state().gridCells, 0);
+  f.advance(.2); assert.ok(body.position.y < y - .1); f.advance(2);
+  assert.equal(f.debris.get(9), undefined); assert.deepEqual(f.debris.drainExpired(), [9]);
+  f.debris.setCollectionEnabled(true); assert.equal(f.debris.state().settled, 0);
+});
+
+test('uncollected body lifetime uses actual elapsed seconds when a coarse frame cannot integrate the whole interval', async () => {
+  const f = await fixture({ collectionEnabled: false }), body = f.add(11, undefined, [0, 100, 0]);
+  f.debris.advance(.01, 8.01); assert.equal(f.debris.get(body.id), undefined); assert.deepEqual(f.debris.drainExpired(), [11]);
+});
 test('released bodies fall faster in world Y for three differently rotated source surfaces', async () => {
   const f = await fixture();
   for (const [id, rotation] of [[0, [0, 0, 0]], [1, [0, 0, Math.PI / 2]], [2, [Math.PI / 2, .7, -.4]]]) {

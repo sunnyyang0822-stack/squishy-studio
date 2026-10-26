@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { readMesh } = require('./helpers/squishy-mesh.cjs');
 
-async function fixture() {
+async function fixture(options = {}) {
   const THREE = await import('three');
   const { createThinWax, thinWaxParameters } = await import('../src/thin-wax.mjs');
   const { getOrbFeel } = await import('../src/orb-feels.mjs');
@@ -10,7 +10,7 @@ async function fixture() {
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(data.positions, 3));
   geometry.setAttribute('normal', new THREE.Float32BufferAttribute(data.normals, 3)); geometry.setIndex(data.indices);
   let now = 0;
-  const wax = createThinWax({ geometry, color: '#ffeeaa', clock: () => now });
+  const wax = createThinWax({ geometry, color: '#ffeeaa', clock: () => now, ...options });
   const deformation = getOrbFeel('clay').createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array);
   const baselinePositions = Float32Array.from(data.positions);
   const baseline = getOrbFeel('clay').createDeformation(baselinePositions, Float32Array.from(data.normals));
@@ -277,6 +277,43 @@ test('live chips stay capped at 24 while continued deep pressure can strip each 
   f.wax.dispose(); f.geometry.dispose();
 });
 
+test('preview fall-through removes actual fragment drawing, preserves holes and frees the moving budget', async () => {
+  const f = await fixture({ collectionEnabled: false }), positions = f.geometry.attributes.position.array;
+  f.wax.setWorldMatrix(new f.THREE.Matrix4().makeTranslation(0, 100, 0));
+  for (const contact of [[0, 0, .9], [0, 0, -.9], [.9, 0, 0]]) {
+    f.wax.begin(contact); f.advance(.501);
+    for (let i = 0; i < 6; i++) { for (let k = 0; k < positions.length; k++) positions[k] *= .97; f.geometry.computeVertexNormals(); f.advance(.061); }
+    f.wax.end();
+  }
+  assert.equal(f.wax.getState().living, 24); const removed = f.wax.getState().detached, airborne = f.wax.getSurfaceSnapshot();
+  const removedIds = new Set(Array.from(airborne.panelIds).filter((id, r) => airborne.detached[r]));
+  settle(f, 9); const cleared = f.wax.getState();
+  assert.equal(cleared.living, 0); assert.equal(cleared.expired, removed); assert.equal(cleared.settled, 0); assert.equal(cleared.debris.gridCells, 0);
+  const snapshot = f.wax.getSurfaceSnapshot();
+  let hidden = 0;
+  for (let r = 0; r < snapshot.layers.length; r++) if (removedIds.has(snapshot.panelIds[r])) {
+    assert.equal(snapshot.positions[r * 3], 0); assert.equal(snapshot.positions[r * 3 + 1], 0); assert.equal(snapshot.positions[r * 3 + 2], 0); hidden++;
+  }
+  assert.ok(hidden > 100, 'Expired rendered triangles genuinely collapse, rather than merely changing counters');
+  f.wax.begin([0, -.9, 0]); f.advance(.501); f.wax.end();
+  assert.ok(f.wax.getState().detached > removed, 'Expired bodies release the full moving budget');
+  f.wax.setCollectionEnabled(true); assert.equal(f.wax.getState().expired, removed);
+  assert.equal(f.wax.getState().detached, f.wax.getState().living + f.wax.getState().settled + f.wax.getState().expired);
+  assert.equal(f.wax.getMetrics({ exhaustive: true }).detachedViolations, 0);
+  f.wax.dispose(); f.geometry.dispose();
+});
+
+test('switching an existing collection off keeps shell damage and lets the old pile fall away without revival', async () => {
+  const f = await fixture(); f.wax.begin([0, 0, .9]); f.advance(.501); f.wax.end(); settle(f, 3);
+  const before = f.wax.getState(); assert.ok(before.settled > 0);
+  f.wax.setCollectionEnabled(false); assert.equal(f.wax.getState().settled, 0); assert.equal(f.wax.getState().detached, before.detached);
+  settle(f, 3); assert.equal(f.wax.getState().expired, before.detached); assert.equal(f.wax.getState().living, 0);
+  f.wax.setCollectionEnabled(true); f.advance(.1);
+  assert.equal(f.wax.getState().expired, before.detached); assert.equal(f.wax.getState().settled, 0); assert.equal(f.wax.getState().detached, before.detached);
+  assert.ok(f.wax.getState().cracked >= before.cracked);
+  f.wax.dispose(); f.geometry.dispose();
+});
+
 test('repeated local presses can strip the complete real shell once without duplicate cells or regrowth', async t => {
   const f = await fixture(); f.wax.setWorldMatrix(new f.THREE.Matrix4().makeTranslation(0, .7, 0));
   const initial = f.wax.getSurfaceSnapshot(), centers = new Map();
@@ -311,7 +348,7 @@ test('repeated local presses can strip the complete real shell once without dupl
   const pileCoreGap = coreBottom - physicalPileTop;
   t.diagnostic(JSON.stringify({ completeShellPanels: centers.size, debris, physicalMaxRadius, physicalSamples, coreBottom, physicalPileTop, pileCoreGap }));
   assert.ok(physicalPileTop <= debris.pileTop + .002, 'Frozen rendering must contain the final settled pose, not an earlier airborne pose');
-  assert.ok(pileCoreGap > .1, `The complete 180-piece pile must leave a visible gap below the elevated core: ${pileCoreGap}`);
+  assert.ok(pileCoreGap > .20, `The complete 180-piece pile must leave a visible gap below the elevated core: ${pileCoreGap}`);
   assert.ok(physicalMaxRadius <= debris.radius + 1e-5, `Every actual inner, outer and wall vertex stays inside the tray: ${physicalMaxRadius}`);
   f.wax.reset(); assert.equal(f.wax.getState().detached, 0); assert.equal(f.wax.getState().cracked, 0);
   f.wax.dispose(); f.geometry.dispose();

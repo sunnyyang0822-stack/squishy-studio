@@ -3,20 +3,20 @@ const assert = require('node:assert/strict');
 const stateModule = import('../detail/state.mjs');
 
 function harness(createDetailController, renderer) {
-  const prepared = [], committed = [], released = [], sound = [];
+  const prepared = [], committed = [], released = [], sound = [], restoreOptions = [];
   let stopped = 0, restored = 0, disposed = 0;
   const preview = renderer || {
     async prepare(config) {
       prepared.push(config);
       return { commit() { committed.push(config); }, dispose() { released.push(config); } };
     },
-    stopInput() { stopped++; }, restore() { restored++; }, dispose() {},
+    stopInput() { stopped++; }, restore(options) { restored++; restoreOptions.push(options); }, dispose() {},
   };
   const controller = createDetailController({
     renderer: preview,
     audio: { ready: false, setVolume(value) { sound.push(value); }, dispose() { disposed++; } },
   });
-  return { controller, prepared, committed, released, sound,
+  return { controller, prepared, committed, released, sound, restoreOptions,
     get stopped() { return stopped; }, get restored() { return restored; },
     get disposed() { return disposed; } };
 }
@@ -64,6 +64,8 @@ test('薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改�
     assert.equal(shell.waxThickness, 'thin');
     assert.equal(core.recipeKey, shell.recipeKey);
     assert.equal(shell.recipeKey, previewFor('play', recipe).recipeKey);
+    for (const step of ['core', 'shell', 'decoration', 'making']) assert.equal(previewFor(step, recipe).waxCollection, false);
+    assert.equal(Object.hasOwn(previewFor('play', recipe), 'waxCollection'), false, 'Final experience keeps its existing configuration contract');
     assert.equal(shell.recipeKey, recipeKeyFor(Object.fromEntries(Object.entries(recipe).reverse())));
     for (const [key, value] of [['coreColor', 'lemon'], ['shellColor', 'lemon'], ['styleId', 'cloud'], ['waxThickness', 'thick'], ['shellMaterial', 'sugar']]) {
       assert.notEqual(shell.recipeKey, recipeKeyFor({ ...recipe, [key]: value }), key);
@@ -84,12 +86,13 @@ test('同配方前后导航不修复损伤，壳设置或隐藏内芯色变化�
   c.setStep('making'); c.setStep('play'); await settle();
   c.setStep('making'); c.setStep('decoration'); await settle();
   c.setStep('shell'); await settle();
-  assert.equal(h.prepared.length, shellCount);
+  assert.equal(h.prepared.length, shellCount + 2, 'Collection presentation changes must configure even with an unchanged recipe');
+  assert.ok(h.prepared.slice(shellCount).every(config => config.recipeKey === h.prepared[shellCount - 1].recipeKey));
   assert.equal(h.restored, 0);
   assert.equal(h.stopped, 2);
   const previous = h.prepared.at(-1);
   await c.select('coreColor', 'mint');
-  assert.equal(h.prepared.length, shellCount + 1);
+  assert.equal(h.prepared.length, shellCount + 3);
   assert.equal(h.prepared.at(-1).color, previous.color);
   assert.notEqual(h.prepared.at(-1).recipeKey, previous.recipeKey);
   await c.select('waxThickness', 'medium');
@@ -106,7 +109,7 @@ test('同配方前后导航不修复损伤，壳设置或隐藏内芯色变化�
   c.dispose();
 });
 
-test('重新开始仅作用于已就绪的圆球黏土薄蜡，不改变配方或步骤', async () => {
+test('重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤', async () => {
   const { createDetailController, canRestartThinWax, defaultRecipe } = await stateModule;
   const h = harness(createDetailController), c = h.controller;
   c.restart(); assert.equal(h.restored, 0);
@@ -123,7 +126,7 @@ test('重新开始仅作用于已就绪的圆球黏土薄蜡，不改变配方�
   assert.deepEqual(c.getState(), before);
   for (const step of ['core', 'making']) assert.equal(canRestartThinWax(step, before.recipe), false);
   for (const step of ['shell', 'decoration', 'play']) assert.equal(canRestartThinWax(step, before.recipe), true);
-  for (const override of [{ styleId: 'donut' }, { coreMaterial: 'marshmallow' }, { coreMaterial: 'butter' }, { waxThickness: 'medium' }, { shellMaterial: 'sugar' }]) {
+  for (const override of [{ styleId: 'unknown' }, { coreMaterial: 'marshmallow' }, { coreMaterial: 'butter' }, { waxThickness: 'medium' }, { shellMaterial: 'sugar' }]) {
     assert.equal(canRestartThinWax('play', { ...defaultRecipe, waxThickness: 'thin', ...override }), false);
   }
   c.rendererUnavailable(); c.restart(); assert.equal(h.restored, 1);
@@ -132,13 +135,58 @@ test('重新开始仅作用于已就绪的圆球黏土薄蜡，不改变配方�
 
 test('薄蜡范围之外的制作结束保留原有自动恢复', async () => {
   const { createDetailController } = await stateModule;
-  for (const [group, value] of [['waxThickness', 'medium'], ['coreMaterial', 'marshmallow'], ['coreMaterial', 'butter'], ['styleId', 'donut'], ['shellMaterial', 'polish']]) {
+  for (const [group, value] of [['waxThickness', 'medium'], ['coreMaterial', 'marshmallow'], ['coreMaterial', 'butter'], ['shellMaterial', 'polish']]) {
     const h = harness(createDetailController), c = h.controller;
     await c.load(); await c.select('waxThickness', 'thin'); await c.select(group, value);
     c.setStep('making'); c.setStep('play');
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(h.restored, 1, `${group}=${value}`);
+    assert.deepEqual(h.restoreOptions, [undefined], 'Legacy configurations retain the no-argument restore contract');
     c.restart(); assert.equal(h.restored, 1);
+    c.dispose();
+  }
+});
+
+test('八种已支持样式从裸芯下一步传递独立薄蜡配方，只有黏土启用且导航保留损伤', async () => {
+  const { createDetailController, isThinWaxRecipe, canRestartThinWax, styleNames } = await stateModule;
+  const settle = () => new Promise(resolve => setImmediate(resolve));
+  for (const styleId of Object.keys(styleNames)) {
+    const h = harness(createDetailController), c = h.controller;
+    await c.load(); await c.select('styleId', styleId);
+    await c.select('coreColor', 'mint'); await c.select('shellColor', 'sky');
+    assert.equal(c.getState().recipe.waxThickness, 'medium');
+    assert.equal(isThinWaxRecipe(c.getState().recipe), false);
+    await c.select('waxThickness', 'thin');
+    const core = h.prepared.at(-1);
+    assert.equal(core.mode, 'core'); assert.equal(core.color, 'mint'); assert.equal(core.waxCollection, false);
+    c.next(); await settle();
+    const shell = h.prepared.at(-1);
+    assert.equal(shell.mode, 'shell'); assert.equal(shell.styleId, styleId); assert.equal(shell.feelId, 'clay');
+    assert.equal(shell.coreColor, 'mint'); assert.equal(shell.shellColor, 'sky');
+    assert.equal(shell.shellMaterial, 'wax'); assert.equal(shell.waxThickness, 'thin'); assert.equal(shell.waxCollection, false);
+    assert.equal(shell.recipeKey, core.recipeKey); assert.equal(isThinWaxRecipe(c.getState().recipe), true);
+    assert.equal(canRestartThinWax('shell', c.getState().recipe), true);
+    assert.equal(canRestartThinWax('decoration', c.getState().recipe), true);
+    assert.equal(canRestartThinWax('play', c.getState().recipe), styleId === 'orb', 'Other styles final experience stays outside this scope');
+    const count = h.prepared.length;
+    c.next(); await settle(); c.previous(); await settle();
+    assert.equal(h.prepared.length, count); assert.equal(h.restored, 0);
+    c.setStep('making'); c.setStep('play'); await settle();
+    assert.equal(h.restored, styleId === 'orb' ? 0 : 1, 'Other style final experience retains its previous restoration');
+    assert.deepEqual(h.restoreOptions, styleId === 'orb' ? [] : [{ preserveShell: true }]);
+    assert.equal(h.prepared.at(-1).waxCollection, undefined);
+    assert.equal(h.prepared.at(-1).recipeKey, shell.recipeKey, 'Presentation state must not alter recipe identity');
+    const playPrepareCount = h.prepared.length;
+    c.setStep('shell'); await settle();
+    assert.equal(h.prepared.length, playPrepareCount + 1, 'Returning from final view must reconfigure preview presentation');
+    assert.equal(h.prepared.at(-1).waxCollection, false);
+    assert.equal(h.prepared.at(-1).recipeKey, shell.recipeKey);
+    assert.deepEqual(h.restoreOptions, styleId === 'orb' ? [] : [{ preserveShell: true }], 'Returning preview does not repair shell');
+    for (const coreMaterial of ['marshmallow', 'butter']) {
+      await c.select('coreMaterial', coreMaterial);
+      assert.equal(isThinWaxRecipe(c.getState().recipe), false);
+      assert.equal(canRestartThinWax('shell', c.getState().recipe), false);
+    }
     c.dispose();
   }
 });
