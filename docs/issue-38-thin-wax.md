@@ -112,6 +112,14 @@ CPU 采样与源码确认瓶颈是碰撞查询反复读取 5120 个芯三角面�
 
 `651c88c` 云端仍只有自由下落采样失败；新增逐帧证据确认三个首发片各自仅有一帧落在完整合法窗口，下一帧即越过收盘边界。后续仅该用例改用真实球投影框下方的按压点，并读取产品实际 ray hit 世界坐标，新增可信输入/Pointer Capture 与触点距芯底 <0.35 的约束；不是修改重力、球位、盘位或扩大验收窗口。三姿态实测距芯底 0.175/0.157/0.192，减少脱芯前落差，从而保留更多低速自由下落取样时间。其他测试仍原按压入口。默认专项 1/1、16.94 秒；SwiftShader＋CPU4＋DPR0.25 专项 1/1、25.46 秒，均退出 0，后者原窗口真实 GPU 下落 0.144/0.399/0.136、侧移均 <0.0031。见 [默认低位按压](../artifacts/issue-38/flight-low-contact-default.txt)、[软件压力低位按压](../artifacts/issue-38/flight-low-contact-swiftshader-cpu4.txt)。最终 CI 结果见 PR 检查；上述前序失败明确保留。
 
+### 最终 CI 与最新 main 集成
+
+`3b2bdac` 的 [GitHub 运行 40219665134](https://github.com/sunnyyang0822-stack/squishy-studio/actions/runs/40219665134) 已完成，30 个作业全部成功（含 6 个分片、23 个样式专项及总汇），计费阻塞已解除。公开状态由用户主动选择，本轮未修改可见性。
+
+最终核对发现远端 main 新增 `3acd470`（PR #40 顶部制作进度与移除制作页样式选择器），已通过普通 merge `52ec256` 合入本工作分支，无冲突、保留该协作者成果。初始基线仍为 `2440cdc`；本轮后续 PR 检查须使用合入后的头提交结果，不能拿先前绿灯代替。产品渲染包哈希不变；既有视频为此前构图与交互证据，未宣称是最新顶部导航录像。
+
+合入后本地验证：默认 DPR1 完整薄蜡浏览器 8/8、54.43 秒；制作流程及状态回归 26/26、25.59 秒，均退出 0，无重跑。见 [薄蜡](../artifacts/issue-38/latest-main-browser.txt)、[流程](../artifacts/issue-38/latest-main-flow.txt)。两套运行曾短暂重叠，故仅作功能验证，不用作性能数据。
+
 ## 分支与回滚
 
 明确基线 `origin/main 2440cdc`，分支 `codex/issue-38-thin-wax`，工作树 `D:/squishy-studio/.worktrees/issue-38-thin-wax`。[草稿 PR #39](https://github.com/sunnyyang0822-stack/squishy-studio/pull/39) 指向 main。用户于 2026-10-26 明确告知已主动将仓库改为 Public，以使用公开仓库标准托管 Runner；本轮按该最新指示保留公开状态，不自动改回 Private。此前文档中的 Private 是历史状态。不改共享历史，不自动关闭 Issue #38。用户查验及必需检查通过前不合并。
