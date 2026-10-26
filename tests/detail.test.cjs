@@ -390,7 +390,8 @@ test('详情样式和配方直达刷新、五步及浏览器返回保持', async
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.goto(base + path + '?style=donut&coreMaterial=butter');
   await ready(page);
-  assert.equal(await page.getByRole('combobox', { name: '捏捏样式' }).inputValue(), 'donut');
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'donut');
+  assert.match(await page.title(), /甜甜圈/);
   assert.equal(await choice(page, '内芯材质', '棉花糖').isDisabled(), false);
   assert.equal(await choice(page, '内芯材质', '慢回弹').isDisabled(), false);
   assert.equal(await choice(page, '内芯材质', '慢回弹').isChecked(), true);
@@ -414,7 +415,8 @@ test('详情样式和配方直达刷新、五步及浏览器返回保持', async
   assert.equal(await choice(page, '装饰', '3').isChecked(), true);
   await page.goBack(); await ready(page);
   assert.equal(await current(page, 'play'), 'step');
-  await page.getByRole('combobox', { name: '捏捏样式' }).selectOption('star'); await ready(page);
+  const starRecipe = new URL(page.url()); starRecipe.searchParams.set('style', 'star');
+  await page.goto(starRecipe.href); await ready(page);
   assert.equal(new URL(page.url()).searchParams.get('style'), 'star');
   await page.reload(); await ready(page);
   assert.equal(await current(page, 'play'), 'step');
@@ -424,6 +426,53 @@ test('详情样式和配方直达刷新、五步及浏览器返回保持', async
   assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'slow-rebound');
   assert.equal(await page.locator('.toy-mount').getAttribute('data-appearance-id'), 'full-matte');
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('制作页去掉样式选择框，步骤条在页头中间且窄屏完整换行', async () => {
+  const page = await browser.newPage();
+  const errors = []; page.on('pageerror', error => errors.push(error.message));
+  await page.goto(base + path + '?style=donut'); await ready(page);
+  assert.equal(await page.locator('.style-picker, select[name="styleId"]').count(), 0);
+  assert.equal(await page.getByRole('combobox', { name: '捏捏样式' }).count(), 0);
+  assert.deepEqual(await page.locator('.detail-topbar > *').evaluateAll(items => items.map(item => item.className)), ['detail-back', 'workflow-progress', 'detail-brand']);
+  for (const theme of ['day', 'night']) {
+    await page.locator('html').evaluate((html, theme) => { html.dataset.theme = theme; }, theme);
+    for (const viewport of [{width:1440,height:900},{width:1024,height:768},{width:768,height:600},{width:760,height:600},{width:390,height:844},{width:320,height:568},{width:844,height:390}]) {
+      await page.setViewportSize(viewport);
+      // The existing renderer aligns the input overlay on its next resize frame.
+      await page.waitForFunction(() => document.documentElement.scrollWidth <= innerWidth);
+      const [back, progressBar, brand] = await Promise.all(['.detail-back','.workflow-progress','.detail-brand'].map(selector => page.locator(selector).boundingBox()));
+      assert.ok(back.height >= 44 && brand.height >= 44, '页头链接触控区域');
+      assert.ok(back.y === brand.y, '返回与品牌同排');
+      if (viewport.width > 760) {
+        assert.ok(progressBar.x > back.x + back.width && progressBar.x + progressBar.width < brand.x, '步骤条位于两个链接中间');
+        assert.ok(progressBar.y >= back.y && progressBar.y + progressBar.height <= back.y + back.height, '桌面步骤条与链接同排');
+      } else {
+        assert.ok(progressBar.y >= back.y + back.height, '窄屏步骤条换行');
+      }
+      assert.ok(progressBar.width >= 5 * 44, '五个步骤有足够空间');
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      assert.equal(await page.locator('.progress-label:visible').count(), 5);
+      if (process.env.HEADER_CAPTURE_DIR && [1440,390].includes(viewport.width)) {
+        const { mkdirSync } = require('node:fs'); mkdirSync(process.env.HEADER_CAPTURE_DIR, { recursive: true });
+        await page.screenshot({ path: `${process.env.HEADER_CAPTURE_DIR}/${viewport.width}-${theme}.png`, fullPage: true });
+      }
+    }
+  }
+  await page.setViewportSize({width:1440,height:900});
+  for (let index = 0; index < 5; index++) {
+    await progress(page,index);
+    if (index < 4) await page.locator('.step-next').click();
+  }
+  await ready(page);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'donut', '去掉选择框仍保留入口样式');
+  await page.locator('.detail-back').click();
+  assert.equal(new URL(page.url()).hash, '#style-donut');
+  await page.locator('#style-star .style-entry').click(); await ready(page);
+  assert.match(await page.title(), /五角星/);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'star', '通过合集仍可选择其他样式');
   assert.deepEqual(errors, []);
   await page.close();
 });

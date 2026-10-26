@@ -2,15 +2,6 @@ import { createDetailController, canRestartThinWax, steps, stepNames, coreNames,
 import { orbColors } from './orb-colors.mjs';
 import { createModelPreview, createSilentAudio } from './adapters.js';
 
-const stylePicker = document.createElement('label');
-stylePicker.className = 'style-picker';
-const styleLabel = document.createElement('span'); styleLabel.textContent = '样式';
-const styleSelect = document.createElement('select'); styleSelect.name = 'styleId'; styleSelect.setAttribute('aria-label', '捏捏样式');
-for (const [id, name] of Object.entries(styleNames)) {
-  const option = document.createElement('option'); option.value = id; option.textContent = name; styleSelect.append(option);
-}
-stylePicker.append(styleLabel, styleSelect);
-document.querySelector('.detail-topbar').insertBefore(stylePicker, document.querySelector('.detail-brand'));
 const styleNotice = document.createElement('p'); styleNotice.className = 'style-notice'; styleNotice.setAttribute('role', 'status');
 document.querySelector('.step-navigation').before(styleNotice);
 
@@ -125,7 +116,6 @@ controller = createDetailController({
     const { step, recipe, resource } = state;
     const styleName = styleNames[recipe.styleId];
     document.querySelector('.detail-back').href = recipe.styleId === 'orb' ? '/collections/' : `/collections/#style-${recipe.styleId}`;
-    styleSelect.value = recipe.styleId;
     styleNotice.textContent = state.selectionNotice;
     styleNotice.hidden = !styleNotice.textContent;
     document.title = `制作${styleName}｜Squishy Studio`;
@@ -169,7 +159,6 @@ function navigate(step) {
   history.replaceState({ squishyStep: new URL(currentUrl).searchParams.get('step') || 'core' }, '', currentUrl);
   history.pushState({ squishyStep: step }, '', targetUrl);
 }
-on(styleSelect, 'change', () => void controller.select('styleId', styleSelect.value));
 on(back, 'click', () => navigate(controller.getState().step === 'play' ? 'decoration' : steps[steps.indexOf(controller.getState().step) - 1]));
 on(next, 'click', () => navigate(steps[steps.indexOf(controller.getState().step) + 1]));
 on(retry, 'click', () => void controller.retry());
