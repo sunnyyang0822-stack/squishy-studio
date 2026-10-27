@@ -22,3 +22,9 @@
 当前ccb686独立性能记录 `slow-orb-aligned-performance.json`／TXT，命令同上：668个完整间隔中位5.7ms、P95 8.6ms、最大12ms，退出码0，无并发本任务测试或录屏，实际服务哈希相等。前述5.6ms为旧比例包的历史阶段，不混用。未验证真机和Safari。
 
 走查：`http://127.0.0.1:4381/squishy/cloud/?style=orb&coreMaterial=butter&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell`。普通revert本提交并 `npm run build:orb` 可撤回圆球入口与展示比例变更；不修改慢回弹工厂或已批准薄蜡预设，不直接推送main、不强推、不自动关闭#38。
+
+## CI 观察器与软件光栅配置修正
+
+首次PR45运行40517275336的两项分片失败：旧托盘自由落体测试在约140ms的软件渲染间隔中只得到一个完全离开内芯、尚未进托盘的帧；新圆球短按测试未读取现有THIN_WAX_TEST_DPR，且原观察器等到超过0.001才结束，而慢回弹首帧约0.00052，需要额外一帧等待。现新浏览器场景采用既有CI DPR0.5，等待真实薄蜡GPU缓冲已上传后再输入；慢回弹观察器显式要求真实非零首帧深度大于0.0001，其余质感默认仍0.001，捕获／可信按下／真实上传／500ms／碰撞断言均保留。旧托盘方向测试仅在CI将DPR0.25调到0.125，完整网格、碰撞、阴影和时钟不变，不涉及产品显示质量。
+
+SwiftShader、DPR0.5／flight0.125、正常CPU下，短按桌面与触屏两例均实际通过，原始记录 slow-orb-ci-default-software-validation.txt；该组合命令在之后的旧托盘阶段被主动中断，以暂停后台负载，不能称整条命令完成通过。旧托盘方向case单独执行 `node --test --test-name-pattern='rotated real interaction' tests/thin-wax-browser.test.cjs` 完整1/1通过，退出码0，30.58秒，原始 slow-orb-ci-flight-software-final.txt。额外4倍CPU限速压力尝试3例失败记录 slow-orb-ci-raster-validation.txt 保留，不将其混为普通CI或手机通过结果。产品运行包仍为ccb686，须等待新head远端完整检查通过再合并。
