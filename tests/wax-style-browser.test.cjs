@@ -115,9 +115,9 @@ for (const id of styles) test(`${id} clay thin-wax making preview: real mesh inp
   } finally { await page.close(); }
 });
 
-test('style wax scope preserves other feels and legacy non-orb play', { timeout: 180000 }, async t => {
+test('style wax scope excludes slow rebound and preserves all preview-only legacy play', { timeout: 180000 }, async t => {
   const results = [];
-  for (const id of styles) for (const material of ['marshmallow', 'butter']) {
+  for (const id of styles) for (const material of ['butter']) {
     const { page } = await open(id, material, 'shell');
     try {
       const d = await diagnostic(page); assert.equal(d.enabled, false, `${id}/${material} remains outside wax scope`);
@@ -125,8 +125,9 @@ test('style wax scope preserves other feels and legacy non-orb play', { timeout:
       results.push({ id, material, enabled: d.enabled });
     } finally { await page.close(); }
   }
-  for (const id of styles.filter(id => id !== 'orb')) {
-    const { page } = await open(id, 'clay', 'play');
+  const legacyRecipes = [...styles.filter(id => id !== 'orb').map(id => [id, 'clay']), ...styles.map(id => [id, 'marshmallow'])];
+  for (const [id, material] of legacyRecipes) {
+    const { page } = await open(id, material, 'play');
     try {
       const d = await diagnostic(page); assert.equal(d.enabled, false, `${id} play keeps the original single surface`);
       assert.equal(d.debrisStage.visible, false);

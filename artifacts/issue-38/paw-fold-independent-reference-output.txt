@@ -1,0 +1,265 @@
+{
+  "feature": "edge",
+  "incidentFaces": [
+    2855,
+    17337
+  ],
+  "pseudoInside": false,
+  "before": {
+    "rays": [
+      {
+        "direction": [
+          0.930773560748922,
+          0.3453169910378501,
+          0.12006978933661094
+        ],
+        "rawHits": 2,
+        "uniqueHits": 2,
+        "inside": false
+      },
+      {
+        "direction": [
+          -0.19543602194737725,
+          0.9006268292505865,
+          0.3881701634070028
+        ],
+        "rawHits": 0,
+        "uniqueHits": 0,
+        "inside": false
+      },
+      {
+        "direction": [
+          0.16360568837583558,
+          -0.2808721933388622,
+          0.9456976206695699
+        ],
+        "rawHits": 0,
+        "uniqueHits": 0,
+        "inside": false
+      }
+    ],
+    "parityConsistent": true,
+    "parityInside": false,
+    "winding": 5.115847229493382e-16,
+    "windingInside": false,
+    "parityWindingAgree": true
+  },
+  "after": {
+    "rays": [
+      {
+        "direction": [
+          0.930773560748922,
+          0.3453169910378501,
+          0.12006978933661094
+        ],
+        "rawHits": 2,
+        "uniqueHits": 2,
+        "inside": false
+      },
+      {
+        "direction": [
+          -0.19543602194737725,
+          0.9006268292505865,
+          0.3881701634070028
+        ],
+        "rawHits": 0,
+        "uniqueHits": 0,
+        "inside": false
+      },
+      {
+        "direction": [
+          0.16360568837583558,
+          -0.2808721933388622,
+          0.9456976206695699
+        ],
+        "rawHits": 0,
+        "uniqueHits": 0,
+        "inside": false
+      }
+    ],
+    "parityConsistent": true,
+    "parityInside": false,
+    "winding": 4.554619184962539e-17,
+    "windingInside": false,
+    "parityWindingAgree": true
+  },
+  "productionQueries": [
+    {
+      "featureNormals": false,
+      "nearestGrid": false,
+      "distance": -0.03808787054371515,
+      "normal": [
+        0.8582712630721014,
+        0.14875088799681702,
+        0.49116556506414205
+      ],
+      "inside": true
+    },
+    {
+      "featureNormals": false,
+      "nearestGrid": true,
+      "distance": -0.03808787054371515,
+      "normal": [
+        0.8582712630721014,
+        0.14875088799681702,
+        0.49116556506414205
+      ],
+      "inside": true
+    },
+    {
+      "featureNormals": true,
+      "nearestGrid": false,
+      "distance": 0.03808787054371515,
+      "normal": [
+        0.04472157164473358,
+        -0.3253536270888966,
+        0.9445342759104745
+      ],
+      "inside": false
+    },
+    {
+      "featureNormals": true,
+      "nearestGrid": true,
+      "distance": 0.03808787054371515,
+      "normal": [
+        0.04472157164473358,
+        -0.3253536270888966,
+        0.9445342759104745
+      ],
+      "inside": false
+    }
+  ]
+}
+LEGACY_REFERENCE_EXIT_CODE=0
+{
+  "feature": "face",
+  "incidentFaces": [
+    2873
+  ],
+  "pseudoInside": true,
+  "before": {
+    "rays": [
+      {
+        "direction": [
+          0.930773560748922,
+          0.3453169910378501,
+          0.12006978933661094
+        ],
+        "rawHits": 5,
+        "uniqueHits": 5,
+        "inside": true
+      },
+      {
+        "direction": [
+          -0.19543602194737725,
+          0.9006268292505865,
+          0.3881701634070028
+        ],
+        "rawHits": 3,
+        "uniqueHits": 3,
+        "inside": true
+      },
+      {
+        "direction": [
+          0.16360568837583558,
+          -0.2808721933388622,
+          0.9456976206695699
+        ],
+        "rawHits": 1,
+        "uniqueHits": 1,
+        "inside": true
+      }
+    ],
+    "parityConsistent": true,
+    "parityInside": true,
+    "winding": 0.999999999999999,
+    "windingInside": true,
+    "parityWindingAgree": true
+  },
+  "after": {
+    "rays": [
+      {
+        "direction": [
+          0.930773560748922,
+          0.3453169910378501,
+          0.12006978933661094
+        ],
+        "rawHits": 4,
+        "uniqueHits": 4,
+        "inside": false
+      },
+      {
+        "direction": [
+          -0.19543602194737725,
+          0.9006268292505865,
+          0.3881701634070028
+        ],
+        "rawHits": 2,
+        "uniqueHits": 2,
+        "inside": false
+      },
+      {
+        "direction": [
+          0.16360568837583558,
+          -0.2808721933388622,
+          0.9456976206695699
+        ],
+        "rawHits": 0,
+        "uniqueHits": 0,
+        "inside": false
+      }
+    ],
+    "parityConsistent": true,
+    "parityInside": false,
+    "winding": 1.0575167445827755e-15,
+    "windingInside": false,
+    "parityWindingAgree": true
+  },
+  "productionQueries": [
+    {
+      "featureNormals": false,
+      "nearestGrid": false,
+      "distance": -0.0002773505469502473,
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "inside": true
+    },
+    {
+      "featureNormals": false,
+      "nearestGrid": true,
+      "distance": -0.0002773505469502473,
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "inside": true
+    },
+    {
+      "featureNormals": true,
+      "nearestGrid": false,
+      "distance": -0.0002773505469502473,
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "inside": true
+    },
+    {
+      "featureNormals": true,
+      "nearestGrid": true,
+      "distance": -0.0002773505469502473,
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "inside": true
+    }
+  ]
+}
+NEW_REFERENCE_EXIT_CODE=0

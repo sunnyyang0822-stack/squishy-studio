@@ -1,11 +1,12 @@
 import { createVoronoiWax } from './thin-wax-panels.mjs';
 import * as THREE from 'three';
+import { createWaxFeatureNormals } from './thin-wax-feature-normals.mjs';
 
 export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwell: .5, localRadius: .16, chainDuration: .063, visibleDeformation: .004, extraFractureDelay: .06, extraFractureStrain: .015, maxLocalFragments: 180, maxFragments: 180, maxLivingFragments: 24 });
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.
-export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, queryCache = true } = {}) {
+export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, queryCache = true, featureNormals = false, restPositions } = {}) {
   let countQueries = false;
   const p = geometry.attributes.position, index = geometry.index.array;
   const a = new THREE.Vector3(), b = a.clone(), c = a.clone(), hit = a.clone();
@@ -25,6 +26,8 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     return { box, left: build(ids.slice(0, mid)), right: build(ids.slice(mid)) };
   }
   const root = build(Array.from({ length: index.length / 3 }, (_, i) => i * 3));
+  const features = featureNormals ? createWaxFeatureNormals(geometry, restPositions) : null;
+  features?.refit(faces);
   // Optional exact local-query broad phase for densely tessellated concave
   // surfaces. Each live triangle occupies every cell touched by its AABB.
   // Large/out-of-grid queries and ambiguous equal-distance faces use the BVH.
@@ -110,6 +113,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     }
     if (node === root && changed) {
       surfaceRevision++;
+      features?.refit(faces);
       if (frameMotionSquared > 0) accumulatedMotion += Math.sqrt(frameMotionSquared) + 64 * Number.EPSILON * Math.max(1, accumulatedMotion);
       rebuildGrid();
     }
@@ -212,6 +216,13 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
   // Reuse traversal storage across synchronous queries. A recursive closure per
   // sample otherwise allocates tens of thousands of closures during a squeeze.
   const nearestStack = [], nearestBounds = [], sweepStack = [];
+  const featureNormal = new THREE.Vector3();
+  function featureResult(point, outwardNormal, faceIndex) {
+    const face = faces[faceIndex]; closestOnFace(face, point);
+    features.normalAt(faceIndex, face, closest, featureNormal); outwardNormal?.copy(featureNormal);
+    const sign = (point.x - closest.x) * featureNormal.x + (point.y - closest.y) * featureNormal.y + (point.z - closest.z) * featureNormal.z < 0 ? -1 : 1;
+    return sign * closest.distanceTo(point);
+  }
   function rememberQuery(siteHint, point, x0, x1, y0, y1, z0, z1, faceIndex, distance, secondSquared) {
     if (!queryCache || !siteHint) return;
     const saved = siteHint.queryResult?.owner === cacheOwner ? siteHint.queryResult : { owner: cacheOwner, cells: [], revisions: [] };
@@ -220,7 +231,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       const cell = (z * gridSize.y + y) * gridSize.x + x; saved.cells[count] = cell; saved.revisions[count++] = cellRevision[cell];
     }
     saved.cells.length = saved.revisions.length = count;
-    const normal = faces[faceIndex].normal;
+    const normal = features ? featureNormal : faces[faceIndex].normal;
     saved.epoch = cacheEpoch; saved.motion = accumulatedMotion; saved.x = point.x; saved.y = point.y; saved.z = point.z;
     saved.faceIndex = faceIndex; saved.distance = distance; saved.nx = normal.x; saved.ny = normal.y; saved.nz = normal.z;
     // Every unvisited triangle lies outside this complete cell cube. The
@@ -234,6 +245,15 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (countQueries) counters.nearestCalls++;
     const siteHint = typeof sourceFace === 'object' && sourceFace !== null ? sourceFace : null;
     const previous = siteHint?.queryResult;
+    if (features && queryCache && gridValid && previous?.owner === cacheOwner && previous.epoch === cacheEpoch && previous.x === point.x && previous.y === point.y && previous.z === point.z) {
+      let unchanged = true;
+      for (let i = 0; i < previous.cells.length; i++) if (cellRevision[previous.cells[i]] !== previous.revisions[i]) { unchanged = false; break; }
+      if (unchanged) {
+        if (countQueries) counters.cachedQueries++;
+        lastNearestFace = previous.faceIndex; siteHint.faceIndex = previous.faceIndex;
+        outwardNormal?.set(previous.nx, previous.ny, previous.nz); return previous.distance;
+      }
+    }
     // A nearest-face certificate survives either an unchanged local region, or
     // a conservatively bounded motion of the complete core and query point.
     let reusable = false;
@@ -249,13 +269,14 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (reusable) {
       if (countQueries) counters.cachedQueries++;
       lastNearestFace = previous.faceIndex; siteHint.faceIndex = previous.faceIndex;
+      if (features) return featureResult(point, outwardNormal, lastNearestFace);
       const face = faces[previous.faceIndex]; closestOnFace(face, point);
       outwardNormal?.copy(face.normal);
       const distance = closest.distanceTo(point), signed = (point.x - closest.x) * face.normal.x + (point.y - closest.y) * face.normal.y + (point.z - closest.z) * face.normal.z < 0 ? -1 : 1;
       return signed * distance;
     }
     sourceFace = siteHint ? siteHint.faceIndex ?? lastNearestFace : sourceFace;
-    let distanceSquared = Infinity, sign = 1;
+    let distanceSquared = Infinity, sign = 1, featureTieRegion;
     // A previously nearest (or known support) triangle is only a search hint.
     // Re-evaluate its *current refitted coordinates* for a finite upper bound;
     // the complete conservative BVH search still chooses the true nearest face.
@@ -283,10 +304,14 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
         if (Number.isFinite(distanceSquared) && secondSquared - distanceSquared > 64 * Number.EPSILON * Math.max(1, distanceSquared)) {
           if (countQueries) counters.gridQueries++;
           lastNearestFace = nearestFace; if (siteHint) siteHint.faceIndex = nearestFace;
-          const distance = sign * Math.sqrt(distanceSquared);
+          const distance = features ? featureResult(point, outwardNormal, nearestFace) : sign * Math.sqrt(distanceSquared);
           rememberQuery(siteHint, point, x0, x1, y0, y1, z0, z1, nearestFace, distance, secondSquared);
           return distance;
         }
+        // Keep BVH's exact tie selection. Closed-surface feature results may
+        // still reuse that *exact point* while the complete region is unchanged;
+        // no nearest-face motion radius is claimed for an equidistant feature.
+        if (features && Number.isFinite(distanceSquared)) featureTieRegion = [x0, x1, y0, y1, z0, z1];
         distanceSquared = Infinity; sign = 1;
       }
     }
@@ -316,9 +341,11 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     // Equal-distance face selection can depend on BVH traversal order; those
     // answers are never cached across refits.
     if (siteHint) { siteHint.faceIndex = lastNearestFace; siteHint.queryResult = undefined; }
-    return sign * Math.sqrt(distanceSquared);
+    const distance = features ? featureResult(point, outwardNormal, lastNearestFace) : sign * Math.sqrt(distanceSquared);
+    if (featureTieRegion) rememberQuery(siteHint, point, ...featureTieRegion, lastNearestFace, distance, distanceSquared);
+    return distance;
   }
-  return { refit, sweep, signedDistance, getLastNearestFace: () => lastNearestFace, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
+  return { refit, sweep, signedDistance, getMotionBound: () => gridHeads ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
 export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
