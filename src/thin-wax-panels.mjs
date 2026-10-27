@@ -117,7 +117,7 @@ function buildPanels(rest, index, count = 180) {
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, captureCorrectionGeometry = false } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
@@ -310,8 +310,11 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     // only while the transform is unchanged AND the live core cannot reach it.
     if (body?.settled && panel.renderedSettled && panel.renderWorldRevision === worldRevision && panel.renderBounds && !collisions.intersectsBox(panel.renderBounds)) return;
     if (!body) {
-      const points = mapped.map(v => v.p.clone().addScaledVector(v.n, config.gap + .006).applyMatrix4(worldMatrix));
-      const normals = mapped.map(v => v.n.clone().transformDirection(worldMatrix));
+      // Bigger plates keep the last displayed attached boundary at separation.
+      // Opt-in preserves the approved thin preset's original clearance path.
+      const freeze = freezeRenderedFragments && mapped.every(v => v.rendered && v.renderedNormal);
+      const points = mapped.map(v => (freeze ? v.rendered.clone() : v.p.clone().addScaledVector(v.n, config.gap + .006)).applyMatrix4(worldMatrix));
+      const normals = mapped.map(v => (freeze ? v.renderedNormal : v.n).clone().transformDirection(worldMatrix));
       body = debris.add(panel.id, points, normals, panel.triangles, now);
     }
     const worldPoints = debris.points(body, body.world), bounds = new THREE.Box3(), normal = vec();

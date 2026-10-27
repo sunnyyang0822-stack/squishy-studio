@@ -349,4 +349,4 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
 }
 
 export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
-export function createThinWax(options = {}) { return createVoronoiWax(options, options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters, createWaxCollisionTree); }
+export function createThinWax(options = {}, parameters = options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters) { return createVoronoiWax(options, parameters, createWaxCollisionTree); }

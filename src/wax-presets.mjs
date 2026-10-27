@@ -14,7 +14,21 @@ const thinWax = Object.freeze({
   },
 });
 
-export const waxPresets = Object.freeze({ 'thin-wax': thinWax });
+// Only physical layer thickness and the actual Voronoi partition count differ.
+// Contact timing, gap, fragment budgets and falling dynamics stay inherited.
+const mediumWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 2, seedCount: 96 });
+const mediumWax = Object.freeze({
+  id: 'medium-wax', material: 'wax', thickness: 'medium',
+  parameters: mediumWaxParameters,
+  create(options = {}) {
+    const { worldMatrix, ...shellOptions } = options;
+    const wax = createThinWax({ ...shellOptions, collectionEnabled: options.collectionEnabled ?? false, freezeRenderedFragments: true }, mediumWaxParameters);
+    if (worldMatrix) wax.setWorldMatrix(worldMatrix);
+    return wax;
+  },
+});
+
+export const waxPresets = Object.freeze({ 'thin-wax': thinWax, 'medium-wax': mediumWax });
 
 export function getWaxPreset(id = 'thin-wax') {
   if (!Object.hasOwn(waxPresets, id)) throw new RangeError('Unknown wax preset: ' + id);

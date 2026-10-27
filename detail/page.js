@@ -1,4 +1,4 @@
-import { createDetailController, canRestartThinWax, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames, styleNames, defaultRecipe } from './state.mjs';
+import { createDetailController, canRestartWax, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames, styleNames, defaultRecipe } from './state.mjs';
 import { orbColors } from './orb-colors.mjs';
 import { createModelPreview, createSilentAudio } from './adapters.js';
 
@@ -145,7 +145,7 @@ controller = createDetailController({
     back.textContent = step === 'making' || step === 'play' ? '返回修改' : '上一步';
     next.hidden = step === 'play';
     next.textContent = step === 'making' ? '开始捏捏' : '下一步';
-    restart.hidden = !canRestartThinWax(step, recipe);
+    restart.hidden = !canRestartWax(step, recipe);
     restart.disabled = resource !== 'ready' || state.configStatus === 'updating' || state.configError;
     document.querySelector('.configuration-summary').textContent = `当前${stepNames[step]}，${styleNames[recipe.styleId]}：内芯${coreNames[recipe.coreMaterial]}、${colorNames[recipe.coreColor]}，填充${fillingNames[recipe.filling]}；外壳${materialNames[recipe.shellMaterial]}、${colorNames[recipe.shellColor]}；装饰${decorationNames[recipe.decoration]}`;
     document.querySelector('.configuration-error').hidden = !state.configError;

@@ -28,7 +28,7 @@ async function show(page, id) {
 }
 const current = (page, id) => page.locator(`.workflow-progress li[data-step="${id}"]`).getAttribute('aria-current');
 
-test('重新开始仅在黏土薄蜡制作步骤显示，圆球保留既有体验入口，保持配方与步骤', async () => {
+test('重新开始在受支持蜡预设步骤显示，圆球黏土中蜡沿用入口并保持配方与步骤', async () => {
   const page = await browser.newPage();
   await page.goto(base + path + '?style=orb&step=shell&waxThickness=thin&coreColor=mint&shellColor=sky');
   await ready(page);
@@ -46,7 +46,7 @@ test('重新开始仅在黏土薄蜡制作步骤显示，圆球保留既有体�
   assert.equal(await restart.isVisible(), true);
   for (const config of [
     'style=orb&waxThickness=thin',
-    'style=orb&step=play',
+    'style=orb&step=play&waxThickness=thick',
     'style=orb&step=play&waxThickness=thin&coreMaterial=marshmallow',
     'style=orb&step=play&waxThickness=thin&coreMaterial=butter',
     'style=donut&step=play&waxThickness=thin',
@@ -55,6 +55,11 @@ test('重新开始仅在黏土薄蜡制作步骤显示，圆球保留既有体�
     await page.goto(base + path + '?' + config); await ready(page);
     assert.equal(await restart.isVisible(), false, config);
     assert.equal(await page.locator('.step-back').count(), 1);
+  }
+  for (const step of ['shell', 'decoration', 'play']) {
+    await page.goto(base + path + `?style=orb&coreMaterial=clay&waxThickness=medium&step=${step}`); await ready(page);
+    assert.equal(await restart.isVisible(), true, `medium ${step}`);
+    const before = page.url(); await restart.click(); assert.equal(page.url(), before);
   }
   await page.close();
 });

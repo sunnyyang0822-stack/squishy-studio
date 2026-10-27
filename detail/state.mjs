@@ -16,6 +16,8 @@ export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shel
 export const isThinWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && squishyStyles[recipe.styleId].supportedFeels.includes(recipe.coreMaterial) && ['clay', 'marshmallow'].includes(recipe.coreMaterial) && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
 const isLegacyOrbClayWax = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && isThinWaxRecipe(recipe);
 export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && isLegacyOrbClayWax(recipe));
+export const isMediumWaxRecipe = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'medium';
+export const canRestartWax = (step, recipe) => canRestartThinWax(step, recipe) || isMediumWaxRecipe(recipe) && ['shell', 'decoration', 'play'].includes(step);
 // Fixed ordering makes identity independent of URL/object property order. Mode is
 // deliberately separate: navigating the same recipe must not repair its shell.
 export const recipeKeyFor = recipe => JSON.stringify(Object.keys(defaultRecipe).map(key => effectiveRecipe(recipe)[key]));
@@ -80,7 +82,7 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
     const wasMaking = state.step === 'making';
     state = { ...state, step }; refreshDerived();
     if (step === 'making') { ++revision; pending?.abort(); pending = undefined; renderer.stopInput?.(); emit(); return; }
-    const preserveDamage = isThinWaxRecipe(state.recipe) && (step !== 'play' || isLegacyOrbClayWax(state.recipe));
+    const preserveDamage = isMediumWaxRecipe(state.recipe) || isThinWaxRecipe(state.recipe) && (step !== 'play' || isLegacyOrbClayWax(state.recipe));
     if (wasMaking && step === 'play' && !preserveDamage) {
       // Preview-only recipes keep the legacy final core restore without
       // repairing the same recipe's temporarily hidden preview shell.
@@ -92,7 +94,7 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
   return {
     getState: snapshot, load: () => prepare(true), retry: () => prepare(true), setStep,
     restart() {
-      if (disposed || pending || state.resource !== 'ready' || state.configError || !canRestartThinWax(state.step, state.recipe)) return;
+      if (disposed || pending || state.resource !== 'ready' || state.configError || !canRestartWax(state.step, state.recipe)) return;
       renderer.restore?.();
     },
     restoreLocation({ styleId = 'orb', recipe: restored = {}, step = 'core' }) {

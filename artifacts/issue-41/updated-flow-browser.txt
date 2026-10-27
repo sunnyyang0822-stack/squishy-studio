@@ -1,0 +1,12 @@
+✔ 重新开始在受支持蜡预设步骤显示，圆球黏土中蜡沿用入口并保持配方与步骤 (14168.6507ms)
+{"testRasterProfile":"default:1","browserRasterEnvironment":{"devicePixelRatio":1,"viewport":[1280,900],"cssCanvas":[791,808],"drawingBuffer":[790,808],"renderer":"ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)","measuredPerformance":false,"resources":{"calls":3,"triangles":76944,"geometries":2}}}
+✔ same recipe survives full workflow; restart, color and configuration reset only their own state (14773.4944ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17551.4855
+EXIT_CODE=0

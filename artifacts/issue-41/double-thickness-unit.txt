@@ -1,0 +1,38 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (4.2881ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.542ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (6.1007ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (1.2714ms)
+✔ 已实现蜡预设范围之外的制作结束保留原有自动恢复 (1.4063ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (7.258ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (1.2573ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (1.5276ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (0.7477ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.6825ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (1.6112ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (0.7673ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.5469ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (7.8547ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (0.7646ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.6771ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.3566ms)
+✔ medium preset changes only physical thickness and real partition count (65.9835ms)
+{"orbGeometryComparison":[{"thickness":0.014,"count":180,"total":12.009426226846116,"mean":0.06671903459358954,"median":0.061356077647639236,"min":0.019977573879851558,"max":0.15430674822263776,"cv":0.3982934777331896,"thicknessError":1.0527582675577685e-7},{"thickness":0.028,"count":96,"total":12.009426228088461,"mean":0.12509818987592147,"median":0.12140881415956403,"min":0.030582047517825204,"max":0.25651812901440235,"cv":0.4119423077061946,"thicknessError":1.0157447742284442e-7}],"thicknessRatio":2,"meanAreaRatio":1.875000000193964,"medianAreaRatio":1.978757750076539}
+✔ medium mapping is limited to orb clay, preserves navigation damage and supports explicit restart (13.5271ms)
+✔ actual orb triangles have larger irregular regions and modestly thicker solid walls (1223.3215ms)
+✔ medium timing, rigid detached shape, persistent damage and cleanup reuse thin contract (646.4234ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 0,0,0 (8504.1273ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 0,0,1.5707963267948966 (8851.4164ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 1.5707963267948966,0.55,-0.4 (9455.0909ms)
+✔ thin-wax registry is immutable, rejects unknown ids and reuses verified parameters (66.1452ms)
+✔ preset defaults to falling cleanup with permanent holes; collection requires explicit opt-in (680.6153ms)
+✔ preset instances isolate geometry, color, clock, damage, reset and disposal (281.056ms)
+✔ preset accepts initial world matrix without moving caller-owned rest data (228.4505ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 29039.1462
+EXIT_CODE=0
