@@ -7,7 +7,8 @@ const thinWax = Object.freeze({
   parameters: thinWaxParameters,
   create(options = {}) {
     const { worldMatrix, ...shellOptions } = options;
-    const wax = createThinWax({ ...shellOptions, collectionEnabled: options.collectionEnabled ?? false });
+    const fragmentSize = ['paw', 'donut'].includes(options.styleId) ? 'small' : options.fragmentSize;
+    const wax = createThinWax({ ...shellOptions, fragmentSize, collectionEnabled: options.collectionEnabled ?? false });
     if (worldMatrix) wax.setWorldMatrix(worldMatrix);
     return wax;
   },

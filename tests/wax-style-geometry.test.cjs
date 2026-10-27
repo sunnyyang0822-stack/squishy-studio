@@ -14,7 +14,7 @@ test('actual supported clay models: thin wax coverage, connected plates and live
     const style = getSquishyStyle(id), actual = readMesh(`.${style.modelUrl}`), rest = Float32Array.from(actual.positions), geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(rest, 3)); geometry.setAttribute('normal', new THREE.Float32BufferAttribute(actual.normals, 3)); geometry.setIndex(actual.indices);
     const scale = getModelPresentationScale(getOrbAppearance('matte'), style.geometryAdapter);
-    let now = 0; const wax = createThinWax({ geometry, restPositions: rest, restNormals: Float32Array.from(actual.normals), collectionEnabled: false, clock: () => now });
+    let now = 0; const wax = createThinWax({ fragmentSize: ['paw', 'donut'].includes(id) ? 'small' : undefined, geometry, restPositions: rest, restNormals: Float32Array.from(actual.normals), collectionEnabled: false, clock: () => now });
     wax.setWorldMatrix(new THREE.Matrix4().makeScale(...scale));
     const deform = getOrbFeel('clay').createDeformation(geometry.attributes.position.array, Float32Array.from(actual.normals), style.geometryAdapter === 'surface' ? { surfaceGeometry: createSurfaceGeometry(rest, Float32Array.from(actual.normals), actual.indices, style.geometryOptions) } : {});
     const snapshot = wax.getSurfaceSnapshot(), covered = new Float64Array(actual.indices.length / 3), panels = new Map();
@@ -55,7 +55,7 @@ test('actual supported clay models: thin wax coverage, connected plates and live
     record.uniquelyDetached = wax.getState().detached; record.maxLiving = maxLiving;
     now += 9; wax.step(9); record.cleanedBodies = wax.getState().expired;
     t.diagnostic(JSON.stringify(record));
-    if (maxAreaError > 1e-8 || disconnectedPanels || panels.size > 180 || record.uniquelyDetached !== panels.size || maxLiving > 24 || record.remoteUnintendedChanges || record.phases.some(p => p.attachedViolations || p.detachedViolations || p.maxThicknessError > 1e-5)) failures.push(id);
+    if (maxAreaError > 1e-8 || disconnectedPanels || panels.size > (['paw', 'donut'].includes(id) ? 280 : 180) || record.uniquelyDetached !== panels.size || maxLiving > 24 || record.remoteUnintendedChanges || record.phases.some(p => p.attachedViolations || p.detachedViolations || p.maxThicknessError > 1e-5)) failures.push(id);
     wax.dispose(); geometry.dispose();
   }
   assert.deepEqual(failures, [], `Unsupported geometry diagnostics: ${failures.join(', ')}`);

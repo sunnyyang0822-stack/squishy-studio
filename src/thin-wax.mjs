@@ -321,4 +321,5 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
   return { refit, sweep, signedDistance, getLastNearestFace: () => lastNearestFace, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
-export function createThinWax(options = {}) { return createVoronoiWax(options, thinWaxParameters, createWaxCollisionTree); }
+export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
+export function createThinWax(options = {}) { return createVoronoiWax(options, options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters, createWaxCollisionTree); }

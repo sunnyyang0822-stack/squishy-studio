@@ -122,7 +122,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
   if (rest.length !== source.length || referenceNormals.length !== normals.length) throw new RangeError('Thin wax original surface snapshot mismatch');
-  let seedCount = 180, panels = buildPanels(rest, geometry.index.array);
+  let seedCount = config.seedCount ?? 180, panels = buildPanels(rest, geometry.index.array, seedCount);
   for (let attempt = 0; panels.length > config.maxFragments && attempt < 5; attempt++) {
     seedCount = Math.max(48, Math.floor(seedCount * config.maxFragments / panels.length * .95));
     panels = buildPanels(rest, geometry.index.array, seedCount);
