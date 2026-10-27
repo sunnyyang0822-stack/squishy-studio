@@ -383,7 +383,7 @@ test('rotated real interaction falls in world Y, lands visibly, and its persiste
   } finally { await page.close(); }
 });
 test('detached polygon keeps its actual GPU vertex distances while the live core keeps changing', { timeout: 60000 }, async t => {
-  const page = await open();
+  const page = await open('clay', 'orb', { flight: true });
   try {
     await page.locator('.toy-mount').evaluate(el => {
       window.waxRigidResult = null;
@@ -411,7 +411,14 @@ test('detached polygon keeps its actual GPU vertex distances while the live core
         }
         let coreChange = 0;
         for (let i = 0; i < baseline.core.length; i++) coreChange = Math.max(coreChange, Math.abs(baseline.core[i] - d.corePositions[i]));
-        if (coreChange <= .005) return;
+        // Sample during the real fragment lifetime. Waiting for a large clay
+        // recovery can outlast the no-tray cleanup and compare a cleared GPU
+        // slot with the original polygon instead of measuring rigid motion.
+        if (coreChange <= .0001) return;
+        if (!baseline.ids.every(id => d.surface.detached[id])) {
+          window.waxRigidResult = { error: 'Fragment expired before a live recovery frame was sampled', coreChange };
+          window.waxFrameObservers.delete(observe); return;
+        }
         const gpu = uploaded(d.surface), anchor = baseline.ids[0]; let distanceError = 0;
         const distance = (array, a, b) => Math.hypot(...[0, 1, 2].map(k => array[a * 3 + k] - array[b * 3 + k]));
         for (const id of baseline.ids) distanceError = Math.max(distanceError, Math.abs(distance(baseline.positions, anchor, id) - distance(gpu, anchor, id)));
@@ -425,7 +432,8 @@ test('detached polygon keeps its actual GPU vertex distances while the live core
     await page.waitForFunction(() => window.waxRigidResult !== null, null, { timeout: 15000 });
     await page.mouse.up();
     const measured = await page.evaluate(() => window.waxRigidResult);
-    assert.ok(measured.sampledVertices > 10, JSON.stringify(measured)); assert.ok(measured.coreChange > .005, JSON.stringify(measured)); assert.ok(measured.distanceError < 1e-5, JSON.stringify(measured));
+    assert.ok(!measured.error, JSON.stringify(measured));
+    assert.ok(measured.sampledVertices > 10, JSON.stringify(measured)); assert.ok(measured.coreChange > .0001, JSON.stringify(measured)); assert.ok(measured.distanceError < 1e-5, JSON.stringify(measured));
     const liveGeometry = { geometry: measured.geometry };
     assert.ok(liveGeometry.geometry.detachedSamples > 0, 'Collision measurement includes still-living detached geometry during core recovery');
     geometryOK(liveGeometry);
