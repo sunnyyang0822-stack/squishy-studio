@@ -43,7 +43,7 @@ export function createModelPreview(mount, options) {
       }
     },
     stopInput() { renderer?.stopInput?.(); },
-    restore() { renderer?.restore?.(); },
+    restore(options) { renderer?.restore?.(options); },
     dispose() { disposed = true; revision++; renderer?.dispose(); for (const candidate of preparing) candidate.dispose(); preparing.clear(); },
   };
 }

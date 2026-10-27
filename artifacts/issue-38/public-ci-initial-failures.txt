@@ -1,0 +1,78 @@
+Run 40183694597, attempt 2, commit 0a2996c60da6f1d48213cadfeab560325557fa39
+Public visibility confirmed; hosted runner began real steps. Old billing failure no longer blocks execution.
+Failing test output only (credentials and job environment excluded):
+2026-10-25T16:58:54.5531939Z not ok 42 - thin wax + clay: actual core geometry, timing, release, recovery and independent colors
+2026-10-25T16:58:54.5532874Z   ---
+2026-10-25T16:58:54.5533351Z   duration_ms: 6967.189278
+2026-10-25T16:58:54.5533920Z   type: 'test'
+2026-10-25T16:58:54.5534791Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/thin-wax-browser.test.cjs:91:34'
+2026-10-25T16:58:54.5535751Z   failureType: 'testCodeFailure'
+2026-10-25T16:58:54.5536239Z   error: |-
+2026-10-25T16:58:54.5537105Z     Expected values to be strictly equal:
+2026-10-25T16:58:54.5537584Z     
+2026-10-25T16:58:54.5538023Z     6 !== 0
+2026-10-25T16:58:54.5538448Z     
+2026-10-25T16:58:54.5538896Z   code: 'ERR_ASSERTION'
+2026-10-25T16:58:54.5539440Z   name: 'AssertionError'
+2026-10-25T16:58:54.5540020Z   expected: 0
+2026-10-25T16:58:54.5540601Z   actual: 6
+2026-10-25T16:58:54.5540959Z   operator: 'strictEqual'
+2026-10-25T16:58:54.5541451Z   stack: |-
+2026-10-25T16:58:54.5542293Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/thin-wax-browser.test.cjs:96:164)
+2026-10-25T16:58:54.5543349Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-25T16:58:54.5544055Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-25T16:58:54.5544622Z   ...
+2026-10-25T16:59:06.4978160Z not ok 43 - rotated real interaction falls in world Y, lands visibly, and its persistent pile never turns with the toy
+2026-10-25T16:59:06.4979202Z   ---
+2026-10-25T16:59:06.4980154Z   duration_ms: 11945.523002
+2026-10-25T16:59:06.4980973Z   type: 'test'
+2026-10-25T16:59:06.4981824Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/thin-wax-browser.test.cjs:139:1'
+2026-10-25T16:59:06.4982663Z   failureType: 'testCodeFailure'
+2026-10-25T16:59:06.4983257Z   error: |-
+2026-10-25T16:59:06.4984007Z     locator.evaluate: Error: No actual airborne shard clears the live core AABB before landing
+2026-10-25T16:59:06.4984856Z         at eval (eval at evaluate (:370:30), <anonymous>:21:37)
+2026-10-25T16:59:06.4985589Z         at async <anonymous>:396:30
+2026-10-25T16:59:06.4986132Z   code: 'ERR_TEST_FAILURE'
+2026-10-25T16:59:06.4986696Z   stack: |-
+2026-10-25T16:59:06.4987287Z     eval (eval at evaluate (:370:30), <anonymous>:21:37)
+2026-10-25T16:59:06.4987878Z     async <anonymous>:396:30
+2026-10-25T16:59:06.4988869Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/thin-wax-browser.test.cjs:148:56)
+2026-10-25T16:59:06.4989710Z   ...
+2026-10-25T16:59:16.8634128Z not ok 44 - detached polygon keeps its actual GPU vertex distances while the live core keeps changing
+2026-10-25T16:59:16.8664308Z   ---
+2026-10-25T16:59:16.8671434Z   duration_ms: 10365.357533
+2026-10-25T16:59:16.8675122Z   type: 'test'
+2026-10-25T16:59:16.8676115Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/thin-wax-browser.test.cjs:218:1'
+2026-10-25T16:59:16.8677007Z   failureType: 'testCodeFailure'
+2026-10-25T16:59:16.8677547Z   error: |-
+2026-10-25T16:59:16.8678104Z     The expression evaluated to a falsy value:
+2026-10-25T16:59:16.8678504Z     
+2026-10-25T16:59:16.8678904Z       assert.ok(measured.coreChange > .005)
+2026-10-25T16:59:16.8679211Z     
+2026-10-25T16:59:16.8679495Z   code: 'ERR_ASSERTION'
+2026-10-25T16:59:16.8679890Z   name: 'AssertionError'
+2026-10-25T16:59:16.8680359Z   expected: true
+2026-10-25T16:59:16.8680728Z   actual: false
+2026-10-25T16:59:16.8680992Z   operator: '=='
+2026-10-25T16:59:16.8681403Z   stack: |-
+2026-10-25T16:59:16.8682191Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/thin-wax-browser.test.cjs:254:54)
+2026-10-25T16:59:16.8682793Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-25T16:59:16.8683804Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-25T16:59:16.8684349Z   ...
+2026-10-25T17:00:17.9664791Z not ok 48 - cancellation, blur, hidden document, hit loss and leave stop the same input lifecycle
+2026-10-25T17:00:17.9671714Z   ---
+2026-10-25T17:00:17.9672243Z   duration_ms: 20534.895122
+2026-10-25T17:00:17.9672800Z   type: 'test'
+2026-10-25T17:00:17.9673444Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/thin-wax-browser.test.cjs:335:1'
+2026-10-25T17:00:17.9674186Z   failureType: 'testCodeFailure'
+2026-10-25T17:00:17.9674756Z   error: 'Crossing into a fresh region resets local continuous dwell'
+2026-10-25T17:00:17.9675237Z   code: 'ERR_ASSERTION'
+2026-10-25T17:00:17.9675728Z   name: 'AssertionError'
+2026-10-25T17:00:17.9676132Z   expected: true
+2026-10-25T17:00:17.9676550Z   actual: false
+2026-10-25T17:00:17.9677014Z   operator: '=='
+2026-10-25T17:00:17.9677399Z   stack: |-
+2026-10-25T17:00:17.9678076Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/thin-wax-browser.test.cjs:364:12)
+2026-10-25T17:00:17.9678823Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-25T17:00:17.9679473Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-25T17:00:17.9679975Z   ...

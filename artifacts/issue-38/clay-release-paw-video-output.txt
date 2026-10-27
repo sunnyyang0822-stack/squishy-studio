@@ -1,0 +1,3 @@
+clay-release-paw-desktop: recorded
+clay-release-paw-mobile: recorded
+EXIT_CODE=0
