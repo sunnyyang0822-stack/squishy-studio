@@ -2,6 +2,10 @@ import { createThinWax, thinWaxParameters } from './thin-wax.mjs';
 
 // Shell presets compose with an independently owned core and its existing input.
 // Parameters stay owned by the verified implementation; no per-preset retuning.
+// Full-surface hosts automatically share verified attached-plate reuse, lazy
+// feature normals and exact grid/BVH tie resolution in the common thin-wax
+// modules. Reuse/invalidation and geometry oracle contracts live in
+// docs/thin-wax-preset.md; do not copy these into individual style scenes.
 const thinWax = Object.freeze({
   id: 'thin-wax', material: 'wax', thickness: 'thin',
   parameters: thinWaxParameters,

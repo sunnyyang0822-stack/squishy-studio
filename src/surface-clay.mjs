@@ -126,7 +126,7 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
   };
 }
 
-export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis, continuousFootprint = false } = {}) {
+export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis, continuousFootprint = false, scalarThickness = true } = {}) {
   const rest = source.slice(), count = rest.length / 3;
   if (!indices?.length || sourceNormals.length !== rest.length) throw new TypeError('Surface clay requires indexed positions and normals');
   const directions = sourceNormals.slice(), radii = new Float32Array(count);
@@ -170,6 +170,22 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
         }
         if (!node.ids) { visit(node.left); visit(node.right); return; }
         for (const id of node.ids) {
+          if (scalarThickness) {
+            // Same Möller–Trumbore arithmetic and tolerances as below. Reuse
+            // scalars rather than allocating maps/reductions for every visited
+            // static triangle of every pressure-radius ray.
+            const tri = triangles[id], a = tri[0] * 3, b = tri[1] * 3, c = tri[2] * 3;
+            const ex = rest[b] - rest[a], ey = rest[b + 1] - rest[a + 1], ez = rest[b + 2] - rest[a + 2];
+            const fx = rest[c] - rest[a], fy = rest[c + 1] - rest[a + 1], fz = rest[c + 2] - rest[a + 2];
+            const hx = ray[1] * fz - ray[2] * fy, hy = ray[2] * fx - ray[0] * fz, hz = ray[0] * fy - ray[1] * fx;
+            const det = ex * hx + ey * hy + ez * hz; if (Math.abs(det) < 1e-10) continue;
+            const sx = origin[0] - rest[a], sy = origin[1] - rest[a + 1], sz = origin[2] - rest[a + 2];
+            const u = (sx * hx + sy * hy + sz * hz) / det; if (u < -1e-6 || u > 1.000001) continue;
+            const qx = sy * ez - sz * ey, qy = sz * ex - sx * ez, qz = sx * ey - sy * ex;
+            const v = (ray[0] * qx + ray[1] * qy + ray[2] * qz) / det; if (v < -1e-6 || u + v > 1.000001) continue;
+            const t = (fx * qx + fy * qy + fz * qz) / det; if (t > 1e-5) best = Math.min(best, t);
+            continue;
+          }
           const [a, b, c] = triangles[id].map(point);
           const e = b.map((v, k) => v - a[k]), f = c.map((v, k) => v - a[k]);
           const h = [ray[1] * f[2] - ray[2] * f[1], ray[2] * f[0] - ray[0] * f[2], ray[0] * f[1] - ray[1] * f[0]];

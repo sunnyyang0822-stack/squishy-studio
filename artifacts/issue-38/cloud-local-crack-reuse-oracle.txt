@@ -1,0 +1,18 @@
+✔ changed-triangle bounds invalidate even a face sweeping completely across an unchanged shell region (32.3763ms)
+✔ cloud slow-rebound: reused shell and lazy feature normals equal fully recomputed actual Float32 geometry (12406.2084ms)
+ℹ {"feelId":"slow-rebound","frames":146,"reused":20439,"thickness":0.014,"minGap":0.003999938887722484,"minActualSigned":0.003929020310222741}
+✔ cloud marshmallow: reused shell and lazy feature normals equal fully recomputed actual Float32 geometry (7008.0816ms)
+ℹ {"feelId":"marshmallow","frames":146,"reused":22818,"thickness":0.014,"minGap":0.003999938887722484,"minActualSigned":0.003929020310222741}
+✔ lazy feature normals match full feature normals after local motion, seam changes and restoration (222.0039ms)
+ℹ {"compared":1158}
+✔ grid ties preserve exact BVH closest face, sign and feature normal on all seven real meshes (2082.856ms)
+ℹ {"compared":85065}
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21905.114
+EXIT_CODE=0

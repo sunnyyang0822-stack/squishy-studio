@@ -184,7 +184,7 @@ test('八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土�
     assert.deepEqual(h.restoreOptions, styleId === 'orb' ? [] : [{ preserveShell: true }], 'Returning preview does not repair shell');
     for (const coreMaterial of ['marshmallow', 'butter']) {
       await c.select('coreMaterial', coreMaterial);
-      const previewEnabled = coreMaterial === 'marshmallow' || coreMaterial === 'butter' && styleId === 'orb';
+      const previewEnabled = coreMaterial === 'marshmallow' || coreMaterial === 'butter';
       assert.equal(isThinWaxRecipe(c.getState().recipe), previewEnabled);
       assert.equal(canRestartThinWax('shell', c.getState().recipe), previewEnabled);
       assert.equal(canRestartThinWax('play', c.getState().recipe), false);
