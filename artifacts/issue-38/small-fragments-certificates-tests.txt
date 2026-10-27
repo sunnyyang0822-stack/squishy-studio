@@ -1,0 +1,23 @@
+✔ identical local queries reuse only unchanged live triangles and stay equal to a cache-disabled full BVH (873.424ms)
+ℹ {"id":"paw","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":3124,"nearestTriangles":2342,"gridQueries":82,"gridSweeps":0,"cachedQueries":244}}
+ℹ {"id":"donut","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":4347,"nearestTriangles":2879,"gridQueries":67,"gridSweeps":0,"cachedQueries":242}}
+✔ a different triangle entering or leaving a cached search region invalidates the result; caches cannot cross tree instances (1.865ms)
+✔ real folded paw distinguishes a false face-normal penetration from a true penetration using independent ray parity (1180.4099ms)
+ℹ {"expectedInside":false,"independentUniqueRayHits":[0,2,0],"robustSignedDistance":0.03808787054371515,"legacySignedDistance":-0.03808787054371515}
+ℹ {"expectedInside":true,"independentUniqueRayHits":[3,3,3],"robustSignedDistance":-0.0002773505469502473,"legacySignedDistance":-0.0002773505469502473}
+✔ closed concave solid with duplicated seam vertices has analytic inside/outside signs after dynamic refit (17.3569ms)
+✔ paw: both cores share smaller connected wax plates with unchanged thickness and active budget (4168.4846ms)
+ℹ {"id":"paw","oldCount":173,"count":278,"meanAreaRatio":0.6223038293224177,"p90AreaRatio":0.5850844201892739}
+✔ donut: both cores share smaller connected wax plates with unchanged thickness and active budget (1835.6228ms)
+ℹ {"id":"donut","oldCount":166,"count":271,"meanAreaRatio":0.6125462066492622,"p90AreaRatio":0.6161370845980977}
+✔ marshmallow paw clearance certificates preserve actual shell geometry through deep/drag/release/restore (23462.5684ms)
+ℹ {"samples":77,"thickness":0.014,"attachedMinSignedDistance":0.0027098422236632243,"detachedViolations":0}
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 32048.3104
+EXIT_CODE=0

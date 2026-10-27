@@ -1,0 +1,27 @@
+{
+  "output": "D:\\squishy-studio\\.worktrees\\issue-30-paw\\artifacts\\issue-30-paw\\coverage.json",
+  "glbSha256": "0fef462aa97cd1bc51f86eff5057a149b206c8ade4a7ee47ac6bea60062fd86b",
+  "contactRanges": {
+    "clay": [
+      0.06687061678440505,
+      0.31752216815948486
+    ]
+  },
+  "repeated": {
+    "regions": 13,
+    "strokesPerRegion": 8,
+    "strokes": 104,
+    "checkedStates": 208,
+    "minRadialScale": null,
+    "minFaceDeterminant": null,
+    "minProjectedAreaRatio": 0.080007965907511,
+    "changedVerticesOutsideFootprint": 0
+  },
+  "constraintCpuTiming": {
+    "method": "Wall time inside each geometry-only offset projection during this CPU simulation; excludes browser rendering and is not FPS or a physical-phone result.",
+    "calls": 36520,
+    "medianMs": 2.982899999988149,
+    "p95Ms": 3.6202999999950407,
+    "maxMs": 9.746399999996356
+  }
+}

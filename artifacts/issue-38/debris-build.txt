@@ -1,0 +1,13 @@
+
+> squishy-studio@1.0.0 build
+> npm run build:brand && npm run build:orb
+
+
+> squishy-studio@1.0.0 build:brand
+> node scripts/build-brand.cjs
+
+
+> squishy-studio@1.0.0 build:orb
+> node scripts/build-orb.cjs
+
+exitCode=0

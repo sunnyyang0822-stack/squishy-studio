@@ -1,0 +1,22 @@
+{
+  "measurement": "390x844 desktop touch emulation, fresh recipe, actual 4-second hold; MutationObserver after renderer completion; all intervals retained, no recording or CPU profiler",
+  "beforeCommit": "c9039c07ded4b4267b056317a2a40f8bb8dba4bc",
+  "afterBundleSha256": "02b5a36d77841d73dccf71072e617b530847e2ef0ae6cb5c6112887d852044f1",
+  "before": {
+    "samples": 222,
+    "medianMs": 7.599999999976717,
+    "p95Ms": 75.30000000004657,
+    "maximumMs": 98.90000000002328,
+    "above33ms": 36
+  },
+  "after": {
+    "samples": 549,
+    "medianMs": 6.699999999953434,
+    "p95Ms": 10.600000000093132,
+    "maximumMs": 22.0999999998603,
+    "above33ms": 0
+  },
+  "p95ReductionPercent": 85.9229747674813,
+  "allIntervalsRetained": true,
+  "physicalPhone": false
+}

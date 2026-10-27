@@ -32,7 +32,13 @@
 
 ## 当前状态
 
-目前已有首页 Hero、第二屏四只静态捏捏样例，以及独立的最小合集大厅。第二屏通过「去合集大厅挑选」进入 `/collections/`；大厅只有一个标记为「制作中」的合集，没有可玩资源或开始按钮。正式捏压、声音与完整合集体验属于后续阶段。
+样式大厅 `/collections/` 提供圆球及七款真实可制作模型：云朵、猫爪、圆柱、甜甜圈、圆钝四面体、五瓣花朵和五角星。七款新模型支持黏土、PR #32 已确认的渐进棉花糖及已确认慢回弹预设；选择后加载对应 GLB，沿用五步制作和最终试捏。猫爪按参考改为圆厚掌体、四个凸起趾垫和饱满倒心形主垫。源文件、导出及初次交付见[七款黏土交付说明](docs/issue-30-clay-styles.md)，本轮修订与验证见[猫爪及预设修订](docs/issue-30-paw-revision.md)。
+
+首页第二屏展示云朵、猫爪、甜甜圈与花朵，点击图片或名称进入对应真实模型的黏土制作流程。也可通过「去合集大厅挑选」查看八种样式。本轮接入保留已交付的页面设计、Hero及配方逻辑。
+
+新增奶油小云详情页 `/squishy/cloud/`：独立静态外观预览、脆皮厚度与材质选择、音量偏好面板。可从大厅的「查看小云外观预览」进入；不代表玩具已经可捏压。详情页复用昼夜偏好，支持直接打开、刷新和返回合集。
+
+详情页、首页第二屏与大厅的捏捏在昼夜模式下保持素材原色。控件提供轻量按下反馈、可反向连续操作的音量面板过渡，并兼顾键盘与减少动态偏好；[原色与动效验证](docs/toy-colors-motion.md)包含最新截图和录屏。
 
 ## 本地运行
 
@@ -51,6 +57,7 @@ npm start
 npm test
 npm run capture
 npm run capture:showcase
+npm run capture:detail
 ```
 
 测试通过 Playwright 使用本机 Edge；其他系统可先执行 `npx playwright install chromium`。也可用 `PLAYWRIGHT_BROWSER_PATH` 指定浏览器可执行文件。截图与昼夜切换录屏保存在 `artifacts/`。
@@ -64,3 +71,5 @@ npm run capture:showcase
 ## 项目级 Agent 技能
 
 项目内已安装 Emil Kowalski 的设计与动效技能集及 Impeccable，使用说明、跨项目使用方式、固定来源版本和许可证见 [项目技能说明](.agents/README.md)。
+
+详情页没有新增依赖、Canvas 或音源。`detail/state.mjs` 管理独立资源、配置、音频状态；`detail/adapters.js` 预留渲染与主音量接口。接入方式、静态资源来源、测试结果及截图录屏见 [详情页交付记录](docs/issue-10-delivery.md)。`capture:detail` 需要运行当前预览服务，并将 `BASELINE_URL` 指向同环境下运行的明确 `origin/main` 基线；`PREVIEW_URL` 默认是 `http://127.0.0.1:4173`。截图及录屏写入 `artifacts/issue-10/`。

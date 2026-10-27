@@ -1,0 +1,566 @@
+{
+  "url": "http://127.0.0.1:4380/squishy/cloud/?style=paw&coreMaterial=marshmallow&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell",
+  "browser": "156.0.4314.42",
+  "bundleSha256": "c6c5e6b6b62afe63e5dfd4d2e363a2dc1718f6600164d12c49d2b55dbaf98570",
+  "measurement": "Dedicated CDP CPU sampling, 500 microsecond interval, fresh 390x844 desktop touch emulation, 4s hold; separate from frame benchmark; no geometry probes, video, or concurrent tests.",
+  "completedFrames": 71,
+  "queryAverages": {
+    "enabled": 1,
+    "sweepCalls": 8074.845070422535,
+    "sweepNodes": 0,
+    "sweepTriangles": 182.3661971830986,
+    "nearestCalls": 29154.76056338028,
+    "nearestNodes": 114015.49295774648,
+    "nearestTriangles": 227456.08450704225,
+    "gridQueries": 12633.070422535211,
+    "gridSweeps": 8074.845070422535,
+    "cachedQueries": 14052.56338028169,
+    "attachedNearestSamples": 29490.281690140844,
+    "detachedNearestSamples": 748.1408450704225,
+    "logicalSweepSamples": 36067.67605633803,
+    "actualSweepQueries": 8076.281690140845,
+    "zeroLengthSweepSamples": 18286.408450704224,
+    "duplicateSweepSamples": 9704.985915492958
+  },
+  "durationMs": 4498.835,
+  "samples": 7537,
+  "selfTop": [
+    {
+      "function": "_t",
+      "selfMs": 581.005,
+      "totalMs": 1423.484,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 700633,
+      "snippet": "(le,me,C=Ie){a&&Me.nearestCalls++;let fe=typeof C==\"object\"&&C!==null?C:null,ie=fe?.queryResult;if(p&&n&&U&&ie?.owner===b&&ie.epoch===D&&ie.x===le.x&&ie.y===le.y&&ie.z===le.z){let "
+    },
+    {
+      "function": "Re",
+      "selfMs": 554.388,
+      "totalMs": 3250.529,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 673768,
+      "snippet": "(){if(oe)return;if(m){m.fill(0);let ae=i.index.array;for(let Q=0;Q<ae.length;Q+=3){let xe=!1;for(let Te=0;Te<3;Te++){let Ge=ae[Q+Te]*3;if(u[Ge]!==y[Ge]||u[Ge+1]!==y[Ge+1]||u[Ge+2]!"
+    },
+    {
+      "function": "pe",
+      "selfMs": 366.432,
+      "totalMs": 386.686,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 698689,
+      "snippet": "(le,me){let{a:C,b:fe,c:ie}=le.triangle,I=le.ab,x=le.ac,W=me.x-C.x,G=me.y-C.y,ne=me.z-C.z,ge=I.x*W+I.y*G+I.z*ne,_e=x.x*W+x.y*G+x.z*ne;if(ge<=0&&_e<=0)return re.copy(C);W=me.x-fe.x,G"
+    },
+    {
+      "function": "(program)",
+      "selfMs": 353.479,
+      "totalMs": 353.479,
+      "url": "",
+      "line": -1,
+      "column": -1
+    },
+    {
+      "function": "l",
+      "selfMs": 193.576,
+      "totalMs": 219.279,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 691095,
+      "snippet": "(h){for(let d of r)d.set(0,0,0);for(let d of a.values())d.normal.set(0,0,0);for(let d=0;d<h.length;d++){let{ab:u,ac:f,normal:y}=h[d],g=o[d];g.points||=[h[d].triangle.a,h[d].triangl"
+    },
+    {
+      "function": "ct",
+      "selfMs": 177.697,
+      "totalMs": 177.697,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 699960,
+      "snippet": "(le,me,C,fe,ie,I,x,W,G,ne,ge){if(!n||!le)return;let _e=le.queryResult?.owner===b?le.queryResult:{owner:b,cells:[],revisions:[]},ce=0;for(let Le=x;Le<=W;Le++)for(let be=ie;be<=I;be+"
+    },
+    {
+      "function": "fe",
+      "selfMs": 155.897,
+      "totalMs": 155.897,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 668768,
+      "snippet": "(B,k,se){se.set(0,0,0);for(let ve=0;ve<3;ve++){let ae=B.ids[ve]*3,Q=B.weights[ve],xe=k===f&&(!m||!m[B.ids[ve]])&&u[ae]===y[ae]&&u[ae+1]===y[ae+1]&&u[ae+2]===y[ae+2]?g:k;se.x+=xe[ae"
+    },
+    {
+      "function": "Pe",
+      "selfMs": 154.727,
+      "totalMs": 186.048,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "ee",
+      "selfMs": 144.268,
+      "totalMs": 144.268,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 694696,
+      "snippet": "(){if(E){E.fill(-1),H=0,U=!0;for(let le=0;le<f.length;le++){let{a:me,b:C,c:fe}=f[le].triangle,ie=Math.floor((Math.min(me.x,C.x,fe.x)-A.x-1e-10)/M),I=Math.floor((Math.max(me.x,C.x,f"
+    },
+    {
+      "function": "g",
+      "selfMs": 130.874,
+      "totalMs": 192.796,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 641655,
+      "snippet": "(m,p,M=-1,A=.08001){function v(_){for(let b=0;b<3;b++){let R=_*3+b;a[R]=i[R]-(n?m[R]:e[R]*m[_]),o[R]=n?m[R]-p[R]:-e[R]*(p[_]-m[_])}}if(M>=0)for(let _=0;_<3;_++)v(t[M*3+_]);else for"
+    },
+    {
+      "function": "(garbage collector)",
+      "selfMs": 118.201,
+      "totalMs": 118.201,
+      "url": "",
+      "line": -1,
+      "column": -1
+    },
+    {
+      "function": "Le",
+      "selfMs": 106.1,
+      "totalMs": 106.1,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 671692,
+      "snippet": "(B,k){let se=C(),ve=C(),ae=C(),Q;for(let xe=B.start;xe<B.end;xe++){let Te=A[xe],Ge=k[Te.vertex];if(se.copy(Ge.renderedNormal),ve.copy(Ge.rendered).addScaledVector(se,Te.layer*h.thi"
+    },
+    {
+      "function": "Se",
+      "selfMs": 86.962,
+      "totalMs": 86.962,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 699585,
+      "snippet": "(le,me){let C=Math.max(le.min.x-me.x,0,me.x-le.max.x),fe=Math.max(le.min.y-me.y,0,me.y-le.max.y),ie=Math.max(le.min.z-me.z,0,me.z-le.max.z);return C*C+fe*fe+ie*ie}let Ie=-1,ye=[],D"
+    },
+    {
+      "function": "Re",
+      "selfMs": 77.881,
+      "totalMs": 3973.997,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 712346,
+      "snippet": "($){if(G.frame=0,y||g||f!==G||document.hidden){G.lastTime=null;return}let{width:Ee,height:B}=i.getBoundingClientRect();if(Ee<1||B<1)return;(Ee!==G.width||B!==G.height)&&Le(Ee,B),_e"
+    },
+    {
+      "function": "fromBufferAttribute",
+      "selfMs": 71.994,
+      "totalMs": 71.994,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 22483,
+      "snippet": "(e,t){return this.x=e.getX(t),this.y=e.getY(t),this.z=e.getZ(t),this}random(){return this.x=Math.random(),this.y=Math.random(),this.z=Math.random(),this}randomDirection(){let e=Mat"
+    },
+    {
+      "function": "c",
+      "selfMs": 71.334,
+      "totalMs": 85.913,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 691690,
+      "snippet": "(h,d,u,f){let y=o[h],g=y.points;for(let m=0;m<3;m++)if(u.distanceToSquared(g[m])<=1e-24){let p=r[y.corners[m]];return f.copy(p.lengthSq()>1e-20?p:d.normal)}for(let m=0;m<3;m++){let"
+    },
+    {
+      "function": "J",
+      "selfMs": 64.981,
+      "totalMs": 70.074,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 697332,
+      "snippet": "(le,me){a&&Me.sweepCalls++;let C=me.length();if(C<1e-8)return C;if(K.origin.copy(le),K.direction.copy(me).normalize(),U&&C<=M*2){let ie=le.x+me.x,I=le.y+me.y,x=le.z+me.z,W=Math.flo"
+    },
+    {
+      "function": "v",
+      "selfMs": 61.922,
+      "totalMs": 61.922,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 641685,
+      "snippet": "(_){for(let b=0;b<3;b++){let R=_*3+b;a[R]=i[R]-(n?m[R]:e[R]*m[_]),o[R]=n?m[R]-p[R]:-e[R]*(p[_]-m[_])}}if(M>=0)for(let _=0;_<3;_++)v(t[M*3+_]);else for(let _=0;_<s;_++)v(_);let S=1,"
+    },
+    {
+      "function": "fe",
+      "selfMs": 61.046,
+      "totalMs": 61.046,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 668768,
+      "snippet": "(B,k,se){se.set(0,0,0);for(let ve=0;ve<3;ve++){let ae=B.ids[ve]*3,Q=B.weights[ve],xe=k===f&&(!m||!m[B.ids[ve]])&&u[ae]===y[ae]&&u[ae+1]===y[ae+1]&&u[ae+2]===y[ae+2]?g:k;se.x+=xe[ae"
+    },
+    {
+      "function": "add",
+      "selfMs": 54.113,
+      "totalMs": 54.113,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 17191,
+      "snippet": "(e){return this.x+=e.x,this.y+=e.y,this.z+=e.z,this}addScalar(e){return this.x+=e,this.y+=e,this.z+=e,this}addVectors(e,t){return this.x=e.x+t.x,this.y=e.y+t.y,this.z=e.z+t.z,this}"
+    },
+    {
+      "function": "distanceToSquared",
+      "selfMs": 52.538,
+      "totalMs": 52.538,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 21198,
+      "snippet": "(e){let t=this.x-e.x,n=this.y-e.y,s=this.z-e.z;return t*t+n*n+s*s}manhattanDistanceTo(e){return Math.abs(this.x-e.x)+Math.abs(this.y-e.y)+Math.abs(this.z-e.z)}setFromSpherical(e){r"
+    },
+    {
+      "function": "Re",
+      "selfMs": 48.09,
+      "totalMs": 189.725,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 673768,
+      "snippet": "(){if(oe)return;if(m){m.fill(0);let ae=i.index.array;for(let Q=0;Q<ae.length;Q+=3){let xe=!1;for(let Te=0;Te<3;Te++){let Ge=ae[Q+Te]*3;if(u[Ge]!==y[Ge]||u[Ge+1]!==y[Ge+1]||u[Ge+2]!"
+    },
+    {
+      "function": "_t",
+      "selfMs": 39.881,
+      "totalMs": 93.286,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 700633,
+      "snippet": "(le,me,C=Ie){a&&Me.nearestCalls++;let fe=typeof C==\"object\"&&C!==null?C:null,ie=fe?.queryResult;if(p&&n&&U&&ie?.owner===b&&ie.epoch===D&&ie.x===le.x&&ie.y===le.y&&ie.z===le.z){let "
+    },
+    {
+      "function": "pe",
+      "selfMs": 35.675,
+      "totalMs": 36.567,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 698689,
+      "snippet": "(le,me){let{a:C,b:fe,c:ie}=le.triangle,I=le.ab,x=le.ac,W=me.x-C.x,G=me.y-C.y,ne=me.z-C.z,ge=I.x*W+I.y*G+I.z*ne,_e=x.x*W+x.y*G+x.z*ne;if(ge<=0&&_e<=0)return re.copy(C);W=me.x-fe.x,G"
+    },
+    {
+      "function": "_t",
+      "selfMs": 33.134,
+      "totalMs": 67.071,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 700633,
+      "snippet": "(le,me,C=Ie){a&&Me.nearestCalls++;let fe=typeof C==\"object\"&&C!==null?C:null,ie=fe?.queryResult;if(p&&n&&U&&ie?.owner===b&&ie.epoch===D&&ie.x===le.x&&ie.y===le.y&&ie.z===le.z){let "
+    },
+    {
+      "function": "computeVertexNormals",
+      "selfMs": 29.542,
+      "totalMs": 135.574,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 101863,
+      "snippet": "(){let e=this.index,t=this.getAttribute(\"position\");if(t!==void 0){let n=this.getAttribute(\"normal\");if(n===void 0||n.count!==t.count)n=new Dt(new Float32Array(t.count*3),3),this.s"
+    },
+    {
+      "function": "pe",
+      "selfMs": 28.08,
+      "totalMs": 28.694,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 698689,
+      "snippet": "(le,me){let{a:C,b:fe,c:ie}=le.triangle,I=le.ab,x=le.ac,W=me.x-C.x,G=me.y-C.y,ne=me.z-C.z,ge=I.x*W+I.y*G+I.z*ne,_e=x.x*W+x.y*G+x.z*ne;if(ge<=0&&_e<=0)return re.copy(C);W=me.x-fe.x,G"
+    },
+    {
+      "function": "bufferSubData",
+      "selfMs": 21.214,
+      "totalMs": 21.214,
+      "url": "",
+      "line": -1,
+      "column": -1
+    },
+    {
+      "function": "pe",
+      "selfMs": 20.442,
+      "totalMs": 21.486,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 698689,
+      "snippet": "(le,me){let{a:C,b:fe,c:ie}=le.triangle,I=le.ab,x=le.ac,W=me.x-C.x,G=me.y-C.y,ne=me.z-C.z,ge=I.x*W+I.y*G+I.z*ne,_e=x.x*W+x.y*G+x.z*ne;if(ge<=0&&_e<=0)return re.copy(C);W=me.x-fe.x,G"
+    },
+    {
+      "function": "Fe",
+      "selfMs": 19.772,
+      "totalMs": 3283.067,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 680965,
+      "snippet": "(B,k=s()){if(oe)return{changed:!1,needsFrame:!1};Pe=k;function se(xe,Te){let Ge=M.filter(tt=>tt.detached&&!tt.dead&&!w.get(tt.id)?.settled).length;for(let tt=0;tt<xe.length;tt++){l"
+    }
+  ],
+  "totalTop": [
+    {
+      "function": "(root)",
+      "selfMs": 0,
+      "totalMs": 4498.527,
+      "url": "",
+      "line": -1,
+      "column": -1
+    },
+    {
+      "function": "Re",
+      "selfMs": 77.881,
+      "totalMs": 3973.997,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 712346,
+      "snippet": "($){if(G.frame=0,y||g||f!==G||document.hidden){G.lastTime=null;return}let{width:Ee,height:B}=i.getBoundingClientRect();if(Ee<1||B<1)return;(Ee!==G.width||B!==G.height)&&Le(Ee,B),_e"
+    },
+    {
+      "function": "Fe",
+      "selfMs": 19.772,
+      "totalMs": 3283.067,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 680965,
+      "snippet": "(B,k=s()){if(oe)return{changed:!1,needsFrame:!1};Pe=k;function se(xe,Te){let Ge=M.filter(tt=>tt.detached&&!tt.dead&&!w.get(tt.id)?.settled).length;for(let tt=0;tt<xe.length;tt++){l"
+    },
+    {
+      "function": "Re",
+      "selfMs": 554.388,
+      "totalMs": 3250.529,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 673768,
+      "snippet": "(){if(oe)return;if(m){m.fill(0);let ae=i.index.array;for(let Q=0;Q<ae.length;Q+=3){let xe=!1;for(let Te=0;Te<3;Te++){let Ge=ae[Q+Te]*3;if(u[Ge]!==y[Ge]||u[Ge+1]!==y[Ge+1]||u[Ge+2]!"
+    },
+    {
+      "function": "_t",
+      "selfMs": 581.005,
+      "totalMs": 1423.484,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 700633,
+      "snippet": "(le,me,C=Ie){a&&Me.nearestCalls++;let fe=typeof C==\"object\"&&C!==null?C:null,ie=fe?.queryResult;if(p&&n&&U&&ie?.owner===b&&ie.epoch===D&&ie.x===le.x&&ie.y===le.y&&ie.z===le.z){let "
+    },
+    {
+      "function": "Pe",
+      "selfMs": 6.513,
+      "totalMs": 592.865,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "pe",
+      "selfMs": 366.432,
+      "totalMs": 386.686,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 698689,
+      "snippet": "(le,me){let{a:C,b:fe,c:ie}=le.triangle,I=le.ab,x=le.ac,W=me.x-C.x,G=me.y-C.y,ne=me.z-C.z,ge=I.x*W+I.y*G+I.z*ne,_e=x.x*W+x.y*G+x.z*ne;if(ge<=0&&_e<=0)return re.copy(C);W=me.x-fe.x,G"
+    },
+    {
+      "function": "(program)",
+      "selfMs": 353.479,
+      "totalMs": 353.479,
+      "url": "",
+      "line": -1,
+      "column": -1
+    },
+    {
+      "function": "step",
+      "selfMs": 15.588,
+      "totalMs": 225.587,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 637841,
+      "snippet": "(V){let oe=Math.min(.04,Math.max(0,Number.isFinite(V)?V:0));R&&(D+=oe);let ee=-Math.expm1(-8*oe),Me=F,we=!1,Pe=!0;for(let K=0;K<r;K++){let j=K*3,J=((s[j]-f[0])**2+(s[j+1]-f[1])**2+"
+    },
+    {
+      "function": "Pe",
+      "selfMs": 0.002,
+      "totalMs": 222.805,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 0.003,
+      "totalMs": 222.803,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 0.007,
+      "totalMs": 222.8,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 1.407,
+      "totalMs": 222.793,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 0.081,
+      "totalMs": 221.386,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 1.011,
+      "totalMs": 221.305,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 0.073,
+      "totalMs": 220.294,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 3.17,
+      "totalMs": 220.221,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "l",
+      "selfMs": 193.576,
+      "totalMs": 219.279,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 691095,
+      "snippet": "(h){for(let d of r)d.set(0,0,0);for(let d of a.values())d.normal.set(0,0,0);for(let d=0;d<h.length;d++){let{ab:u,ac:f,normal:y}=h[d],g=o[d];g.points||=[h[d].triangle.a,h[d].triangl"
+    },
+    {
+      "function": "Pe",
+      "selfMs": 5.352,
+      "totalMs": 217.051,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 2.83,
+      "totalMs": 210.641,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "(anonymous)",
+      "selfMs": 15.078,
+      "totalMs": 207.874,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 642678,
+      "snippet": "(p,M){let A=0;for(let _=0;_<l;_++)A=Math.max(A,Math.abs(M[_]-p[_]));if(A===0)return 1;f.fill(1),y.fill(0);for(let _=0;_<d;_++)u[_]=_;let v=0,S=d,E=_=>{f[_]||(f[_]=1,u[S++%d]=_)};fo"
+    },
+    {
+      "function": "Pe",
+      "selfMs": 9.555,
+      "totalMs": 206.822,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "Pe",
+      "selfMs": 11.219,
+      "totalMs": 197.267,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "g",
+      "selfMs": 130.874,
+      "totalMs": 192.796,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 641655,
+      "snippet": "(m,p,M=-1,A=.08001){function v(_){for(let b=0;b<3;b++){let R=_*3+b;a[R]=i[R]-(n?m[R]:e[R]*m[_]),o[R]=n?m[R]-p[R]:-e[R]*(p[_]-m[_])}}if(M>=0)for(let _=0;_<3;_++)v(t[M*3+_]);else for"
+    },
+    {
+      "function": "Re",
+      "selfMs": 48.09,
+      "totalMs": 189.725,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 673768,
+      "snippet": "(){if(oe)return;if(m){m.fill(0);let ae=i.index.array;for(let Q=0;Q<ae.length;Q+=3){let xe=!1;for(let Te=0;Te<3;Te++){let Ge=ae[Q+Te]*3;if(u[Ge]!==y[Ge]||u[Ge+1]!==y[Ge+1]||u[Ge+2]!"
+    },
+    {
+      "function": "Pe",
+      "selfMs": 154.727,
+      "totalMs": 186.048,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 695614,
+      "snippet": "(le=m){if(le===m){for(let C of Object.keys(Me))Me[C]=0;L=0,++R===4294967295&&(R=1,_?.fill(0),D++)}let me=!1;if(le.ids)for(let C of le.ids){let fe=f[C/3],ie=fe.triangle;(ie.a.x!==o."
+    },
+    {
+      "function": "ct",
+      "selfMs": 177.697,
+      "totalMs": 177.697,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 699960,
+      "snippet": "(le,me,C,fe,ie,I,x,W,G,ne,ge){if(!n||!le)return;let _e=le.queryResult?.owner===b?le.queryResult:{owner:b,cells:[],revisions:[]},ce=0;for(let Le=x;Le<=W;Le++)for(let be=ie;be<=I;be+"
+    },
+    {
+      "function": "fe",
+      "selfMs": 155.897,
+      "totalMs": 155.897,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 668768,
+      "snippet": "(B,k,se){se.set(0,0,0);for(let ve=0;ve<3;ve++){let ae=B.ids[ve]*3,Q=B.weights[ve],xe=k===f&&(!m||!m[B.ids[ve]])&&u[ae]===y[ae]&&u[ae+1]===y[ae+1]&&u[ae+2]===y[ae+2]?g:k;se.x+=xe[ae"
+    },
+    {
+      "function": "ee",
+      "selfMs": 144.268,
+      "totalMs": 144.268,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 694696,
+      "snippet": "(){if(E){E.fill(-1),H=0,U=!0;for(let le=0;le<f.length;le++){let{a:me,b:C,c:fe}=f[le].triangle,ie=Math.floor((Math.min(me.x,C.x,fe.x)-A.x-1e-10)/M),I=Math.floor((Math.max(me.x,C.x,f"
+    },
+    {
+      "function": "computeVertexNormals",
+      "selfMs": 29.542,
+      "totalMs": 135.574,
+      "url": "http://127.0.0.1:4380/assets/orb-preview.js",
+      "line": 0,
+      "column": 101863,
+      "snippet": "(){let e=this.index,t=this.getAttribute(\"position\");if(t!==void 0){let n=this.getAttribute(\"normal\");if(n===void 0||n.count!==t.count)n=new Dt(new Float32Array(t.count*3),3),this.s"
+    }
+  ]
+}

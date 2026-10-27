@@ -1,0 +1,94 @@
+{
+  "source": "clay-style-geometry.txt",
+  "units": "normalized model units; normal support gap and nearest-core signed distance are distinct measurements",
+  "styles": [
+    {
+      "id": "orb",
+      "panels": 180,
+      "disconnected": 0,
+      "coverageAreaError": 2.569458967642546e-9,
+      "minNormalGap": 0.00399994316375401,
+      "minCoreSignedDistance": 0.0036033476409883984,
+      "maxThicknessError": 2.3257457841541207e-7,
+      "maxTotalCorrection": 0,
+      "violations": 0
+    },
+    {
+      "id": "cloud",
+      "panels": 180,
+      "disconnected": 0,
+      "coverageAreaError": 3.521647366842677e-9,
+      "minNormalGap": 0.003999938887722484,
+      "minCoreSignedDistance": 0.00286512237870297,
+      "maxThicknessError": 2.3235655871242655e-7,
+      "maxTotalCorrection": 0,
+      "violations": 0
+    },
+    {
+      "id": "paw",
+      "panels": 173,
+      "disconnected": 0,
+      "coverageAreaError": 1.3696569178302254e-9,
+      "minNormalGap": 0.003999939968060502,
+      "minCoreSignedDistance": 0.0005850383065321024,
+      "maxThicknessError": 2.2357727695251906e-7,
+      "maxTotalCorrection": 0.008021487800507729,
+      "violations": 0
+    },
+    {
+      "id": "cylinder",
+      "panels": 180,
+      "disconnected": 0,
+      "coverageAreaError": 1.822262106726362e-9,
+      "minNormalGap": 0.003999942154594307,
+      "minCoreSignedDistance": 0.003344905793317434,
+      "maxThicknessError": 2.2252120476448645e-7,
+      "maxTotalCorrection": 0,
+      "violations": 0
+    },
+    {
+      "id": "donut",
+      "panels": 166,
+      "disconnected": 0,
+      "coverageAreaError": 2.0843366392662294e-9,
+      "minNormalGap": 0.003999713580839211,
+      "minCoreSignedDistance": 0.002660876512434389,
+      "maxThicknessError": 2.280212746882948e-7,
+      "maxTotalCorrection": 0.005335876332946413,
+      "violations": 0
+    },
+    {
+      "id": "pyramid",
+      "panels": 180,
+      "disconnected": 0,
+      "coverageAreaError": 2.181413561288051e-9,
+      "minNormalGap": 0.0039999605831408614,
+      "minCoreSignedDistance": 0.002423861197955334,
+      "maxThicknessError": 2.2666648368321884e-7,
+      "maxTotalCorrection": 0,
+      "violations": 0
+    },
+    {
+      "id": "flower",
+      "panels": 180,
+      "disconnected": 0,
+      "coverageAreaError": 2.347959430397742e-9,
+      "minNormalGap": 0.003999938543296498,
+      "minCoreSignedDistance": 0.0027121413133999275,
+      "maxThicknessError": 2.2577178278651577e-7,
+      "maxTotalCorrection": 0,
+      "violations": 0
+    },
+    {
+      "id": "star",
+      "panels": 180,
+      "disconnected": 0,
+      "coverageAreaError": 1.582526406901548e-9,
+      "minNormalGap": 0.003999942716302156,
+      "minCoreSignedDistance": 0.0022582445439849326,
+      "maxThicknessError": 2.3462274608733458e-7,
+      "maxTotalCorrection": 0,
+      "violations": 0
+    }
+  ]
+}

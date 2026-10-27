@@ -1,0 +1,2 @@
+Command: node capture-making.cjs
+Exit code: 0

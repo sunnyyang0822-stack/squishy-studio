@@ -2,6 +2,7 @@ node_modules/
 .next/
 dist/
 .vercel/
+.tmp/
 
 # Local configuration and credentials
 .env

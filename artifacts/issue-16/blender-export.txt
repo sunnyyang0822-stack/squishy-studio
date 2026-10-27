@@ -1,0 +1,13 @@
+BlenderMCP addon registered
+INFO Draco mesh compression is available, use library at C:\Program Files\Blender Foundation\Blender 4.4\4.4\scripts\addons_core\io_scene_gltf2\extern_draco.dll
+18:31:02 | INFO: Starting glTF 2.0 export
+18:31:02 | INFO: Extracting primitive: Orb_Uniform_Triangles
+18:31:02 | INFO: Primitives created: 1
+18:31:02 | INFO: Finished glTF 2.0 export in 0.028722524642944336 s
+
+{"blender": "4.4.0", "scene": "Squishy_Orb_1A", "vertices": 2562, "triangles": 5120, "glb_bytes": 124324, "linked_libraries": 0, "source_only_core": true}
+BlenderMCP addon unregistered
+Blender 4.4.0 (hash 05377985c527 built 2025-03-18 03:22:03)
+Read blend: "D:\squishy-studio\assets-source\squishy-orb\squishy-orb.blend"
+
+Blender quit

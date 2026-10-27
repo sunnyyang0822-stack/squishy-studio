@@ -1,0 +1,19 @@
+✔ 慢回弹原圆球边缘沿按入方向凹陷，旋转后不向球心拉扯且完整恢复 (13461.2489ms)
+✔ 正常鼠标滑动时实际GPU左右路径均可见，终点驻留达到限深且全路径自然回弹 (15728.1653ms)
+ℹ {"slidingLeftRight":[0.16794034822515716,0.19122455706803573],"slidingMaximum":0.19926439775181448,"dwellMaximum":0.4407995150568243}
+✔ 慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离 (31533.2974ms)
+ℹ {"firstGpuFrame":{"time":451.7,"maximum":0.0005186598541285478,"pressed":true},"release":{"before":{"time":723.7,"maximum":0.10247196878871041,"pressed":true},"after":{"time":729.3,"maximum":0.10201391686202496,"pressed":false}},"expectedReleaseDepth":0.10201392116132202}
+✔ 新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管后全网格自然归零 (14873.5353ms)
+ℹ {"interruptedGpuDepth":0.12936210022110042,"inputAccepted":"true","immediatePositionError":0}
+✔ pointercancel、失焦、后台结束施力；后台暂停且前台连续恢复，离页释放 (17711.2499ms)
+✔ 手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复加速，色卡和页面可用 (7573.6616ms)
+✔ 连续切换质感最后选择生效；保留独立棉花糖且所有旧上下文释放 (1687.1342ms)
+✔ 厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，黏土与棉花糖保持原外观 (21354.5562ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124942.3741

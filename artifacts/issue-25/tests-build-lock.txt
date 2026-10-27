@@ -1,0 +1,34 @@
+
+> squishy-studio@1.0.0 pretest
+> npm run build
+
+
+> squishy-studio@1.0.0 build
+> npm run build:brand && npm run build:orb
+
+
+> squishy-studio@1.0.0 build:brand
+> node scripts/build-brand.cjs
+
+
+> squishy-studio@1.0.0 build:orb
+> node scripts/build-orb.cjs
+
+X [ERROR] Failed to write to output file: open D:\squishy-studio\assets\orb-preview.js: The requested operation cannot be performed on a file with a user-mapped section open.
+
+Error: Build failed with 1 error:
+error: Failed to write to output file: open D:\squishy-studio\assets\orb-preview.js: The requested operation cannot be performed on a file with a user-mapped section open.
+    at failureErrorWithLog (D:\squishy-studio\node_modules\esbuild\lib\main.js:1752:15)
+    at D:\squishy-studio\node_modules\esbuild\lib\main.js:1211:25
+    at D:\squishy-studio\node_modules\esbuild\lib\main.js:1163:52
+    at buildResponseToResult (D:\squishy-studio\node_modules\esbuild\lib\main.js:1209:7)
+    at D:\squishy-studio\node_modules\esbuild\lib\main.js:1236:16
+    at responseCallbacks.<computed> (D:\squishy-studio\node_modules\esbuild\lib\main.js:886:9)
+    at handleIncomingPacket (D:\squishy-studio\node_modules\esbuild\lib\main.js:941:12)
+    at Socket.readFromStdout (D:\squishy-studio\node_modules\esbuild\lib\main.js:864:7)
+    at Socket.emit (node:events:514:28)
+    at addChunk (node:internal/streams/readable:568:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+exit_code=1

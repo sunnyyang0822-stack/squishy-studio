@@ -1,0 +1,10 @@
+✔ 慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离 (30823.1582ms)
+ℹ {"firstGpuFrame":{"time":848.3,"maximum":0.0003043681154702239,"pressed":true},"release":{"before":{"time":1948.1,"maximum":0.10009337469509422,"pressed":true},"after":{"time":1953.8,"maximum":0.09963803875592002,"pressed":false}},"expectedReleaseDepth":0.099637987977295}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 31681.4371

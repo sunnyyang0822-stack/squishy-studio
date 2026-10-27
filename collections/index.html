@@ -6,26 +6,72 @@
     <meta name="theme-color" content="#f9f3f4" />
     <script src="/theme-preference.js"></script>
     <title>合集大厅｜Squishy Studio</title>
-    <meta name="description" content="Squishy Studio 合集大厅，第一组脆皮捏捏正在制作中。" />
+    <meta name="description" content="挑选圆球、云朵、猫爪、圆柱、甜甜圈、三角锥、花朵与五角星。选择喜欢的造型，制作自己的黏土捏捏。" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/showcase.css" />
+    <link rel="stylesheet" href="/collections/gallery.css" />
+    <script src="/collections/gallery.js" defer></script>
   </head>
   <body class="hall-page">
     <header class="hall-topbar">
       <a class="hall-brand" href="/#samples">Squishy Studio</a>
       <a class="hall-back" href="/#samples"><span aria-hidden="true">←</span> 返回首页样例</a>
     </header>
-    <main class="hall-main">
+    <main class="hall-main style-hall">
+      <p class="hall-eyebrow">给柔软，选个模样</p>
       <h1>合集大厅</h1>
-      <p class="hall-intro">喜欢的柔软，正在慢慢集合。<br />先留一点期待，等它们准备好。</p>
-      <article class="collection-pending" aria-labelledby="first-collection">
-        <img src="/assets/samples/cloud.svg" width="320" height="320" alt="圆润的奶油小云样例" />
-        <div>
-          <span class="pending-status">制作中</span>
-          <h2 id="first-collection">柔软的一刻</h2>
-          <p>第一组脆皮捏捏正在制作中。<br />准备好了，再来慢慢挑。</p>
-        </div>
-      </article>
+      <p class="hall-intro">挑个样式</p>
+      <p class="gallery-note">八个软乎乎的模样，选一个开始制作。</p>
+      <ul class="style-grid" aria-label="捏捏样式">
+        <li class="style-card collection-ready" id="style-orb">
+          <span class="style-number" aria-hidden="true">01</span>
+          <div class="style-art"><img src="/assets/style-thumbnails/orb.svg" width="300" height="250" alt="粉色饱满圆球" /><span class="style-art-fallback" hidden>圆球预览暂未显示</span></div>
+          <h2>奶油圆球</h2><p class="style-state">圆球原型 · 可制作</p>
+          <a class="style-entry" href="/squishy/cloud/?style=orb">开始制作 <span aria-hidden="true">↗</span></a>
+        </li>
+        <li class="style-card" id="style-cloud">
+          <span class="style-number" aria-hidden="true">02</span>
+          <div class="style-art"><img src="/assets/style-thumbnails/cloud.svg" width="300" height="250" alt="珍珠白、多瓣圆润的云朵造型示意" /><span class="style-art-fallback" hidden>云朵预览暂未显示</span></div>
+          <h2>云朵</h2><p class="style-state">黏土捏捏 · 可制作</p>
+          <a class="style-entry" href="/squishy/cloud/?style=cloud" aria-label="云朵：开始制作">开始制作 <span aria-hidden="true">↗</span></a>
+        </li>
+        <li class="style-card" id="style-paw">
+          <span class="style-number" aria-hidden="true">03</span>
+          <div class="style-art"><img src="/assets/style-thumbnails/paw.svg" width="300" height="250" alt="奶油底色与鼓起粉色肉垫的猫爪造型示意" /><span class="style-art-fallback" hidden>猫爪预览暂未显示</span></div>
+          <h2>猫爪</h2><p class="style-state">黏土捏捏 · 可制作</p>
+          <a class="style-entry" href="/squishy/cloud/?style=paw" aria-label="猫爪：开始制作">开始制作 <span aria-hidden="true">↗</span></a>
+        </li>
+        <li class="style-card" id="style-cylinder">
+          <span class="style-number" aria-hidden="true">04</span>
+          <div class="style-art"><img src="/assets/style-thumbnails/cylinder.svg" width="300" height="250" alt="薄荷色短胖圆柱造型示意" /><span class="style-art-fallback" hidden>圆柱预览暂未显示</span></div>
+          <h2>圆柱</h2><p class="style-state">黏土捏捏 · 可制作</p>
+          <a class="style-entry" href="/squishy/cloud/?style=cylinder" aria-label="圆柱：开始制作">开始制作 <span aria-hidden="true">↗</span></a>
+        </li>
+        <li class="style-card" id="style-donut">
+          <span class="style-number" aria-hidden="true">05</span>
+          <div class="style-art"><img src="/assets/style-thumbnails/donut.svg" width="300" height="250" alt="粉色糖霜、中央有孔的厚实甜甜圈造型示意" /><span class="style-art-fallback" hidden>甜甜圈预览暂未显示</span></div>
+          <h2>甜甜圈</h2><p class="style-state">黏土捏捏 · 可制作</p>
+          <a class="style-entry" href="/squishy/cloud/?style=donut" aria-label="甜甜圈：开始制作">开始制作 <span aria-hidden="true">↗</span></a>
+        </li>
+        <li class="style-card" id="style-pyramid">
+          <span class="style-number" aria-hidden="true">06</span>
+          <div class="style-art"><img src="/assets/style-thumbnails/pyramid.svg" width="300" height="250" alt="奶杏色、边角柔化的三角锥体造型示意" /><span class="style-art-fallback" hidden>三角锥预览暂未显示</span></div>
+          <h2>三角锥</h2><p class="style-state">黏土捏捏 · 可制作</p>
+          <a class="style-entry" href="/squishy/cloud/?style=pyramid" aria-label="三角锥：开始制作">开始制作 <span aria-hidden="true">↗</span></a>
+        </li>
+        <li class="style-card" id="style-flower">
+          <span class="style-number" aria-hidden="true">07</span>
+          <div class="style-art"><img src="/assets/style-thumbnails/flower.svg" width="300" height="250" alt="五瓣圆润花瓣与鼓起中心花蕊的奶黄色花朵造型示意" /><span class="style-art-fallback" hidden>花朵预览暂未显示</span></div>
+          <h2>五瓣花朵</h2><p class="style-state">黏土捏捏 · 可制作</p>
+          <a class="style-entry" href="/squishy/cloud/?style=flower" aria-label="五瓣花朵：开始制作">开始制作 <span aria-hidden="true">↗</span></a>
+        </li>
+        <li class="style-card" id="style-star">
+          <span class="style-number" aria-hidden="true">08</span>
+          <div class="style-art"><img src="/assets/style-thumbnails/star.svg" width="300" height="250" alt="奶黄色、五角圆钝饱满的星星造型示意" /><span class="style-art-fallback" hidden>星星预览暂未显示</span></div>
+          <h2>五角星</h2><p class="style-state">黏土捏捏 · 可制作</p>
+          <a class="style-entry" href="/squishy/cloud/?style=star" aria-label="五角星：开始制作">开始制作 <span aria-hidden="true">↗</span></a>
+        </li>
+      </ul>
       <a class="hall-back hall-return" href="/#samples"><span aria-hidden="true">←</span> 回去看看样例</a>
     </main>
   </body>

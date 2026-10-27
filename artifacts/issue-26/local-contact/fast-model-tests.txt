@@ -1,0 +1,22 @@
+✔ real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps (127.3258ms)
+✔ real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps (742.6564ms)
+✔ explicit restore, interruption, reset and instance isolation (5.3228ms)
+✔ measured GLB endpoint/middle curves with and without dwell: density and frame tolerances (869.948ms)
+✔ optical material isolation preserves clay defaults and source, with separate soft fibre response (25.7655ms)
+✔ real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport (70.0684ms)
+✔ deep collapse leaves a small bounded core and repeated strokes cannot drill through it (132.6169ms)
+✔ press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously (73.8822ms)
+✔ stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process (28.2856ms)
+✔ a stalled render cannot skip the visible press process or consume a whole hold (2.7226ms)
+✔ one press is local: outside .40 footprint is unchanged and affected area is under 6 percent (8.036ms)
+✔ dwelling at a slide endpoint deepens only its local footprint; departed trail stays exactly frozen (25.317ms)
+✔ subframe fast sweep is continuous between sparse endpoints without deepening the departed path (12.8421ms)
+✔ immutable ready-to-use presets compose separate material and deformation instances (48.9847ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2198.1008

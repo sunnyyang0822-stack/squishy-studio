@@ -1,0 +1,26 @@
+{
+  "id": "paw",
+  "name": "猫爪",
+  "blender": "4.4.0",
+  "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
+  "bboxMin": [
+    -1.1009916067123413,
+    -1.1278393268585205,
+    -0.6347475647926331
+  ],
+  "bboxMax": [
+    1.1009916067123413,
+    1.1278393268585205,
+    0.6347475647926331
+  ],
+  "vertices": 14468,
+  "triangles": 28932,
+  "glbBytes": 522136,
+  "meshes": 1,
+  "primitives": 1,
+  "materials": 1,
+  "closedManifold": true,
+  "externalTextures": false,
+  "feelId": "clay",
+  "reviewStatus": "reference revision: rounded thick outer palm; four raised oval toe pads with broad root fillets; classical inverted-heart main pad, 0.10 m rounded tip toward toes and two full lower lobes with shallow cleft"
+}

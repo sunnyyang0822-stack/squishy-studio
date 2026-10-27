@@ -1,0 +1,716 @@
+{
+  "bundleSHA256": "1c90a123e4149feed209a3793946479a1ec47c790f65610e401a209c439c3827",
+  "selection": "4 actual pressed desktop/mobile day/night images plus interaction video per combination; clay front/side/back/bottom browser views per model; full capture metadata and encoding provenance",
+  "files": [
+    {
+      "path": "artifacts/issue-30-combinations/clay/validation.json",
+      "bytes": 77994,
+      "sha256": "e1dfa0dd3603cad0cf05af35098ddcab8effc16cc5723c5f9edea70a18e38c44"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-desktop-day-pressed.png",
+      "bytes": 635570,
+      "sha256": "9f39e6e84b21c1c5874762c2322bf808975647bbe404d688d6bce95106d08d50"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-desktop-night-pressed.png",
+      "bytes": 665174,
+      "sha256": "dfa895d4587c7cba528a48ec444fb3dc0cef3b21e74c0035626f7d9f9b626f54"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-mobile-day-pressed.png",
+      "bytes": 165257,
+      "sha256": "f79495f34a71daee0a5d834a073ccd9e9b648e22112759d3b655db433a8995be"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-mobile-night-pressed.png",
+      "bytes": 195931,
+      "sha256": "e55f4bf5060ccc827498385cbeeabb565f0c45bfb2bed12ebda17cffdf40186b"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-clay-interaction.webm",
+      "bytes": 317785,
+      "sha256": "3440498baaa430b9baef7e5ef83e65a865ef31c7f0e1b879355d29a0714f893d"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-desktop-day-pressed.png",
+      "bytes": 693665,
+      "sha256": "8ad597a7fb4993cebfc5f60b933f2ba7a5fe6d10ce8a2e9bdb8c91895a940069"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-desktop-night-pressed.png",
+      "bytes": 729918,
+      "sha256": "0c18f99c3484f08fe1c252d37af77b649afb6fd429a1962d311852debf3b46e9"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-mobile-day-pressed.png",
+      "bytes": 185357,
+      "sha256": "34bcdb73bb67a32159aa4fb72860f3b2950f3dec080f1a74003052f484518df9"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-mobile-night-pressed.png",
+      "bytes": 212238,
+      "sha256": "1c4066b1de1632e56f670e692b12e893389acb6576fa67819c32591b5348a5fc"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-clay-interaction.webm",
+      "bytes": 330885,
+      "sha256": "f7f2ae1bd91c1f3c336e676c62ad534d61e9bafb6013c211c6b448bde4ae7dd2"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-desktop-day-pressed.png",
+      "bytes": 665364,
+      "sha256": "9155c518109c6470985245a66b4a9e8e1b41962a6f0ae252422a6d061ec5cd7c"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-desktop-night-pressed.png",
+      "bytes": 697253,
+      "sha256": "4b8c8e8f1acd6ba50332cc9dc047bc16f5b39698cfc19ac3b226cb494de74fb3"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-mobile-day-pressed.png",
+      "bytes": 170016,
+      "sha256": "e3fca18c94e7a3c0e9dd6430a6787661634361a0bbf5d4bab09b16897c05d337"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-mobile-night-pressed.png",
+      "bytes": 201739,
+      "sha256": "99609aa83a944318ccbfca667d201a956b9ac879fd4a1599b35c28fff0f973c3"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-clay-interaction.webm",
+      "bytes": 289174,
+      "sha256": "58fbfdb50513fef5ed233c9a1d16b5849570712aabb1de3929da22f868cf3e81"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-desktop-day-pressed.png",
+      "bytes": 656495,
+      "sha256": "490770ee1a9c669f753ffbf70daad5d84dca8f43644488380c364fae71783abd"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-desktop-night-pressed.png",
+      "bytes": 691606,
+      "sha256": "a95efd4807775c2007a6250cf0fd3687976e52a3b370e84013e45f41876cf52a"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-mobile-day-pressed.png",
+      "bytes": 171789,
+      "sha256": "f2f268d93537244a1436662b9ea2354dd387a5e21ac73f718b64f4f404212738"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-mobile-night-pressed.png",
+      "bytes": 201182,
+      "sha256": "8ce84439ba215d5c0719f3912aa9ad3e895acd6e219b4562891a454d95b618a1"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-clay-interaction.webm",
+      "bytes": 349411,
+      "sha256": "fbaf810a2f14c4fcfbc9d857fef4bd1c7a510e831eb5f72c770b49ed2b774aa7"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-desktop-day-pressed.png",
+      "bytes": 702727,
+      "sha256": "6a61b1321efc3003bc8aa1db797cf9dbfd33c463078e109f311ba1afd561acf4"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-desktop-night-pressed.png",
+      "bytes": 736942,
+      "sha256": "1ce62161fea3c2d83d88b46ced22078837cee7b4fd4196c2b619e61772dea956"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-mobile-day-pressed.png",
+      "bytes": 180473,
+      "sha256": "dd34f1284568b71eecf630c06cbfaa8e17138dbbf6ceaf9178db2de9247e6595"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-mobile-night-pressed.png",
+      "bytes": 210978,
+      "sha256": "6b702c15eed4f1207d5085eb340185095b427e3660fe0857b4e7cf616f95fceb"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-clay-interaction.webm",
+      "bytes": 294344,
+      "sha256": "ef9354183626db94edf61368224c0dace17026d7efc6a21dfca0e339fc9c5605"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-desktop-day-pressed.png",
+      "bytes": 654115,
+      "sha256": "1e06a9fee8f9350d84ebcc14f16623b60e2b6805e6bff92f45eabe164d6a56db"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-desktop-night-pressed.png",
+      "bytes": 690881,
+      "sha256": "8e21b9c1137c7d4b820c5433012164709e085b6455a95c4d303db58828b75d64"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-mobile-day-pressed.png",
+      "bytes": 173748,
+      "sha256": "e92f1dd7a467384aec9caf56be73b1d2f9f0c75a8635d53872e8d41f3b49984a"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-mobile-night-pressed.png",
+      "bytes": 201037,
+      "sha256": "1f584d5e6ff4d07b0fd7e292a89f25702e301575960de471f02f1748fc81de21"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-clay-interaction.webm",
+      "bytes": 308672,
+      "sha256": "d4c197ade2cfd05f852d879df728745b35c31b38f593b9ed13414364db1880a1"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-desktop-day-pressed.png",
+      "bytes": 702247,
+      "sha256": "7cf628621474db3fbcb750eb926a1fc74ecba744ae18b3c2d23df33b2fbcff9d"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-desktop-night-pressed.png",
+      "bytes": 735798,
+      "sha256": "8015c868f81a6529de6591315abb9734dd84855c5cb8303323c1e32b670a7331"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-mobile-day-pressed.png",
+      "bytes": 184195,
+      "sha256": "60c803a9635895c594238f32bf5b5e35b753cf174fb6a10153d6a0a31018e18e"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-mobile-night-pressed.png",
+      "bytes": 211851,
+      "sha256": "e6f16f8a9264e9bd0f9288a23ee773752f8a4acdb3e4c308ba31ea23e37cea25"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-clay-interaction.webm",
+      "bytes": 278006,
+      "sha256": "dc0bcdd7e8e5a51e1f14dced25d6e4ceceee9e9b9a11fc1e82c75d0a07d2e5d2"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/validation.json",
+      "bytes": 78180,
+      "sha256": "9163c4945b067eeef17ef8c76e08b052fb0bf78696eb0afec8d80f39bfedbb67"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cloud-marshmallow-desktop-day-pressed.png",
+      "bytes": 630160,
+      "sha256": "59c3534303759a45a01bb672ce0139eeb722c195000ef81cf108ac57baa200e3"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cloud-marshmallow-desktop-night-pressed.png",
+      "bytes": 652304,
+      "sha256": "1b96ac2aaf4b525da9f2a6841f873fa60973f056fecff2f79bbd6fd7538a7423"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cloud-marshmallow-mobile-day-pressed.png",
+      "bytes": 163868,
+      "sha256": "fb085f122ffc590e9dbf622cb9946dc25aac3973411df38360a179bfe247861b"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cloud-marshmallow-mobile-night-pressed.png",
+      "bytes": 191972,
+      "sha256": "cf2d925494023817587f148b58a99fecb7d74a395e9bf91c54270cbeadef9ad2"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cloud-marshmallow-interaction.webm",
+      "bytes": 274373,
+      "sha256": "fa16a7348f7783822216bc8d10739ad0372e419faae39d5b8866038715f5e1cf"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/paw-marshmallow-desktop-day-pressed.png",
+      "bytes": 692580,
+      "sha256": "32e5c06e1d142e7ef14be38cb06841a52f21486e5f1fbd4a1dcd50f66a447e8a"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/paw-marshmallow-desktop-night-pressed.png",
+      "bytes": 717330,
+      "sha256": "ec1d23012ee38aeb7ff1c3d6e6f6ff2f072e3d770265bddb9a18fa7cbe6c7459"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/paw-marshmallow-mobile-day-pressed.png",
+      "bytes": 185342,
+      "sha256": "5ce82193c6f730d65d5f445ecf01ac24a4b5b26ba7228dec37c3210f93b0d4c3"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/paw-marshmallow-mobile-night-pressed.png",
+      "bytes": 209262,
+      "sha256": "60477e647f6bd8734b065ea78ee1835cc98ea7ec6cd2c4c006a2bcdd61d71da6"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/paw-marshmallow-interaction.webm",
+      "bytes": 317107,
+      "sha256": "2d43dcf16e93c1ffc5c1303d899f832b396435d9c100204f037d66ceb1a72fb1"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cylinder-marshmallow-desktop-day-pressed.png",
+      "bytes": 658569,
+      "sha256": "776c466fc662743f86e31033ed9c5f633459202bc94ab8e0e01148d70a1726af"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cylinder-marshmallow-desktop-night-pressed.png",
+      "bytes": 683839,
+      "sha256": "8679085cb212af048944f44c6b07bc49e259ba93b2b4159fad70feddfb58e457"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cylinder-marshmallow-mobile-day-pressed.png",
+      "bytes": 168072,
+      "sha256": "04b245625154a5c97b8134b30f43c921775a9d31f8b08e70d83a819d9d9fdc2b"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cylinder-marshmallow-mobile-night-pressed.png",
+      "bytes": 197898,
+      "sha256": "63ad94074f9839c564888417c3db0f5cee77c29a97cf0fd4c3fcdef650b0e1ea"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/cylinder-marshmallow-interaction.webm",
+      "bytes": 263339,
+      "sha256": "be228488da42752ad753daffaf28bff38b05420982480ac2163462e54a0f2dcf"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/donut-marshmallow-desktop-day-pressed.png",
+      "bytes": 652217,
+      "sha256": "55c91394570b511e77c41352e0329c8f2bdd04c8bd3a80d468580c33aec45af1"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/donut-marshmallow-desktop-night-pressed.png",
+      "bytes": 681395,
+      "sha256": "a55c68caede7abe595726f965858a4d1910865a7544b3fd2283198890dbad324"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/donut-marshmallow-mobile-day-pressed.png",
+      "bytes": 171676,
+      "sha256": "2a325136a9a21cf350b9f5e58ad203d497a795084cd5282886f328ee5763e0f7"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/donut-marshmallow-mobile-night-pressed.png",
+      "bytes": 198561,
+      "sha256": "541c9a9401cb91d3aa2ed18c1ac3c2498e73d41dc57b8a48180d1db3837c1f89"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/donut-marshmallow-interaction.webm",
+      "bytes": 282872,
+      "sha256": "347d6c818dcdbce9bc30ea77514d131c2afb9641b5116f7a4a6619e2e72abc3e"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/pyramid-marshmallow-desktop-day-pressed.png",
+      "bytes": 701254,
+      "sha256": "301dbf2df4c1d5fe1a50b6112f2d9256c412feb16c0c2f860e755bc3fce91c0e"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/pyramid-marshmallow-desktop-night-pressed.png",
+      "bytes": 731395,
+      "sha256": "af119755761202c31be8f0a7a481f9dbab5efc2e823c269b9582d4f681868b71"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/pyramid-marshmallow-mobile-day-pressed.png",
+      "bytes": 179786,
+      "sha256": "ea09a9c00ce2cf31210b38f2de67af0a0a9a3ab5fd1a404c7b7844e89e7f387f"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/pyramid-marshmallow-mobile-night-pressed.png",
+      "bytes": 208875,
+      "sha256": "6b320d72312275c037e4b09a3e933f50b6c4691224365427bda2428a4a667838"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/pyramid-marshmallow-interaction.webm",
+      "bytes": 272186,
+      "sha256": "25c3496eaf3d95b43893dec3cc2d4e54df88479d07dfd8399f9591d4b16fe7cc"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/flower-marshmallow-desktop-day-pressed.png",
+      "bytes": 648949,
+      "sha256": "54c0398123e35b8cb4c36a87bbe8afa97b413ccdd83023d784149b99c0db2459"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/flower-marshmallow-desktop-night-pressed.png",
+      "bytes": 677530,
+      "sha256": "626bfc2ddd7eef10296dd3d7c449aee15d491b791edf734e8615b2a60ca2aa1d"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/flower-marshmallow-mobile-day-pressed.png",
+      "bytes": 172762,
+      "sha256": "24e8754169f31663476c24e5cfac1177b291c1c7abf4abc90dcfb8d5b4c6ccba"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/flower-marshmallow-mobile-night-pressed.png",
+      "bytes": 197479,
+      "sha256": "481b64fea6e5cf17bcd3cd3ea88c15f67e6fdd0bbf7171e895fe0f63da746040"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/flower-marshmallow-interaction.webm",
+      "bytes": 308524,
+      "sha256": "d40bdbe0bf01cc8b54bed18e893f1f7655d479b0ad8d9bdeeb8c8d6929dc9335"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/star-marshmallow-desktop-day-pressed.png",
+      "bytes": 699548,
+      "sha256": "3ad51a2c0e302e7e00dae3a3614ffcd8c960e9ef6644aeebb3f1fb52acf552ab"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/star-marshmallow-desktop-night-pressed.png",
+      "bytes": 726502,
+      "sha256": "3f28edda57408afe810a05f0f023ad915bf02626675a163231ed0f97563a868a"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/star-marshmallow-mobile-day-pressed.png",
+      "bytes": 183556,
+      "sha256": "7c678bc23494a1bda892ce2577057b8e16718d5f1fb30f872a95f6c213f4eddf"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/star-marshmallow-mobile-night-pressed.png",
+      "bytes": 209006,
+      "sha256": "921da017290f78a277e3506a0bada6e264954389383887b3fd16d339bac4b48f"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow/star-marshmallow-interaction.webm",
+      "bytes": 284225,
+      "sha256": "96cd15ca8411eeb7afe10f528be468158f5c69f680bbb6c5a33bfaaf1ee8dc8a"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/validation.json",
+      "bytes": 77279,
+      "sha256": "07297ed529ca066502c0f76c2a3c5ca5e76ec6843ae6e793405be801fc3306ae"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cloud-slow-rebound-desktop-day-pressed.png",
+      "bytes": 639077,
+      "sha256": "35a56a3bd92a25bf5bc50b73eb280865bad334d4d7477af229d19118ad086990"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cloud-slow-rebound-desktop-night-pressed.png",
+      "bytes": 667839,
+      "sha256": "8de1376ba524e0ace5bbbebb55bbd87e8b9750a3c1e8717f016d0a31b9e9ee6f"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cloud-slow-rebound-mobile-day-pressed.png",
+      "bytes": 166250,
+      "sha256": "da7e89732a315377787c53147005594497c8ca07c394b3f76a874febf4c47cfb"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cloud-slow-rebound-mobile-night-pressed.png",
+      "bytes": 196541,
+      "sha256": "0fa01cb93b7ac89d9a658043ebc4c88c24df98e4aee2856b46c9ac5f5a99a5ec"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cloud-slow-rebound-interaction.webm",
+      "bytes": 495026,
+      "sha256": "38106d6622fe985055871d315398799239858e19090d0bca69546c8fb43837cf"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/paw-slow-rebound-desktop-day-pressed.png",
+      "bytes": 698485,
+      "sha256": "47b1d22ed5163ddd6af0713c9d1df15ee6abea9596e1b3e9d3bffcc0f551375b"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/paw-slow-rebound-desktop-night-pressed.png",
+      "bytes": 733347,
+      "sha256": "6f3f32cdc2343e95ae39e3bc38c1f3b9edf7a2a0493a97329d82dad477157d39"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/paw-slow-rebound-mobile-day-pressed.png",
+      "bytes": 186669,
+      "sha256": "895e6b5a1bf17dd216f36858865ff9e1c034e48ae6359ed0cc8f28a510bcf13d"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/paw-slow-rebound-mobile-night-pressed.png",
+      "bytes": 213300,
+      "sha256": "2019c186a93f71c0490d50ac1187141461e31fab0da727f30ce17ea93380c295"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/paw-slow-rebound-interaction.webm",
+      "bytes": 538080,
+      "sha256": "5847492c0a5c24f50fcc6abe3cee504334b42b81afa42d04b424448980bc8b54"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cylinder-slow-rebound-desktop-day-pressed.png",
+      "bytes": 668313,
+      "sha256": "1b2ce82341c5feb0e57818ea8760337fad3a0db17f34f4501f83dfa70224ffa4"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cylinder-slow-rebound-desktop-night-pressed.png",
+      "bytes": 699160,
+      "sha256": "c1b25cb572a1c021a426341c11f9b43d1e9297c3c3af45e234459274898768a0"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cylinder-slow-rebound-mobile-day-pressed.png",
+      "bytes": 171027,
+      "sha256": "1129cda786d9910d9ad73a328d100825d71605846c1d0a79da30f74fdbadcfbe"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cylinder-slow-rebound-mobile-night-pressed.png",
+      "bytes": 202091,
+      "sha256": "d918eacf3c854d0c06b2aa75f0ce93f9b7a4ab4c014e4d4d62670be61b751345"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/cylinder-slow-rebound-interaction.webm",
+      "bytes": 478696,
+      "sha256": "2a2f5c2260c02122b47707c4ecd1cfbb2b208344bb4d089af35ab9de545e2682"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/donut-slow-rebound-desktop-day-pressed.png",
+      "bytes": 657178,
+      "sha256": "f72db74c2511badf24bf45a5c524036a4b10a9836a12edd034e8f7b519d7d578"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/donut-slow-rebound-desktop-night-pressed.png",
+      "bytes": 692268,
+      "sha256": "ff487e7eea2d6414579bec53eb576d019cc6d306ae6d2ea946bd5d072c74a050"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/donut-slow-rebound-mobile-day-pressed.png",
+      "bytes": 171586,
+      "sha256": "0b096ad19cffeaf6bdffa8558733c47f4c3b497eeb1991b8bf95779b439301ef"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/donut-slow-rebound-mobile-night-pressed.png",
+      "bytes": 200847,
+      "sha256": "f65d2e20879c6359a9c72798fa4a79db14cb3b1ac9bd510cee659e5a11a1be18"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/donut-slow-rebound-interaction.webm",
+      "bytes": 455262,
+      "sha256": "59e1ae206a4ff95b1eb1f8e6a68b474d39b7a20e6fb17f6d6f16e695bf0a7ef8"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/pyramid-slow-rebound-desktop-day-pressed.png",
+      "bytes": 703579,
+      "sha256": "e99816c791384b25abef0d3e2ae2101d00b2e1356fc227061df32bed788481f2"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/pyramid-slow-rebound-desktop-night-pressed.png",
+      "bytes": 737814,
+      "sha256": "898b2b170eeb35603e88cfeb63e5c43e7c0fef5276bd59147b859c4fa6a7204a"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/pyramid-slow-rebound-mobile-day-pressed.png",
+      "bytes": 180854,
+      "sha256": "eb3675560e29721ecabfa272cb3cffbe6f3736a80b20a05fedadfed4f42262ad"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/pyramid-slow-rebound-mobile-night-pressed.png",
+      "bytes": 211146,
+      "sha256": "75821cf5e4245a34d7e718cff41cb7299c8d746a6b06b3ec8a6279c580fee5a6"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/pyramid-slow-rebound-interaction.webm",
+      "bytes": 432418,
+      "sha256": "b74e55cf6ec2756b447babc6a2c8852e1aabec0acdfe4c06df0492441f940211"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/flower-slow-rebound-desktop-day-pressed.png",
+      "bytes": 656660,
+      "sha256": "ad8bfec048b2a4c41ff8440634c09085f65c830ec9e9f3d5131dc879be4d18e0"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/flower-slow-rebound-desktop-night-pressed.png",
+      "bytes": 691402,
+      "sha256": "af0e4bb3a8c260e1d807b30d5e4c42a39e973ba49f990d18ad5aa87c73f291f5"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/flower-slow-rebound-mobile-day-pressed.png",
+      "bytes": 174034,
+      "sha256": "ba437a4a3779431c1b41c44cd1408a56feb487b31720084f0e2e84c2b054afd8"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/flower-slow-rebound-mobile-night-pressed.png",
+      "bytes": 200975,
+      "sha256": "9adbb7c100d942ba2484c68bb1a695711d9b4e567b3953adf92f0633147ef1c2"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/flower-slow-rebound-interaction.webm",
+      "bytes": 467526,
+      "sha256": "2b6c5a8ca4c4176c223a4ea4515395d9850272b63ccaa347064852ad33f00f3e"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/star-slow-rebound-desktop-day-pressed.png",
+      "bytes": 703454,
+      "sha256": "128e01a96c29c8a7510feccd626d75ed7ffc0f17505219243210368ed12b30ea"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/star-slow-rebound-desktop-night-pressed.png",
+      "bytes": 736472,
+      "sha256": "433d8eee8b9a05109c85dd4dcbd62f71c0f529adb4e10d3dd17c795b76d140e4"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/star-slow-rebound-mobile-day-pressed.png",
+      "bytes": 184580,
+      "sha256": "f206a3ce857cf4c100da76f055f6524f2b74c2793b26090f958a776f725a4fe7"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/star-slow-rebound-mobile-night-pressed.png",
+      "bytes": 211364,
+      "sha256": "0fdfb27ca015af45a9376a8a90c0173078d2b694f7dfefdae2b5d5f18f7c3167"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound/star-slow-rebound-interaction.webm",
+      "bytes": 465205,
+      "sha256": "8f9930ee99afec3087040b891214d8e6620bffee6b096f5c4ca901fd78d753a7"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-browser-day-front.png",
+      "bytes": 623942,
+      "sha256": "f429ddbd3940f262b2c7bbb771ff14d1d22b1f6bef9f8fc56bcfb5aed6586a8b"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-browser-day-side.png",
+      "bytes": 710537,
+      "sha256": "a361455a78dbbb5391c8a9ff57a50ff7d9dfb843853e5a168dfaac9dfb717193"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-browser-day-back.png",
+      "bytes": 623479,
+      "sha256": "84197b1249e1e2adce7f7132bccbc80889e8907bb77f457a143285831e3617ab"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cloud-browser-day-bottom.png",
+      "bytes": 668182,
+      "sha256": "3ce56a98e92ccdae728a01cb214b3db668b9d390aaabcddd84ffa8d520992896"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-browser-day-front.png",
+      "bytes": 693115,
+      "sha256": "bfa8050369e7ec470269edb7acce741f44ce3a02b98f2a5f94d605d8b02c6bb5"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-browser-day-side.png",
+      "bytes": 723767,
+      "sha256": "6ede1753a46b1289e50b68771e449b3358f78af6a3db6a9ea21ffbcc898e0ec8"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-browser-day-back.png",
+      "bytes": 649817,
+      "sha256": "a00262beea6fbe9f6cdc50845b787103a580553d733df3373eadd86f04907a32"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/paw-browser-day-bottom.png",
+      "bytes": 718581,
+      "sha256": "2c42857975f123eb8c172d2da6f83c7604a3efe298663dde14a1fb2209ea39bd"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-browser-day-front.png",
+      "bytes": 650115,
+      "sha256": "00e8b319d374673b1ceaf8b653732d026fe423a61835c858e258586f7846e31d"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-browser-day-side.png",
+      "bytes": 675206,
+      "sha256": "3fedef6583311555fc04e2e52c191cdabfc3e6c0529af3692430e59fd7140caa"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-browser-day-back.png",
+      "bytes": 647820,
+      "sha256": "14d7217a9ee03bb00e67cf1acae501a768be1a7310bc4eab8bf64038e455b065"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/cylinder-browser-day-bottom.png",
+      "bytes": 648125,
+      "sha256": "44390fb1bfe3d276418c113a2c7d3d6db4a37d668bc894352ba14d23bc921863"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-browser-day-front.png",
+      "bytes": 651483,
+      "sha256": "f6b8c9d5d438e29b795a7197017747f45c8f2085ed2f140fc0c53bce2f12a9d1"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-browser-day-side.png",
+      "bytes": 712039,
+      "sha256": "5b9acb433aa04299de9d75bbeb6611f0137cc66e6c0c425dab7331474d84b21c"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-browser-day-back.png",
+      "bytes": 649537,
+      "sha256": "8c9adc1fdc0fbfcd8c94c8ab3331772ee4afe685f97fd0e6b379a3905fef14da"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/donut-browser-day-bottom.png",
+      "bytes": 696502,
+      "sha256": "b5a1f1fc8c080f53c1226752fab538fc6b308ba60e2ef491be788ba0f0d88199"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-browser-day-front.png",
+      "bytes": 695069,
+      "sha256": "2ec39f374f3733e20f13ffba40c41d3b929a643b0acd12d4b04ce8fe7a10e88e"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-browser-day-side.png",
+      "bytes": 698624,
+      "sha256": "eddfc60907aa7994f3c3f0e4ec2653f7b0fe5b4d5435aba2ed5adc8d7a693d24"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-browser-day-back.png",
+      "bytes": 703847,
+      "sha256": "c4748b4b1d2ad595d9cf0b9dac214e1b9d7b5f7086576aeb63e55f8bd240a49f"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/pyramid-browser-day-bottom.png",
+      "bytes": 704380,
+      "sha256": "173546354ef95ccc9200312aa9616a855a25e7b62433179549c3d6b9aa708e6c"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-browser-day-front.png",
+      "bytes": 648803,
+      "sha256": "133a025811fedf7f034ee85036251fd1abaf399520c99b9ef52fea8a3cbecdd1"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-browser-day-side.png",
+      "bytes": 712981,
+      "sha256": "c26dc67600962552289db33e343f08625d86e71169a1537cd70a7a9248135c7a"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-browser-day-back.png",
+      "bytes": 635610,
+      "sha256": "82efdf4f6b63e7d2f7a7fa66a8645c9ec60e4643077361576cfeb45bc85fc1a7"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/flower-browser-day-bottom.png",
+      "bytes": 706978,
+      "sha256": "69e368c89424a26803748bd8c32c51d2d8b48cbc338deccec002bab6cd4980a4"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-browser-day-front.png",
+      "bytes": 696333,
+      "sha256": "73dffce5a1f1ce99bf697f6e40ecb3479803eccbc9ed59a43f0dfaf69ef94cdb"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-browser-day-side.png",
+      "bytes": 721937,
+      "sha256": "dfb8b26500e45a1e0a69d69e9b8ac72b7a88d851df3c5fc11b8d5bb07cd3c500"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-browser-day-back.png",
+      "bytes": 693373,
+      "sha256": "ecaeda187682f471904da8c747ed322b0efa2dd6999ef1ab938d14677168ea99"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay/star-browser-day-bottom.png",
+      "bytes": 719629,
+      "sha256": "473dab192f606709f4aeda43e7b3741a85a3d7d48f8ea7e1dbda6015ade2918d"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/summary.json",
+      "bytes": 8817,
+      "sha256": "d4938dde6ab04e8e849ecb15bac07e233db7dd5b214aace5231ece9b6a6cd067"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/validation.md",
+      "bytes": 3195,
+      "sha256": "d308666693657feb357057397113d79d63d7e2606256fc151ab94ab7bbc1452f"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/video-encoding.json",
+      "bytes": 19088,
+      "sha256": "aa4407a67cfd435032462f77a471921b31401d44a2330de3eba7664f9c9babc1"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/clay-current-capture.txt",
+      "bytes": 388,
+      "sha256": "fd6abbf45ed278f86ab1d17c14a2f06f19d53215796a40f594a366373546cb6d"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/marshmallow-current-capture.txt",
+      "bytes": 437,
+      "sha256": "109d74d986e43e0973942542314ac1d1173ab56f799538db9d94da208db4c4ed"
+    },
+    {
+      "path": "artifacts/issue-30-combinations/slow-rebound-current-capture.txt",
+      "bytes": 444,
+      "sha256": "fa7b23b1c1dfc329ebe12401b6023cf13fd4a1586f6c970add64025da04ccb33"
+    }
+  ]
+}

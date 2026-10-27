@@ -1,0 +1,11 @@
+✔ marshmallow paw clearance certificates preserve actual shell geometry through deep/drag/release/restore (23937.6322ms)
+ℹ {"samples":77,"thickness":0.014,"attachedMinSignedDistance":0.0027098422236632243,"detachedViolations":0}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 24131.7584
+EXIT_CODE=0

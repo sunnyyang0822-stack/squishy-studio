@@ -1,0 +1,314 @@
+{
+  "snapshot": ".tmp/issue-38/paw-max-correction-core.json",
+  "source": {
+    "panelId": 3,
+    "time": 5.1999999999999975,
+    "attempt": 1,
+    "point": [
+      -0.3317097673472535,
+      0.24841093143368886,
+      -0.049213047069709956
+    ],
+    "distance": -0.0002773505469502473,
+    "shift": [
+      0.0006612541878030855,
+      0.0008265001871570021,
+      0.00020080971280373691
+    ],
+    "hitNormal": [
+      0.6137781149087982,
+      0.7671599457545645,
+      0.18639217603981076
+    ],
+    "sampleKind": "inner-vertex",
+    "sourceFace": 2873,
+    "renderedVertex": 3810,
+    "nearestFace": {
+      "face": 2873,
+      "ids": [
+        3017,
+        2994,
+        3014
+      ],
+      "points": [
+        [
+          -0.33426064252853394,
+          0.25126034021377563,
+          -0.05105287954211235
+        ],
+        [
+          -0.36425355076789856,
+          0.2411627471446991,
+          0.08927199989557266
+        ],
+        [
+          -0.3207230865955353,
+          0.24105660617351532,
+          -0.053634315729141235
+        ]
+      ],
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "originalNormal": [
+        -0.23342451279954252,
+        0.2113305163868161,
+        0.9491324510667506
+      ],
+      "normalDotOriginal": 0.19576431295231692,
+      "pointSignedPlaneDistance": -0.00027735054695021027,
+      "nearestDistance": 0.0002773505469502473,
+      "mappedNormalDots": [
+        0.24705459148687947
+      ]
+    },
+    "ownFaces": [
+      {
+        "face": 2873,
+        "ids": [
+          3017,
+          2994,
+          3014
+        ],
+        "points": [
+          [
+            -0.33426064252853394,
+            0.25126034021377563,
+            -0.05105287954211235
+          ],
+          [
+            -0.36425355076789856,
+            0.2411627471446991,
+            0.08927199989557266
+          ],
+          [
+            -0.3207230865955353,
+            0.24105660617351532,
+            -0.053634315729141235
+          ]
+        ],
+        "normal": [
+          0.6137781149087982,
+          0.7671599457545645,
+          0.18639217603981076
+        ],
+        "originalNormal": [
+          -0.23342451279954252,
+          0.2113305163868161,
+          0.9491324510667506
+        ],
+        "normalDotOriginal": 0.19576431295231692,
+        "pointSignedPlaneDistance": -0.00027735054695021027,
+        "nearestDistance": 0.0002773505469502473,
+        "mappedNormalDots": [
+          0.24705459148687947
+        ]
+      }
+    ],
+    "vertices": [
+      {
+        "index": 387,
+        "sourceFace": 2873,
+        "sourcePoint": [
+          -0.33426064252853394,
+          0.25126034021377563,
+          -0.05105287954211235
+        ],
+        "sourceNormal": [
+          0.826259887153719,
+          -0.428000080122856,
+          0.3662110461135117
+        ],
+        "rendered": [
+          -0.3317097673472535,
+          0.24841093143368886,
+          -0.049213047069709956
+        ],
+        "authoredNormal": [
+          -0.2655907948479071,
+          0.059197949954786756,
+          0.9622666638792011
+        ],
+        "sourceNormalGap": 0.0040009999999999985
+      }
+    ],
+    "afterProjection": {
+      "point": [
+        -0.3310485131594504,
+        0.24923743162084586,
+        -0.04901223735690622
+      ],
+      "actualNearestSignedDistance": 0.00036628763454269695,
+      "nearestFace": 17340,
+      "normal": [
+        -0.5498710471269893,
+        -0.7946260913903408,
+        0.25731538316466407
+      ]
+    }
+  },
+  "feature": {
+    "kind": "face",
+    "barycentric": [
+      0.7414145424136682,
+      0.017907188292135168,
+      0.24067826929419658
+    ],
+    "selectedClosestPoint": [
+      -0.33153953565137745,
+      0.24862370366424222,
+      -0.049161351097738074
+    ],
+    "selectedFace": 2873,
+    "incidentFaces": [
+      {
+        "face": 2873,
+        "ids": [
+          3017,
+          2994,
+          3014
+        ],
+        "normal": [
+          0.6137781149087982,
+          0.7671599457545645,
+          0.18639217603981076
+        ],
+        "weight": 1
+      }
+    ],
+    "pseudonormal": [
+      0.6137781149087983,
+      0.7671599457545647,
+      0.1863921760398108
+    ],
+    "pseudonormalDot": -0.00027735054695024735,
+    "pseudonormalInside": true
+  },
+  "independentBefore": {
+    "rays": [
+      {
+        "direction": [
+          0.930773560748922,
+          0.3453169910378501,
+          0.12006978933661094
+        ],
+        "rawHits": 5,
+        "uniqueHits": 5,
+        "inside": true
+      },
+      {
+        "direction": [
+          -0.19543602194737725,
+          0.9006268292505865,
+          0.3881701634070028
+        ],
+        "rawHits": 3,
+        "uniqueHits": 3,
+        "inside": true
+      },
+      {
+        "direction": [
+          0.16360568837583558,
+          -0.2808721933388622,
+          0.9456976206695699
+        ],
+        "rawHits": 1,
+        "uniqueHits": 1,
+        "inside": true
+      }
+    ],
+    "parityConsistent": true,
+    "parityInside": true,
+    "winding": 0.999999999999999,
+    "windingInside": true,
+    "parityWindingAgree": true
+  },
+  "independentAfter": {
+    "rays": [
+      {
+        "direction": [
+          0.930773560748922,
+          0.3453169910378501,
+          0.12006978933661094
+        ],
+        "rawHits": 4,
+        "uniqueHits": 4,
+        "inside": false
+      },
+      {
+        "direction": [
+          -0.19543602194737725,
+          0.9006268292505865,
+          0.3881701634070028
+        ],
+        "rawHits": 2,
+        "uniqueHits": 2,
+        "inside": false
+      },
+      {
+        "direction": [
+          0.16360568837583558,
+          -0.2808721933388622,
+          0.9456976206695699
+        ],
+        "rawHits": 0,
+        "uniqueHits": 0,
+        "inside": false
+      }
+    ],
+    "parityConsistent": true,
+    "parityInside": false,
+    "winding": 1.0575167445827755e-15,
+    "windingInside": false,
+    "parityWindingAgree": true
+  },
+  "referenceMethod": "Three independent non-axis ray directions; all live triangles, merged equal-distance hits; independent oriented solid-angle winding. No production BVH sign or pseudonormal is used by these two inside references.",
+  "productionQueries": [
+    {
+      "featureNormals": false,
+      "nearestGrid": false,
+      "distance": -0.0002773505469502473,
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "inside": true
+    },
+    {
+      "featureNormals": false,
+      "nearestGrid": true,
+      "distance": -0.0002773505469502473,
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "inside": true
+    },
+    {
+      "featureNormals": true,
+      "nearestGrid": false,
+      "distance": -0.0002773505469502473,
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "inside": true
+    },
+    {
+      "featureNormals": true,
+      "nearestGrid": true,
+      "distance": -0.0002773505469502473,
+      "normal": [
+        0.6137781149087982,
+        0.7671599457545645,
+        0.18639217603981076
+      ],
+      "inside": true
+    }
+  ]
+}

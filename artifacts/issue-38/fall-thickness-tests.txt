@@ -1,0 +1,25 @@
+✔ 同一捕获与命中同时驱动芯壳；命中丢失终止驻留，不在旧位置继续施力 (3.3767ms)
+✔ thin wax is a separate closed-volume shell with independently owned color and measured nonzero thickness (641.2166ms)
+✔ actual continuous dwell exceeds one second; one brittle local wave retains most plates and releases only a few small chips (565.3449ms)
+✔ released wax chips fall promptly under gravity instead of ejecting sideways (1045.9642ms)
+✔ short taps, cancellation, hit loss and sliding cannot borrow previous dwell time (196.7364ms)
+✔ deep clay press and recovery keep original core behavior and measured shell clearance (5339.347ms)
+✔ bounded lifetime, unique chips, reduced motion and idempotent cleanup (197.5949ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 0,-1,0 (13543.554ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 1,0,0 (12167.589ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 0,0,1 (12121.891ms)
+✔ the actual 24-chip budget is reached across fresh locations and cannot be reused after expiry or repeated pressure (503.0523ms)
+✔ one local press leaves remote real render positions, normals and colors exactly unchanged (802.8943ms)
+✔ creating a shell over an old bare-core dent retains original contact coordinates (1190.6834ms)
+✔ detached curved plates retain frozen edge lengths while the original core continues deforming (1853.7672ms)
+✔ irregular area distribution, rapid connected cracking and strain-limited saturation replace regular scales and timed emptying (623.9343ms)
+✔ random Voronoi cutting covers the complete real orb GLB surface with no intact-shell holes (292.5906ms)
+✔ retained shells open connected partial boundary chains while unbroken boundary bridges remain geometrically closed (1023.8558ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52249.3796

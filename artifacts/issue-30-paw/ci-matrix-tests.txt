@@ -1,0 +1,10 @@
+✔ PR 检查安装依赖和浏览器并执行完整测试 (230.6081ms)
+✔ PR 模板要求范围、验证和回滚信息 (1.1248ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 528.2297

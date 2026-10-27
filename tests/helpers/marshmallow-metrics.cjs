@@ -1,0 +1,43 @@
+const { modelAttribute } = require('./orb-probe.cjs');
+module.exports = async function measure() {
+  const { getOrbFeel } = await import('../../src/orb-feels.mjs');
+  const rest = modelAttribute('POSITION'), normal = modelAttribute('NORMAL');
+  const point = a => [Math.sin(a), .0175, Math.cos(a)];
+  const sample = (p, a) => {
+    const contact = point(a); let index = 0, nearest = Infinity;
+    for (let i = 0; i < rest.length; i += 3) {
+      const distance = Math.hypot(...contact.map((v, k) => v - rest[i + k]));
+      if (distance < nearest) { nearest = distance; index = i; }
+    }
+    return { vertex: index / 3, rest: Array.from(rest.slice(index, index + 3)), depth: Math.hypot(...contact.map((_, k) => p[index + k] - rest[index + k])) };
+  };
+  const fixture = id => { const p = rest.slice(); return { p, d: getOrbFeel(id).createDeformation(p, normal) }; };
+  const advance = (d, duration, hz = 120) => { for (let t = 0; t < duration - 1e-9; t += 1 / hz) d.step(Math.min(1 / hz, duration - t)); };
+  const report = { units: 'model-space radial displacement; nearest original GLB vertex', parameters: { pressResponsePerSecond: 8, sweepResponsePerSecond: 240, trailStrength: .06, sweptDwellInitialStrength: .06, contactAge: 'current footprint only', initialStrength: .03, holdStrength: .58, holdRampSeconds: 2, maxDepth: .70, radialLimit: .76, footprintRadius: .40, pathSpacing: .04 }, curves: [], paths: [] };
+  for (const seconds of [.004, 1 / 120, 1 / 60, .025, .05, .1, .2, .3, .5, 1, 2, 3]) {
+    const row = { seconds };
+    for (const id of ['clay', 'marshmallow']) { const f = fixture(id); f.d.begin(point(0)); advance(f.d, seconds); row[id] = sample(f.p, 0); }
+    report.curves.push(row);
+  }
+  for (const duration of [.1, .6, 2]) for (const hz of [30, 60, 120]) for (const events of [2, 12, 60]) for (const dwell of [0, .3]) {
+    const f = fixture('marshmallow'); f.d.begin(point(-1)); advance(f.d, dwell, hz);
+    let next = 1;
+    for (let t = 1 / hz; t < duration + 1 / hz - 1e-9; t += 1 / hz) {
+      while (next <= events && next / events * duration <= t + 1e-9) { f.d.move(point(-1 + 2 * next / events), 1); next++; }
+      f.d.step(Math.min(1 / hz, duration));
+    }
+    const beforeDwell = f.p.slice();
+    const endpoint = point(1);
+    advance(f.d, dwell, hz);
+    let departedTrailDrift = 0;
+    for (let i = 0; i < rest.length; i += 3) {
+      if (Math.hypot(...endpoint.map((v,k) => rest[i+k] - v)) >= .40)
+        for (let k = 0; k < 3; k++) departedTrailDrift = Math.max(departedTrailDrift, Math.abs(f.p[i+k] - beforeDwell[i+k]));
+    }
+    const endpointDwellGain = sample(f.p, 1).depth - sample(beforeDwell, 1).depth;
+    const samples = Array.from({ length: 9 }, (_, i) => sample(f.p, -1 + i / 4));
+    f.d.release(); const frozen = f.p.slice(); advance(f.d, 10, hz);
+    report.paths.push({ duration, hz, events, dwell, samples, departedTrailDrift, endpointDwellGain, maxDifference: Math.max(...samples.map(p => p.depth)) - Math.min(...samples.map(p => p.depth)), releaseDrift: Math.max(...f.p.map((v, i) => Math.abs(v - frozen[i]))) });
+  }
+  return report;
+};

@@ -1,0 +1,7 @@
+cloud×marshmallow: captured, actual GPU deformation verified
+cylinder×marshmallow: captured, actual GPU deformation verified
+donut×marshmallow: captured, actual GPU deformation verified
+pyramid×marshmallow: captured, actual GPU deformation verified
+flower×marshmallow: captured, actual GPU deformation verified
+star×marshmallow: captured, actual GPU deformation verified
+paw×marshmallow: captured, actual GPU deformation verified

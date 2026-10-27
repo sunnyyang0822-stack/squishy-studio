@@ -1,0 +1,5 @@
+paw-clay-batch-desktop: recorded
+donut-clay-batch-desktop: recorded
+donut-clay-batch-mobile: recorded
+paw-clay-batch-mobile: recorded
+EXIT_CODE=0

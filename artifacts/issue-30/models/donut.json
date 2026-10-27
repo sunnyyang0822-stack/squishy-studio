@@ -1,0 +1,26 @@
+{
+  "id": "donut",
+  "name": "甜甜圈",
+  "blender": "4.4.0",
+  "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
+  "bboxMin": [
+    -1.1600000858306885,
+    -1.1600000858306885,
+    -0.440000057220459
+  ],
+  "bboxMax": [
+    1.1600000858306885,
+    1.1600000858306885,
+    0.440000057220459
+  ],
+  "vertices": 6144,
+  "triangles": 12288,
+  "glbBytes": 222496,
+  "meshes": 1,
+  "primitives": 1,
+  "materials": 1,
+  "closedManifold": true,
+  "externalTextures": false,
+  "feelId": "clay",
+  "reviewStatus": "review revision: fuller donut; major radius 0.72; tube radius 0.44; through-hole diameter 0.56"
+}

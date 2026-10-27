@@ -1,0 +1,58 @@
+[
+  {
+    "style": "orb",
+    "vertices": 2562,
+    "edges": 7680,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  },
+  {
+    "style": "cloud",
+    "vertices": 7136,
+    "edges": 21402,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  },
+  {
+    "style": "paw",
+    "vertices": 14468,
+    "edges": 43398,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  },
+  {
+    "style": "cylinder",
+    "vertices": 6424,
+    "edges": 19266,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  },
+  {
+    "style": "donut",
+    "vertices": 6144,
+    "edges": 18432,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  },
+  {
+    "style": "pyramid",
+    "vertices": 4100,
+    "edges": 12294,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  },
+  {
+    "style": "flower",
+    "vertices": 8654,
+    "edges": 25956,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  },
+  {
+    "style": "star",
+    "vertices": 6944,
+    "edges": 20826,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  }
+]

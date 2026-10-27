@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="day">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f9f3f4" />
+  <script src="/theme-preference.js"></script>
+  <title>制作奶油圆球｜Squishy Studio</title>
+  <meta name="description" content="选择内芯、外壳和装饰，制作并试捏自己的圆球。" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/detail/detail.css" />
+  <script type="module" src="/detail/page.js"></script>
+</head>
+<body class="detail-page">
+  <header class="detail-topbar">
+    <a class="detail-back" href="/collections/"><span aria-hidden="true">←</span> 返回合集</a>
+    <nav class="workflow-progress" aria-label="制作步骤">
+      <ol>
+        <li data-step="core"><span class="progress-label">内芯</span><span class="progress-track" aria-hidden="true"></span></li>
+        <li data-step="shell"><span class="progress-label">外壳</span><span class="progress-track" aria-hidden="true"></span></li>
+        <li data-step="decoration"><span class="progress-label">装饰</span><span class="progress-track" aria-hidden="true"></span></li>
+        <li data-step="making"><span class="progress-label">制作</span><span class="progress-track" aria-hidden="true"></span></li>
+        <li data-step="play"><span class="progress-label">试捏</span><span class="progress-track" aria-hidden="true"></span></li>
+      </ol>
+    </nav>
+    <a class="detail-brand" href="/">Squishy Studio</a>
+  </header>
+  <main class="detail-main">
+    <section class="toy-area" aria-label="奶油圆球">
+      <p class="style-placeholder-note" hidden></p>
+      <div class="toy-stage" id="toy-stage" role="region" aria-label="奶油圆球展示区" aria-busy="true">
+        <div class="toy-halo" aria-hidden="true"></div>
+        <div class="toy-mount"></div>
+        <div class="resource-message"><p class="resource-status" role="status">正在加载圆球…</p><button class="retry-button" type="button" hidden>重新加载</button></div>
+      </div>
+      <div class="making-blank" hidden aria-label="制作动画区域"></div>
+    </section>
+    <section class="step-panel" aria-label="制作设置">
+      <div class="step-head sr-only"><h1 class="step-title"></h1></div>
+      <div class="category-tabs" role="group" aria-label="设置分类"></div>
+      <div class="step-options"></div>
+      <output class="configuration-summary sr-only" aria-live="polite"></output>
+      <p class="configuration-error" role="status" hidden>请重试</p>
+      <div class="step-navigation"><button class="step-back" type="button">上一步</button><button class="step-next" type="button">下一步</button></div>
+    </section>
+    <noscript><p class="no-script">请启用 JavaScript 以制作圆球；仍可通过上方导航返回合集。</p></noscript>
+  </main>
+</body>
+</html>

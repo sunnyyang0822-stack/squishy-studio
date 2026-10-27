@@ -1,0 +1,47 @@
+Command: node --test tests/thin-wax-debris.test.cjs tests/thin-wax.test.cjs
+Exit code: 0
+Provenance: exact previously executed tool output (exec session 6516), saved after completion; no rerun.
+
+✔ collection disabled falls below the former floor, expires offscreen and cannot respawn the same body (32.549ms)
+✔ disabling a populated collection releases settled bodies and clears every support cell (1.6329ms)
+✔ uncollected body lifetime uses actual elapsed seconds when a coarse frame cannot integrate the whole interval (0.5467ms)
+✔ released bodies fall faster in world Y for three differently rotated source surfaces (1.5175ms)
+✔ a slanted curved chip contacting a high pile keeps its complete physical footprint inside the tray (11.0482ms)
+ℹ {"contactTop":-0.5239519073365981,"contactRadius":1.2906795784735718,"settledRadius":1.2906699013896046,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":5,"minY":-1.348,"maxRadius":1.2894901761494932,"pileTop":-0.5224519073365982,"gridCells":2523}}
+✔ floor contact preserves real bodies past the former lifetime and settled vertices remain exact (2.0009ms)
+✔ a body created at the end of a coarse frame cannot integrate motion before its birth (0.4492ms)
+✔ successive real polygon bodies accumulate above earlier surfaces and reset clears the support field (5.6274ms)
+✔ thin wax is a separate closed-volume shell with independently owned color and measured nonzero thickness (401.1681ms)
+✔ actual continuous dwell exceeds 0.5 seconds; one brittle local wave retains most plates and releases only a few small chips (420.6887ms)
+✔ released wax chips fall promptly under gravity instead of ejecting sideways (351.2649ms)
+✔ actual detached world vertices fall down after toy rotation, then remain fixed on the floor while the toy turns (1208.6614ms)
+ℹ {"rotation":[0,0,0],"uniqueVertices":42,"meanWorldYDrop":0.12298324848970446,"meanCornerLateral":0.06619204014601919}
+ℹ {"rotation":[0,0,1.5707963267948966],"uniqueVertices":42,"meanWorldYDrop":0.07350189309744608,"meanCornerLateral":0.10245171459415155}
+ℹ {"rotation":[1.5707963267948966,0.55,-0.4],"uniqueVertices":42,"meanWorldYDrop":0.13551533506030128,"meanCornerLateral":0.05890962007662631}
+✔ actual clay dent and dragged deformation all receive local crack geometry before any chip can fall (872.4182ms)
+✔ additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone (267.1071ms)
+✔ short taps, cancellation, hit loss and sliding cannot borrow previous dwell time (187.4803ms)
+✔ deep clay press and recovery keep original core behavior and measured shell clearance (3269.6264ms)
+✔ bounded moving budget, persistent settled chips, reduced motion and idempotent cleanup (208.3661ms)
+✔ broken rims remain outside the live clay after world rotation 0,0,0 (5642.866ms)
+✔ broken rims remain outside the live clay after world rotation 0,0,1.5707963267948966 (5758.3648ms)
+✔ broken rims remain outside the live clay after world rotation 1.5707963267948966,0.55,-0.4 (5291.3493ms)
+✔ live chips stay capped at 24 while continued deep pressure can strip each local cohort (5182.9058ms)
+✔ preview fall-through removes actual fragment drawing, preserves holes and frees the moving budget (4938.5118ms)
+✔ switching an existing collection off keeps shell damage and lets the old pile fall away without revival (388.5975ms)
+✔ repeated local presses can strip the complete real shell once without duplicate cells or regrowth (1831.5951ms)
+ℹ {"completeShellPanels":180,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":180,"minY":-1.348,"maxRadius":1.2929891444331607,"pileTop":-0.771119179061487,"gridCells":2181},"physicalMaxRadius":1.2970834230234367,"physicalSamples":44700,"coreBottom":-0.5049999713897705,"physicalPileTop":-0.7726192474365234,"pileCoreGap":0.26761927604675295}
+✔ one local press leaves remote real render positions, normals and colors exactly unchanged (1482.2062ms)
+✔ creating a shell over an old bare-core dent retains original contact coordinates (466.7795ms)
+✔ detached curved plates retain frozen edge lengths while the original core continues deforming (1968.9483ms)
+✔ irregular area distribution, rapid connected cracking and strain-limited saturation replace regular scales and timed emptying (228.0326ms)
+✔ random Voronoi cutting covers the complete real orb GLB surface with no intact-shell holes (190.0511ms)
+✔ retained shells open connected partial boundary chains while unbroken boundary bridges remain geometrically closed (268.8292ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 40960.1497
