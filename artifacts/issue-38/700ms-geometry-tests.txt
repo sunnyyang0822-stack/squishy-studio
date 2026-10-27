@@ -1,0 +1,27 @@
+✔ 同一捕获与命中同时驱动芯壳；命中丢失终止驻留，不在旧位置继续施力 (2.5893ms)
+✔ thin wax is a separate closed-volume shell with independently owned color and measured nonzero thickness (541.5368ms)
+✔ actual continuous dwell exceeds 0.7 seconds; one brittle local wave retains most plates and releases only a few small chips (519.9367ms)
+✔ released wax chips fall promptly under gravity instead of ejecting sideways (937.951ms)
+✔ actual clay dent and dragged deformation all receive local crack geometry before any chip can fall (1392.5046ms)
+✔ additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone (914.3333ms)
+✔ short taps, cancellation, hit loss and sliding cannot borrow previous dwell time (172.3108ms)
+✔ deep clay press and recovery keep original core behavior and measured shell clearance (6287.6577ms)
+✔ bounded lifetime, unique chips, reduced motion and idempotent cleanup (203.573ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 0,-1,0 (16912.8296ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 1,0,0 (15487.684ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 0,0,1 (14975.6188ms)
+✔ the actual 24-chip budget is reached across fresh locations and cannot be reused after expiry or repeated pressure (496.8132ms)
+✔ one local press leaves remote real render positions, normals and colors exactly unchanged (1189.799ms)
+✔ creating a shell over an old bare-core dent retains original contact coordinates (1160.1548ms)
+✔ detached curved plates retain frozen edge lengths while the original core continues deforming (2330.2638ms)
+✔ irregular area distribution, rapid connected cracking and strain-limited saturation replace regular scales and timed emptying (457.3949ms)
+✔ random Voronoi cutting covers the complete real orb GLB surface with no intact-shell holes (178.4229ms)
+✔ retained shells open connected partial boundary chains while unbroken boundary bridges remain geometrically closed (945.4828ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 65212.8177

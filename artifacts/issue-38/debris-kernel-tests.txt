@@ -1,0 +1,14 @@
+✔ released bodies fall faster in world Y for three differently rotated source surfaces (27.7225ms)
+✔ a slanted curved chip contacting a high pile keeps its complete physical footprint inside the tray (9.5981ms)
+ℹ {"contactTop":-0.5239519073365981,"contactRadius":1.2906795784735718,"settledRadius":1.2906699013896046,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":5,"minY":-1.348,"maxRadius":1.2894901761494932,"pileTop":-0.5224519073365982,"gridCells":2523}}
+✔ floor contact preserves real bodies past the former lifetime and settled vertices remain exact (2.1205ms)
+✔ a body created at the end of a coarse frame cannot integrate motion before its birth (0.3687ms)
+✔ successive real polygon bodies accumulate above earlier surfaces and reset clears the support field (5.0973ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 130.8184
