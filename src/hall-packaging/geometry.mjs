@@ -54,13 +54,12 @@ export function buildPackageGeometry(spec, id, toyGeometry) {
   // those top points, with straight creases where the planes meet.
   const lower = new Float32Array(count), film = new Float32Array(count);
   for (let k = 0; k < count; k++) lower[k] = toyTop[k] > 0 ? Math.max(edgeZ, toyTop[k] + bag.contactGap) : edgeZ;
-  // The sheet rests on a sparse set of the toy's points (spacing bag.supportSpacing),
-  // raised together just enough that the flat facets between them clear the toy
-  // everywhere: it touches only at a few points and never wraps the toy's curves.
-  const step = Math.max(1, Math.round(bag.supportSpacing / grid.dx));
+  // The sheet presses onto the toy's upper face (smooth, bridging small dips)
+  // and leaves its rim in straight slopes to the sealed edges: the upper convex
+  // hull of the edge rectangle and the toy.
   const edgePoints = [];
   for (let i = 0; i <= 60; i++) { const f = i / 60; for (const [x, y] of [[-halfW + f * W, bodyBottom], [-halfW + f * W, bodyTop], [-halfW, bodyBottom + f * (bodyTop - bodyBottom)], [halfW, bodyBottom + f * (bodyTop - bodyBottom)]]) edgePoints.push(new THREE.Vector3(x, y, edgeZ), new THREE.Vector3(x, y, -1)); }
-  const supportCells = []; for (let j = 0; j < ny; j += step) for (let i = (j / step) % 2 ? Math.floor(step / 2) : 0; i < nx; i += step) { const k = j * nx + i; if (toyTop[k] > 0) supportCells.push(k); }
+  const supportCells = []; for (let k = 0; k < count; k++) if (toyTop[k] > 0) supportCells.push(k);
   const hullHeights = raise => {
     const hull = new ConvexHull().setFromPoints([...edgePoints, ...supportCells.map(k => new THREE.Vector3(X(k), Y(k), lower[k] + raise))]), tris = [];
     for (const face of hull.faces) { if (face.normal.z <= 1e-4) continue; let e = face.edge; const vs = []; do { vs.push(e.head().point); e = e.next; } while (e !== face.edge); for (let i = 1; i < vs.length - 1; i++) tris.push(vs[0], vs[i], vs[i + 1]); }
@@ -68,8 +67,7 @@ export function buildPackageGeometry(spec, id, toyGeometry) {
     for (let k = 0; k < count; k++) { ray.origin.set(X(k), Y(k), 10); const hit = hullBvh.raycastFirst(ray, THREE.DoubleSide); z[k] = hit ? hit.point.z : edgeZ; }
     return z;
   };
-  let raise = 0, hullZ = hullHeights(0);
-  for (let pass = 0; pass < 3; pass++) { let worst = 0; for (let k = 0; k < count; k++) worst = Math.max(worst, lower[k] - hullZ[k]); if (worst <= 1e-5) break; raise += worst; hullZ = hullHeights(raise); }
+  const hullZ = hullHeights(0);
   for (let k = 0; k < count; k++) film[k] = Math.max(lower[k], hullZ[k]);
   // A stiff sheet still sags a little between its supports (thickness-scaled).
   const sagAt = k => { const x = X(k), y = Y(k), e = Math.min(x + halfW, halfW - x, y - bodyBottom, bodyTop - y); return bag.sag * smoothstep(0, .6, e) * (toyTop[k] > 0 ? 0 : 1); };
@@ -106,6 +104,16 @@ export function buildPackageGeometry(spec, id, toyGeometry) {
     const start = extreme(dir), jitter = (random() - .5) * .25;
     const end = [start[0] + (target[0] - start[0]) * (.82 + random() * .12) + jitter * dir[1], start[1] + (target[1] - start[1]) * (.82 + random() * .12) - jitter * dir[0]];
     addRidge(start, end, bag.foldAmplitude[0] + random() * (bag.foldAmplitude[1] - bag.foldAmplitude[0]), .14 + random() * .08, t => (1 - t) ** .8 * Math.min(1, t * 6));
+  }
+  // Standing flaps: the surplus film beside the toy's widest sides buckles up
+  // into tall, sharp triangular flaps (as on the reference bags).
+  for (let side = 0; side < bag.flaps.count; side++) {
+    const s = side % 2 ? 1 : -1, tilt = (random() - .5) * .9 + (random() < .5 ? .35 : -.35);
+    const dir = [s * Math.cos(tilt), Math.sin(tilt)], start = extreme(dir);
+    const length = bag.flaps.length[0] + random() * (bag.flaps.length[1] - bag.flaps.length[0]);
+    const end = [start[0] + dir[0] * length, start[1] + dir[1] * length];
+    const height = bag.flaps.height[0] + random() * (bag.flaps.height[1] - bag.flaps.height[0]);
+    addRidge([start[0] - dir[0] * .05, start[1] - dir[1] * .05], end, height, bag.flaps.width, t => Math.min(1, t * 4) * (1 - t) ** 1.2);
   }
   for (let c = 0; c < bag.pinches; c++) {
     const side = c % 2 ? 1 : -1, y = bodyBottom + .25 + random() * (bodyTop - bodyBottom - .5);

@@ -3,7 +3,7 @@
   "styles": {
     "cloud": {
       "model": "/assets/hall-packaging/cloud.glb",
-      "bytes": 80184,
+      "bytes": 80236,
       "triangles": {
         "toy": 5420,
         "filmFront": 25942,
@@ -12,21 +12,21 @@
       "sourceTriangles": 14268,
       "toyScale": 0.7375,
       "pressure": 0,
-      "contactShare": 0.01,
+      "contactShare": 0.668,
       "stickers": 2,
       "chainBeads": 40,
       "clearance": {
-        "toyFilm": -0.02629,
+        "toyFilm": -0.00201,
         "toyBack": -0.004,
-        "sticker": -0.00132,
-        "stickerFloat": -0.0042,
+        "sticker": -0.00133,
+        "stickerFloat": -0.00428,
         "chain": null,
         "zipper": -0.001
       }
     },
     "star": {
       "model": "/assets/hall-packaging/star.glb",
-      "bytes": 84952,
+      "bytes": 85260,
       "triangles": {
         "toy": 5274,
         "filmFront": 25942,
@@ -35,14 +35,14 @@
       "sourceTriangles": 13884,
       "toyScale": 0.9526,
       "pressure": 0,
-      "contactShare": 0.005,
+      "contactShare": 0.491,
       "stickers": 3,
       "chainBeads": 40,
       "clearance": {
-        "toyFilm": -0.04013,
+        "toyFilm": -0.00251,
         "toyBack": -0.004,
-        "sticker": -0.00099,
-        "stickerFloat": -0.00395,
+        "sticker": -0.00135,
+        "stickerFloat": -0.00389,
         "chain": null,
         "zipper": -0.001
       }

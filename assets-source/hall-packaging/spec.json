@@ -8,7 +8,7 @@
     ],
     "fov": 17,
     "tiltDegrees": 32,
-    "exposure": 1.0,
+    "exposure": 1,
     "maxPixelRatio": 2,
     "toyLods": 0.38
   },
@@ -40,7 +40,7 @@
       36,
       32
     ],
-    "folds": 5,
+    "folds": 3,
     "foldAmplitude": [
       0.06,
       0.12
@@ -54,8 +54,19 @@
       "pullScale": 0.16,
       "kinkWidth": 0.55
     },
-    "sag": 0.06,
-    "supportSpacing": 0.3
+    "flaps": {
+      "count": 2,
+      "length": [
+        0.6,
+        0.85
+      ],
+      "height": [
+        0.38,
+        0.52
+      ],
+      "width": 0.1
+    },
+    "sag": 0.03
   },
   "tag": {
     "width": 1.32,

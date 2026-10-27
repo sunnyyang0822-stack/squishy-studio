@@ -37,18 +37,22 @@ function studioEnvironment() {
   // highlight bands seen on real PVC bags. No broad panels (they read as wet blobs).
   // Soft rectangular light panels (lightformer style): wide feathered edges give
   // the film long, smooth highlight bands instead of hard-edged blocks.
+  // A low, narrow side window: flat film and gentle slopes (including the film
+  // lying on the toy) reflect only the dim room and stay clear; standing flaps,
+  // steep slopes and creases that face the window catch it as large, sharp-edged
+  // white reflections.
   const boxes = [
-    { az: [112, 156], el: [24, 84], power: 6, feather: 5 },     // big window, upper-left: facets facing it go white
-    { az: [62, 84], el: [40, 70], power: 2.4, feather: 5 },     // second window pane, upper-right
-    { az: [96, 112], el: [-2, 36], power: 1.2, feather: 6 },    // soft key panel, front-left
-    { az: [-130, -50], el: [14, 52], power: .8, feather: 12 },  // rim from behind
+    { az: [120, 150], el: [6, 30], power: 7, feather: 3 },      // side window, left
+    { az: [96, 108], el: [2, 16], power: 1.2, feather: 4 },     // low fill near the camera
   ];
 
 
 
 
+
   for (let y = 0; y < height; y++) {
-    const el = ((y + .5) / height - .5) * 180, sky = el > 0 ? .14 + .06 * Math.sin(el * Math.PI / 180) : .1 + .08 * (1 + el / 90);
+    // tabletop studio: a bright white table below and around the horizon, a dimmer room above
+    const el = ((y + .5) / height - .5) * 180, sky = el < 8 ? .75 - .1 * Math.min(1, Math.max(0, -el) / 60) : el < 14 ? .75 - (el - 8) / 6 * .55 : .2 + .05 * Math.sin(el * Math.PI / 180);
     for (let x = 0; x < width; x++) {
       const az = ((x + .5) / width - .5) * 360; let v = sky;
       for (const b of boxes) v += b.power * s(b.az[0] - b.feather, b.az[0] + b.feather, az) * (1 - s(b.az[1] - b.feather, b.az[1] + b.feather, az)) * s(b.el[0] - b.feather, b.el[0] + b.feather, el) * (1 - s(b.el[1] - b.feather, b.el[1] + b.feather, el));
@@ -184,7 +188,7 @@ async function buildScene(id, url) {
 
   const toyGeometry = track(dequantized(byName('toy')));
   const aoSource = byName('toy').geometry.attributes.color; if (aoSource) { const c = new Float32Array(aoSource.count * 3); for (let i = 0; i < aoSource.count; i++) c.set([aoSource.getX(i), aoSource.getY(i), aoSource.getZ(i)], i * 3); toyGeometry.setAttribute('color', new THREE.BufferAttribute(c, 3)); }
-  const toyMaterial = track(crustMaterial(toyHex)); toyMaterial.envMapIntensity *= balance(toyHex);
+  const toyMaterial = track(crustMaterial(toyHex)); toyMaterial.envMapIntensity = .5 * balance(toyHex); // the bright table lights the film reflections, the key light shapes the toy
   const toyObject = new THREE.Mesh(toyGeometry, toyMaterial); toyObject.name = 'toy'; group.add(toyObject);
   // Back film carries the toy's soft contact shade (baked in the alpha of a grid texture).
   const shadeMaterial = track(film({ roughnessMap, edge: .35 }));
@@ -302,8 +306,8 @@ export function createPackageRenderer() {
   renderer.setClearColor(0x000000, 0);
   const pmrem = new THREE.PMREMGenerator(renderer), source = studioEnvironment();
   const environment = pmrem.fromEquirectangular(source).texture; source.dispose(); pmrem.dispose();
-  const key = new THREE.DirectionalLight(0xfff6ee, 2.3); key.position.set(-2.5, 3, 4);
-  const fill = new THREE.DirectionalLight(0xf2f4ff, .7); fill.position.set(3, -1, 4);
+  const key = new THREE.DirectionalLight(0xfff6ee, 1.8); key.position.set(-2.5, 3, 4);
+  const fill = new THREE.DirectionalLight(0xf2f4ff, .35); fill.position.set(3, -1, 4);
 
   async function render(id, url, target, view = {}) {
     const started = performance.now();
