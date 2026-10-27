@@ -59,10 +59,10 @@ export function sealNormal(aspect) {
 // drives roughness in three.js; values stay glossy (0.03–0.11).
 export function filmRoughness(seed) {
   const size = 512, [element, context] = canvas(size, size), random = rng(seed);
-  context.fillStyle = 'rgb(0,18,0)'; context.fillRect(0, 0, size, size);
+  context.fillStyle = 'rgb(0,10,0)'; context.fillRect(0, 0, size, size);
   for (let i = 0; i < 140; i++) {
     const x = random() * size, y = random() * size, length = 20 + random() * 90, angle = random() * Math.PI;
-    context.strokeStyle = `rgba(0,${28 + random() * 26},0,${.25 + random() * .35})`;
+    context.strokeStyle = `rgba(0,${16 + random() * 14},0,${.2 + random() * .25})`;
     context.lineWidth = .6 + random() * 1.4;
     context.beginPath(); context.moveTo(x, y); context.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length); context.stroke();
   }
@@ -74,9 +74,12 @@ export function sealPrint(pattern, ink, aspect, { hole = null } = {}) {
   const width = 1024, rows = Math.max(48, Math.round(width / aspect));
   const [element, context] = canvas(width, rows);
   context.clearRect(0, 0, width, rows);
-  const band = [rows * .26, rows * .74];
+  const band = [rows * .18, rows * .82];
   context.fillStyle = ink; context.strokeStyle = ink;
-  context.globalAlpha = .46;
+  // Printed band: a pale tinted ground with the pattern on top, like the
+  // reference zip strips. One ground opacity and line weight for every style.
+  context.globalAlpha = .42; context.fillRect(0, band[0], width, band[1] - band[0]);
+  context.globalAlpha = .85;
   const fine = pattern.endsWith('-fine');
   const kind = pattern.replace('-fine', '');
   if (kind === 'horizontal') {
@@ -90,7 +93,7 @@ export function sealPrint(pattern, ink, aspect, { hole = null } = {}) {
     for (let x = step / 2; x < width; x += step) context.fillRect(x - weight / 2, band[0], weight, band[1] - band[0]);
   } else if (kind === 'check') {
     const step = fine ? 12 : 20, weight = step / 2;
-    context.globalAlpha = .24;
+    context.globalAlpha = .42;
     for (let x = 0; x < width; x += step) context.fillRect(x, band[0], weight, band[1] - band[0]);
     for (let y = band[0]; y < band[1]; y += step) context.fillRect(0, y, width, Math.min(weight, band[1] - y));
   }
@@ -179,18 +182,54 @@ export function sticker(kind, ink, paper) {
   return texture(element);
 }
 
-// Printed insert of the PVC tag. The style name is supplied by real page text,
-// so the print only carries a quiet accent rule and a blank writing field.
-export function tagPrint(ink, aspect) {
+// Printed insert of the PVC tag: a pale tinted ground with a faint ink band at
+// its top and bottom edges. The style name is real page text placed on top.
+export function tagPrint(ground, keyline, aspect) {
   const width = 512, rows = Math.round(width / aspect);
   const [element, context] = canvas(width, rows);
-  const radius = rows * .16;
-  context.fillStyle = '#f7f3ec';
-  context.beginPath(); context.roundRect(0, 0, width, rows, radius); context.fill();
-  context.fillStyle = ink; context.globalAlpha = .9;
-  context.beginPath(); context.roundRect(width * .05, rows * .2, width * .022, rows * .6, width * .011); context.fill();
-  context.globalAlpha = .35;
-  context.fillRect(width * .12, rows * .78, width * .76, 2);
-  context.globalAlpha = 1;
+  context.fillStyle = ground; context.fillRect(0, 0, width, rows);
+  // faint printed edge band following the insert outline (drawn by the mesh UVs)
+  const band = context.createLinearGradient(0, 0, 0, rows); band.addColorStop(0, keyline); band.addColorStop(.06, ground); band.addColorStop(.94, ground); band.addColorStop(1, keyline);
+  context.globalAlpha = .35; context.fillStyle = band; context.fillRect(0, 0, width, rows); context.globalAlpha = 1;
   return texture(element);
+}
+
+// Fine crease network of handled PVC film as a normal map over the bag body:
+// long creases radiating from the toy toward corners and seams, short crinkles
+// near the edges, and faint random wrinkles. Breaks reflections into the thin
+// sharp highlight lines seen on real bags. uv (0,0) is the lower-left corner.
+export function creaseNormal(seed, toyBox, folds = []) {
+  const size = 768, random = rng(seed), height = new Float32Array(size * size);
+  const stamp = (x0, y0, x1, y1, width, depth) => {
+    const minX = Math.max(0, Math.floor(Math.min(x0, x1) - width * 3)), maxX = Math.min(size - 1, Math.ceil(Math.max(x0, x1) + width * 3));
+    const minY = Math.max(0, Math.floor(Math.min(y0, y1) - width * 3)), maxY = Math.min(size - 1, Math.ceil(Math.max(y0, y1) + width * 3));
+    const sx = x1 - x0, sy = y1 - y0, ll = sx * sx + sy * sy || 1;
+    for (let y = minY; y <= maxY; y++) for (let x = minX; x <= maxX; x++) {
+      const t = Math.min(1, Math.max(0, ((x - x0) * sx + (y - y0) * sy) / ll)), d = Math.hypot(x - x0 - sx * t, y - y0 - sy * t);
+      // sharp ridge (crease) with a soft shoulder, fading at both ends
+      height[y * size + x] += depth * Math.sin(Math.PI * t) ** .5 * (Math.exp(-((d / width) ** 2)) * .8 + Math.exp(-d / (width * 4)) * .2);
+    }
+  };
+  const polyline = (x, y, angle, length, width, depth, bend) => {
+    const steps = 6; let a = angle;
+    for (let s = 0; s < steps; s++) {
+      const nx = x + Math.cos(a) * length / steps, ny = y + Math.sin(a) * length / steps;
+      stamp(x, y, nx, ny, width, depth); x = nx; y = ny; a += (random() - .5) * bend;
+    }
+  };
+  const [cx, cy] = [(toyBox[0] + toyBox[2]) / 2 * size, (toyBox[1] + toyBox[3]) / 2 * size];
+  const rx = (toyBox[2] - toyBox[0]) / 2 * size, ry = (toyBox[3] - toyBox[1]) / 2 * size;
+  // The baked folds, drawn crisp: a sharp crease line along each ridge.
+  for (const f of folds) {
+    const [x0, y0, x1, y1] = [f.start[0] * size, f.start[1] * size, f.end[0] * size, f.end[1] * size];
+    stamp(x0, y0, x1, y1, 1.4, 2.2); stamp(x0, y0, x1, y1, 5, .9);
+  }
+  // A few faint secondary creases only.
+  for (let i = 0; i < 6; i++) {
+    const angle = random() * Math.PI * 2, start = [cx + Math.cos(angle) * rx, cy + Math.sin(angle) * ry];
+    polyline(start[0], start[1], angle + (random() - .5) * .4, size * (.08 + random() * .12), 1.2, (random() < .5 ? 1 : -1) * .35, .1);
+  }
+  const map = heightToNormal(height, size, size, .9);
+  map.flipY = false; // rows were written bottom-up in uv space
+  return map;
 }

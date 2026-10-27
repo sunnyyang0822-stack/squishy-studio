@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大厅包装评审</title>
+<style>
+  :root { --ink: #3a2f36; --muted: #8a7b83; --line: #e7dde2; --paper: #fbf8f6; }
+  body { margin: 0; font-family: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif; color: var(--ink); background: var(--paper); }
+  header { padding: 20px 16px 8px; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0 0 6px; } h2 { font-size: 15px; margin: 28px 0 10px; }
+  p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+  main { max-width: 1200px; margin: 0 auto; padding: 0 16px 60px; }
+  .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+  figure { margin: 0; } figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .pack { position: relative; display: block; }
+  .pack canvas { display: block; width: 100%; height: 100%; }
+  @font-face { font-family: "Squishy Tag Rounded"; src: url("/assets/fonts/squishy-tag-rounded-bold.woff2") format("woff2"); font-weight: 700; font-display: block; }
+  .name { position: absolute; display: flex; align-items: center; justify-content: center; font-family: "Squishy Tag Rounded", "PingFang SC", "Microsoft YaHei", sans-serif; font-weight: 700; line-height: 1; white-space: nowrap; pointer-events: none; }
+  .name[data-fit="too-small"] { outline: 2px solid red; }
+  .bg-white { background: #fff; } .bg-black { background: #000; } .bg-gray { background: #8c8c8c; }
+  .bg-day { background: linear-gradient(160deg, #fbf3f7, #d6f6fa); } .bg-night { background: linear-gradient(160deg, #292044, #4b5685); }
+  .refcrop { width: 300px; height: 400px; background: url('/.local/reference/pvc-bag-hall.jpg') no-repeat; background-size: 300% 300%; border-radius: 4px; }
+  .phone { width: 390px; padding: 16px 18px; box-sizing: border-box; background: linear-gradient(160deg, #fbf3f7, #d6f6fa); border: 1px solid var(--line); border-radius: 22px; }
+  .phone .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .stats { font: 12px/1.6 ui-monospace, Consolas, monospace; white-space: pre-wrap; background: #fff; border: 1px solid var(--line); padding: 10px; border-radius: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>大厅包装 · 阶段 A 评审（云朵 / 五角星）</h1>
+  <p>网页端实时渲染一次后冻结。样式名为页面真实文字，叠放在吊牌印刷区。陈列配色为待评审方案。</p>
+</header>
+<main>
+  <h2>1. 参考图 vs 当前（同尺度并排）</h2>
+  <div class="row">
+    <figure><div class="refcrop" style="background-position:50% 0%"></div><figcaption>参考 · 云朵</figcaption></figure><figure><div class="refcrop" style="background-position:100% 50%"></div><figcaption>参考 · 面包</figcaption></figure><figure><div class="refcrop" style="background-position:0% 50%"></div><figcaption>参考 · 爱心</figcaption></figure>
+    <figure data-id="cloud" data-w="300" class="bg-white"></figure>
+    <figure data-id="star" data-w="300" class="bg-white"></figure>
+  </div>
+  <h2>2. 不同底色透明验证</h2>
+  <div class="row" id="backgrounds"></div>
+  <h2>3. 近景：塑料高光与贴附 / 吊牌与钢珠链 / 封口与贴纸</h2>
+  <div class="row" id="details"></div>
+  <h2>4. 侧面</h2>
+  <div class="row" id="sides"></div>
+  <h2>5. 手机尺寸（390 宽，两列）</h2>
+  <div class="phone"><div class="grid" id="phone"></div></div>
+  <h2>6. 渲染统计</h2>
+  <div class="stats" id="stats">渲染中…</div>
+</main>
+<script type="module">
+  import { createPackageRenderer, placeName, spec } from '/assets/hall-packaging.js';
+  const names = { cloud: '云朵', star: '五角星' };
+  const renderer = createPackageRenderer();
+  const log = [];
+  async function pack(host, id, width, view = {}, label = '') {
+    const height = view.height || Math.round(width * 5 / 4);
+    const wrap = document.createElement('div'); wrap.className = 'pack'; wrap.style.width = width + 'px'; wrap.style.height = height + 'px'; wrap.style.setProperty('--px', width + 'px');
+    const canvas = document.createElement('canvas'); canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
+    const name = document.createElement('span'); name.className = 'name'; name.textContent = names[id];
+    wrap.append(canvas); if (!view.hideName) wrap.append(name);
+    const figure = host.tagName === 'FIGURE' ? host : document.createElement('figure');
+    figure.prepend(wrap); if (label) { const c = document.createElement('figcaption'); c.textContent = label; figure.append(c); }
+    if (figure !== host) host.append(figure);
+    const result = await renderer.render(id, `/assets/hall-packaging/${id}.glb`, canvas, { width, height, ...view });
+    if (name.isConnected) placeName(name, result.quad, { color: result.nameColor });
+    log.push(`${id} ${label || 'front'} ${result.stats.width}×${result.stats.height}px ${result.stats.ms}ms ${result.stats.triangles} tris ${result.stats.calls} calls`);
+  }
+  await document.fonts.load('700 16px "Squishy Tag Rounded"', '云朵五角星');
+  const t0 = performance.now();
+  for (const figure of document.querySelectorAll('figure[data-id]')) await pack(figure, figure.dataset.id, +figure.dataset.w);
+  for (const [bg, label] of [['bg-white', '白'], ['bg-black', '黑'], ['bg-gray', '中灰'], ['bg-day', '大厅日间'], ['bg-night', '大厅夜间']]) {
+    const f = document.createElement('figure'); f.className = bg; document.getElementById('backgrounds').append(f); await pack(f, 'cloud', 200, {}, label);
+  }
+  const details = [
+    ['塑料高光与贴附', { frame: { left: -1.2, right: 1.2, bottom: -1.2, top: 1.0 }, fov: 12 }, 1],
+    ['吊牌与钢珠链', { frame: { left: .9, right: 2.25, bottom: .55, top: 1.95 }, fov: 12, hideName: false }, 1],
+    ['上封口与贴纸', { frame: { left: -1.75, right: .2, bottom: .7, top: 1.85 }, fov: 12 }, .6],
+    ['下封口', { frame: { left: -1.75, right: .2, bottom: -1.75, top: -1.0 }, fov: 12 }, .45],
+  ];
+  for (const id of ['cloud', 'star']) for (const [label, view, ratio] of details) {
+    const f = document.createElement('figure'); f.className = 'bg-white'; document.getElementById('details').append(f);
+    await pack(f, id, 340, { ...view, height: Math.round(340 * ratio), hideName: label !== '吊牌与钢珠链' }, `${names[id]} · ${label}`);
+  }
+  for (const id of ['cloud', 'star']) { const f = document.createElement('figure'); f.className = 'bg-white'; document.getElementById('sides').append(f); await pack(f, id, 300, { yaw: 34, tilt: 28 }, `${names[id]} · 侧面`); }
+  for (const id of ['cloud', 'star', 'cloud', 'star']) await pack(document.getElementById('phone'), id, 170);
+  renderer.dispose();
+  const unfit = [...document.querySelectorAll('.name')].filter(n => n.dataset.fit !== 'ok').map(n => `${n.textContent} ${n.style.fontSize}`);
+  log.unshift(unfit.length ? `名称不合格：${unfit.join('，')}` : `名称检查：${document.querySelectorAll('.name').length} 处全部放入牌面且字号 ≥ 10px`);
+  document.getElementById('stats').textContent = `GPU 渲染总耗时 ${(performance.now() - t0).toFixed(0)}ms（含加载）\n` + log.join('\n');
+  document.body.dataset.ready = 'true';
+</script>
+</body>
+</html>

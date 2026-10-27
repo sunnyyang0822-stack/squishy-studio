@@ -4,7 +4,7 @@ import { extname, resolve, sep } from 'node:path';
 
 const root = resolve(import.meta.dirname);
 const port = Number(process.env.PORT || 4173);
-const types = { '.glb': 'model/gltf-binary', '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8' };
+const types = { '.glb': 'model/gltf-binary', '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp' };
 
 createServer(async (request, response) => {
   try {
