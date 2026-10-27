@@ -27,3 +27,9 @@ node --test --test-concurrency=1 tests/wax-cache-surface.test.cjs tests/wax-coll
 正常速度实际录像为 `clay-release-paw-desktop.webm` 与 `clay-release-paw-mobile.webm`，元数据见 `clay-release-paw-videos.json`，两例完成、页面错误为空、附着／脱落采样穿入违规均为0，退出码0，运行包哈希与性能测量一致。包含短触裂缝、跨0.5秒局部掉片、深按、滑动、松开继续向下掉落、近侧面厚度／间隙和重新开始。触屏片的捏压使用CDP真实触摸，旋转明确标注为鼠标辅助；视频按真实墙时录制，没有加速时钟，侧面截图仅辅助，不替代视频。可用 `node scripts/capture-clay-release-paw.cjs` 在本分支独立端口4256复现。
 
 回滚猫爪性能增量时普通 revert 对应优化提交并 `npm run build:orb`，保留先前黏土薄蜡基线；整体撤销时使用 PR 的普通 revert。无存储迁移，不强推、不改写历史，不自动关闭范围更大的 Issue #38。PR #39 仍用于未验收的棉花糖阶段，不在本次合并中。
+
+## CI 刚性观察窗口修正
+
+最终候选 11bd460 的 CI 为 28 项成功、一个分片失败及汇总失败。失败仅在真实 GPU 碎片刚性测试：等待内芯恢复超过 0.005 时耗时 1207.5ms，碎片已按无托盘规则清理，旧断言错误比较清零 GPU 槽与活碎片。现使用既有 flight DPR，并在内芯实际变化超过 0.0001 的存活帧立即比较，显式拒绝已过期碎片；顶点距离容差仍为 1e-5，仍要求活碎片几何碰撞测量、真实上传与零穿入，不修改产品或时钟。
+
+命令 `node --test --test-name-pattern='detached polygon keeps' tests/thin-wax-browser.test.cjs`，THIN_WAX_TEST_DPR=0.5、THIN_WAX_FLIGHT_DPR=0.25，结果 1/1 通过、退出码0。52.8ms 内实际内芯变化 0.00396448，208个顶点刚性距离误差 2.7861e-8，活碎片内部样点816、穿入违规0，原始输出 `clay-release-rigid-live-frame.txt`。本次仅修测试观察窗口，运行包哈希不变。重新推送后必须等待完整 GitHub 检查通过才能合并。
