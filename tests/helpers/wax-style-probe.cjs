@@ -1,4 +1,5 @@
 const assert = require('node:assert/strict');
+const { installWaxGPUObserver } = require('./wax-upload-observer.cjs');
 const regions = Object.freeze({
   orb: { target: [0, .03], region: 'front' },
   cloud: { target: [.4, .05], region: 'lobe connection' },
@@ -10,21 +11,11 @@ const regions = Object.freeze({
   star: { target: [.5, .15], region: 'arm connection' },
 });
 async function installWaxStyleProbe(page) {
+  await installWaxGPUObserver(page);
   await page.addInitScript(() => {
     window.waxStyleObservers = new Set();
     const request = requestAnimationFrame.bind(window);
     window.requestAnimationFrame = callback => request(t => { callback(t); for (const observer of [...window.waxStyleObservers]) observer(t); });
-    const get = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function(type, ...args) {
-      const gl = get.call(this, type, ...args); if (type !== 'webgl2' || !gl || gl.waxStyleBuffers) return gl;
-      const buffers = window.waxStyleBuffers = gl.waxStyleBuffers = new Map(); let bound;
-      const bind = gl.bindBuffer.bind(gl), data = gl.bufferData.bind(gl), sub = gl.bufferSubData.bind(gl), dispose = gl.deleteBuffer.bind(gl);
-      gl.bindBuffer = (...a) => { if (a[0] === gl.ARRAY_BUFFER) bound = a[1]; return bind(...a); };
-      gl.bufferData = (...a) => { const result = data(...a); if (a[0] === gl.ARRAY_BUFFER && a[1] instanceof Float32Array) buffers.set(bound, a[1].slice()); return result; };
-      gl.bufferSubData = (...a) => { const result = sub(...a), b = buffers.get(bound); if (a[0] === gl.ARRAY_BUFFER && b && a[2] instanceof Float32Array) { const offset = a[3] || 0, length = a[4] || a[2].length - offset; b.set(a[2].subarray(offset, offset + length), a[1] / 4); } return result; };
-      gl.deleteBuffer = b => { buffers.delete(b); return dispose(b); };
-      return gl;
-    };
   });
 }
 async function projectedMeshContact(page, mesh, style, offset = [0, 0]) {

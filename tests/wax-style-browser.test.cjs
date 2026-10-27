@@ -5,6 +5,7 @@ const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
 const { installStyleProbe, ready, rotate } = require('./helpers/squishy-browser.cjs');
 const { regions, installWaxStyleProbe, projectedMeshContact, geometryOK } = require('./helpers/wax-style-probe.cjs');
+const { armWaxUploadEnd, readWaxUploadEnd } = require('./helpers/wax-upload-observer.cjs');
 const port = process.env.WAX_STYLE_TEST_PORT || '4240', base = `http://127.0.0.1:${port}`;
 const styles = Object.keys(regions); let server, browser;
 before(async () => {
@@ -55,22 +56,11 @@ for (const id of styles) test(`${id} clay thin-wax making preview: real mesh inp
     const initial = await diagnostic(page, { measure: true, exhaustive: true }); geometryOK(initial);
     assert.equal(initial.debrisStage.visible, false); assert.equal(initial.thinWax.collectionEnabled, false);
     assert.notEqual(initial.coreColor, initial.shellColor);
-    // A real trusted down owns capture. The page timer ends the short contact
-    // in the browser task, before transport latency can become an extra hold.
-    await page.evaluate(() => {
-      window.waxStyleShort = null;
-      window.addEventListener('pointerdown', e => {
-        const start = performance.now();
-        setTimeout(() => {
-          const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
-          const result = { state: d.thinWax, core: d.corePositions, elapsed: performance.now() - start, captured: document.querySelector('.orb-input').hasPointerCapture(e.pointerId), trusted: e.isTrusted };
-          window.dispatchEvent(new PointerEvent('pointerup', { pointerId: e.pointerId })); window.waxStyleShort = result;
-        }, 60);
-      }, { capture: true, once: true });
-    });
+    // End force after an actual changed core position upload, before costly
+    // native drawing. The trusted down and Pointer Capture stay real.
+    await armWaxUploadEnd(page, { resultKey: 'waxStyleShort' });
     const shellContact = await projectedMeshContact(page, mesh, id); await pressAt(page, shellContact);
-    await page.waitForFunction(() => window.waxStyleShort !== null); await page.mouse.up();
-    const short = await page.evaluate(() => window.waxStyleShort);
+    const short = await readWaxUploadEnd(page, 'waxStyleShort'); await page.mouse.up();
     assert.ok(short.elapsed < 500 && short.captured && short.trusted, JSON.stringify(short.state));
     assert.ok(short.state.cracked > 0); assert.equal(short.state.detached, 0);
     assert.ok(maxChange(initial.corePositions, short.core) > .0001, 'The same short input changes core geometry under the independent wax');
@@ -82,7 +72,7 @@ for (const id of styles) test(`${id} clay thin-wax making preview: real mesh inp
         if (lastRender === el.dataset.renderCount || started === undefined) return; lastRender = el.dataset.renderCount;
         const d = el.thinWaxDiagnostics({ measure: false }), state = d.thinWax;
         if (state.active && state.dwell <= .5) window.waxStyleBeforeThreshold.push({ dwell: state.dwell, detached: state.detached });
-        if (state.detached) { window.waxStyleOnset = { elapsed: performance.now() - started, state, core: d.corePositions }; window.waxStyleObservers.delete(observe); }
+        if (state.active && state.dwell > .5) { window.waxStyleOnset = { elapsed: performance.now() - started, state, core: d.corePositions }; window.waxStyleObservers.delete(observe); }
       }; window.waxStyleObservers.add(observe);
     });
     await pressAt(page, await projectedMeshContact(page, mesh, id));
@@ -121,7 +111,7 @@ for (const id of styles) test(`${id} clay thin-wax making preview: real mesh inp
     await page.locator('.step-next').click(); await page.locator('.step-back').click();
     const back = await diagnostic(page); assert.equal(back.thinWax.detached, cleared.state.detached); assert.equal(back.thinWax.expired, cleared.state.expired);
     assert.deepEqual(errors, []);
-    t.diagnostic(JSON.stringify({ style: id, actualContact: contact, shortMs: short.elapsed, onset: onset.onset.state, bareBox, shellBox, gpuCoreError, geometry: recovered.geometry, cleanup: { holes: cleared.holes, state: cleared.state } }));
+    t.diagnostic(JSON.stringify({ style: id, actualContact: contact, shortMs: short.elapsed, shortGPU: { depth: short.gpuDepth, changedSinceDown: short.changedSinceDown, error: short.gpuCoreError, captured: short.captured, trusted: short.trusted }, onset: onset.onset.state, bareBox, shellBox, gpuCoreError, geometry: recovered.geometry, cleanup: { holes: cleared.holes, state: cleared.state } }));
   } finally { await page.close(); }
 });
 

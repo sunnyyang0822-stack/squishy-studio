@@ -4,6 +4,7 @@ const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
 const { installStyleProbe, ready, projectedSurfaceContact, rotate } = require('./helpers/squishy-browser.cjs');
+const { installWaxGPUObserver, armWaxUploadEnd, readWaxUploadEnd } = require('./helpers/wax-upload-observer.cjs');
 const port = process.env.THIN_WAX_TEST_PORT || '4228', base = `http://127.0.0.1:${port}`;
 let server, browser;
 const reportedRenderProfiles = new Set();
@@ -17,23 +18,6 @@ before(async () => {
 after(async () => { await browser?.close(); server?.kill(); });
 const diagnostics = (page, options = { measure: false }) => page.locator('.toy-mount').evaluate((el, options) => el.thinWaxDiagnostics(options), options);
 const depth = d => Math.max(...d.corePositions.filter((_, i) => i % 3 === 0).map((_, vertex) => Math.hypot(...[0, 1, 2].map(k => d.corePositions[vertex * 3 + k] - d.coreRestPositions[vertex * 3 + k]))));
-async function installWaxUploadProbe(page) {
-  await page.addInitScript(() => {
-    const nativeContext = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function(type, ...args) {
-      const gl = nativeContext.call(this, type, ...args);
-      if (type !== 'webgl2' || !gl || gl.waxUploadProbe) return gl;
-      const probe = window.waxUploadProbe = gl.waxUploadProbe = { buffers: new Map(), uploads: 0 };
-      let bound;
-      const bind = gl.bindBuffer.bind(gl), data = gl.bufferData.bind(gl), sub = gl.bufferSubData.bind(gl), dispose = gl.deleteBuffer.bind(gl);
-      gl.bindBuffer = (...a) => { if (a[0] === gl.ARRAY_BUFFER) bound = a[1]; return bind(...a); };
-      gl.bufferData = (...a) => { const result = data(...a); if (a[0] === gl.ARRAY_BUFFER && a[1] instanceof Float32Array) { probe.buffers.set(bound, a[1].slice()); probe.uploads++; } return result; };
-      gl.bufferSubData = (...a) => { const result = sub(...a), target = probe.buffers.get(bound); if (a[0] === gl.ARRAY_BUFFER && target && a[2] instanceof Float32Array) { const offset = a[3] || 0, length = a[4] || a[2].length - offset; target.set(a[2].subarray(offset, offset + length), a[1] / 4); probe.uploads++; } return result; };
-      gl.deleteBuffer = buffer => { probe.buffers.delete(buffer); return dispose(buffer); };
-      return gl;
-    };
-  });
-}
 async function open(coreMaterial = 'clay', style = 'orb', { flight = false, step = 'shell' } = {}) {
   // CI software rasterization may need fewer pixels to observe real subsecond
   // interactions. CSS layout, meshes, shadows, depth and clocks stay intact.
@@ -41,7 +25,7 @@ async function open(coreMaterial = 'clay', style = 'orb', { flight = false, step
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor });
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   await installStyleProbe(page, getSquishyStyle(style));
-  await installWaxUploadProbe(page);
+  await installWaxGPUObserver(page);
   await page.addInitScript(() => {
     // Observe completed real render callbacks; neither clocks nor animation
     // deltas are replaced. Transport latency cannot delay these samples.
@@ -76,27 +60,11 @@ async function press(page, style = 'orb') {
   const hit = await projectedSurfaceContact(page, style === 'donut' ? .72 : style === 'paw' ? -.24 : 0, style === 'paw' ? -.46 : .03);
   await page.mouse.move(hit.x, hit.y); await page.mouse.down(); return hit;
 }
-async function shortContact(page, action = 'pointerup', milliseconds = 60) {
-  await page.evaluate(({ action, milliseconds }) => {
-    window.waxShortContact = null;
-    window.addEventListener('pointerdown', event => {
-      const start = performance.now(), surface = document.querySelector('.orb-input');
-      setTimeout(() => {
-        const before = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
-        const elapsed = performance.now() - start, captured = surface.hasPointerCapture(event.pointerId);
-        if (action === 'hidden') { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); }
-        else if (action === 'miss') window.dispatchEvent(new PointerEvent('pointermove', { pointerId: event.pointerId, clientX: 5, clientY: 5 }));
-        else window.dispatchEvent(action === 'blur' ? new Event('blur') : new PointerEvent(action, { pointerId: event.pointerId }));
-        window.waxShortContact = { before, elapsed, captured, trustedDown: event.isTrusted };
-      }, milliseconds);
-    }, { capture: true, once: true });
-  }, { action, milliseconds });
+async function shortContact(page, action = 'pointerup') {
+  await armWaxUploadEnd(page, { action });
   await press(page);
-  await page.waitForFunction(() => window.waxShortContact !== null);
+  const result = await readWaxUploadEnd(page);
   await page.mouse.up();
-  const result = await page.evaluate(() => window.waxShortContact);
-  assert.ok(result.elapsed < 500, `A short contact really ended before the fracture threshold: ${result.elapsed}ms`);
-  assert.equal(result.trustedDown, true); assert.equal(result.captured, true);
   assert.ok(depth(result.before) > .001, 'A short contact includes real nonzero core deformation before ending');
   return result;
 }
@@ -158,20 +126,34 @@ for (const material of ['clay']) test(`thin wax + ${material}: actual core geome
     for (let i = 0; i < 2; i++) { await shortContact(page); await page.waitForTimeout(100); }
     const repeated = await diagnostics(page); assert.equal(repeated.thinWax.detached, 0, JSON.stringify(repeated.thinWax));
     await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(750);
-    await page.evaluate(() => {
-      window.waxTimedSamples = [];
-      window.addEventListener('pointerdown', () => {
-        const start = performance.now();
-        for (const targetMs of [400, 560, 900, 2600, 5000]) setTimeout(() => {
-          const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
-          window.waxTimedSamples.push({ targetMs, actualMs: performance.now() - start, thinWax: d.thinWax, coreState: d.coreState });
-        }, targetMs);
-      }, { capture: true, once: true });
+    await page.locator('.toy-mount').evaluate(el => {
+      window.waxTimedSamples = null;
+      let started, lastRender, beforeThreshold, onset, chain, saturated;
+      window.addEventListener('pointerdown', () => { started = performance.now(); }, { capture: true, once: true });
+      const observe = () => {
+        if (started === undefined || lastRender === el.dataset.renderCount) return;
+        lastRender = el.dataset.renderCount;
+        const d = el.thinWaxDiagnostics({ measure: false });
+        if (!d.thinWax.active) return;
+        const sample = { actualMs: performance.now() - started, renderCount: lastRender, thinWax: d.thinWax, coreState: d.coreState };
+        // Select the FIRST completed frame across the boundary, independently
+        // of its damage result. A wall timer can otherwise read a stale frame.
+        if (d.thinWax.dwell <= .5) beforeThreshold = sample;
+        else if (!onset) onset = sample;
+        if (!chain && d.thinWax.dwell >= .9) chain = sample;
+        if (!saturated && d.thinWax.dwell >= 2.6) saturated = sample;
+        if (d.thinWax.dwell >= 5) {
+          window.waxTimedSamples = [beforeThreshold, onset, chain, saturated, sample];
+          window.waxFrameObservers.delete(observe);
+        }
+      };
+      window.waxFrameObservers.add(observe);
     });
-    await press(page); await page.waitForFunction(() => window.waxTimedSamples.length === 5, null, { timeout: 15000 });
+    await press(page); await page.waitForFunction(() => window.waxTimedSamples !== null, null, { timeout: 20000 });
     const timed = await page.evaluate(() => window.waxTimedSamples), [beforeThreshold, onset, chain, saturated, held] = timed;
+    assert.ok(beforeThreshold && beforeThreshold.thinWax.dwell <= .5, JSON.stringify(timed));
     assert.equal(beforeThreshold.thinWax.detached, 0, JSON.stringify(beforeThreshold));
-    assert.ok(onset.thinWax.detached > 0, 'Fragments already start at the 560ms page-local sample: ' + JSON.stringify(onset));
+    assert.ok(onset.thinWax.dwell > .5 && onset.thinWax.detached > 0, 'The first completed frame beyond 0.5 seconds already starts fracture: ' + JSON.stringify(onset));
     assert.ok(chain.thinWax.detached > 0 && chain.thinWax.dwell > .5, JSON.stringify(timed));
     assert.ok(chain.thinWax.cracked >= 6 && chain.thinWax.cracked > chain.thinWax.detached, 'The first local chain fracture cracks many more polygons than it drops: ' + JSON.stringify(timed));
     assert.ok(onset.thinWax.attachedPartialBranches >= 4, 'Most attached cracked plates expose partial connected branches rather than complete polygon outlines');

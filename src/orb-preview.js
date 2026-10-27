@@ -437,7 +437,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (shadowsChanged) mesh.material.needsUpdate = true;
       // Navigating a fixed thin-wax recipe never recolors or repairs its core.
       current.selectColor(thinRecipe ? config.coreColor : config.color);
-      current.diagnostics = ({ exhaustive = false, surface = false, measure = true } = {}) => ({
+      current.diagnostics = ({ exhaustive = false, surface = false, measure = true, counters = false } = {}) => {
+        if (counters) return wax?.getQueryCounters(true);
+        return ({
         enabled: Boolean(wax && shellVisible), configKey: recipeKey,
         coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor,
         corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions),
@@ -449,6 +451,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
           projectedTray: [[-1.42 * debrisTray.scale.x, -1.35, 0], [1.42 * debrisTray.scale.x, -1.35, 0], [0, -1.35, 1.42], [0, -1.35, -1.42]].map(p => new THREE.Vector3(...p).project(camera).toArray()) },
         resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries },
       });
+      };
       mount.thinWaxDiagnostics = current.diagnostics;
     };
     motionPreference.addEventListener('change', event => {
