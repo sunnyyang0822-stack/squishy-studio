@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "note": "Shared hall packaging spec. Units match the GLB models (metres in glTF, toy ≈ 2 units). Display colours are hall-only proposals pending product review; they never change recipes or feel presets.",
+  "render": {
+    "width": 720,
+    "height": 900,
+    "samples": 640,
+    "bounces": 5,
+    "transmissiveBounces": 8,
+    "exposure": 1.0,
+    "fov": 17,
+    "tiltDegrees": 20,
+    "tiles": 3
+  },
+  "frame": {
+    "left": -1.82,
+    "right": 2.62,
+    "bottom": -2.66,
+    "top": 2.86
+  },
+  "bag": {
+    "width": 3.4,
+    "bodyBottom": -2.02,
+    "bodyTop": 1.84,
+    "topSeal": 0.34,
+    "bottomSeal": 0.2,
+    "zipperDrop": 0.08,
+    "toyFill": 0.62,
+    "toyCenterY": -0.12,
+    "airGap": 0.05,
+    "contactGap": 0.0015,
+    "maxContactShare": 0.15,
+    "grid": [
+      180,
+      210
+    ],
+    "sag": -3.2e-05,
+    "wrinkles": 9,
+    "hole": {
+      "x": 1.47,
+      "radius": 0.055
+    }
+  },
+  "tag": {
+    "width": 1.34,
+    "height": 0.66,
+    "thickness": 0.028,
+    "radius": 0.11,
+    "printInset": 0.075,
+    "center": [
+      1.83,
+      1.0
+    ],
+    "tilt": -8
+  },
+  "chain": {
+    "beadRadius": 0.024,
+    "pitch": 0.058,
+    "linkRadius": 0.0065
+  },
+  "stickers": {
+    "max": 3,
+    "size": [
+      0.15,
+      0.23
+    ]
+  },
+  "palette": {
+    "rose": "#EFB3C9",
+    "coral": "#E9A39C",
+    "peach": "#EFBE99",
+    "lemon": "#EFDC9B",
+    "pistachio": "#CFD99E",
+    "mint": "#ADCFB4",
+    "aqua": "#A7D4CF",
+    "sky": "#AAC7E3",
+    "lavender": "#C6B4DC",
+    "cream": "#EDE1CF"
+  },
+  "styles": {
+    "orb": {
+      "color": "rose",
+      "seal": {
+        "top": "horizontal",
+        "bottom": "horizontal-fine"
+      },
+      "stickers": [
+        "heart",
+        "dot",
+        "sparkle"
+      ],
+      "seed": 3,
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    "cloud": {
+      "color": "cream",
+      "seal": {
+        "top": "vertical-fine",
+        "bottom": "vertical"
+      },
+      "stickers": [
+        "sparkle",
+        "drop"
+      ],
+      "seed": 11,
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    "paw": {
+      "color": "peach",
+      "seal": {
+        "top": "check",
+        "bottom": "horizontal"
+      },
+      "stickers": [
+        "heart",
+        "dot"
+      ],
+      "seed": 23,
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    "cylinder": {
+      "color": "mint",
+      "seal": {
+        "top": "vertical",
+        "bottom": "vertical-fine"
+      },
+      "stickers": [
+        "leaf",
+        "dot"
+      ],
+      "seed": 31,
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    "donut": {
+      "color": "coral",
+      "seal": {
+        "top": "check",
+        "bottom": "check-fine"
+      },
+      "stickers": [
+        "sprinkle",
+        "dot"
+      ],
+      "seed": 41,
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    "pyramid": {
+      "color": "sky",
+      "seal": {
+        "top": "horizontal",
+        "bottom": "vertical-fine"
+      },
+      "stickers": [
+        "sparkle",
+        "dot"
+      ],
+      "seed": 53,
+      "rotation": [
+        0,
+        0.35,
+        0
+      ]
+    },
+    "flower": {
+      "color": "lavender",
+      "seal": {
+        "top": "check-fine",
+        "bottom": "horizontal-fine"
+      },
+      "stickers": [
+        "leaf",
+        "sparkle"
+      ],
+      "seed": 61,
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    "star": {
+      "color": "lemon",
+      "seal": {
+        "top": "vertical",
+        "bottom": "horizontal-fine"
+      },
+      "stickers": [
+        "star",
+        "dot",
+        "sparkle"
+      ],
+      "seed": 71,
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}

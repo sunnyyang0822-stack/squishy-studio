@@ -29,7 +29,9 @@
   "devDependencies": {
     "esbuild": "^0.28.2",
     "fontkit": "^2.0.4",
-    "playwright": "^1.64.1"
+    "playwright": "^1.64.1",
+    "three-gpu-pathtracer": "^0.0.27",
+    "three-mesh-bvh": "^0.9.16"
   },
   "dependencies": {
     "@fontsource/fredoka": "^5.3.0",
