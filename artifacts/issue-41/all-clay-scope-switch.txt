@@ -1,0 +1,10 @@
+✔ rapid thickness changes clear old damage/resources; last selection wins and unsupported recipes stay disabled (6209.0578ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7081.5185
+EXIT_CODE=0

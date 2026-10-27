@@ -45,10 +45,12 @@ test('medium preset changes only physical thickness and real partition count', a
   assert.equal(seedCount, 96);
 });
 
-test('medium mapping is limited to orb clay, preserves navigation damage and supports explicit restart', async () => {
+test('medium mapping supports every registered clay preview and preserves legacy final scope', async () => {
   const { createDetailController, isMediumWaxRecipe, canRestartWax, defaultRecipe, styleNames } = await import('../detail/state.mjs');
   for (const styleId of Object.keys(styleNames)) for (const coreMaterial of ['clay', 'marshmallow', 'butter']) {
-    assert.equal(isMediumWaxRecipe({ ...defaultRecipe, styleId, coreMaterial }), styleId === 'orb' && coreMaterial === 'clay');
+    assert.equal(isMediumWaxRecipe({ ...defaultRecipe, styleId, coreMaterial }), coreMaterial === 'clay');
+    assert.equal(canRestartWax('shell', { ...defaultRecipe, styleId, coreMaterial }), coreMaterial === 'clay');
+    assert.equal(canRestartWax('play', { ...defaultRecipe, styleId, coreMaterial }), styleId === 'orb' && coreMaterial === 'clay');
   }
   for (const override of [{ shellMaterial: 'polish' }, { shellMaterial: 'sugar' }, { waxThickness: 'thick' }, { waxThickness: 'thin' }]) assert.equal(isMediumWaxRecipe({ ...defaultRecipe, ...override }), false);
   for (const step of ['shell', 'decoration', 'play']) assert.equal(canRestartWax(step, defaultRecipe), true);
@@ -64,6 +66,24 @@ test('medium mapping is limited to orb clay, preserves navigation damage and sup
     await controller.select('waxThickness', 'thin'); await controller.select('waxThickness', 'medium');
     assert.equal(prepared.at(-1).waxThickness, 'medium'); assert.equal(prepared.at(-1).coreColor, defaultRecipe.coreColor);
   } finally { controller.dispose(); }
+  for (const styleId of Object.keys(styleNames)) {
+    let calls = []; const configurations = [];
+    const c = createDetailController({ styleId, step: 'shell', renderer: {
+      async prepare(config) { configurations.push(config); return { commit() {}, dispose() {} }; },
+      restore(options) { calls.push(options); }, stopInput() {}, dispose() {},
+    }, audio: { ready: false, setVolume() {}, dispose() {} } });
+    try {
+      await c.load(); c.restart(); assert.equal(calls.length, 1);
+      calls = [];
+      for (const step of ['decoration', 'making', 'play']) { c.setStep(step); await new Promise(resolve => setImmediate(resolve)); }
+      assert.deepEqual(calls, styleId === 'orb' ? [] : [{ preserveShell: true }]);
+      c.setStep('shell'); await new Promise(resolve => setImmediate(resolve));
+      assert.equal(configurations.at(-1).styleId, styleId); assert.equal(configurations.at(-1).waxThickness, 'medium');
+      assert.equal(configurations.at(-1).waxCollection, false);
+      await c.select('waxThickness', 'thin'); await c.select('waxThickness', 'medium');
+      assert.equal(configurations.at(-1).waxThickness, 'medium');
+    } finally { c.dispose(); }
+  }
 });
 
 test('actual orb triangles have larger irregular regions and modestly thicker solid walls', async () => {

@@ -22,7 +22,7 @@ const mediumWax = Object.freeze({
   parameters: mediumWaxParameters,
   create(options = {}) {
     const { worldMatrix, ...shellOptions } = options;
-    const wax = createThinWax({ ...shellOptions, collectionEnabled: options.collectionEnabled ?? false, freezeRenderedFragments: true }, mediumWaxParameters);
+    const wax = createThinWax({ ...shellOptions, fullSurfaceSupport: options.fullSurfaceSupport || options.styleId === 'paw', collectionEnabled: options.collectionEnabled ?? false, freezeRenderedFragments: true }, mediumWaxParameters);
     if (worldMatrix) wax.setWorldMatrix(worldMatrix);
     return wax;
   },

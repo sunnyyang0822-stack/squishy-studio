@@ -410,7 +410,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || (feelId === 'marshmallow' && config.waxCollection === false);
       const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
-      const mediumRecipe = style.id === 'orb' && feelId === 'clay' && config.shellMaterial === 'wax' && config.waxThickness === 'medium';
+      const mediumRecipe = feelId === 'clay' && config.shellMaterial === 'wax' && config.waxThickness === 'medium' && (style.id === 'orb' || config.waxCollection === false);
       const waxRecipe = thinRecipe || mediumRecipe;
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
       if (wax || waxRecipe) current.input.cancel({ preserveShape: changed });
