@@ -391,10 +391,12 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       for (let i = 0; i < mapped.length; i++) {
         const vertex = mapped[i];
         if (panel.cracked) {
-          if (!fullSurfaceSupport && (panel.loose || panel.openVertexMask[i])) vertex.target.addScaledVector(outward, safetyLift + .0008);
+          if (panel.loose || panel.openVertexMask[i]) vertex.target.addScaledVector(outward, safetyLift + .0008);
           // Bound shards keep their unbroken bridges. Only explicitly selected
           // perimeter chains open; whole-cell shrinking produced a scale mosaic.
-          if (!fullSurfaceSupport && (panel.loose || panel.openVertexMask[i])) {
+          // Full-volume support constrains these real openings against the
+          // core; it must not replace visible strain cracks with state alone.
+          if (panel.loose || panel.openVertexMask[i]) {
             tangent.copy(center).sub(vertex.target).addScaledVector(vertex.targetNormal, -tangent.dot(vertex.targetNormal));
             const opening = panel.fractureAt === undefined ? (panel.strainCracked ? .0035 : .002) : .0055;
             if (tangent.length() > .0001) tangent.setLength(Math.min(opening, tangent.length() * .035)); vertex.target.add(tangent);

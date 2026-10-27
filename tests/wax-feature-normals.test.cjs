@@ -66,5 +66,16 @@ test('closed concave solid with duplicated seam vertices has analytic inside/out
       assert.ok(Math.abs(normal.length() - 1) < 1e-12);
     }
   }
+  const point = new THREE.Vector3(.37, .21, 1.004), hint = {};
+  robust.getQueryCounters(true);
+  const value = robust.signedDistance(point, normal, hint), expectedNormal = normal.clone();
+  robust.signedDistance(point, normal, hint); robust.signedDistance(point, normal, hint);
+  assert.ok(robust.getQueryCounters().cachedQueries > 0, 'Actual feature-normal results must exercise identical-point reuse');
+  assert.equal(robust.signedDistance(point, normal, hint), value); assert.deepEqual(normal, expectedNormal);
+  // A distant change cannot invalidate local geometry, but still refits the
+  // global angle-weighted normals. Its result must remain exactly the same.
+  for (let i = 0; i < rest.length; i += 3) if (rest[i] >= 2) g.attributes.position.setX(i / 3, rest[i] + .001);
+  robust.refit(); assert.equal(robust.signedDistance(point, normal, hint), value); assert.deepEqual(normal, expectedNormal);
+  assert.equal(robust.getQueryCounters().cachedQueries, 1);
   g.dispose();
 });

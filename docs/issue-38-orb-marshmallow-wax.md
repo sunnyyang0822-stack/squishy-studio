@@ -1,5 +1,17 @@
 # 棉花糖薄蜡制作预览
 
+## 滑动裂缝修复（待用户查验）
+
+七款非圆球的完整支撑模式此前记录了损伤，却错误跳过裂边的实际切向张开，导致滑动有形变、没有可见裂缝。现恢复选中局部裂边的几何张开及 0.0008 安全抬升，再由完整实际芯面约束；完整支撑模式仍不启用整片柔性铰链。黏土和圆球原路径保持不变，内芯参数未修改。
+
+运行包 SHA-256 为 `d8cacbc5cd1f50582c5a8209d336d798754bd1fde508de1636e1a974a17a671c`。`node --test --test-concurrency=1 tests/wax-marshmallow-style-geometry.test.cjs tests/wax-marshmallow-cracks.test.cjs` **14/14 通过、退出码0、102.24秒**，原始输出 `artifacts/issue-38/marshmallow-cracks-final-geometry.txt`。包括真实深按、拖动、破口边缘、恢复及浅滑；浅滑0.3秒时七款均零掉片，真实相邻片边界有220–926组张开，最大切向间隔约0.00738–0.00763。远处未变形的实际表面位置及法线逐值一致。修复前负对照的张开组数为0，见 `marshmallow-visible-cracks-before-fix.txt`。
+
+深按完整几何测量的附着内层最大最近芯面间隔约0.01030，厚度0.014、normal支撑gap0.004，最大厚度误差小于3.5e-7；真实内外面、边和断面穿入违规均为0。下文约0.008的数字是本次裂边重新张开前的历史阶段，不作为当前最大值。
+
+真实原生滑动浏览器验证 `WAX_MM_SLIDE_RECORD=1 node --test --test-concurrency=1 tests/wax-marshmallow-slide-browser.test.cjs` **7/7通过、退出码0、88.64秒**，见 `marshmallow-slide-browser-and-video.txt`。所有样式在真实可信短滑动后有实际裂缝、零掉片，裂缝位置与实际GPU上传误差0；随后真实按住1.8秒掉片、清理和侧转检查均通过。七段正常速度录像为 `<style>-marshmallow-slide-and-fracture.webm`，近景及侧面截图仅作辅助。鼠标事件按CDP原生队列顺序发送，不修改时钟；原先逐条等渲染ACK造成猫爪短滑被拖成长按的失败记录另保留于 `marshmallow-slide-browser-serialized-input-attempt.txt`。
+
+以上为Windows Edge桌面功能及几何验证；不是手机真机或性能验收。棉花糖猫爪在此前性能采集中仍较慢，仍须单独处理。棉花糖改动保留在PR #39草稿，用户查验通过前不合并。黏土发布单独在PR #42处理。
+
 ## 当前修复与完整几何结果
 
 当前范围为八款黏土与八款棉花糖制作预览。新增七款使用宿主显式传入的 `fullSurfaceSupport:true`，工厂不绑定内芯质感。完整支撑预建真实内外面、顶点、唯一边中点及断面三角形样点，并通过实际变形芯网格约束；默认已验收的黏土与圆球路径不启用这个额外模式。

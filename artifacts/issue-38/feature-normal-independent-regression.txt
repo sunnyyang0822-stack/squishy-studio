@@ -1,7 +1,7 @@
-✔ real folded paw distinguishes a false face-normal penetration from a true penetration using independent ray parity (1454.4335ms)
+✔ real folded paw distinguishes a false face-normal penetration from a true penetration using independent ray parity (1040.8007ms)
 ℹ {"expectedInside":false,"independentUniqueRayHits":[0,2,0],"robustSignedDistance":0.03808787054371515,"legacySignedDistance":-0.03808787054371515}
 ℹ {"expectedInside":true,"independentUniqueRayHits":[3,3,3],"robustSignedDistance":-0.0002773505469502473,"legacySignedDistance":-0.0002773505469502473}
-✔ closed concave solid with duplicated seam vertices has analytic inside/outside signs after dynamic refit (20.3239ms)
+✔ closed concave solid with duplicated seam vertices has analytic inside/outside signs after dynamic refit (15.8577ms)
 ℹ tests 2
 ℹ suites 0
 ℹ pass 2
@@ -9,4 +9,5 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 1602.4531
+ℹ duration_ms 1153.2095
+EXIT_CODE=0

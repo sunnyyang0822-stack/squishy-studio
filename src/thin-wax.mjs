@@ -231,7 +231,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       const cell = (z * gridSize.y + y) * gridSize.x + x; saved.cells[count] = cell; saved.revisions[count++] = cellRevision[cell];
     }
     saved.cells.length = saved.revisions.length = count;
-    const normal = faces[faceIndex].normal;
+    const normal = features ? featureNormal : faces[faceIndex].normal;
     saved.epoch = cacheEpoch; saved.motion = accumulatedMotion; saved.x = point.x; saved.y = point.y; saved.z = point.z;
     saved.faceIndex = faceIndex; saved.distance = distance; saved.nx = normal.x; saved.ny = normal.y; saved.nz = normal.z;
     // Every unvisited triangle lies outside this complete cell cube. The
@@ -245,6 +245,15 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (countQueries) counters.nearestCalls++;
     const siteHint = typeof sourceFace === 'object' && sourceFace !== null ? sourceFace : null;
     const previous = siteHint?.queryResult;
+    if (features && queryCache && gridValid && previous?.owner === cacheOwner && previous.epoch === cacheEpoch && previous.x === point.x && previous.y === point.y && previous.z === point.z) {
+      let unchanged = true;
+      for (let i = 0; i < previous.cells.length; i++) if (cellRevision[previous.cells[i]] !== previous.revisions[i]) { unchanged = false; break; }
+      if (unchanged) {
+        if (countQueries) counters.cachedQueries++;
+        lastNearestFace = previous.faceIndex; siteHint.faceIndex = previous.faceIndex;
+        outwardNormal?.set(previous.nx, previous.ny, previous.nz); return previous.distance;
+      }
+    }
     // A nearest-face certificate survives either an unchanged local region, or
     // a conservatively bounded motion of the complete core and query point.
     let reusable = false;
