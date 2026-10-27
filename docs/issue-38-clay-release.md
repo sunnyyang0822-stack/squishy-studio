@@ -39,3 +39,5 @@ node --test --test-concurrency=1 tests/wax-cache-surface.test.cjs tests/wax-coll
 用户追加要求同时缩小两款的黏土与棉花糖碎块，本黏土发布分支只同步黏土部分。预设按styleId选择small分块，种子260、连通片上限280（其他款仍180），同时运动上限仍24；不缩放掉落物、不改芯和壳厚、不改0.5秒阈值。猫爪173→278片，甜甜圈166→271片，实际平均表面积分别为原来的0.6223／0.6125，90百分位面积分别0.5851／0.6161，折合典型边长缩小约21%。
 
 本分支命令 `node --test --test-concurrency=1 tests/wax-style-geometry.test.cjs tests/wax-small-fragments.test.cjs`，3项通过（包含八款黏土完整几何及两款大小测量），退出码0，46.16秒，原始输出 `clay-small-fragments-geometry.txt`。真实面覆盖、单片连通、深按拖动恢复、独立片唯一脱落／全部剥落、活动预算及清理均通过。新增外观需要用户重新查验，先不合并；棉花糖的完整支撑性能优化仍不进入本PR。
+
+新增真实浏览器命令 `node --test --test-name-pattern='^(paw|donut) clay' tests/wax-style-browser.test.cjs`，独立端口4255，实际Edge原生输入、深按／拖动／侧转及全体积碰撞检查2/2通过，退出码0，22.19秒。对应本分支2553c9a2运行包，日志 `clay-small-fragments-browser.txt`；此前efb4417性能和录像属于调整碎块前的阶段，不充当本次新包数据。
