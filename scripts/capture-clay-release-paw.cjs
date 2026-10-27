@@ -25,7 +25,10 @@ const { armWaxUploadEnd, readWaxUploadEnd } = require('../tests/helpers/wax-uplo
         async function send(type, p) { if (touch) await client.send('Input.dispatchTouchEvent', { type: { down: 'touchStart', move: 'touchMove', up: 'touchEnd' }[type], touchPoints: type === 'up' ? [] : [{ x: p.x, y: p.y, id: 0 }] }); else if (type === 'down') { await page.mouse.move(p.x, p.y); await page.mouse.down(); } else if (type === 'move') await page.mouse.move(p.x, p.y); else await page.mouse.up(); }
         await label('完整薄蜡与独立薄断面'); await page.waitForTimeout(500);
         await armWaxUploadEnd(page, { resultKey: 'releaseShort' }); await label('短按局部裂缝');
-        const contact = await projectedMeshContact(page, mesh, 'paw'); await send('down', contact); item.short = await readWaxUploadEnd(page, 'releaseShort'); await send('up');
+        const contact = await projectedMeshContact(page, mesh, 'paw'); await send('down', contact);
+        const short = await readWaxUploadEnd(page, 'releaseShort');
+        item.short = Object.fromEntries(['elapsed', 'sampledElapsed', 'captured', 'trustedDown', 'gpuDepth', 'changedSinceDown', 'gpuCoreError', 'drawsAtRelease', 'drawsAfter', 'actualGPU'].map(key => [key, short[key]])); item.short.state = short.state;
+        await send('up');
         await page.waitForTimeout(400); await label('超过0.5秒后少量碎裂，持续深按'); await send('down', contact); await page.waitForTimeout(2300);
         const destination = await projectedMeshContact(page, mesh, 'paw', [.12, -.02]);
         await label('深按后连续滑动，局部损伤');
