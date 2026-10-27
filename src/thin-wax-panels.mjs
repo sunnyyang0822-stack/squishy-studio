@@ -117,13 +117,13 @@ function buildPanels(rest, index, count = 180) {
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, captureCorrectionGeometry = false } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, captureCorrectionGeometry = false } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
   const normalAffected = fullSurfaceSupport ? new Uint8Array(source.length / 3) : null;
   if (rest.length !== source.length || referenceNormals.length !== normals.length) throw new RangeError('Thin wax original surface snapshot mismatch');
-  let seedCount = 180, panels = buildPanels(rest, geometry.index.array);
+  let seedCount = config.seedCount ?? 180, panels = buildPanels(rest, geometry.index.array, seedCount);
   for (let attempt = 0; panels.length > config.maxFragments && attempt < 5; attempt++) {
     seedCount = Math.max(48, Math.floor(seedCount * config.maxFragments / panels.length * .95));
     panels = buildPanels(rest, geometry.index.array, seedCount);
@@ -446,7 +446,21 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
               samplePoint.add(vertex.rendered); if (node & 1) samplePoint.addScaledVector(vertex.renderedNormal, config.thickness);
             }
             samplePoint.multiplyScalar(1 / sample.nodes.length);
+            // Signed clearance is 1-Lipschitz. A sample remains outside when
+            // its previous positive distance exceeds its motion plus the sum
+            // of maximum live-core vertex motions. This checks every actual
+            // sample; it never reuses a stale distance after the bound expires.
+            const certificate = sample.clearance, motion = collisions.getMotionBound?.();
+            if (supportCertificates && certificate && Number.isFinite(motion)) {
+              const allowance = certificate.distance - (motion - certificate.motion) - .0005 - 1e-10;
+              const dx = samplePoint.x - certificate.x, dy = samplePoint.y - certificate.y, dz = samplePoint.z - certificate.z;
+              if (allowance > 0 && dx * dx + dy * dy + dz * dz < allowance * allowance) continue;
+            }
             attachedNearestSamples++; const distance = collisions.signedDistance(samplePoint, hitNormal, sample.hint);
+            if (Number.isFinite(motion)) {
+              const saved = sample.clearance ||= {};
+              saved.x = samplePoint.x; saved.y = samplePoint.y; saved.z = samplePoint.z; saved.distance = distance; saved.motion = motion;
+            }
             if (distance < .0005) {
               shift.copy(hitNormal).multiplyScalar(.0008 - distance);
               const captureCorrection = shift.length() > attachedCorrectionMax;

@@ -29,7 +29,7 @@ for (const id of styles) test(`${id} marshmallow reuses thin-wax preset without 
   const sourceMaterial = new THREE.MeshStandardMaterial(), coreMaterial = getOrbPreset('marshmallow').createMaterial(sourceMaterial);
   coreMaterial.color.set('#9cdbb6'); const coreColor = coreMaterial.color.clone();
   let seconds = 0;
-  const waxOptions = { geometry, restPositions: rest, restNormals: normals, color: '#f8dcac', collectionEnabled: false, fullSurfaceSupport: true, captureCorrectionGeometry: Boolean(process.env.WAX_CORRECTION_SNAPSHOT_FILE), clock: () => seconds };
+  const waxOptions = { styleId: id, geometry, restPositions: rest, restNormals: normals, color: '#f8dcac', collectionEnabled: false, fullSurfaceSupport: true, captureCorrectionGeometry: Boolean(process.env.WAX_CORRECTION_SNAPSHOT_FILE), clock: () => seconds };
   const legacySign = process.env.WAX_LEGACY_COLLISION_SIGN === '1';
   const wax = legacySign
     ? createVoronoiWax(waxOptions, thinWaxParameters, (g, settings) => createWaxCollisionTree(g, { ...settings, featureNormals: false }))

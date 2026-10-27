@@ -15,7 +15,7 @@ for (const id of styles) test(`${id} marshmallow shallow sliding opens actual at
   const settings = () => ({ surfaceGeometry: createSurfaceGeometry(rest.slice(), normal.slice(), mesh.indices, { ...style.geometryOptions, continuousFootprint: false }) });
   const core = feel.createDeformation(positions, normal.slice(), settings()), bare = feel.createDeformation(barePositions, normal.slice(), settings());
   let seconds = 0;
-  const wax = getWaxPreset('thin-wax').create({ geometry, restPositions: rest, restNormals: normal, fullSurfaceSupport: true, collectionEnabled: false, clock: () => seconds });
+  const wax = getWaxPreset('thin-wax').create({ styleId: id, geometry, restPositions: rest, restNormals: normal, fullSurfaceSupport: true, collectionEnabled: false, clock: () => seconds });
   const initial = wax.getSurfaceSnapshot();
   function contact(x, y) {
     let chosen = -1, best = Infinity;

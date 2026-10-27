@@ -4,6 +4,8 @@
 
 ## 当前滑动修复及黏土独立发布
 
+最新小碎块与棉花糖猫爪优化包9d7d5b45：实际79个完整间隔，中位51.2ms、P95 78ms、最大101.4ms。当前完整测量及77帧无缓存对照见 [本次记录](issue-38-small-shards-and-mm-paw.md)，原始数据 `mm-small-paw-final-performance.json`。以下92ms属于此次优化前的对照阶段。
+
 当前棉花糖滑动修复包 `d8cacbc5cd1f50582c5a8209d336d798754bd1fde508de1636e1a974a17a671c`，猫爪单独采集45个完整间隔：中位92.0ms、P95 114.8ms、最大131.8ms。390×844桌面触屏模拟、Intel UHD／ANGLE D3D11、真实4秒按压，不与本任务其他浏览器／CPU测试并发；脚本验证4380实际服务与本地包哈希一致。命令 `node scripts/benchmark-thin-wax.cjs artifacts/issue-38/marshmallow-slide-fix-paw-performance.json`，通过 THIN_WAX_BENCHMARK_URL 指向猫爪棉花糖制作预览，退出码0。完整记录为同名JSON／TXT；仍较慢，不能称性能验收通过。
 
 已验收黏土的PR #42另有独立包、服务器及测量，见其 `docs/issue-38-clay-release.md`：91.0ms／P95 106.1ms。用户已授权黏土合并，不包含尚待查验的棉花糖。此前593ddff包的16组合数据与下文d3af历史9组合分开，不能互相替代；下文“最终”仅表示当时阶段，不表示当前交付。

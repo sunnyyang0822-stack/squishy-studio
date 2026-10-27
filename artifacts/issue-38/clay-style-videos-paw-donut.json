@@ -1,0 +1,1810 @@
+{
+  "recordedAt": "2026-10-27T13:28:55.024Z",
+  "bundleSha256": "e7b71744180e7cfe36025d6c3a480dd393da70b654b81c7b785caab51909acdd",
+  "normalWallTime": true,
+  "physicalPhone": false,
+  "visualAcceptance": "pending user review",
+  "performanceMeasured": false,
+  "cases": [
+    {
+      "name": "paw-clay-batch-desktop",
+      "style": "paw",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "input": "native mouse",
+      "actualGeometry": [
+        {
+          "thickness": 0.014,
+          "gap": 0.004,
+          "tolerance": 0.00001,
+          "attachedMinGap": 0.003999917182421345,
+          "attachedMinSignedDistance": 0.00356207622491616,
+          "worstAttachedSample": {
+            "panelId": 91,
+            "point": [
+              -0.13986535370349884,
+              0.3077496141195297,
+              -0.05884610489010811
+            ],
+            "distance": 0.00356207622491616,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 3713,
+            "renderTriangleId": 49655,
+            "panelTriangle": 241,
+            "edge": 1,
+            "cracked": true,
+            "supportOnly": true,
+            "complexSurface": true,
+            "lift": 0
+          },
+          "attachedMaxSignedDistance": 0.005676405285419876,
+          "worstAttachedMaxSample": {
+            "panelId": 169,
+            "point": [
+              0.1339985430240631,
+              0.3093128204345703,
+              -0.06959282234311104
+            ],
+            "distance": 0.005676405285419876,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 8628,
+            "renderTriangleId": 87855,
+            "panelTriangle": 79,
+            "edge": 1
+          },
+          "attachedOuterMaxSignedDistance": null,
+          "attachedWallMaxSignedDistance": 0.014476558933365608,
+          "worstAttachedCorrection": null,
+          "attachedCorrectionMax": 0,
+          "attachedCorrectionTotalMax": 0,
+          "attachedCorrectedSamples": 0,
+          "maxThicknessError": 1.1073117155147028e-7,
+          "attachedSamples": 32569,
+          "attachedSurfaceSamples": 222134,
+          "attachedViolations": 0,
+          "detachedSweepSamples": 16151,
+          "logicalSweepSamples": 60055,
+          "duplicateSweepSamples": 16335,
+          "zeroLengthSweepSamples": 27569,
+          "detachedMinSignedDistance": null,
+          "detachedSamples": 0,
+          "detachedInteriorSamples": 0,
+          "detachedViolations": 0,
+          "wallSamples": 36282,
+          "drawCalls": 1,
+          "shellVertices": 139300,
+          "shellTriangles": 130336,
+          "patches": 278,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "panelAreaCV": 0.7293074104278295,
+          "panelAreaRange": [
+            0.0013959944619543574,
+            0.19514552310836314
+          ],
+          "method": "Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"
+        },
+        {
+          "thickness": 0.014,
+          "gap": 0.004,
+          "tolerance": 0.00001,
+          "attachedMinGap": 0.003999939968060502,
+          "attachedMinSignedDistance": 0.0035623178026445673,
+          "worstAttachedSample": {
+            "panelId": 91,
+            "point": [
+              -0.13990237563848495,
+              0.3078330308198929,
+              -0.05789167992770672
+            ],
+            "distance": 0.0035623178026445673,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 3713,
+            "renderTriangleId": 49655,
+            "panelTriangle": 241,
+            "edge": 1,
+            "cracked": true,
+            "supportOnly": true,
+            "complexSurface": true,
+            "lift": 0
+          },
+          "attachedMaxSignedDistance": 0.0056767394074754346,
+          "worstAttachedMaxSample": {
+            "panelId": 169,
+            "point": [
+              0.13403785973787308,
+              0.3094073385000229,
+              -0.06857303529977798
+            ],
+            "distance": 0.0056767394074754346,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 8628,
+            "renderTriangleId": 87855,
+            "panelTriangle": 79,
+            "edge": 1
+          },
+          "attachedOuterMaxSignedDistance": null,
+          "attachedWallMaxSignedDistance": 0.01447577108751016,
+          "worstAttachedCorrection": null,
+          "attachedCorrectionMax": 0,
+          "attachedCorrectionTotalMax": 0,
+          "attachedCorrectedSamples": 0,
+          "maxThicknessError": 1.1073117155147028e-7,
+          "attachedSamples": 32569,
+          "attachedSurfaceSamples": 222134,
+          "attachedViolations": 0,
+          "detachedSweepSamples": 16151,
+          "logicalSweepSamples": 60055,
+          "duplicateSweepSamples": 16335,
+          "zeroLengthSweepSamples": 27569,
+          "detachedMinSignedDistance": null,
+          "detachedSamples": 0,
+          "detachedInteriorSamples": 0,
+          "detachedViolations": 0,
+          "wallSamples": 36282,
+          "drawCalls": 1,
+          "shellVertices": 139300,
+          "shellTriangles": 130336,
+          "patches": 278,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "panelAreaCV": 0.7293074104278295,
+          "panelAreaRange": [
+            0.0013959944619543574,
+            0.19514552310836314
+          ],
+          "method": "Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"
+        }
+      ],
+      "bareBounds": {
+        "x": 141.390625,
+        "y": 179.6875,
+        "width": 556,
+        "height": 562.3125
+      },
+      "shellBounds": {
+        "x": 141.390625,
+        "y": 179.6875,
+        "width": 556,
+        "height": 562.3125
+      },
+      "short": {
+        "elapsed": 127,
+        "state": {
+          "active": true,
+          "cracked": 84,
+          "attachedCracked": 84,
+          "attachedPartialBranches": 83,
+          "visibleLongCrackEdges": 84,
+          "detached": 0,
+          "living": 0,
+          "settled": 0,
+          "expired": 0,
+          "collectionEnabled": false,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "firstBurst": 0,
+          "burstDuration": 0.07,
+          "burstInitialOutwardSpeed": 0,
+          "maxOutwardOffset": 0,
+          "dwell": 0.061200000000185995,
+          "disposed": false,
+          "topology": "random-spaced-clipped-voronoi",
+          "panels": 278,
+          "visibleCrackRadius": 0.53,
+          "localDamaged": 0,
+          "localDetached": 0,
+          "chainWaveCount": 0,
+          "lastDamageTime": null,
+          "heldStrain": 0,
+          "maxDetachedPerContact": 280,
+          "localRetainedFraction": 1
+        }
+      },
+      "contact": {
+        "face": 23027,
+        "point": [
+          -0.005812966575225195,
+          0.16726624965667725,
+          0.1650944004456202
+        ],
+        "normal": [
+          -0.002999949889878432,
+          0.324197252591451,
+          0.9459252953529358
+        ],
+        "radialDot": 0.05424469719840771,
+        "score": 0.000041263971344302675,
+        "region": "palm-to-toe connection",
+        "x": 417.9384759750424,
+        "y": 437.03959052113396
+      },
+      "held": {
+        "enabled": true,
+        "configKey": "[\"paw\",\"clay\",\"mint\",\"none\",\"wax\",\"rose\",\"thin\",\"one\"]",
+        "coreColor": "mint",
+        "shellColor": "rose",
+        "coreState": {
+          "active": true,
+          "restoring": false,
+          "held": 3.616266666666666,
+          "drag": 0.05389632204541934,
+          "depth": 0.24366877973079681,
+          "retainedDepth": 0.021335257217288017,
+          "center": [
+            0.10991029644771083,
+            0.191956578764388,
+            0.15383573455703792
+          ]
+        },
+        "thinWax": {
+          "active": true,
+          "cracked": 99,
+          "attachedCracked": 88,
+          "attachedPartialBranches": 79,
+          "visibleLongCrackEdges": 189,
+          "detached": 11,
+          "living": 0,
+          "settled": 0,
+          "expired": 11,
+          "collectionEnabled": false,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "firstBurst": 3,
+          "burstDuration": 0.07,
+          "burstInitialOutwardSpeed": 0,
+          "maxOutwardOffset": 0,
+          "dwell": 3.612699999999953,
+          "disposed": false,
+          "topology": "random-spaced-clipped-voronoi",
+          "panels": 278,
+          "visibleCrackRadius": 0.53,
+          "localDamaged": 11,
+          "localDetached": 11,
+          "chainWaveCount": 1,
+          "lastDamageTime": 7.7918000000000465,
+          "heldStrain": 0.013284952261743005,
+          "maxDetachedPerContact": 280,
+          "localRetainedFraction": 0
+        },
+        "debrisStage": {
+          "visible": false,
+          "collectionEnabled": false,
+          "discardBelowY": -4,
+          "projectionMatrix": [
+            0.638583735082589,
+            0,
+            0,
+            0,
+            0,
+            0.625,
+            0,
+            0,
+            0,
+            0,
+            -0.06688963210702341,
+            0,
+            0,
+            0,
+            -1.0066889632107023,
+            1
+          ],
+          "viewMatrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.9834900573119674,
+            0.18096217054540198,
+            0,
+            0,
+            -0.18096217054540198,
+            0.9834900573119674,
+            0,
+            0,
+            -0.37372622177854764,
+            -5.152701108268859,
+            1
+          ],
+          "projectedDiscardPlane": [
+            [
+              -1.277167470165178,
+              -2.4661013187097582,
+              -0.48203813343983937
+            ],
+            [
+              -1.277167470165178,
+              -2.9185067450732634,
+              -0.7451792858978908
+            ],
+            [
+              1.277167470165178,
+              -2.4661013187097582,
+              -0.48203813343983937
+            ],
+            [
+              1.277167470165178,
+              -2.9185067450732634,
+              -0.7451792858978908
+            ]
+          ],
+          "floorY": -1.35,
+          "radius": 1.35,
+          "trayHalfLength": 1.5189863861386144,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0.4,
+            0,
+            1
+          ],
+          "projectedTray": [
+            [
+              -0.9700000000000002,
+              -1.0633986244685647,
+              -0.6456856161535016
+            ],
+            [
+              0.9700000000000002,
+              -1.0633986244685647,
+              -0.6456856161535016
+            ],
+            [
+              0,
+              -1.224002550827609,
+              -0.7391007252761098
+            ],
+            [
+              0,
+              -0.9027946981095205,
+              -0.5522705070308933
+            ]
+          ]
+        },
+        "resources": {
+          "calls": 3,
+          "triangles": 289604,
+          "geometries": 3
+        },
+        "coreDepth": 0.24366878347254803,
+        "coreVertexCount": 14468
+      },
+      "cleared": {
+        "active": false,
+        "cracked": 99,
+        "attachedCracked": 88,
+        "attachedPartialBranches": 79,
+        "visibleLongCrackEdges": 189,
+        "detached": 11,
+        "living": 0,
+        "settled": 0,
+        "expired": 11,
+        "collectionEnabled": false,
+        "debris": {
+          "floorY": -1.35,
+          "radius": 1.35,
+          "moving": 0,
+          "settled": 0,
+          "minY": null,
+          "maxRadius": 0,
+          "pileTop": -1.35,
+          "gridCells": 0
+        },
+        "firstBurst": 3,
+        "burstDuration": 0.07,
+        "burstInitialOutwardSpeed": 0,
+        "maxOutwardOffset": 0,
+        "dwell": 0,
+        "disposed": false,
+        "topology": "random-spaced-clipped-voronoi",
+        "panels": 278,
+        "visibleCrackRadius": 0.53,
+        "localDamaged": 11,
+        "localDetached": 11,
+        "chainWaveCount": 1,
+        "lastDamageTime": 7.7918000000000465,
+        "heldStrain": 0,
+        "maxDetachedPerContact": 280,
+        "localRetainedFraction": 0
+      },
+      "complete": true
+    },
+    {
+      "name": "donut-clay-batch-desktop",
+      "style": "donut",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "input": "native mouse",
+      "actualGeometry": [
+        {
+          "thickness": 0.014,
+          "gap": 0.004,
+          "tolerance": 0.00001,
+          "attachedMinGap": 0.0039999419519422645,
+          "attachedMinSignedDistance": 0.003717702076580825,
+          "worstAttachedSample": {
+            "panelId": 135,
+            "point": [
+              0.29516632854938507,
+              -0.13222331553697586,
+              -0.15965184569358826
+            ],
+            "distance": 0.003717702076580825,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 11477,
+            "renderTriangleId": 45859,
+            "panelTriangle": 129,
+            "edge": 1,
+            "cracked": true,
+            "supportOnly": false,
+            "complexSurface": true,
+            "lift": 0
+          },
+          "attachedMaxSignedDistance": 0.0053771752147379025,
+          "worstAttachedMaxSample": {
+            "panelId": 51,
+            "point": [
+              0.31940770149230957,
+              -0.3755170404911041,
+              0.1675892025232315
+            ],
+            "distance": 0.0053771752147379025,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 10599,
+            "renderTriangleId": 19157,
+            "panelTriangle": 246,
+            "edge": 1
+          },
+          "attachedOuterMaxSignedDistance": null,
+          "attachedWallMaxSignedDistance": 0.014471183524749407,
+          "worstAttachedCorrection": null,
+          "attachedCorrectionMax": 0,
+          "attachedCorrectionTotalMax": 0,
+          "attachedCorrectedSamples": 0,
+          "maxThicknessError": 1.0566017608591716e-7,
+          "attachedSamples": 18020,
+          "attachedSurfaceSamples": 117646,
+          "attachedViolations": 0,
+          "detachedSweepSamples": 8219,
+          "logicalSweepSamples": 25804,
+          "duplicateSweepSamples": 6590,
+          "zeroLengthSweepSamples": 10995,
+          "detachedMinSignedDistance": null,
+          "detachedSamples": 0,
+          "detachedInteriorSamples": 0,
+          "detachedViolations": 0,
+          "wallSamples": 24458,
+          "drawCalls": 1,
+          "shellVertices": 89844,
+          "shellTriangles": 75196,
+          "patches": 271,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "panelAreaCV": 0.920873163133205,
+          "panelAreaRange": [
+            0.0012450162521632016,
+            0.22523333392075842
+          ],
+          "method": "Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"
+        },
+        {
+          "thickness": 0.014,
+          "gap": 0.004,
+          "tolerance": 0.00001,
+          "attachedMinGap": 0.0039999419519422645,
+          "attachedMinSignedDistance": 0.003717702076580825,
+          "worstAttachedSample": {
+            "panelId": 135,
+            "point": [
+              0.29516632854938507,
+              -0.13222331553697586,
+              -0.15965184569358826
+            ],
+            "distance": 0.003717702076580825,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 11477,
+            "renderTriangleId": 45859,
+            "panelTriangle": 129,
+            "edge": 1,
+            "cracked": true,
+            "supportOnly": false,
+            "complexSurface": true,
+            "lift": 0
+          },
+          "attachedMaxSignedDistance": 0.0053771752147379025,
+          "worstAttachedMaxSample": {
+            "panelId": 51,
+            "point": [
+              0.31940770149230957,
+              -0.3755170404911041,
+              0.1675892025232315
+            ],
+            "distance": 0.0053771752147379025,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 10599,
+            "renderTriangleId": 19157,
+            "panelTriangle": 246,
+            "edge": 1
+          },
+          "attachedOuterMaxSignedDistance": null,
+          "attachedWallMaxSignedDistance": 0.014471183524749407,
+          "worstAttachedCorrection": null,
+          "attachedCorrectionMax": 0,
+          "attachedCorrectionTotalMax": 0,
+          "attachedCorrectedSamples": 0,
+          "maxThicknessError": 1.0566017608591716e-7,
+          "attachedSamples": 18020,
+          "attachedSurfaceSamples": 117646,
+          "attachedViolations": 0,
+          "detachedSweepSamples": 8219,
+          "logicalSweepSamples": 25804,
+          "duplicateSweepSamples": 6590,
+          "zeroLengthSweepSamples": 10995,
+          "detachedMinSignedDistance": null,
+          "detachedSamples": 0,
+          "detachedInteriorSamples": 0,
+          "detachedViolations": 0,
+          "wallSamples": 24458,
+          "drawCalls": 1,
+          "shellVertices": 89844,
+          "shellTriangles": 75196,
+          "patches": 271,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "panelAreaCV": 0.920873163133205,
+          "panelAreaRange": [
+            0.0012450162521632016,
+            0.22523333392075842
+          ],
+          "method": "Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"
+        }
+      ],
+      "bareBounds": {
+        "x": 126.5,
+        "y": 181.265625,
+        "width": 585.796875,
+        "height": 579.5
+      },
+      "shellBounds": {
+        "x": 126.5,
+        "y": 181.265625,
+        "width": 585.796875,
+        "height": 579.5
+      },
+      "short": {
+        "elapsed": 109.69999999995343,
+        "state": {
+          "active": true,
+          "cracked": 54,
+          "attachedCracked": 54,
+          "attachedPartialBranches": 53,
+          "visibleLongCrackEdges": 55,
+          "detached": 0,
+          "living": 0,
+          "settled": 0,
+          "expired": 0,
+          "collectionEnabled": false,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "firstBurst": 0,
+          "burstDuration": 0.07,
+          "burstInitialOutwardSpeed": 0,
+          "maxOutwardOffset": 0,
+          "dwell": 0.06960000000009314,
+          "disposed": false,
+          "topology": "random-spaced-clipped-voronoi",
+          "panels": 271,
+          "visibleCrackRadius": 0.53,
+          "localDamaged": 0,
+          "localDetached": 0,
+          "chainWaveCount": 0,
+          "lastDamageTime": null,
+          "heldStrain": 0,
+          "maxDetachedPerContact": 280,
+          "localRetainedFraction": 1
+        }
+      },
+      "contact": {
+        "face": 37,
+        "point": [
+          0.38342512647310895,
+          0.006066811250933668,
+          0.28227900465329486
+        ],
+        "normal": [
+          -0.7638531525929769,
+          -0.012966513633728027,
+          0.6420568029085796
+        ],
+        "radialDot": -0.2929591570306436,
+        "score": 0.00004853769011124704,
+        "region": "inner wall",
+        "x": 516.2210921069312,
+        "y": 482.424956727825
+      },
+      "held": {
+        "enabled": true,
+        "configKey": "[\"donut\",\"clay\",\"mint\",\"none\",\"wax\",\"rose\",\"thin\",\"one\"]",
+        "coreColor": "mint",
+        "shellColor": "rose",
+        "coreState": {
+          "active": true,
+          "restoring": false,
+          "held": 2.8162666666666674,
+          "drag": 0.04328598141429266,
+          "depth": 0.27246996760368347,
+          "retainedDepth": 0.021852688863873482,
+          "center": [
+            0.4836660248915653,
+            0.015573195888872444,
+            0.37039257925600844
+          ]
+        },
+        "thinWax": {
+          "active": true,
+          "cracked": 80,
+          "attachedCracked": 66,
+          "attachedPartialBranches": 63,
+          "visibleLongCrackEdges": 145,
+          "detached": 14,
+          "living": 5,
+          "settled": 0,
+          "expired": 9,
+          "collectionEnabled": false,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 5,
+            "settled": 0,
+            "minY": -3.4981824859260877,
+            "maxRadius": 1.970560501235275,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "firstBurst": 3,
+          "burstDuration": 0.07,
+          "burstInitialOutwardSpeed": 0,
+          "maxOutwardOffset": 0,
+          "dwell": 2.8011999999999535,
+          "disposed": false,
+          "topology": "random-spaced-clipped-voronoi",
+          "panels": 271,
+          "visibleCrackRadius": 0.53,
+          "localDamaged": 14,
+          "localDetached": 14,
+          "chainWaveCount": 1,
+          "lastDamageTime": 7.2778999999999066,
+          "heldStrain": 0.01086059115154625,
+          "maxDetachedPerContact": 280,
+          "localRetainedFraction": 0
+        },
+        "debrisStage": {
+          "visible": false,
+          "collectionEnabled": false,
+          "discardBelowY": -4,
+          "projectionMatrix": [
+            0.638583735082589,
+            0,
+            0,
+            0,
+            0,
+            0.625,
+            0,
+            0,
+            0,
+            0,
+            -0.06688963210702341,
+            0,
+            0,
+            0,
+            -1.0066889632107023,
+            1
+          ],
+          "viewMatrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.9834900573119674,
+            0.18096217054540198,
+            0,
+            0,
+            -0.18096217054540198,
+            0.9834900573119674,
+            0,
+            0,
+            -0.37372622177854764,
+            -5.152701108268859,
+            1
+          ],
+          "projectedDiscardPlane": [
+            [
+              -1.277167470165178,
+              -2.4661013187097582,
+              -0.48203813343983937
+            ],
+            [
+              -1.277167470165178,
+              -2.9185067450732634,
+              -0.7451792858978908
+            ],
+            [
+              1.277167470165178,
+              -2.4661013187097582,
+              -0.48203813343983937
+            ],
+            [
+              1.277167470165178,
+              -2.9185067450732634,
+              -0.7451792858978908
+            ]
+          ],
+          "floorY": -1.35,
+          "radius": 1.35,
+          "trayHalfLength": 1.5189863861386144,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0.4,
+            0,
+            1
+          ],
+          "projectedTray": [
+            [
+              -0.9700000000000002,
+              -1.0633986244685647,
+              -0.6456856161535016
+            ],
+            [
+              0.9700000000000002,
+              -1.0633986244685647,
+              -0.6456856161535016
+            ],
+            [
+              0,
+              -1.224002550827609,
+              -0.7391007252761098
+            ],
+            [
+              0,
+              -0.9027946981095205,
+              -0.5522705070308933
+            ]
+          ]
+        },
+        "resources": {
+          "calls": 3,
+          "triangles": 162680,
+          "geometries": 3
+        },
+        "coreDepth": 0.27246995512019867,
+        "coreVertexCount": 6144
+      },
+      "cleared": {
+        "active": false,
+        "cracked": 80,
+        "attachedCracked": 66,
+        "attachedPartialBranches": 63,
+        "visibleLongCrackEdges": 146,
+        "detached": 14,
+        "living": 0,
+        "settled": 0,
+        "expired": 14,
+        "collectionEnabled": false,
+        "debris": {
+          "floorY": -1.35,
+          "radius": 1.35,
+          "moving": 0,
+          "settled": 0,
+          "minY": null,
+          "maxRadius": 0,
+          "pileTop": -1.35,
+          "gridCells": 0
+        },
+        "firstBurst": 3,
+        "burstDuration": 0.07,
+        "burstInitialOutwardSpeed": 0,
+        "maxOutwardOffset": 0,
+        "dwell": 0,
+        "disposed": false,
+        "topology": "random-spaced-clipped-voronoi",
+        "panels": 271,
+        "visibleCrackRadius": 0.53,
+        "localDamaged": 14,
+        "localDetached": 14,
+        "chainWaveCount": 1,
+        "lastDamageTime": 7.2778999999999066,
+        "heldStrain": 0,
+        "maxDetachedPerContact": 280,
+        "localRetainedFraction": 0
+      },
+      "complete": true
+    },
+    {
+      "name": "donut-clay-batch-mobile",
+      "style": "donut",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "CDP touch pressure; labeled mouse-assisted side rotation",
+      "actualGeometry": [
+        {
+          "thickness": 0.014,
+          "gap": 0.004,
+          "tolerance": 0.00001,
+          "attachedMinGap": 0.0039999419519422645,
+          "attachedMinSignedDistance": 0.0037140191430176392,
+          "worstAttachedSample": {
+            "panelId": 135,
+            "point": [
+              0.2952774316072464,
+              -0.1322566196322441,
+              -0.15959589928388596
+            ],
+            "distance": 0.0037140191430176392,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 11477,
+            "renderTriangleId": 45859,
+            "panelTriangle": 129,
+            "edge": 1,
+            "cracked": true,
+            "supportOnly": false,
+            "complexSurface": true,
+            "lift": 0
+          },
+          "attachedMaxSignedDistance": 0.0053799987560667895,
+          "worstAttachedMaxSample": {
+            "panelId": 51,
+            "point": [
+              0.3199116587638855,
+              -0.37606723606586456,
+              0.16702913492918015
+            ],
+            "distance": 0.0053799987560667895,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 10599,
+            "renderTriangleId": 19157,
+            "panelTriangle": 246,
+            "edge": 1
+          },
+          "attachedOuterMaxSignedDistance": null,
+          "attachedWallMaxSignedDistance": 0.014473291424068654,
+          "worstAttachedCorrection": null,
+          "attachedCorrectionMax": 0,
+          "attachedCorrectionTotalMax": 0,
+          "attachedCorrectedSamples": 0,
+          "maxThicknessError": 1.0566017608591716e-7,
+          "attachedSamples": 18020,
+          "attachedSurfaceSamples": 117646,
+          "attachedViolations": 0,
+          "detachedSweepSamples": 8219,
+          "logicalSweepSamples": 25804,
+          "duplicateSweepSamples": 6590,
+          "zeroLengthSweepSamples": 10995,
+          "detachedMinSignedDistance": null,
+          "detachedSamples": 0,
+          "detachedInteriorSamples": 0,
+          "detachedViolations": 0,
+          "wallSamples": 24458,
+          "drawCalls": 1,
+          "shellVertices": 89844,
+          "shellTriangles": 75196,
+          "patches": 271,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "panelAreaCV": 0.920873163133205,
+          "panelAreaRange": [
+            0.0012450162521632016,
+            0.22523333392075842
+          ],
+          "method": "Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"
+        },
+        {
+          "thickness": 0.014,
+          "gap": 0.004,
+          "tolerance": 0.00001,
+          "attachedMinGap": 0.0039999419519422645,
+          "attachedMinSignedDistance": 0.0037140191430176392,
+          "worstAttachedSample": {
+            "panelId": 135,
+            "point": [
+              0.2952774316072464,
+              -0.1322566196322441,
+              -0.15959589928388596
+            ],
+            "distance": 0.0037140191430176392,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 11477,
+            "renderTriangleId": 45859,
+            "panelTriangle": 129,
+            "edge": 1,
+            "cracked": true,
+            "supportOnly": false,
+            "complexSurface": true,
+            "lift": 0
+          },
+          "attachedMaxSignedDistance": 0.0053799987560667895,
+          "worstAttachedMaxSample": {
+            "panelId": 51,
+            "point": [
+              0.3199116587638855,
+              -0.37606723606586456,
+              0.16702913492918015
+            ],
+            "distance": 0.0053799987560667895,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 10599,
+            "renderTriangleId": 19157,
+            "panelTriangle": 246,
+            "edge": 1
+          },
+          "attachedOuterMaxSignedDistance": null,
+          "attachedWallMaxSignedDistance": 0.014473291424068654,
+          "worstAttachedCorrection": null,
+          "attachedCorrectionMax": 0,
+          "attachedCorrectionTotalMax": 0,
+          "attachedCorrectedSamples": 0,
+          "maxThicknessError": 1.0566017608591716e-7,
+          "attachedSamples": 18020,
+          "attachedSurfaceSamples": 117646,
+          "attachedViolations": 0,
+          "detachedSweepSamples": 8219,
+          "logicalSweepSamples": 25804,
+          "duplicateSweepSamples": 6590,
+          "zeroLengthSweepSamples": 10995,
+          "detachedMinSignedDistance": null,
+          "detachedSamples": 0,
+          "detachedInteriorSamples": 0,
+          "detachedViolations": 0,
+          "wallSamples": 24458,
+          "drawCalls": 1,
+          "shellVertices": 89844,
+          "shellTriangles": 75196,
+          "patches": 271,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "panelAreaCV": 0.920873163133205,
+          "panelAreaRange": [
+            0.0012450162521632016,
+            0.22523333392075842
+          ],
+          "method": "Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"
+        }
+      ],
+      "bareBounds": {
+        "x": 54.6875,
+        "y": 205.328125,
+        "width": 280.59375,
+        "height": 277.578125
+      },
+      "shellBounds": {
+        "x": 54.6875,
+        "y": 205.328125,
+        "width": 280.59375,
+        "height": 277.578125
+      },
+      "short": {
+        "elapsed": 125.9000000001397,
+        "state": {
+          "active": true,
+          "cracked": 57,
+          "attachedCracked": 57,
+          "attachedPartialBranches": 56,
+          "visibleLongCrackEdges": 60,
+          "detached": 0,
+          "living": 0,
+          "settled": 0,
+          "expired": 0,
+          "collectionEnabled": false,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "firstBurst": 0,
+          "burstDuration": 0.07,
+          "burstInitialOutwardSpeed": 0,
+          "maxOutwardOffset": 0,
+          "dwell": 0.09579999999981403,
+          "disposed": false,
+          "topology": "random-spaced-clipped-voronoi",
+          "panels": 271,
+          "visibleCrackRadius": 0.53,
+          "localDamaged": 0,
+          "localDetached": 0,
+          "chainWaveCount": 0,
+          "lastDamageTime": null,
+          "heldStrain": 0,
+          "maxDetachedPerContact": 280,
+          "localRetainedFraction": 1
+        }
+      },
+      "contact": {
+        "face": 37,
+        "point": [
+          0.38342512647310895,
+          0.006066811250933668,
+          0.28227900465329486
+        ],
+        "normal": [
+          -0.7638531525929769,
+          -0.012966513633728027,
+          0.6420568029085796
+        ],
+        "radialDot": -0.2929591570306436,
+        "score": 0.00004853769011124704,
+        "region": "inner wall",
+        "x": 241.3737156158061,
+        "y": 349.577514609388
+      },
+      "held": {
+        "enabled": true,
+        "configKey": "[\"donut\",\"clay\",\"mint\",\"none\",\"wax\",\"rose\",\"thin\",\"one\"]",
+        "coreColor": "mint",
+        "shellColor": "rose",
+        "coreState": {
+          "active": true,
+          "restoring": false,
+          "held": 2.7713666666666654,
+          "drag": 0.04323825649378293,
+          "depth": 0.2728225588798523,
+          "retainedDepth": 0.025159616023302078,
+          "center": [
+            0.4836660807339301,
+            0.015573239452199059,
+            0.3703926172815579
+          ]
+        },
+        "thinWax": {
+          "active": true,
+          "cracked": 80,
+          "attachedCracked": 66,
+          "attachedPartialBranches": 63,
+          "visibleLongCrackEdges": 145,
+          "detached": 14,
+          "living": 5,
+          "settled": 0,
+          "expired": 9,
+          "collectionEnabled": false,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 5,
+            "settled": 0,
+            "minY": -3.083091760667387,
+            "maxRadius": 1.8863848466582802,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "firstBurst": 3,
+          "burstDuration": 0.07,
+          "burstInitialOutwardSpeed": 0,
+          "maxOutwardOffset": 0,
+          "dwell": 2.763100000000094,
+          "disposed": false,
+          "topology": "random-spaced-clipped-voronoi",
+          "panels": 271,
+          "visibleCrackRadius": 0.53,
+          "localDamaged": 14,
+          "localDetached": 14,
+          "chainWaveCount": 1,
+          "lastDamageTime": 7.1851000000000935,
+          "heldStrain": 0.011555933651606953,
+          "maxDetachedPerContact": 280,
+          "localRetainedFraction": 0
+        },
+        "debrisStage": {
+          "visible": false,
+          "collectionEnabled": false,
+          "discardBelowY": -4,
+          "projectionMatrix": [
+            0.6756756756756757,
+            0,
+            0,
+            0,
+            0,
+            0.511399348608651,
+            0,
+            0,
+            0,
+            0,
+            -0.06688963210702341,
+            0,
+            0,
+            0,
+            -1.0066889632107023,
+            1
+          ],
+          "viewMatrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.9834900573119674,
+            0.18096217054540198,
+            0,
+            0,
+            -0.18096217054540198,
+            0.9834900573119674,
+            0,
+            0,
+            -0.37372622177854764,
+            -5.152701108268859,
+            1
+          ],
+          "projectedDiscardPlane": [
+            [
+              -1.3513513513513513,
+              -2.017860172785769,
+              -0.48203813343983937
+            ],
+            [
+              -1.3513513513513513,
+              -2.388035917344674,
+              -0.7451792858978908
+            ],
+            [
+              1.3513513513513513,
+              -2.017860172785769,
+              -0.48203813343983937
+            ],
+            [
+              1.3513513513513513,
+              -2.388035917344674,
+              -0.7451792858978908
+            ]
+          ],
+          "floorY": -1.35,
+          "radius": 1.35,
+          "trayHalfLength": 1.4355999999999998,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0.4,
+            0,
+            1
+          ],
+          "projectedTray": [
+            [
+              -0.9699999999999999,
+              -0.8701141821832952,
+              -0.6456856161535016
+            ],
+            [
+              0.9699999999999999,
+              -0.8701141821832952,
+              -0.6456856161535016
+            ],
+            [
+              0,
+              -1.0015265715017063,
+              -0.7391007252761098
+            ],
+            [
+              0,
+              -0.738701792864884,
+              -0.5522705070308933
+            ]
+          ]
+        },
+        "resources": {
+          "calls": 3,
+          "triangles": 162680,
+          "geometries": 3
+        },
+        "coreDepth": 0.27282253221252717,
+        "coreVertexCount": 6144
+      },
+      "cleared": {
+        "active": false,
+        "cracked": 80,
+        "attachedCracked": 66,
+        "attachedPartialBranches": 63,
+        "visibleLongCrackEdges": 146,
+        "detached": 14,
+        "living": 0,
+        "settled": 0,
+        "expired": 14,
+        "collectionEnabled": false,
+        "debris": {
+          "floorY": -1.35,
+          "radius": 1.35,
+          "moving": 0,
+          "settled": 0,
+          "minY": null,
+          "maxRadius": 0,
+          "pileTop": -1.35,
+          "gridCells": 0
+        },
+        "firstBurst": 3,
+        "burstDuration": 0.07,
+        "burstInitialOutwardSpeed": 0,
+        "maxOutwardOffset": 0,
+        "dwell": 0,
+        "disposed": false,
+        "topology": "random-spaced-clipped-voronoi",
+        "panels": 271,
+        "visibleCrackRadius": 0.53,
+        "localDamaged": 14,
+        "localDetached": 14,
+        "chainWaveCount": 1,
+        "lastDamageTime": 7.1851000000000935,
+        "heldStrain": 0,
+        "maxDetachedPerContact": 280,
+        "localRetainedFraction": 0
+      },
+      "complete": true
+    },
+    {
+      "name": "paw-clay-batch-mobile",
+      "style": "paw",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "CDP touch pressure; labeled mouse-assisted side rotation",
+      "actualGeometry": [
+        {
+          "thickness": 0.014,
+          "gap": 0.004,
+          "tolerance": 0.00001,
+          "attachedMinGap": 0.003999115003422745,
+          "attachedMinSignedDistance": 0.003558576826236202,
+          "worstAttachedSample": {
+            "panelId": 91,
+            "point": [
+              -0.13978057354688644,
+              0.30755700170993805,
+              -0.06105835177004337
+            ],
+            "distance": 0.003558576826236202,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 3713,
+            "renderTriangleId": 49655,
+            "panelTriangle": 241,
+            "edge": 1,
+            "cracked": true,
+            "supportOnly": true,
+            "complexSurface": true,
+            "lift": 0
+          },
+          "attachedMaxSignedDistance": 0.005674998164819892,
+          "worstAttachedMaxSample": {
+            "panelId": 169,
+            "point": [
+              0.13392144441604614,
+              0.3091471195220947,
+              -0.07129420340061188
+            ],
+            "distance": 0.005674998164819892,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 8628,
+            "renderTriangleId": 87855,
+            "panelTriangle": 79,
+            "edge": 1
+          },
+          "attachedOuterMaxSignedDistance": null,
+          "attachedWallMaxSignedDistance": 0.014477179457112592,
+          "worstAttachedCorrection": null,
+          "attachedCorrectionMax": 0,
+          "attachedCorrectionTotalMax": 0,
+          "attachedCorrectedSamples": 0,
+          "maxThicknessError": 1.1073117155147028e-7,
+          "attachedSamples": 32569,
+          "attachedSurfaceSamples": 222134,
+          "attachedViolations": 0,
+          "detachedSweepSamples": 16151,
+          "logicalSweepSamples": 60055,
+          "duplicateSweepSamples": 16335,
+          "zeroLengthSweepSamples": 27569,
+          "detachedMinSignedDistance": null,
+          "detachedSamples": 0,
+          "detachedInteriorSamples": 0,
+          "detachedViolations": 0,
+          "wallSamples": 36282,
+          "drawCalls": 1,
+          "shellVertices": 139300,
+          "shellTriangles": 130336,
+          "patches": 278,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "panelAreaCV": 0.7293074104278295,
+          "panelAreaRange": [
+            0.0013959944619543574,
+            0.19514552310836314
+          ],
+          "method": "Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"
+        },
+        {
+          "thickness": 0.014,
+          "gap": 0.004,
+          "tolerance": 0.00001,
+          "attachedMinGap": 0.003999150830620914,
+          "attachedMinSignedDistance": 0.0035585883443563547,
+          "worstAttachedSample": {
+            "panelId": 91,
+            "point": [
+              -0.13978181779384613,
+              0.3075598031282425,
+              -0.061026228591799736
+            ],
+            "distance": 0.0035585883443563547,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 3713,
+            "renderTriangleId": 49655,
+            "panelTriangle": 241,
+            "edge": 1,
+            "cracked": true,
+            "supportOnly": true,
+            "complexSurface": true,
+            "lift": 0
+          },
+          "attachedMaxSignedDistance": 0.005675010403108035,
+          "worstAttachedMaxSample": {
+            "panelId": 169,
+            "point": [
+              0.1339227631688118,
+              0.309150293469429,
+              -0.07125981897115707
+            ],
+            "distance": 0.005675010403108035,
+            "sampleKind": "inner-edge-midpoint",
+            "sourceFace": 8628,
+            "renderTriangleId": 87855,
+            "panelTriangle": 79,
+            "edge": 1
+          },
+          "attachedOuterMaxSignedDistance": null,
+          "attachedWallMaxSignedDistance": 0.014477190251401399,
+          "worstAttachedCorrection": null,
+          "attachedCorrectionMax": 0,
+          "attachedCorrectionTotalMax": 0,
+          "attachedCorrectedSamples": 0,
+          "maxThicknessError": 1.1073117155147028e-7,
+          "attachedSamples": 32569,
+          "attachedSurfaceSamples": 222134,
+          "attachedViolations": 0,
+          "detachedSweepSamples": 16151,
+          "logicalSweepSamples": 60055,
+          "duplicateSweepSamples": 16335,
+          "zeroLengthSweepSamples": 27569,
+          "detachedMinSignedDistance": null,
+          "detachedSamples": 0,
+          "detachedInteriorSamples": 0,
+          "detachedViolations": 0,
+          "wallSamples": 36282,
+          "drawCalls": 1,
+          "shellVertices": 139300,
+          "shellTriangles": 130336,
+          "patches": 278,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "panelAreaCV": 0.7293074104278295,
+          "panelAreaRange": [
+            0.0013959944619543574,
+            0.19514552310836314
+          ],
+          "method": "Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"
+        }
+      ],
+      "bareBounds": {
+        "x": 61.828125,
+        "y": 204.5625,
+        "width": 266.3125,
+        "height": 269.34375
+      },
+      "shellBounds": {
+        "x": 61.828125,
+        "y": 204.5625,
+        "width": 266.3125,
+        "height": 269.34375
+      },
+      "short": {
+        "elapsed": 251.89999999990687,
+        "state": {
+          "active": true,
+          "cracked": 89,
+          "attachedCracked": 89,
+          "attachedPartialBranches": 82,
+          "visibleLongCrackEdges": 132,
+          "detached": 0,
+          "living": 0,
+          "settled": 0,
+          "expired": 0,
+          "collectionEnabled": false,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 0,
+            "settled": 0,
+            "minY": null,
+            "maxRadius": 0,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "firstBurst": 0,
+          "burstDuration": 0.07,
+          "burstInitialOutwardSpeed": 0,
+          "maxOutwardOffset": 0,
+          "dwell": 0.19310000000009309,
+          "disposed": false,
+          "topology": "random-spaced-clipped-voronoi",
+          "panels": 278,
+          "visibleCrackRadius": 0.53,
+          "localDamaged": 0,
+          "localDetached": 0,
+          "chainWaveCount": 0,
+          "lastDamageTime": null,
+          "heldStrain": 0,
+          "maxDetachedPerContact": 280,
+          "localRetainedFraction": 1
+        }
+      },
+      "contact": {
+        "face": 23027,
+        "point": [
+          -0.005812966575225195,
+          0.16726624965667725,
+          0.1650944004456202
+        ],
+        "normal": [
+          -0.002999949889878432,
+          0.324197252591451,
+          0.9459252953529358
+        ],
+        "radialDot": 0.05424469719840771,
+        "score": 0.000041263971344302675,
+        "region": "palm-to-toe connection",
+        "x": 194.2969452437213,
+        "y": 327.8382043742514
+      },
+      "held": {
+        "enabled": true,
+        "configKey": "[\"paw\",\"clay\",\"mint\",\"none\",\"wax\",\"rose\",\"thin\",\"one\"]",
+        "coreColor": "mint",
+        "shellColor": "rose",
+        "coreState": {
+          "active": true,
+          "restoring": false,
+          "held": 3.499566666666666,
+          "drag": 0.05396121717108869,
+          "depth": 0.2458573430776596,
+          "retainedDepth": 0.03172256797552109,
+          "center": [
+            0.1099102373597761,
+            0.1919564879607748,
+            0.15383576720937542
+          ]
+        },
+        "thinWax": {
+          "active": true,
+          "cracked": 99,
+          "attachedCracked": 88,
+          "attachedPartialBranches": 79,
+          "visibleLongCrackEdges": 189,
+          "detached": 11,
+          "living": 1,
+          "settled": 0,
+          "expired": 10,
+          "collectionEnabled": false,
+          "debris": {
+            "floorY": -1.35,
+            "radius": 1.35,
+            "moving": 1,
+            "settled": 0,
+            "minY": -2.785516573951361,
+            "maxRadius": 1.832280187115767,
+            "pileTop": -1.35,
+            "gridCells": 0
+          },
+          "firstBurst": 3,
+          "burstDuration": 0.07,
+          "burstInitialOutwardSpeed": 0,
+          "maxOutwardOffset": 0,
+          "dwell": 3.488899999999907,
+          "disposed": false,
+          "topology": "random-spaced-clipped-voronoi",
+          "panels": 278,
+          "visibleCrackRadius": 0.53,
+          "localDamaged": 11,
+          "localDetached": 11,
+          "chainWaveCount": 1,
+          "lastDamageTime": 7.3631000000000935,
+          "heldStrain": 0.007977446154670609,
+          "maxDetachedPerContact": 280,
+          "localRetainedFraction": 0
+        },
+        "debrisStage": {
+          "visible": false,
+          "collectionEnabled": false,
+          "discardBelowY": -4,
+          "projectionMatrix": [
+            0.6756756756756757,
+            0,
+            0,
+            0,
+            0,
+            0.511399348608651,
+            0,
+            0,
+            0,
+            0,
+            -0.06688963210702341,
+            0,
+            0,
+            0,
+            -1.0066889632107023,
+            1
+          ],
+          "viewMatrix": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.9834900573119674,
+            0.18096217054540198,
+            0,
+            0,
+            -0.18096217054540198,
+            0.9834900573119674,
+            0,
+            0,
+            -0.37372622177854764,
+            -5.152701108268859,
+            1
+          ],
+          "projectedDiscardPlane": [
+            [
+              -1.3513513513513513,
+              -2.017860172785769,
+              -0.48203813343983937
+            ],
+            [
+              -1.3513513513513513,
+              -2.388035917344674,
+              -0.7451792858978908
+            ],
+            [
+              1.3513513513513513,
+              -2.017860172785769,
+              -0.48203813343983937
+            ],
+            [
+              1.3513513513513513,
+              -2.388035917344674,
+              -0.7451792858978908
+            ]
+          ],
+          "floorY": -1.35,
+          "radius": 1.35,
+          "trayHalfLength": 1.4355999999999998,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0.4,
+            0,
+            1
+          ],
+          "projectedTray": [
+            [
+              -0.9699999999999999,
+              -0.8701141821832952,
+              -0.6456856161535016
+            ],
+            [
+              0.9699999999999999,
+              -0.8701141821832952,
+              -0.6456856161535016
+            ],
+            [
+              0,
+              -1.0015265715017063,
+              -0.7391007252761098
+            ],
+            [
+              0,
+              -0.738701792864884,
+              -0.5522705070308933
+            ]
+          ]
+        },
+        "resources": {
+          "calls": 3,
+          "triangles": 289604,
+          "geometries": 3
+        },
+        "coreDepth": 0.24585734955465902,
+        "coreVertexCount": 14468
+      },
+      "cleared": {
+        "active": false,
+        "cracked": 99,
+        "attachedCracked": 88,
+        "attachedPartialBranches": 79,
+        "visibleLongCrackEdges": 189,
+        "detached": 11,
+        "living": 0,
+        "settled": 0,
+        "expired": 11,
+        "collectionEnabled": false,
+        "debris": {
+          "floorY": -1.35,
+          "radius": 1.35,
+          "moving": 0,
+          "settled": 0,
+          "minY": null,
+          "maxRadius": 0,
+          "pileTop": -1.35,
+          "gridCells": 0
+        },
+        "firstBurst": 3,
+        "burstDuration": 0.07,
+        "burstInitialOutwardSpeed": 0,
+        "maxOutwardOffset": 0,
+        "dwell": 0,
+        "disposed": false,
+        "topology": "random-spaced-clipped-voronoi",
+        "panels": 278,
+        "visibleCrackRadius": 0.53,
+        "localDamaged": 11,
+        "localDetached": 11,
+        "chainWaveCount": 1,
+        "lastDamageTime": 7.3631000000000935,
+        "heldStrain": 0,
+        "maxDetachedPerContact": 280,
+        "localRetainedFraction": 0
+      },
+      "complete": true
+    }
+  ],
+  "errors": [],
+  "exitCode": 0,
+  "browser": "156.0.4314.42",
+  "metadataCompaction": "Repeated core coordinate arrays removed; actual core depth and vertex count retained. Raw geometry checks, timing and damage unchanged."
+}

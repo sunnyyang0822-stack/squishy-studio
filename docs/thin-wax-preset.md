@@ -1,5 +1,7 @@
 # 可复用薄蜡预设
 
+宿主应传入 `styleId`。猫爪与甜甜圈按用户要求选用small分块：260种子、连通片上限280，同时活动仍24；其他样式保持原180预算。`parameters` 仍表示基础薄蜡参数，small参数独立登记于 `smallThinWaxParameters`，不改变厚度、输入或内芯。当前大小及性能验证见 [追加说明](issue-38-small-shards-and-mm-paw.md)。
+
 稳定 ID 为 `thin-wax`，入口 `src/wax-presets.mjs`。它直接组合现有 `createThinWax`，`parameters` 与 `thinWaxParameters` 是同一只读对象，不复制场景、输入或手感算法。制作外壳／装饰步骤为当前八种造型的黏土 × 蜡 × 薄和棉花糖 × 蜡 × 薄调用同一预设：圆球、云朵、猫爪、圆柱、甜甜圈、三角锥、花朵、五角星。慢回弹及中／厚蜡不启用；所有棉花糖最终试捏保持原行为，不显示预览壳、不新增重开按钮。棉花糖的状态、几何与验证边界见 [专项说明](issue-38-orb-marshmallow-wax.md)。本合同仍不把任意外部模型视作自动验收通过。
 
 ```js

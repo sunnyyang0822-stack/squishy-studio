@@ -276,7 +276,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       return signed * distance;
     }
     sourceFace = siteHint ? siteHint.faceIndex ?? lastNearestFace : sourceFace;
-    let distanceSquared = Infinity, sign = 1;
+    let distanceSquared = Infinity, sign = 1, featureTieRegion;
     // A previously nearest (or known support) triangle is only a search hint.
     // Re-evaluate its *current refitted coordinates* for a finite upper bound;
     // the complete conservative BVH search still chooses the true nearest face.
@@ -308,6 +308,10 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
           rememberQuery(siteHint, point, x0, x1, y0, y1, z0, z1, nearestFace, distance, secondSquared);
           return distance;
         }
+        // Keep BVH's exact tie selection. Closed-surface feature results may
+        // still reuse that *exact point* while the complete region is unchanged;
+        // no nearest-face motion radius is claimed for an equidistant feature.
+        if (features && Number.isFinite(distanceSquared)) featureTieRegion = [x0, x1, y0, y1, z0, z1];
         distanceSquared = Infinity; sign = 1;
       }
     }
@@ -337,9 +341,12 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     // Equal-distance face selection can depend on BVH traversal order; those
     // answers are never cached across refits.
     if (siteHint) { siteHint.faceIndex = lastNearestFace; siteHint.queryResult = undefined; }
-    return features ? featureResult(point, outwardNormal, lastNearestFace) : sign * Math.sqrt(distanceSquared);
+    const distance = features ? featureResult(point, outwardNormal, lastNearestFace) : sign * Math.sqrt(distanceSquared);
+    if (featureTieRegion) rememberQuery(siteHint, point, ...featureTieRegion, lastNearestFace, distance, distanceSquared);
+    return distance;
   }
-  return { refit, sweep, signedDistance, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
+  return { refit, sweep, signedDistance, getMotionBound: () => gridHeads ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
-export function createThinWax(options = {}) { return createVoronoiWax(options, thinWaxParameters, createWaxCollisionTree); }
+export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
+export function createThinWax(options = {}) { return createVoronoiWax(options, options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters, createWaxCollisionTree); }
