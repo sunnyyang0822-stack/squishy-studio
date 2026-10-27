@@ -1,0 +1,14 @@
+✔ donut: cavity cells and first released bodies are larger than previous medium (966.9855ms)
+ℹ {"id":"donut","region":"inner ring","point":[0.37092456221580505,2.022249212529914e-8,0.2678550183773041],"previous":{"cells":87,"weightedArea":0.17032982363788948,"median":0.02623597251269631,"firstDetachedMean":0.011385991562165928},"current":{"cells":24,"weightedArea":0.31951682193526887,"median":0.2608700017588788,"firstDetachedMean":0.2424779749940336}}
+✔ paw: cavity cells and first released bodies are larger than previous medium (2958.3885ms)
+ℹ {"id":"paw","region":"palm-to-toe recess","point":[0.017365409061312675,0.15843325853347778,0.16800402104854584],"previous":{"cells":21,"weightedArea":0.1949815925535681,"median":0.032656919349389,"firstDetachedMean":0.008508969993503817},"current":{"cells":5,"weightedArea":0.502066762126684,"median":0.3929285743490918,"firstDetachedMean":0.4146988736032624}}
+ℹ {"id":"paw","region":"left recessed connection","point":[-0.3272308111190796,0.40883398056030273,0.2793562412261963],"previous":{"cells":5,"weightedArea":0.24210422472762017,"median":0.2453392337325501,"firstDetachedMean":0.013735202906831931},"current":{"cells":4,"weightedArea":0.368680689520806,"median":0.34891675706304676,"firstDetachedMean":0.30085939281996243}}
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4076.5662
+EXIT_CODE=0

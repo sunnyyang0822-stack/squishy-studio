@@ -10,6 +10,7 @@ fs.writeFileSync(path.join(folder, 'review.html'), `<!doctype html>
 body{font:16px/1.6 system-ui,sans-serif;margin:24px;background:#faf7f8;color:#382b36}h1{font-size:24px}a{color:#943d70}nav,fieldset{margin:16px 0}label{margin-right:18px}button,select{font:inherit;padding:6px 12px}main{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;min-width:0}img,video{display:block;width:100%;background:#eee;border-radius:8px}figcaption{font-weight:600;margin:8px 0}.notes{color:#675963} @media(max-width:650px){body{margin:12px}main{grid-template-columns:1fr}}
 </style>
 <h1>圆球黏土：薄蜡 / 中蜡</h1>
+<nav><a href="cavities/review.html">甜甜圈内环／猫爪凹陷：上一版与新版大块对照</a></nav>
 <nav>全部黏土中蜡：${Object.entries({orb:'圆球',cloud:'云朵',paw:'猫爪',cylinder:'圆柱',donut:'甜甜圈',pyramid:'三角锥',flower:'花朵',star:'五角星'}).map(([id,name]) => `<a target="_blank" href="/squishy/cloud/?style=${id}&coreMaterial=clay&coreColor=mint&shellColor=rose&waxThickness=medium&step=shell">${name}</a>`).join(' · ')}</nav>
 <nav><a href="/squishy/cloud/?style=orb&coreMaterial=clay&coreColor=mint&shellColor=rose&waxThickness=medium&step=shell" target="_blank">打开中蜡交互</a> · <a href="/squishy/cloud/?style=orb&coreMaterial=clay&coreColor=mint&shellColor=rose&waxThickness=thin&step=shell" target="_blank">打开薄蜡交互</a></nav>
 <p>同一个圆球、黏土内芯、薄荷绿内芯色、玫瑰粉壳色和操作顺序。中蜡真实厚度 0.028（薄蜡 0.014），96 块分区（薄蜡 180）；平均碎块面积 1.875 倍，中位面积约 1.98 倍。</p>

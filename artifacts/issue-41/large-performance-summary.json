@@ -1,0 +1,34 @@
+{
+  "physicalPhone": false,
+  "protocol": "390x844 Edge CDP touch, fresh recipe, four-second hold, all completion intervals retained, no recorder/profiler/concurrent task tests",
+  "baseline": {
+    "sha256": "220ed93d83978a609bbe00479790959be7081f8a37636d005321032546ff22d3",
+    "summary": {
+      "samples": 38,
+      "medianMs": 68,
+      "p95Ms": 228.79999999981374,
+      "maximumMs": 348.59999999962747,
+      "above33ms": 38
+    }
+  },
+  "final": {
+    "sha256": "35cc1b8b809d1ab578aa26996bac9f3d258af12cf5643307a43528ad335cefed",
+    "runs": [
+      {
+        "samples": 137,
+        "medianMs": 25.199999999254942,
+        "p95Ms": 93.59999999962747,
+        "maximumMs": 161.59999999962747,
+        "above33ms": 22
+      },
+      {
+        "samples": 133,
+        "medianMs": 26.300000000745058,
+        "p95Ms": 90.09999999962747,
+        "maximumMs": 157.10000000149012,
+        "above33ms": 24
+      }
+    ]
+  },
+  "acceptance": "Improved; not a stable 60fps or physical-phone performance claim"
+}

@@ -14,24 +14,45 @@ export function createWaxSweepSchedule(triangles) {
 // Voronoi boundaries cut the original triangles in model space. Each generated
 // point retains a barycentric source mapping, so shell contact and deformation
 // use the same original surface even when the shell is built over an old dent.
-function buildPanels(rest, index, count = 180) {
+function buildPanels(rest, index, count = 180, surfaceSites = false) {
   // Random spacing produces deliberately unequal shards: no Fibonacci rows,
   // equal hexagons, or a repeated scale pattern. The seed is deterministic.
   let randomState = 0x38c1a7;
   const random = () => { randomState ^= randomState << 13; randomState ^= randomState >>> 17; randomState ^= randomState << 5; return (randomState >>> 0) / 4294967296; };
   const seeds = [];
+  // Optional sites on the actual mesh keep cavity/inner-ring cells from
+  // shrinking toward the model origin. They use the same Voronoi clipper,
+  // barycentric mapping, connected-island split and fracture lifecycle.
+  const faces = []; let surfaceArea = 0;
+  if (surfaceSites) for (let i = 0; i < index.length; i += 3) {
+    const a = new THREE.Vector3().fromArray(rest, index[i] * 3), b = new THREE.Vector3().fromArray(rest, index[i + 1] * 3), c = new THREE.Vector3().fromArray(rest, index[i + 2] * 3);
+    surfaceArea += b.clone().sub(a).cross(c.clone().sub(a)).length() * .5;
+    faces.push({ a, b, c, cumulative: surfaceArea });
+  }
+  let proposals = 0;
   while (seeds.length < count) {
-    const y = random() * 2 - 1, angle = random() * Math.PI * 2;
-    const candidate = new THREE.Vector3(Math.sqrt(1 - y * y) * Math.cos(angle), y, Math.sqrt(1 - y * y) * Math.sin(angle));
-    if (seeds.every(seed => seed.distanceToSquared(candidate) > .007)) seeds.push(candidate);
+    let candidate;
+    if (surfaceSites) {
+      const target = random() * surfaceArea; let lo = 0, hi = faces.length - 1;
+      while (lo < hi) { const mid = (lo + hi) >> 1; if (faces[mid].cumulative < target) lo = mid + 1; else hi = mid; }
+      const face = faces[lo], u = Math.sqrt(random()), v = random();
+      candidate = face.a.clone().multiplyScalar(1 - u).addScaledVector(face.b, u * (1 - v)).addScaledVector(face.c, u * v);
+    } else {
+      const y = random() * 2 - 1, angle = random() * Math.PI * 2;
+      candidate = new THREE.Vector3(Math.sqrt(1 - y * y) * Math.cos(angle), y, Math.sqrt(1 - y * y) * Math.sin(angle));
+    }
+    const minimumSquared = surfaceSites ? surfaceArea / count * .16 : .007;
+    if (seeds.every(seed => seed.distanceToSquared(candidate) > minimumSquared)) seeds.push(candidate);
+    if (++proposals > count * 10000) throw new RangeError('Wax surface sites cannot satisfy minimum spacing');
   }
   const nearby = seeds.map(s => seeds.map((t, j) => [j, s.distanceToSquared(t)]).sort((a, b) => a[1] - b[1]).map(x => x[0]));
   const planes = seeds.map(seed => seeds.map(other => other.clone().sub(seed)));
-  const panels = seeds.map((seed, id) => ({ id, seed, vertices: [], triangles: [], sourceFaces: [], map: new Map(), cracked: false, detached: false, dead: false, lift: 0, born: 0, burst: false, offset: new THREE.Vector3(), outward: seed.clone() }));
-  function clip(poly, plane) {
+  const offsets = seeds.map(seed => seeds.map(other => surfaceSites ? (other.lengthSq() - seed.lengthSq()) * .5 : 0));
+  const panels = seeds.map((site, id) => { const seed = surfaceSites ? site.clone().normalize() : site; return { id, seed, vertices: [], triangles: [], sourceFaces: [], map: new Map(), cracked: false, detached: false, dead: false, lift: 0, born: 0, burst: false, offset: new THREE.Vector3(), outward: seed.clone() }; });
+  function clip(poly, plane, offset = 0) {
     const output = [];
     for (let i = 0; i < poly.length; i++) {
-      const a = poly[i], b = poly[(i + 1) % poly.length], da = a.p.dot(plane), db = b.p.dot(plane), ina = da <= 1e-10, inb = db <= 1e-10;
+      const a = poly[i], b = poly[(i + 1) % poly.length], da = a.p.dot(plane) - offset, db = b.p.dot(plane) - offset, ina = da <= 1e-10, inb = db <= 1e-10;
       if (ina) output.push(a);
       if (ina !== inb) { const t = da / (da - db); output.push({ p: a.p.clone().lerp(b.p, t), weights: a.weights.map((w, k) => w + (b.weights[k] - w) * t), ids: a.ids, sourceFace: a.sourceFace }); }
     }
@@ -39,19 +60,19 @@ function buildPanels(rest, index, count = 180) {
   }
   for (let f = 0; f < index.length; f += 3) {
     const ids = Array.from(index.slice(f, f + 3)), points = ids.map(i => new THREE.Vector3().fromArray(rest, i * 3));
-    const center = points[0].clone().add(points[1]).add(points[2]).normalize();
-    let nearest = 0; for (let s = 1; s < seeds.length; s++) if (center.dot(seeds[s]) > center.dot(seeds[nearest])) nearest = s;
+    const center = points[0].clone().add(points[1]).add(points[2]); if (surfaceSites) center.multiplyScalar(1 / 3); else center.normalize();
+    let nearest = 0; for (let s = 1; s < seeds.length; s++) if (surfaceSites ? center.distanceToSquared(seeds[s]) < center.distanceToSquared(seeds[nearest]) : center.dot(seeds[s]) > center.dot(seeds[nearest])) nearest = s;
     const initial = points.map((p, k) => ({ p, ids, sourceFace: f / 3, weights: [+(k === 0), +(k === 1), +(k === 2)] }));
     // Random spacing invalidates fixed-neighbor guesses. This quick rejection
     // is conservative over the *whole source triangle*: a linear half-space
     // excluding all three corners excludes every point inside that triangle.
     // Every surviving cell is then clipped against every other seed.
     for (let s = 0; s < seeds.length; s++) {
-      if (s !== nearest && points.every(p => p.dot(planes[s][nearest]) > 1e-10)) continue;
+      if (s !== nearest && points.every(p => p.dot(planes[s][nearest]) - offsets[s][nearest] > 1e-10)) continue;
       let polygon = initial;
       for (const other of nearby[s]) {
         if (polygon.length < 3) break;
-        if (other !== s) polygon = clip(polygon, planes[s][other]);
+        if (other !== s) polygon = clip(polygon, planes[s][other], offsets[s][other]);
       }
       if (polygon.length < 3) continue;
       const panel = panels[s], local = polygon.map(vertex => {
@@ -98,7 +119,7 @@ function buildPanels(rest, index, count = 180) {
     for (const edge of panel.boundary) {
       const midpoint = panel.vertices[edge[0]].p.clone().add(panel.vertices[edge[1]].p).multiplyScalar(.5);
       let neighbor = -1, nearest = Infinity;
-      for (let j = 0; j < seeds.length; j++) if (j !== panel.cellId) { const distance = Math.abs(midpoint.dot(planes[panel.cellId][j])) / planes[panel.cellId][j].length(); if (distance < nearest) { nearest = distance; neighbor = j; } }
+      for (let j = 0; j < seeds.length; j++) if (j !== panel.cellId) { const distance = Math.abs(midpoint.dot(planes[panel.cellId][j]) - offsets[panel.cellId][j]) / planes[panel.cellId][j].length(); if (distance < nearest) { nearest = distance; neighbor = j; } }
       if (splitSurface) neighbor = edgeOwners.get(edgeKey(panel, edge))?.find(id => id !== panel.id) ?? -1;
       const key = splitSurface ? neighbor < 0 ? `boundary:${panel.id}:${edgeKey(panel, edge)}` : panel.id < neighbor ? `${panel.id}:${neighbor}` : `${neighbor}:${panel.id}` : panel.cellId < neighbor ? `${panel.cellId}:${neighbor}` : `${neighbor}:${panel.cellId}`;
       if (!groups.has(key)) groups.set(key, { key, neighbor, edges: [], center: new THREE.Vector3(), samples: 0 });
@@ -117,16 +138,16 @@ function buildPanels(rest, index, count = 180) {
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
   const normalAffected = fullSurfaceSupport ? new Uint8Array(source.length / 3) : null;
   if (rest.length !== source.length || referenceNormals.length !== normals.length) throw new RangeError('Thin wax original surface snapshot mismatch');
-  let seedCount = config.seedCount ?? 180, panels = buildPanels(rest, geometry.index.array, seedCount);
+  let seedCount = config.seedCount ?? 180, panels = buildPanels(rest, geometry.index.array, seedCount, config.partitionSpace === 'surface');
   for (let attempt = 0; panels.length > config.maxFragments && attempt < 5; attempt++) {
     seedCount = Math.max(48, Math.floor(seedCount * config.maxFragments / panels.length * .95));
-    panels = buildPanels(rest, geometry.index.array, seedCount);
+    panels = buildPanels(rest, geometry.index.array, seedCount, config.partitionSpace === 'surface');
   }
   if (panels.length > config.maxFragments) throw new RangeError('Wax surface cannot be split into connected plates within the fragment budget');
   const records = [], indices = [], sourceFaces = [];
@@ -176,6 +197,18 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         face([a * 2, b * 2, b * 2 + 1], context); face([a * 2, b * 2 + 1, a * 2 + 1], { ...context, renderTriangleId: context.renderTriangleId + 1 });
       }
       panel.fullSupportSamples = [...samples.values()];
+      if (supportClusters) {
+        const groups = new Map();
+        for (const sample of panel.fullSupportSamples) if (sample.nodes.every(node => node & 1) && Number.isInteger(sample.context.sourceFace)) {
+          const id = sample.context.sourceFace;
+          if (!groups.has(id)) groups.set(id, { samples: [], hint: { faceIndex: id }, point: new THREE.Vector3() });
+          groups.get(id).samples.push(sample);
+        }
+        for (const group of groups.values()) if (group.samples.length >= 3) {
+          group.nodes = [...new Set(group.samples.flatMap(sample => Array.from(sample.nodes)))];
+          for (const sample of group.samples) sample.cluster = group;
+        }
+      }
       triangleBase += panel.triangles.length * 2 + panel.boundary.length * 2;
     }
   }
@@ -188,7 +221,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const material = new THREE.MeshStandardMaterial({ color, roughness: .64, metalness: 0, vertexColors: true });
   const mesh = new THREE.Mesh(shell, material); mesh.frustumCulled = false;
   const group = new THREE.Group(); group.name = 'Thin_Wax_Voronoi'; group.add(mesh);
-  const collisions = makeCollisionTree(geometry, { nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, restPositions: rest });
+  const collisions = makeCollisionTree(geometry, { nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, restPositions: rest, featureTieConsensus });
   const visibleCrackEdges = new Set();
   const debris = createWaxDebris({ thickness: config.thickness, reducedMotion, collectionEnabled });
   const worldMatrix = new THREE.Matrix4(), worldInverse = new THREE.Matrix4(), worldLinear = new THREE.Matrix3();
@@ -326,18 +359,35 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     bounds.expandByScalar(config.thickness + .005);
     if (collisions.intersectsBox(bounds)) {
+      const hints = detachedQueryHints ? (panel.detachedHints ||= []) : null;
       // Translate the entire world-space chip out of the *current* live core.
       // Vertex, outer face, triangle center and edge samples stay rigid together.
       for (let attempt = 0; attempt < 10; attempt++) {
-        let minimum = .003; const pushNormal = vec(), sample = point => {
-          detachedNearestSamples++; const distance = collisions.signedDistance(point, normal);
+        let queryIndex = 0;
+        let minimum = .003; const pushNormal = vec(), sample = (point, ball) => {
+          const hint = hints ? (hints[queryIndex++] ||= { faceIndex: panel.vertices[0].sourceFace }) : undefined;
+          if (ball && ball.distance > .003 && point.distanceToSquared(ball.point) < (ball.distance - .003 - 1e-10) ** 2) return;
+          const motion = hint ? collisions.getMotionBound?.() : undefined, certificate = hint?.clearance;
+          if (certificate && Number.isFinite(motion)) {
+            const allowance = certificate.distance - (motion - certificate.motion) - .003 - 1e-10;
+            const dx = point.x - certificate.x, dy = point.y - certificate.y, dz = point.z - certificate.z;
+            if (allowance > 0 && dx * dx + dy * dy + dz * dz < allowance * allowance) return;
+          }
+          detachedNearestSamples++; const distance = hint ? collisions.signedDistance(point, normal, hint) : collisions.signedDistance(point, normal);
+          if (hint && Number.isFinite(motion)) {
+            const saved = hint.clearance ||= {}; saved.x = point.x; saved.y = point.y; saved.z = point.z; saved.distance = distance; saved.motion = motion;
+          }
           if (distance < minimum) { minimum = distance; pushNormal.copy(normal); }
+          return distance;
         };
-        for (const vertex of mapped) { sample(vertex.rendered); sample(vertex.rendered.clone().addScaledVector(vertex.renderedNormal, config.thickness)); }
+        const scratch = detachedQueryHints ? (panel.detachedScratch ||= { outer: vec(), centroid: vec(), edge: vec(), ball: {} }) : null;
+        for (const vertex of mapped) { sample(vertex.rendered); sample((scratch ? scratch.outer.copy(vertex.rendered) : vertex.rendered.clone()).addScaledVector(vertex.renderedNormal, config.thickness)); }
         for (const triangle of panel.triangles) {
           const points = triangle.map(i => mapped[i].rendered);
-          sample(points[0].clone().add(points[1]).add(points[2]).multiplyScalar(1 / 3));
-          for (let k = 0; k < 3; k++) sample(points[k].clone().add(points[(k + 1) % 3]).multiplyScalar(.5));
+          const centroid = (scratch ? scratch.centroid.copy(points[0]) : points[0].clone()).add(points[1]).add(points[2]).multiplyScalar(1 / 3);
+          const distance = sample(centroid);
+          const ball = scratch ? scratch.ball : undefined; if (ball) { ball.point = centroid; ball.distance = distance; }
+          for (let k = 0; k < 3; k++) sample((scratch ? scratch.edge.copy(points[k]) : points[k].clone()).add(points[(k + 1) % 3]).multiplyScalar(.5), ball);
         }
         if (minimum >= .00299) break;
         const correction = pushNormal.multiplyScalar((.003 - minimum) * 1.15);
@@ -351,8 +401,10 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     panel.renderBounds.expandByScalar(config.thickness + .005); panel.renderWorldRevision = worldRevision; panel.renderedSettled = body.settled;
     writePanel(panel, mapped);
   }
+  let supportRevision = 0;
   function sync() {
     if (disposed) return;
+    supportRevision++;
     if (normalAffected) {
       normalAffected.fill(0);
       const index = geometry.index.array;
@@ -449,6 +501,21 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
               samplePoint.add(vertex.rendered); if (node & 1) samplePoint.addScaledVector(vertex.renderedNormal, config.thickness);
             }
             samplePoint.multiplyScalar(1 / sample.nodes.length);
+            // A positive signed-distance ball certifies every point inside it.
+            // Still test each current sample against that ball: corrections in
+            // earlier samples cannot make a cached cluster silently unsafe.
+            const cluster = supportCertificates && sample.cluster;
+            if (cluster) {
+              if (cluster.revision !== supportRevision) {
+                cluster.point.set(0, 0, 0);
+                for (const node of cluster.nodes) { const v = mapped[node >> 1]; cluster.point.add(v.rendered).addScaledVector(v.renderedNormal, config.thickness); }
+                cluster.point.multiplyScalar(1 / cluster.nodes.length);
+                attachedNearestSamples++; cluster.distance = collisions.signedDistance(cluster.point, hitNormal, cluster.hint);
+                cluster.revision = supportRevision;
+              }
+              const allowance = cluster.distance - .0005 - 1e-10;
+              if (allowance > 0 && samplePoint.distanceToSquared(cluster.point) < allowance * allowance) continue;
+            }
             // Signed clearance is 1-Lipschitz. A sample remains outside when
             // its previous positive distance exceeds its motion plus the sum
             // of maximum live-core vertex motions. This checks every actual

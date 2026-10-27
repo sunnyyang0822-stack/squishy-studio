@@ -6,7 +6,7 @@ export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwe
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.
-export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, queryCache = true, featureNormals = false, restPositions } = {}) {
+export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, queryCache = true, featureNormals = false, restPositions, featureTieConsensus = false } = {}) {
   let countQueries = false;
   const p = geometry.attributes.position, index = geometry.index.array;
   const a = new THREE.Vector3(), b = a.clone(), c = a.clone(), hit = a.clone();
@@ -290,11 +290,17 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       if (x0 >= 0 && y0 >= 0 && z0 >= 0 && x1 < gridSize.x && y1 < gridSize.y && z1 < gridSize.z) {
         if (++queryStamp === 0xffffffff) { querySeen.fill(0); queryStamp = 1; }
         let secondSquared = Infinity, nearestFace = -1;
+        const ties = featureTieConsensus && features ? [] : null;
         for (let z = z0; z <= z1; z++) for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
           for (let link = gridHeads[(z * gridSize.y + y) * gridSize.x + x]; link !== -1; link = gridLinks[link]) {
             const id = gridFaces[link]; if (querySeen[id] === queryStamp) continue; querySeen[id] = queryStamp;
             if (countQueries) counters.nearestTriangles++;
             const face = faces[id]; closestOnFace(face, point); const d = closest.distanceToSquared(point);
+            const tieTolerance = 64 * Number.EPSILON * Math.max(1, d);
+            if (ties && d <= distanceSquared + tieTolerance) {
+              if (d < distanceSquared - tieTolerance) ties.length = 0;
+              ties.push([id, d]);
+            }
             if (d < distanceSquared) {
               secondSquared = distanceSquared; distanceSquared = d; nearestFace = id; outwardNormal?.copy(face.normal);
               sign = (point.x - closest.x) * face.normal.x + (point.y - closest.y) * face.normal.y + (point.z - closest.z) * face.normal.z < 0 ? -1 : 1;
@@ -307,6 +313,24 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
           const distance = features ? featureResult(point, outwardNormal, nearestFace) : sign * Math.sqrt(distanceSquared);
           rememberQuery(siteHint, point, x0, x1, y0, y1, z0, z1, nearestFace, distance, secondSquared);
           return distance;
+        }
+        // Incident faces can identify the same closest edge/vertex. Accept a
+        // grid tie only when every tied face agrees on point, feature normal,
+        // sign and distance; ambiguous folds still take the original full BVH.
+        if (ties && Number.isFinite(distanceSquared)) {
+          const distance = featureResult(point, outwardNormal, nearestFace), selectedPoint = closest.clone(), selectedNormal = featureNormal.clone();
+          let agrees = true;
+          for (const [id, squared] of ties) if (squared - distanceSquared <= 64 * Number.EPSILON * Math.max(1, distanceSquared)) {
+            const alternative = featureResult(point, undefined, id);
+            if (Math.abs(alternative - distance) > 1e-12 || selectedPoint.distanceToSquared(closest) > 1e-24 || selectedNormal.distanceToSquared(featureNormal) > 1e-24) { agrees = false; break; }
+          }
+          if (agrees) {
+            if (countQueries) counters.gridQueries++;
+            lastNearestFace = nearestFace; if (siteHint) siteHint.faceIndex = nearestFace;
+            featureNormal.copy(selectedNormal); outwardNormal?.copy(selectedNormal);
+            rememberQuery(siteHint, point, x0, x1, y0, y1, z0, z1, nearestFace, distance, distanceSquared);
+            return distance;
+          }
         }
         // Keep BVH's exact tie selection. Closed-surface feature results may
         // still reuse that *exact point* while the complete region is unchanged;

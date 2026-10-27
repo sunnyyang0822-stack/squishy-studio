@@ -21,6 +21,8 @@ const { chromium } = require('playwright');
     await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.({ measure: false }).enabled);
     await page.waitForTimeout(350);
     const client = await page.context().newCDPSession(page);
+    const profilePath = process.env.WAX_CPU_PROFILE;
+    if (profilePath) { await client.send('Profiler.enable'); await client.send('Profiler.start'); }
     await page.evaluate(() => {
       const mount = document.querySelector('.toy-mount'); window.frameSamples = []; let previous = null;
       new MutationObserver(() => {
@@ -31,6 +33,7 @@ const { chromium } = require('playwright');
     await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: box.x + box.width * contact.x, y: box.y + box.height * contact.y, id: 0 }] });
     await page.waitForTimeout(4000);
     await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    if (profilePath) { const { profile } = await client.send('Profiler.stop'); fs.mkdirSync(path.dirname(profilePath), { recursive: true }); fs.writeFileSync(profilePath, JSON.stringify(profile)); }
     const result = await page.evaluate(() => ({ intervals: window.frameSamples, state: document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax }));
     const sorted = result.intervals.slice().sort((a, b) => a - b);
     if (!sorted.length || result.state.detached < 3) throw new Error('Benchmark did not exercise a real wax fracture');
@@ -41,7 +44,7 @@ const { chromium } = require('playwright');
       const gl = document.querySelector('.toy-mount canvas').getContext('webgl2'), extension = gl.getExtension('WEBGL_debug_renderer_info');
       return { renderer: gl.getParameter(extension ? extension.UNMASKED_RENDERER_WEBGL : gl.RENDERER), vendor: gl.getParameter(extension ? extension.UNMASKED_VENDOR_WEBGL : gl.VENDOR) };
     });
-    result.measurement = '390x844 desktop touch emulation, fresh recipe, actual 4-second hold; MutationObserver after renderer completion; all intervals retained, no recording or CPU profiler';
+    result.measurement = '390x844 desktop touch emulation, fresh recipe, actual 4-second hold; MutationObserver after renderer completion; all intervals retained, no recording; CPU profiler ' + (profilePath ? 'enabled (diagnostic, not performance evidence)' : 'disabled');
     fs.mkdirSync(path.dirname(output), { recursive: true }); fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n');
     console.log(JSON.stringify(result.summary));
   } finally { await browser.close(); }

@@ -43,6 +43,15 @@ test('medium preset changes only physical thickness and real partition count', a
   assert.deepEqual(inherited, Object.fromEntries(Object.entries(thin.parameters).filter(([key]) => key !== 'thickness')));
   assert.equal(thickness, thin.parameters.thickness * 2);
   assert.equal(seedCount, 96);
+  for (const id of ['cloud','paw','cylinder','donut','pyramid','flower','star']) {
+    const p = medium.parametersForStyle(id), geometry = medium.geometryOptionsForStyle(id);
+    assert.ok(Object.isFrozen(p)); assert.ok(Object.isFrozen(geometry));
+    assert.equal(p.seedCount, id === 'paw' ? 32 : 48); assert.equal(p.partitionSpace, 'surface');
+    assert.equal(p.thickness, thickness); assert.equal(p.dwell, thin.parameters.dwell);
+    assert.equal(geometry.fullSurfaceSupport, id === 'paw');
+    assert.equal(geometry.detachedQueryHints, true); assert.equal(geometry.supportClusters, true); assert.equal(geometry.featureTieConsensus, true);
+  }
+  assert.equal(medium.parametersForStyle('orb'), medium.parameters);
 });
 
 test('medium mapping supports every registered clay preview and preserves legacy final scope', async () => {
