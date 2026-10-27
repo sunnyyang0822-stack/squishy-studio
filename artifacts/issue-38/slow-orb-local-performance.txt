@@ -1,0 +1,2 @@
+{"samples":672,"medianMs":5.600000000093132,"p95Ms":8.5,"maximumMs":43.60000000009313,"above33ms":1}
+EXIT_CODE=0

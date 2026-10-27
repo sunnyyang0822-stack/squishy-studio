@@ -245,7 +245,7 @@ test('连续切换质感最后选择生效；保留独立棉花糖且所有旧�
   await page.close();
 });
 
-test('厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，黏土与棉花糖保持原外观', async () => {
+test('三质感共用圆球真实GPU比例；慢回弹十色在昼夜统一小幅加深，黏土与棉花糖保持原外观', async () => {
   const page = await open({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' }, { pixels: true });
   const { orbColors } = await import('../detail/orb-colors.mjs');
   async function idle() {
@@ -260,7 +260,7 @@ test('厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，�
     await idle(); return page.evaluate(() => window.orbMeshProbe.pixelFrames.at(-1));
   };
   const scaled = await sample();
-  for (const [k, expected] of [1, 1.06, 1.10].entries()) assert.ok(Math.abs(Math.hypot(...scaled.matrix.slice(k * 4, k * 4 + 3)) - expected) < 1e-5);
+  for (const [k, expected] of [1, 1, 1].entries()) assert.ok(Math.abs(Math.hypot(...scaled.matrix.slice(k * 4, k * 4 + 3)) - expected) < 1e-5);
   for (const theme of ['day', 'night']) {
     await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
     const standard = new Map();

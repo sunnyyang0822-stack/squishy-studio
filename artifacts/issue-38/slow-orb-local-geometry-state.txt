@@ -1,0 +1,33 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (2.8121ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.2822ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (3.1857ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (0.6117ms)
+✔ 薄蜡范围之外的制作结束保留原有自动恢复 (0.6411ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (3.623ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (0.6165ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (0.8267ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (0.4126ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.2909ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (0.9022ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (0.4058ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.2873ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (4.4019ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (0.5139ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.3385ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.179ms)
+✔ all registered marshmallow styles share the thin-wax making preview; slow rebound and legacy play remain excluded (0.7683ms)
+✔ every marshmallow core to shell keeps independent colors, the same feel and recipe, and persistent preview damage (6.3458ms)
+✔ every marshmallow legacy final restores core while preserving hidden shell, and return configures preview without repair (1.7785ms)
+✔ local slow-rebound orb + thin wax: exact bare-core trajectory, live recovery support and permanent holes (normal) (4927.492ms)
+ℹ {"reducedMotion":false,"comparedCoreFrames":1048,"records":[{"label":"deep press","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003843323182307845,"detachedMinSigned":3.1909324216683443,"attachedSamples":54686,"detachedSamples":518,"wallSamples":12444,"thicknessError":2.1976400113588035e-7},{"label":"natural recovery 1","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0038495959995793008,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 30","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003921236400741325,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 120","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003986965522797987,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 400","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 800","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"fully rebounded with permanent holes","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"fast sweep cancelled","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003988839020620459,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"repeated rim press","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.00388856745086347,"detachedMinSigned":0.10296513971001772,"attachedSamples":51938,"detachedSamples":2748,"wallSamples":12346,"thicknessError":2.3023791881522648e-7}]}
+✔ local slow-rebound orb + thin wax: exact bare-core trajectory, live recovery support and permanent holes (reduced) (2703.3426ms)
+ℹ {"reducedMotion":true,"comparedCoreFrames":371,"records":[{"label":"deep press","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003843323182307845,"detachedMinSigned":3.300464782858875,"attachedSamples":54686,"detachedSamples":518,"wallSamples":12444,"thicknessError":4.2126670288245016e-7},{"label":"natural recovery 1","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003879923933882233,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 30","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.00399405075616342,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 120","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"fully rebounded with permanent holes","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"fast sweep cancelled","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003988934763894437,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"repeated rim press","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003988589427339965,"detachedMinSigned":0.13175236174789962,"attachedSamples":51128,"detachedSamples":3558,"wallSamples":12346,"thicknessError":2.2310436662009714e-7}]}
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7886.1083
+EXIT_CODE=0
