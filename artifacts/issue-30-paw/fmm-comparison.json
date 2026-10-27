@@ -1,0 +1,103 @@
+{
+  "glbSha256": "0fef462aa97cd1bc51f86eff5057a149b206c8ade4a7ee47ac6bea60062fd86b",
+  "method": "Actual exported GLB, 162 fixed 1/60 s steps; area-weighted computed vertex normals, edge endpoints within .6 Euclidean rest-space ball; max/p95 angles in degrees. No visual or phone-performance claim.",
+  "limitations": "Causal first-order triangle FMM, not exact geodesics; obtuse/noncausal updates fall back to mesh edges. Preserves original one-ring Euclidean seeds. Same pressure radius; compared with edge graph, the less anisotropic surface metric can include about 7–8% more vertices in these two footprints.",
+  "results": [
+    {
+      "variant": "graph",
+      "feelId": "clay",
+      "hit": [
+        -0.227550849,
+        -0.447725296,
+        0.582143188
+      ],
+      "neighborhood": 1341,
+      "holdDepth": 0.30765077471733093,
+      "normal": {
+        "edges": 4234,
+        "max": 55.824510777042626,
+        "p95": 18.573283429975827,
+        "above15": 463
+      },
+      "restNormal": {
+        "edges": 4234,
+        "max": 27.756211804488057,
+        "p95": 13.97203879915605,
+        "above15": 179
+      },
+      "cpuMs": 542.3158
+    },
+    {
+      "variant": "graph",
+      "feelId": "marshmallow",
+      "hit": [
+        -0.294868529,
+        0.701795161,
+        0.381095231
+      ],
+      "neighborhood": 1492,
+      "holdDepth": 0.2485237568616867,
+      "normal": {
+        "edges": 4715,
+        "max": 58.96582815159159,
+        "p95": 23.520428605923875,
+        "above15": 611
+      },
+      "restNormal": {
+        "edges": 4715,
+        "max": 44.35549750598094,
+        "p95": 16.877668799346313,
+        "above15": 287
+      },
+      "cpuMs": 561.8422
+    },
+    {
+      "variant": "fmm",
+      "feelId": "clay",
+      "hit": [
+        -0.227550849,
+        -0.447725296,
+        0.582143188
+      ],
+      "neighborhood": 1446,
+      "holdDepth": 0.30765077471733093,
+      "normal": {
+        "edges": 4234,
+        "max": 56.885536255728155,
+        "p95": 17.982492454061106,
+        "above15": 372
+      },
+      "restNormal": {
+        "edges": 4234,
+        "max": 27.756211804488057,
+        "p95": 13.97203879915605,
+        "above15": 179
+      },
+      "cpuMs": 530.5544
+    },
+    {
+      "variant": "fmm",
+      "feelId": "marshmallow",
+      "hit": [
+        -0.294868529,
+        0.701795161,
+        0.381095231
+      ],
+      "neighborhood": 1601,
+      "holdDepth": 0.2485237568616867,
+      "normal": {
+        "edges": 4715,
+        "max": 58.76158039022768,
+        "p95": 22.914938967083938,
+        "above15": 465
+      },
+      "restNormal": {
+        "edges": 4715,
+        "max": 44.35549750598094,
+        "p95": 16.877668799346313,
+        "above15": 287
+      },
+      "cpuMs": 558.4325999999996
+    }
+  ]
+}

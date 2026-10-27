@@ -1,0 +1,21 @@
+Command: node --test tests/squishy-styles-browser.test.cjs
+Exit code: 0
+All 25 original assertion-bearing lines preserved verbatim in order; added >=30 real position uploads assertion.
+1300 ms hold advanced by Playwright clock with every RAF and real GPU uploads.
+
+✔ cloud×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (11496.8448ms)
+✔ paw×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (11179.455ms)
+✔ cylinder×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (9717.5857ms)
+✔ donut×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (13705.2967ms)
+✔ pyramid×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (9353.4451ms)
+✔ flower×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (9556.6393ms)
+✔ star×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放 (9709.2309ms)
+✔ 新增模型加载失败可重试，快速样式切换只提交最后选择 (1947.942ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77569.1402

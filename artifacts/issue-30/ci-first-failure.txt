@@ -1,0 +1,52 @@
+GitHub Actions PR #34, run 39780953703 / job 119831759512
+Head edc790928c2acf3bacf6b83b9d5ede1b2adf50f0; Ubuntu software GPU
+Local complete regression: 152/152; CI first run: 150/152.
+Failures retained below; no original depth/pixel/idle assertions removed.
+
+2026-10-22T12:53:12.8902107Z not ok 38 - 真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制
+2026-10-22T12:53:12.8914132Z   ---
+2026-10-22T12:53:12.8916102Z   duration_ms: 10348.02061
+2026-10-22T12:53:12.8919149Z   type: 'test'
+2026-10-22T12:53:12.8920207Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/orb-color.test.cjs:71:1'
+2026-10-22T12:53:12.8921305Z   failureType: 'testCodeFailure'
+2026-10-22T12:53:12.8922300Z   error: 'A real frame shows changed top while bottom retains its previous color'
+2026-10-22T12:53:12.8923275Z   code: 'ERR_ASSERTION'
+2026-10-22T12:53:12.8923852Z   name: 'AssertionError'
+2026-10-22T12:53:12.8924409Z   expected: true
+2026-10-22T12:53:12.8924943Z   actual: false
+2026-10-22T12:53:12.8925422Z   operator: '=='
+2026-10-22T12:53:12.8925924Z   stack: |-
+2026-10-22T12:53:12.8926998Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/orb-color.test.cjs:78:10)
+2026-10-22T12:53:12.8929000Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-22T12:53:12.8930186Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-22T12:53:12.8931097Z   ...
+2026-10-22T12:53:36.9308150Z # Subtest: 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作
+2026-10-22T12:53:36.9328579Z ok 39 - 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作
+2026-10-22T12:53:36.9329401Z   ---
+2026-10-22T12:53:36.9330290Z   duration_ms: 24038.712382
+2026-10-22T12:53:36.9331419Z   type: 'test'
+2026-10-22T13:11:45.2799148Z not ok 121 - paw×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放
+2026-10-22T13:11:45.2823421Z   ---
+2026-10-22T13:11:45.2824109Z   duration_ms: 13132.221339
+2026-10-22T13:11:45.2824724Z   type: 'test'
+2026-10-22T13:11:45.2825830Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/squishy-styles-browser.test.cjs:17:86'
+2026-10-22T13:11:45.2826992Z   failureType: 'testCodeFailure'
+2026-10-22T13:11:45.2829096Z   error: '{"maximum":0.019302845001220703,"changed":599,"center":[0.1313187550247369,-0.2675964019404298,0.380211350795833],"uploads":4,"vertices":9166,"finite":true}'
+2026-10-22T13:11:45.2830688Z   code: 'ERR_ASSERTION'
+2026-10-22T13:11:45.2831264Z   name: 'AssertionError'
+2026-10-22T13:11:45.2831839Z   expected: true
+2026-10-22T13:11:45.2832365Z   actual: false
+2026-10-22T13:11:45.2832879Z   operator: '=='
+2026-10-22T13:11:45.2833400Z   stack: |-
+2026-10-22T13:11:45.2834586Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/squishy-styles-browser.test.cjs:30:10)
+2026-10-22T13:11:45.2835954Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-22T13:11:45.2837002Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-22T13:11:45.2837898Z   ...
+2026-10-22T13:14:16.0704847Z # Subtest: cylinder×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放
+2026-10-22T13:14:16.0736858Z ok 122 - cylinder×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放
+2026-10-22T13:14:16.0737451Z   ---
+2026-10-22T13:14:16.0737690Z   duration_ms: 150798.12706
+2026-10-22T13:14:16.0737957Z   type: 'test'
+2026-10-22T13:31:44.0962731Z # pass 150
+2026-10-22T13:31:44.0963376Z # fail 2
+2026-10-22T13:31:44.0966479Z # duration_ms 2742582.976448

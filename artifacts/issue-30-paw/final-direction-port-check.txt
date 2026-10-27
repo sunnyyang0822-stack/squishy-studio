@@ -1,0 +1,1 @@
+PASS: 29 isolated tests and helper parse; PR #32 helper uses a consistent OS-selected port; DETAIL_TEST_PORT=5180; no browser started.

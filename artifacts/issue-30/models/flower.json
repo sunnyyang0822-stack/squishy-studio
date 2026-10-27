@@ -1,0 +1,26 @@
+{
+  "id": "flower",
+  "name": "五瓣花朵",
+  "blender": "4.4.0",
+  "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
+  "bboxMin": [
+    -1.2257978916168213,
+    -1.2001028060913086,
+    -0.6051644086837769
+  ],
+  "bboxMax": [
+    1.2257978916168213,
+    1.2001028060913086,
+    0.6051644086837769
+  ],
+  "vertices": 8654,
+  "triangles": 17304,
+  "glbBytes": 312840,
+  "meshes": 1,
+  "primitives": 1,
+  "materials": 1,
+  "closedManifold": true,
+  "externalTextures": false,
+  "feelId": "clay",
+  "reviewStatus": "review revision: four toes + inverted heart palm; approved tetrahedron; five petals + one center"
+}

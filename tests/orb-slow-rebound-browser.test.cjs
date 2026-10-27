@@ -6,6 +6,38 @@ const { chromium } = require('playwright');
 const { installOrbProbe, meshStats } = require('./helpers/orb-probe.cjs');
 const base = 'http://127.0.0.1:4205';
 let server, browser;
+test('慢回弹原圆球边缘沿按入方向凹陷，旋转后不向球心拉扯且完整恢复', { timeout: 120000 }, async () => {
+  const { installStyleProbe, ready, projectedSurfaceContact, rotate } = require('./helpers/squishy-browser.cjs');
+  const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  try {
+    await page.clock.install(); await installStyleProbe(page, getSquishyStyle('orb'));
+    await page.goto(`${base}/squishy/cloud/?style=orb&coreMaterial=butter`); await ready(page);
+    for (const pose of ['initial', 'rotated']) {
+      if (pose === 'rotated') await rotate(page, 55, 16);
+      const hit = await projectedSurfaceContact(page, .6, .05);
+      await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+      await page.mouse.move(hit.x, hit.y); await page.mouse.down();
+      for (let i = 0; i < 26; i++) await page.clock.fastForward(50);
+      const delta = await page.evaluate(({ index }) => {
+        const p = window.styleProbe, d = [0, 1, 2].map(k => p.positions[index + k] - p.rest[index + k]);
+        return [0, 1, 2].map(k => d.reduce((s, v, j) => s + v * p.matrix[j * 4 + k], 0));
+      }, hit);
+      assert.ok(Math.hypot(delta[0], delta[1]) < 1e-5 && delta[2] < -.02, `${pose}: ${delta}`);
+      await page.mouse.up();
+      for (let i = 0; i < 20; i++) await page.clock.fastForward(50);
+      const recovering = await page.evaluate(() => {
+        const p = window.styleProbe; let maximum = 0;
+        for (let i = 0; i < p.rest.length; i += 3) maximum = Math.max(maximum, Math.hypot(...[0, 1, 2].map(k => p.positions[i + k] - p.rest[i + k])));
+        return maximum;
+      });
+      assert.ok(recovering > 0 && recovering < Math.abs(delta[2]), 'Actual GPU recovery progresses gradually before its idle tail');
+      await page.clock.fastForward(13000);
+      assert.equal(await page.evaluate(() => window.styleProbe.positions.every((v, i) => v === window.styleProbe.rest[i])), true);
+      await page.clock.resume();
+    }
+  } finally { await page.close(); }
+});
 before(async () => {
   server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4205' } });
   for (let i = 0; i < 60; i++) { try { if ((await fetch(base)).ok) break; } catch {} await new Promise(r => setTimeout(r, 100)); }
@@ -47,14 +79,50 @@ async function recovered(page) {
   assert.equal((await meshStats(page)).maximum, 0);
 }
 
+test('正常鼠标滑动时实际GPU左右路径均可见，终点驻留达到限深且全路径自然回弹', async t => {
+  const page = await open({ viewport: { width: 1440, height: 900 } });
+  const start = await point(page, .32), end = await point(page, .68);
+  await page.mouse.move(start.x, start.y); await page.mouse.down();
+  const started = Date.now();
+  let progress = 0;
+  while (progress < 1) {
+    progress = Math.min(1, (Date.now() - started) / 800);
+    await page.mouse.move(start.x + (end.x - start.x) * progress, start.y);
+    if (progress < 1) await page.waitForTimeout(16);
+  }
+  const path = await page.evaluate(() => {
+    const { positions: p, rest: r } = window.orbMeshProbe;
+    const depths = [0, 0];
+    for (let i = 0; i < r.length; i += 3) {
+      if (r[i + 2] < .5 || Math.abs(r[i + 1] - .0175) > .25) continue;
+      const side = r[i] < 0 ? 0 : 1;
+      depths[side] = Math.max(depths[side], Math.hypot(p[i] - r[i], p[i + 1] - r[i + 1], p[i + 2] - r[i + 2]));
+    }
+    return depths;
+  });
+  for (const depth of path) assert.ok(depth > .08 && depth < .46, `Clearly visible bounded GPU path: ${path}`);
+  const sliding = (await meshStats(page)).maximum;
+  // A slow host may already have yielded deeply before automation returns.
+  // Dwell must reach the bounded target, without asking it to exceed the limit.
+  await reachesDepth(page, .44);
+  t.diagnostic(JSON.stringify({ slidingLeftRight: path, slidingMaximum: sliding, dwellMaximum: (await meshStats(page)).maximum }));
+  await page.mouse.up(); await recovered(page); await page.close();
+});
+
 test('慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离', async t => {
   const page = await open({ viewport: { width: 1440, height: 900 } }, { frames: true }); const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await press(page, 120); await reachesDepth(page, .10);
   const early = await page.evaluate(() => window.orbMeshProbe.positionFrames.find(frame => frame.maximum > 0));
-  assert.ok(early.maximum > .0002 && early.maximum < .0015, `Actual first GPU frame: ${JSON.stringify(early)}`);
+  assert.ok(early.maximum > .0004 && early.maximum < .0007, `Gentle actual first GPU frame: ${JSON.stringify(early)}`);
+  const pressingFrames = await page.evaluate(() => window.orbMeshProbe.positionFrames.filter(frame => frame.pressed && frame.maximum > 0).slice(0, 2));
+  assert.equal(pressingFrames.length, 2);
+  const onsetIntegral = t => t < .12 ? t * t / (.12 * 2) : t - .12 / 2;
+  const secondElapsed = 1 / 60 + Math.min(.1, (pressingFrames[1].time - early.time) / 1000);
+  const expectedSecond = early.maximum * onsetIntegral(secondElapsed) / onsetIntegral(1 / 60);
+  assert.ok(Math.abs(pressingFrames[1].maximum - expectedSecond) < .000002, 'Actual GPU follows gentle onset then uniform speed, without exponential ease-out');
   const held = (await meshStats(page)).maximum;
-  assert.ok(held > .10 && held < .34);
+  assert.ok(held > .10 && held < .46);
   await page.mouse.up();
   await page.waitForFunction(() => window.orbMeshProbe.positionFrames.some(frame => !frame.pressed));
   const release = await page.evaluate(() => {
@@ -114,7 +182,7 @@ test('新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管�
 });
 
 test('pointercancel、失焦、后台结束施力；后台暂停且前台连续恢复，离页释放', async () => {
-  const page = await open(); await press(page, 700);
+  const page = await open({}, { frames: true }); await press(page, 700);
   await page.evaluate(() => window.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 1 })));
   assert.equal(await page.locator('.orb-input').getAttribute('aria-pressed'), 'false'); await page.mouse.up();
   const canceled = (await meshStats(page)).maximum; await page.waitForTimeout(300);
@@ -129,10 +197,16 @@ test('pointercancel、失焦、后台结束施力；后台暂停且前台连续�
   assert.equal(await page.locator('.toy-mount').getAttribute('data-render-count'), count);
   assert.deepEqual(await page.evaluate(() => Array.from(window.orbMeshProbe.positions)), snapshot);
   await page.mouse.up();
+  const resumeFrom = await page.evaluate(() => ({ count: window.orbMeshProbe.positionFrames.length, depth: window.orbMeshProbe.positionFrames.at(-1).maximum }));
   await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange')); });
-  await page.waitForTimeout(100);
-  const delta = await page.evaluate(before => Math.max(...window.orbMeshProbe.positions.map((v, i) => Math.abs(v - before[i]))), snapshot);
-  assert.ok(delta > 0 && delta < .04, `Foreground has no hidden-time jump: ${delta}`);
+  await page.waitForFunction(count => window.orbMeshProbe.positionFrames.length >= count + 2, resumeFrom.count);
+  const resumed = await page.evaluate(count => window.orbMeshProbe.positionFrames.slice(count), resumeFrom.count);
+  let expected = resumeFrom.depth;
+  for (let i = 0; i < resumed.length; i++) {
+    const elapsed = i === 0 ? 1 / 60 : (resumed[i].time - resumed[i - 1].time) / 1000;
+    expected *= Math.exp(-.8 * elapsed);
+    assert.ok(Math.abs(resumed[i].maximum - expected) < .000002, 'Foreground integrates only visible frame time, never the hidden 1.3 seconds');
+  }
   await recovered(page);
   await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pagehide')));
   assert.equal(await page.locator('.toy-mount canvas').count(), 0);
@@ -171,7 +245,7 @@ test('连续切换质感最后选择生效；保留独立棉花糖且所有旧�
   await page.close();
 });
 
-test('厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，黏土与棉花糖保持原外观', async () => {
+test('三质感共用圆球真实GPU比例；慢回弹十色在昼夜统一小幅加深，黏土与棉花糖保持原外观', async () => {
   const page = await open({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' }, { pixels: true });
   const { orbColors } = await import('../detail/orb-colors.mjs');
   async function idle() {
@@ -186,7 +260,7 @@ test('厚实体型真实GPU矩阵生效；十色在昼夜统一小幅加深，�
     await idle(); return page.evaluate(() => window.orbMeshProbe.pixelFrames.at(-1));
   };
   const scaled = await sample();
-  for (const [k, expected] of [1, 1.06, 1.10].entries()) assert.ok(Math.abs(Math.hypot(...scaled.matrix.slice(k * 4, k * 4 + 3)) - expected) < 1e-5);
+  for (const [k, expected] of [1, 1, 1].entries()) assert.ok(Math.abs(Math.hypot(...scaled.matrix.slice(k * 4, k * 4 + 3)) - expected) < 1e-5);
   for (const theme of ['day', 'night']) {
     await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
     const standard = new Map();

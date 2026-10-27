@@ -1,0 +1,1 @@
+PASS: PR #32 f9c223d87d52d603a721d726b54a0d5568c72956; 2224 operations; normal/reduced motion; every return, vertex and state strictly equal.

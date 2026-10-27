@@ -1,0 +1,28 @@
+✔ 同一捕获与命中同时驱动芯壳；命中丢失终止驻留，不在旧位置继续施力 (2.9633ms)
+✔ thin wax is a separate closed-volume shell with independently owned color and measured nonzero thickness (543.7126ms)
+✔ actual continuous dwell exceeds 0.5 seconds; one brittle local wave retains most plates and releases only a few small chips (493.5326ms)
+✔ released wax chips fall promptly under gravity instead of ejecting sideways (924.3218ms)
+✔ actual clay dent and dragged deformation all receive local crack geometry before any chip can fall (1369.7665ms)
+✔ additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone (966.9971ms)
+✔ short taps, cancellation, hit loss and sliding cannot borrow previous dwell time (184.0792ms)
+✔ deep clay press and recovery keep original core behavior and measured shell clearance (7927.1045ms)
+✔ bounded lifetime, unique chips, reduced motion and idempotent cleanup (223.0187ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 0,-1,0 (11794.4455ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 1,0,0 (12809.4251ms)
+✔ broken rim repeated deep pressure and fast crossing strokes remain outside the live clay surface under local gravity 0,0,1 (9790.3197ms)
+✔ live chips stay capped at 24 while continued deep pressure can strip each local cohort (932.9917ms)
+✔ repeated local presses can strip the complete real shell once without duplicate cells or regrowth (1291.0055ms)
+✔ one local press leaves remote real render positions, normals and colors exactly unchanged (1199.9941ms)
+✔ creating a shell over an old bare-core dent retains original contact coordinates (1106.5225ms)
+✔ detached curved plates retain frozen edge lengths while the original core continues deforming (2450.522ms)
+✔ irregular area distribution, rapid connected cracking and strain-limited saturation replace regular scales and timed emptying (425.7067ms)
+✔ random Voronoi cutting covers the complete real orb GLB surface with no intact-shell holes (188.1704ms)
+✔ retained shells open connected partial boundary chains while unbroken boundary bridges remain geometrically closed (909.223ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55637.125

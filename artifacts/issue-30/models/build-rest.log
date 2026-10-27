@@ -1,0 +1,1145 @@
+BlenderMCP addon registered
+INFO Draco mesh compression is available, use library at C:\Program Files\Blender Foundation\Blender 4.4\4.4\scripts\addons_core\io_scene_gltf2\extern_draco.dll
+18:24:46 | INFO: Starting glTF 2.0 export
+18:24:46 | INFO: Extracting primitive: 球体
+18:24:46 | INFO: Primitives created: 1
+18:24:46 | INFO: Finished glTF 2.0 export in 0.035176753997802734 s
+Blender 4.4.0 (hash 05377985c527 built 2025-03-18 03:22:03)
+Fra:1 Mem:25.66M (Peak 25.66M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:26.26M (峰值 26.26M) | 时间:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Initializing
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Waiting for render to start
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Scene
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Shaders
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Procedurals
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Background
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Camera
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes
+Fra:1 Mem:26.37M (Peak 26.37M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.75 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.75 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.75 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.75 | Mem:0.56M, Peak:0.56M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.75 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.75 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.75 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.75 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Objects Flags
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.75 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.75 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Images
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.75 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Camera Volume
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.75 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.75 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.75 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.75 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Integrator
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.75 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Film
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.75 | Mem:1.60M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.75 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Baking
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.75 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.75 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.75 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Sample 0/24
+Fra:1 Mem:38.87M (Peak 38.87M) | Time:00:00.79 | Remaining:00:00.90 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 1/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:02.24 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 24/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:02.24 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\cloud-front.png'
+Time: 00:02.46 (Saving: 00:00.17)
+
+Fra:1 Mem:25.66M (Peak 25.66M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:26.26M (峰值 26.26M) | 时间:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Initializing
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Waiting for render to start
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Scene
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Shaders
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Procedurals
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Background
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Camera
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes
+Fra:1 Mem:26.37M (Peak 26.37M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:0.56M, Peak:0.56M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.10 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.10 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Objects Flags
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.10 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.10 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Images
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.10 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Camera Volume
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.10 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.10 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.10 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.10 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Integrator
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.10 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Film
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.10 | Mem:1.60M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.10 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Baking
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.10 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.10 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.10 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Sample 0/24
+Fra:1 Mem:38.87M (Peak 38.87M) | Time:00:00.12 | Remaining:00:00.46 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 1/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:01.29 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 24/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:01.29 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\cloud-side.png'
+Time: 00:01.35 (Saving: 00:00.02)
+
+Fra:1 Mem:25.66M (Peak 25.66M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:26.26M (峰值 26.26M) | 时间:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Initializing
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Waiting for render to start
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Scene
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Shaders
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Procedurals
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Background
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Camera
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes
+Fra:1 Mem:26.37M (Peak 26.37M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:0.56M, Peak:0.56M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.13 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.13 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.13 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.13 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Objects Flags
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.13 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.13 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Images
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.13 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Camera Volume
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.13 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.13 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.13 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.13 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Integrator
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.13 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Film
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.13 | Mem:1.60M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.13 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Baking
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.13 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.13 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.13 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Sample 0/24
+Fra:1 Mem:38.87M (Peak 38.87M) | Time:00:00.16 | Remaining:00:00.64 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 1/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:01.47 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 24/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:01.47 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\cloud-back.png'
+Time: 00:01.53 (Saving: 00:00.02)
+
+Fra:1 Mem:25.66M (Peak 25.66M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:26.26M (峰值 26.26M) | 时间:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Initializing
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Waiting for render to start
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Scene
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Shaders
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Procedurals
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Background
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Camera
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes
+Fra:1 Mem:26.37M (Peak 26.37M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.10 | Mem:0.56M, Peak:0.56M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.11 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.11 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.11 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.11 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Objects Flags
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.11 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.11 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Images
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.11 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Camera Volume
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.11 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.11 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.11 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.11 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Integrator
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.11 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Film
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.11 | Mem:1.60M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.11 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Baking
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.11 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.11 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.11 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Sample 0/24
+Fra:1 Mem:38.87M (Peak 38.87M) | Time:00:00.13 | Remaining:00:00.41 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 1/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:01.30 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 24/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:01.30 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\cloud-bottom.png'
+Time: 00:01.36 (Saving: 00:00.02)
+
+Fra:1 Mem:25.66M (Peak 25.66M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:26.26M (峰值 26.26M) | 时间:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Initializing
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Waiting for render to start
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Scene
+Fra:1 Mem:26.05M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Shaders
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Procedurals
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Background
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Camera
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:26.13M (Peak 26.26M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Meshes
+Fra:1 Mem:26.37M (Peak 26.37M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:0.09M, Peak:0.09M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:0.56M, Peak:0.56M | Squishy_cloud, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:26.46M (Peak 26.46M) | Time:00:00.12 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.12 | Mem:1.07M, Peak:1.54M | Squishy_cloud, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.12 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Objects Flags
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.12 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.12 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Images
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.12 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Camera Volume
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.12 | Mem:1.60M, Peak:1.60M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.12 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights
+Fra:1 Mem:26.98M (Peak 26.98M) | Time:00:00.12 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.12 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Integrator
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.12 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Film
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.12 | Mem:1.60M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.12 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Baking
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.12 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.12 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:26.99M (Peak 26.99M) | Time:00:00.12 | Mem:1.68M, Peak:1.68M | Squishy_cloud, ViewLayer | Sample 0/24
+Fra:1 Mem:38.87M (Peak 38.87M) | Time:00:00.15 | Remaining:00:00.52 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 1/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:01.42 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Sample 24/24
+Fra:1 Mem:43.75M (Peak 51.08M) | Time:00:01.42 | Mem:13.28M, Peak:13.28M | Squishy_cloud, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\assets-source\squishy-cloud\preview.png'
+Time: 00:01.48 (Saving: 00:00.02)
+
+警告: 路径 'C:\Program Files\Blender Foundation\Blender 4.4\4.4\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' 不能成为 Material 'Dots Stroke' 的相对路径
+警告: 路径 'C:\Program Files\Blender Foundation\Blender 4.4\4.4\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' 不能成为 Material 'Material' 的相对路径
+
+信息: 已保存 "squishy-cloud.blend"
+STYLE_DONE {"id": "cloud", "name": "云朵", "blender": "4.4.0", "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin", "bboxMin": [-1.4382503032684326, -0.9473748803138733, -0.6320602893829346], "bboxMax": [1.4382503032684326, 0.9473748803138733, 0.6320602893829346], "vertices": 7678, "triangles": 15352, "glbBytes": 277700, "meshes": 1, "primitives": 1, "materials": 1, "closedManifold": true, "externalTextures": false, "feelId": "clay", "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"}
+18:24:54 | INFO: Starting glTF 2.0 export
+18:24:54 | INFO: Extracting primitive: 球体.005
+18:24:54 | INFO: Primitives created: 1
+18:24:54 | INFO: Finished glTF 2.0 export in 0.024623632431030273 s
+Fra:1 Mem:33.56M (Peak 33.56M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:34.35M (峰值 34.35M) | 时间:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Initializing
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Waiting for render to start
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Scene
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Shaders
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Procedurals
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Background
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Camera
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes
+Fra:1 Mem:34.53M (Peak 34.53M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.10 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.10 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.10 | Mem:0.73M, Peak:0.73M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.10 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.10 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Objects Flags
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Images
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Camera Volume
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Integrator
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Film
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.17M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Baking
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Sample 0/24
+Fra:1 Mem:47.22M (Peak 47.22M) | Time:00:00.14 | Remaining:00:00.85 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 1/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.53 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 24/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.53 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\paw-front.png'
+Time: 00:01.60 (Saving: 00:00.02)
+
+Fra:1 Mem:33.56M (Peak 33.56M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:34.35M (峰值 34.35M) | 时间:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Initializing
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Waiting for render to start
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Scene
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Shaders
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Procedurals
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Background
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Camera
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes
+Fra:1 Mem:34.53M (Peak 34.53M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.13 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.13 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.13 | Mem:0.73M, Peak:0.73M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.13 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.13 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Objects Flags
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Images
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Camera Volume
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Integrator
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.14 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Film
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.14 | Mem:2.17M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.14 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Baking
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.14 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.14 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.14 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Sample 0/24
+Fra:1 Mem:47.22M (Peak 47.22M) | Time:00:00.16 | Remaining:00:00.56 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 1/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.24 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 24/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.24 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\paw-side.png'
+Time: 00:01.30 (Saving: 00:00.01)
+
+Fra:1 Mem:33.56M (Peak 33.56M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:34.35M (峰值 34.35M) | 时间:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Initializing
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Waiting for render to start
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Scene
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Shaders
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Procedurals
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Background
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Camera
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes
+Fra:1 Mem:34.53M (Peak 34.53M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:0.73M, Peak:0.73M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.12 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.12 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Objects Flags
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Images
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Camera Volume
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Integrator
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.12 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Film
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.12 | Mem:2.17M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.12 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Baking
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.12 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.12 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.12 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Sample 0/24
+Fra:1 Mem:47.22M (Peak 47.22M) | Time:00:00.14 | Remaining:00:00.60 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 1/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.42 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 24/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.42 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\paw-back.png'
+Time: 00:01.49 (Saving: 00:00.02)
+
+Fra:1 Mem:33.56M (Peak 33.56M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:34.35M (峰值 34.35M) | 时间:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Initializing
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Waiting for render to start
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Scene
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Shaders
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Procedurals
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Background
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Camera
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes
+Fra:1 Mem:34.53M (Peak 34.53M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.12 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.12 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.12 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.12 | Mem:0.73M, Peak:0.73M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.13 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.13 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Objects Flags
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Images
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Camera Volume
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Integrator
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.13 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Film
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.13 | Mem:2.17M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.13 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Baking
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.13 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.13 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.13 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Sample 0/24
+Fra:1 Mem:47.22M (Peak 47.22M) | Time:00:00.14 | Remaining:00:00.42 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 1/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.20 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 24/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.20 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\paw-bottom.png'
+Time: 00:01.27 (Saving: 00:00.02)
+
+Fra:1 Mem:33.56M (Peak 33.56M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:34.35M (峰值 34.35M) | 时间:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Initializing
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Waiting for render to start
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Scene
+Fra:1 Mem:34.14M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Shaders
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Procedurals
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Background
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Camera
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:34.22M (Peak 34.35M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Meshes
+Fra:1 Mem:34.53M (Peak 34.53M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_paw, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:0.12M, Peak:0.12M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:0.73M, Peak:0.73M | Squishy_paw, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:34.65M (Peak 34.65M) | Time:00:00.11 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:1.47M, Peak:2.09M | Squishy_paw, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Objects Flags
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Images
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Camera Volume
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.17M, Peak:2.17M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Integrator
+Fra:1 Mem:35.34M (Peak 35.34M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Film
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.17M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Baking
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:35.35M (Peak 35.35M) | Time:00:00.11 | Mem:2.25M, Peak:2.25M | Squishy_paw, ViewLayer | Sample 0/24
+Fra:1 Mem:47.22M (Peak 47.22M) | Time:00:00.14 | Remaining:00:00.72 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 1/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.45 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Sample 24/24
+Fra:1 Mem:52.11M (Peak 59.43M) | Time:00:01.45 | Mem:13.85M, Peak:13.85M | Squishy_paw, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\assets-source\squishy-paw\preview.png'
+Time: 00:01.53 (Saving: 00:00.02)
+
+
+信息: 已保存 "squishy-paw.blend"
+STYLE_DONE {"id": "paw", "name": "猫爪", "blender": "4.4.0", "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin", "bboxMin": [-1.1140241622924805, -1.1419556140899658, -0.5272058844566345], "bboxMax": [1.1140241622924805, 1.1419556140899658, 0.5272058844566345], "vertices": 10102, "triangles": 20200, "glbBytes": 364972, "meshes": 1, "primitives": 1, "materials": 1, "closedManifold": true, "externalTextures": false, "feelId": "clay", "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"}
+警告: 没有可供合并的网格数据(请检查要合并的物体是否都是网格，比如有一个物体是曲线。此功能仅能合并网格物体)
+18:25:02 | INFO: Starting glTF 2.0 export
+18:25:02 | INFO: Extracting primitive: Rounded_Tetrahedron_Construction
+18:25:02 | INFO: Primitives created: 1
+18:25:02 | INFO: Finished glTF 2.0 export in 0.024515628814697266 s
+Fra:1 Mem:38.91M (Peak 38.91M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:39.23M (峰值 39.23M) | 时间:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Initializing
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Waiting for render to start
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Scene
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Shaders
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Procedurals
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Background
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Camera
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes
+Fra:1 Mem:39.22M (Peak 39.23M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.13 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.13 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.13 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.13 | Mem:0.30M, Peak:0.30M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.13 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.13 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Objects Flags
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Images
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Camera Volume
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Integrator
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.13 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Film
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.13 | Mem:0.88M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.13 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Baking
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.13 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.13 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.13 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Sample 0/24
+Fra:1 Mem:51.43M (Peak 51.43M) | Time:00:00.15 | Remaining:00:00.48 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 1/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.38 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 24/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.38 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\pyramid-front.png'
+Time: 00:01.47 (Saving: 00:00.02)
+
+Fra:1 Mem:38.91M (Peak 38.91M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:39.23M (峰值 39.23M) | 时间:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Initializing
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Waiting for render to start
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Scene
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Shaders
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Procedurals
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Background
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Camera
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes
+Fra:1 Mem:39.22M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.30M, Peak:0.30M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.15 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.15 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Objects Flags
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Images
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Camera Volume
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Integrator
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Film
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.88M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Baking
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Sample 0/24
+Fra:1 Mem:51.43M (Peak 51.43M) | Time:00:00.17 | Remaining:00:00.48 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 1/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.64 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 24/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.64 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\pyramid-side.png'
+Time: 00:01.71 (Saving: 00:00.02)
+
+Fra:1 Mem:38.91M (Peak 38.91M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:39.23M (峰值 39.23M) | 时间:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Initializing
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Waiting for render to start
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Scene
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Shaders
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Procedurals
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Background
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Camera
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes
+Fra:1 Mem:39.22M (Peak 39.23M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.30M, Peak:0.30M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.14 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.14 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.14 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Objects Flags
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.14 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Images
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Camera Volume
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Integrator
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.15 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Film
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.88M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Baking
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.15 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Sample 0/24
+Fra:1 Mem:51.43M (Peak 51.43M) | Time:00:00.16 | Remaining:00:00.38 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 1/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.34 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 24/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.34 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\pyramid-back.png'
+Time: 00:01.40 (Saving: 00:00.02)
+
+Fra:1 Mem:38.91M (Peak 38.91M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:39.23M (峰值 39.23M) | 时间:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Initializing
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Waiting for render to start
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Scene
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Shaders
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Procedurals
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Background
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Camera
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes
+Fra:1 Mem:39.22M (Peak 39.23M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.11 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.11 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.11 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.11 | Mem:0.30M, Peak:0.30M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.11 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.11 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Objects Flags
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Images
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Camera Volume
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Integrator
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.11 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Film
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.11 | Mem:0.88M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.11 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Baking
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.11 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.11 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.11 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Sample 0/24
+Fra:1 Mem:51.43M (Peak 51.43M) | Time:00:00.13 | Remaining:00:00.30 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 1/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.07 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 24/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.07 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\pyramid-bottom.png'
+Time: 00:01.13 (Saving: 00:00.02)
+
+Fra:1 Mem:38.91M (Peak 38.91M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:39.23M (峰值 39.23M) | 时间:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Initializing
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Waiting for render to start
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Scene
+Fra:1 Mem:39.01M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Shaders
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Procedurals
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Background
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Camera
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:39.10M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Meshes
+Fra:1 Mem:39.22M (Peak 39.23M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.09 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.09 | Mem:0.05M, Peak:0.05M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.09 | Mem:0.30M, Peak:0.30M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.09 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:39.27M (Peak 39.27M) | Time:00:00.09 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.60M, Peak:0.85M | Squishy_pyramid, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Objects Flags
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Images
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Camera Volume
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.88M, Peak:0.88M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Integrator
+Fra:1 Mem:39.55M (Peak 39.55M) | Time:00:00.09 | Mem:0.96M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Film
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.09 | Mem:0.88M, Peak:0.96M | Squishy_pyramid, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.09 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Baking
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.09 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.09 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:39.56M (Peak 39.56M) | Time:00:00.09 | Mem:0.97M, Peak:0.97M | Squishy_pyramid, ViewLayer | Sample 0/24
+Fra:1 Mem:51.43M (Peak 51.43M) | Time:00:00.11 | Remaining:00:00.43 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 1/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.07 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Sample 24/24
+Fra:1 Mem:56.32M (Peak 63.64M) | Time:00:01.07 | Mem:12.56M, Peak:12.56M | Squishy_pyramid, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\assets-source\squishy-pyramid\preview.png'
+Time: 00:01.12 (Saving: 00:00.01)
+
+
+信息: 已保存 "squishy-pyramid.blend"
+STYLE_DONE {"id": "pyramid", "name": "三角锥（初稿）", "blender": "4.4.0", "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin", "bboxMin": [-0.8893687725067139, -0.9141882658004761, -0.8043967485427856], "bboxMax": [0.8893687725067139, 0.9141882658004761, 0.8043967485427856], "vertices": 4100, "triangles": 8196, "glbBytes": 148916, "meshes": 1, "primitives": 1, "materials": 1, "closedManifold": true, "externalTextures": false, "feelId": "clay", "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"}
+18:25:09 | INFO: Starting glTF 2.0 export
+18:25:09 | INFO: Extracting primitive: 球体.015
+18:25:09 | INFO: Primitives created: 1
+18:25:09 | INFO: Finished glTF 2.0 export in 0.023640155792236328 s
+Fra:1 Mem:46.18M (Peak 46.18M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:46.85M (峰值 46.85M) | 时间:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Initializing
+Fra:1 Mem:46.63M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Waiting for render to start
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Scene
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Shaders
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Procedurals
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Background
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Camera
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.07 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes
+Fra:1 Mem:46.98M (Peak 46.98M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:0.62M, Peak:0.62M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Objects Flags
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Images
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Camera Volume
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Integrator
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.08 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Film
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.08 | Mem:1.77M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.08 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Baking
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.08 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.08 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.08 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Sample 0/24
+Fra:1 Mem:59.54M (Peak 59.54M) | Time:00:00.12 | Remaining:00:00.78 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 1/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.28 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 24/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.28 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\flower-front.png'
+Time: 00:01.32 (Saving: 00:00.01)
+
+Fra:1 Mem:46.18M (Peak 46.18M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:46.85M (峰值 46.85M) | 时间:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Initializing
+Fra:1 Mem:46.63M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Waiting for render to start
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Scene
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Shaders
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Procedurals
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Background
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Camera
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes
+Fra:1 Mem:46.98M (Peak 46.98M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.08 | Mem:0.62M, Peak:0.62M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Objects Flags
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Images
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Camera Volume
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Integrator
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Film
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.77M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Baking
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Sample 0/24
+Fra:1 Mem:59.54M (Peak 59.54M) | Time:00:00.11 | Remaining:00:00.54 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 1/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.16 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 24/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.16 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\flower-side.png'
+Time: 00:01.21 (Saving: 00:00.01)
+
+Fra:1 Mem:46.18M (Peak 46.18M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:46.85M (峰值 46.85M) | 时间:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Initializing
+Fra:1 Mem:46.63M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Waiting for render to start
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Scene
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Shaders
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Procedurals
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Background
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Camera
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes
+Fra:1 Mem:46.98M (Peak 46.98M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.62M, Peak:0.62M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Objects Flags
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Images
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Camera Volume
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Integrator
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.09 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Film
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.77M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Baking
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.09 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Sample 0/24
+Fra:1 Mem:59.54M (Peak 59.54M) | Time:00:00.12 | Remaining:00:00.77 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 1/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.32 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 24/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.32 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\flower-back.png'
+Time: 00:01.38 (Saving: 00:00.02)
+
+Fra:1 Mem:46.18M (Peak 46.18M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:46.85M (峰值 46.85M) | 时间:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Initializing
+Fra:1 Mem:46.63M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Waiting for render to start
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Scene
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Shaders
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Procedurals
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Background
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Camera
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes
+Fra:1 Mem:46.98M (Peak 46.98M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.62M, Peak:0.62M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.10 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.10 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Objects Flags
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Images
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Camera Volume
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Integrator
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Film
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.77M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Baking
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Sample 0/24
+Fra:1 Mem:59.54M (Peak 59.54M) | Time:00:00.11 | Remaining:00:00.43 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 1/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.14 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 24/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.14 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\flower-bottom.png'
+Time: 00:01.20 (Saving: 00:00.02)
+
+Fra:1 Mem:46.18M (Peak 46.18M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:46.85M (峰值 46.85M) | 时间:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Initializing
+Fra:1 Mem:46.63M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Waiting for render to start
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Scene
+Fra:1 Mem:46.64M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Shaders
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Procedurals
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Background
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Camera
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:46.72M (Peak 46.85M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Meshes
+Fra:1 Mem:46.98M (Peak 46.98M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.00M, Peak:0.00M | Squishy_flower, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.10M, Peak:0.10M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.09 | Mem:0.62M, Peak:0.62M | Squishy_flower, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.10 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:47.08M (Peak 47.08M) | Time:00:00.10 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.19M, Peak:1.70M | Squishy_flower, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Objects Flags
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Images
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Camera Volume
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.77M, Peak:1.77M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Integrator
+Fra:1 Mem:47.66M (Peak 47.66M) | Time:00:00.10 | Mem:1.85M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Film
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.77M, Peak:1.85M | Squishy_flower, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Baking
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:47.67M (Peak 47.67M) | Time:00:00.10 | Mem:1.86M, Peak:1.86M | Squishy_flower, ViewLayer | Sample 0/24
+Fra:1 Mem:59.54M (Peak 59.54M) | Time:00:00.13 | Remaining:00:00.67 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 1/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.34 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Sample 24/24
+Fra:1 Mem:64.43M (Peak 71.75M) | Time:00:01.34 | Mem:13.45M, Peak:13.45M | Squishy_flower, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\assets-source\squishy-flower\preview.png'
+Time: 00:01.40 (Saving: 00:00.01)
+
+
+信息: 已保存 "squishy-flower.blend"
+STYLE_DONE {"id": "flower", "name": "花朵", "blender": "4.4.0", "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin", "bboxMin": [-1.1742703914642334, -1.2529066801071167, -0.6133378744125366], "bboxMax": [1.1742703914642334, 1.2529066801071167, 0.6133378744125366], "vertices": 8502, "triangles": 17000, "glbBytes": 307376, "meshes": 1, "primitives": 1, "materials": 1, "closedManifold": true, "externalTextures": false, "feelId": "clay", "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"}
+警告: 没有可供合并的网格数据(请检查要合并的物体是否都是网格，比如有一个物体是曲线。此功能仅能合并网格物体)
+18:25:15 | INFO: Starting glTF 2.0 export
+18:25:15 | INFO: Extracting primitive: Puffy_Star_Surface
+18:25:15 | INFO: Primitives created: 1
+18:25:15 | INFO: Finished glTF 2.0 export in 0.024512290954589844 s
+Fra:1 Mem:52.29M (Peak 52.29M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:52.83M (峰值 52.83M) | 时间:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Initializing
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Waiting for render to start
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Scene
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Shaders
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Procedurals
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Background
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Camera
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes
+Fra:1 Mem:52.91M (Peak 52.91M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.51M, Peak:0.51M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.09 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.09 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Objects Flags
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Images
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Camera Volume
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Integrator
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.09 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Film
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.09 | Mem:1.45M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.09 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Baking
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.09 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.09 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.09 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Sample 0/24
+Fra:1 Mem:65.35M (Peak 65.35M) | Time:00:00.11 | Remaining:00:00.51 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 1/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.12 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 24/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.12 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\star-front.png'
+Time: 00:01.17 (Saving: 00:00.01)
+
+Fra:1 Mem:52.29M (Peak 52.29M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:52.83M (峰值 52.83M) | 时间:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Initializing
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Waiting for render to start
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Scene
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Shaders
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Procedurals
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Background
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Camera
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes
+Fra:1 Mem:52.91M (Peak 52.91M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.51M, Peak:0.51M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.08 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Objects Flags
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Images
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Camera Volume
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Integrator
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.08 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Film
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.08 | Mem:1.45M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.08 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Baking
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.08 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.08 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.08 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Sample 0/24
+Fra:1 Mem:65.35M (Peak 65.35M) | Time:00:00.10 | Remaining:00:00.45 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 1/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.13 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 24/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.13 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\star-side.png'
+Time: 00:01.18 (Saving: 00:00.01)
+
+Fra:1 Mem:52.29M (Peak 52.29M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:52.83M (峰值 52.83M) | 时间:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Initializing
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Waiting for render to start
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Scene
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Shaders
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Procedurals
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Background
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Camera
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes
+Fra:1 Mem:52.91M (Peak 52.91M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.51M, Peak:0.51M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.11 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.11 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Objects Flags
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Images
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Camera Volume
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Integrator
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.11 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Film
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.11 | Mem:1.45M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.11 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Baking
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.11 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.11 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.11 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Sample 0/24
+Fra:1 Mem:65.35M (Peak 65.35M) | Time:00:00.13 | Remaining:00:00.45 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 1/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.23 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 24/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.23 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\star-back.png'
+Time: 00:01.28 (Saving: 00:00.01)
+
+Fra:1 Mem:52.29M (Peak 52.29M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:52.83M (峰值 52.83M) | 时间:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Initializing
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Waiting for render to start
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Scene
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Shaders
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Procedurals
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Background
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Camera
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes
+Fra:1 Mem:52.91M (Peak 52.91M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.51M, Peak:0.51M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Objects Flags
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Images
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Camera Volume
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Integrator
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Film
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.45M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Baking
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Sample 0/24
+Fra:1 Mem:65.35M (Peak 65.35M) | Time:00:00.12 | Remaining:00:00.40 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 1/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.12 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 24/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.12 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\artifacts\issue-30\models\star-bottom.png'
+Time: 00:01.18 (Saving: 00:00.02)
+
+帧:1 内存:52.29M (峰值 52.29M) | 时间:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Synchronizing object | Squishy_Surface
+帧:1 内存:52.83M (峰值 52.83M) | 时间:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Initializing
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Waiting for render to start
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Scene
+Fra:1 Mem:52.62M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Shaders
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Procedurals
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Background
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Camera
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:52.70M (Peak 52.83M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Meshes
+Fra:1 Mem:52.91M (Peak 52.91M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.00M, Peak:0.00M | Squishy_star, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.08M, Peak:0.08M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.51M, Peak:0.51M | Squishy_star, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:52.99M (Peak 52.99M) | Time:00:00.10 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:0.97M, Peak:1.39M | Squishy_star, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Objects Flags
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Images
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Camera Volume
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.45M, Peak:1.45M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Integrator
+Fra:1 Mem:53.47M (Peak 53.47M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Film
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.45M, Peak:1.53M | Squishy_star, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Baking
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:53.48M (Peak 53.48M) | Time:00:00.10 | Mem:1.53M, Peak:1.53M | Squishy_star, ViewLayer | Sample 0/24
+Fra:1 Mem:65.35M (Peak 65.35M) | Time:00:00.12 | Remaining:00:00.43 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 1/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.20 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Sample 24/24
+Fra:1 Mem:70.24M (Peak 77.56M) | Time:00:01.20 | Mem:13.13M, Peak:13.13M | Squishy_star, ViewLayer | Finished
+Saved: 'D:\squishy-studio-issue-30\assets-source\squishy-star\preview.png'
+Time: 00:01.25 (Saving: 00:00.02)
+
+
+信息: 已保存 "squishy-star.blend"
+STYLE_DONE {"id": "star", "name": "五角星", "blender": "4.4.0", "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin", "bboxMin": [-1.1064430475234985, -1.0623714923858643, -0.5486434102058411], "bboxMax": [1.1064430475234985, 1.0623714923858643, 0.5486434102058411], "vertices": 6944, "triangles": 13884, "glbBytes": 251284, "meshes": 1, "primitives": 1, "materials": 1, "closedManifold": true, "externalTextures": false, "feelId": "clay", "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"}
+BlenderMCP addon unregistered
+
+Blender quit

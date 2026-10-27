@@ -1,0 +1,79 @@
+[
+  {
+    "id": "cloud",
+    "legacy": false,
+    "comparedCoreFrames": 469,
+    "maxInnerGap": 0.007999940934895875,
+    "minSigned": 0.0005726553552342629,
+    "maxTotalCorrection": 0.005315739049968477,
+    "maxSingleCorrection": 0.0037173229301137134,
+    "maxThicknessError": 2.332591866344852e-7,
+    "violations": 0
+  },
+  {
+    "id": "paw",
+    "legacy": false,
+    "comparedCoreFrames": 469,
+    "maxInnerGap": 0.00799999453291286,
+    "minSigned": 0.0005245679726732785,
+    "maxTotalCorrection": 0.0011764464396661436,
+    "maxSingleCorrection": 0.0010773505469502472,
+    "maxThicknessError": 2.2558178969754594e-7,
+    "violations": 0
+  },
+  {
+    "id": "cylinder",
+    "legacy": false,
+    "comparedCoreFrames": 469,
+    "maxInnerGap": 0.007999968615296263,
+    "minSigned": 0.0028674617747787884,
+    "maxTotalCorrection": 0,
+    "maxSingleCorrection": 0,
+    "maxThicknessError": 2.056441610037013e-7,
+    "violations": 0
+  },
+  {
+    "id": "donut",
+    "legacy": false,
+    "comparedCoreFrames": 469,
+    "maxInnerGap": 0.00799999444802945,
+    "minSigned": 0.000519153009519746,
+    "maxTotalCorrection": 0.007498164606922792,
+    "maxSingleCorrection": 0.005170773523885363,
+    "maxThicknessError": 3.142709062882443e-7,
+    "violations": 0
+  },
+  {
+    "id": "pyramid",
+    "legacy": false,
+    "comparedCoreFrames": 469,
+    "maxInnerGap": 0.008000025574968369,
+    "minSigned": 0.0008936349412913491,
+    "maxTotalCorrection": 0,
+    "maxSingleCorrection": 0,
+    "maxThicknessError": 3.48131282272221e-7,
+    "violations": 0
+  },
+  {
+    "id": "flower",
+    "legacy": false,
+    "comparedCoreFrames": 469,
+    "maxInnerGap": 0.00799985414065039,
+    "minSigned": 0.0006748998072402397,
+    "maxTotalCorrection": 0.0003363746185097213,
+    "maxSingleCorrection": 0.0003363746185097379,
+    "maxThicknessError": 2.431727285524127e-7,
+    "violations": 0
+  },
+  {
+    "id": "star",
+    "legacy": false,
+    "comparedCoreFrames": 469,
+    "maxInnerGap": 0.007999903878274237,
+    "minSigned": 0.0005417968939937522,
+    "maxTotalCorrection": 0.007909257470878867,
+    "maxSingleCorrection": 0.0054502000902246165,
+    "maxThicknessError": 2.1846559134300336e-7,
+    "violations": 0
+  }
+]

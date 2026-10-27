@@ -1,0 +1,26 @@
+{
+  "id": "pyramid",
+  "name": "三角锥（初稿）",
+  "blender": "4.4.0",
+  "coordinates": "meters; glTF Y-up; front +Z; bounds-centered origin",
+  "bboxMin": [
+    -0.8893687725067139,
+    -0.9141882658004761,
+    -0.8043967485427856
+  ],
+  "bboxMax": [
+    0.8893687725067139,
+    0.9141882658004761,
+    0.8043967485427856
+  ],
+  "vertices": 4100,
+  "triangles": 8196,
+  "glbBytes": 148916,
+  "meshes": 1,
+  "primitives": 1,
+  "materials": 1,
+  "closedManifold": true,
+  "externalTextures": false,
+  "feelId": "clay",
+  "reviewStatus": "draft; paw four toes + one raised palm; pyramid triangular-base tetrahedron"
+}

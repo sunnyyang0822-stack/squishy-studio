@@ -1,0 +1,1 @@
+PASS: origin/main baseline aaaed2f19a5a2f3a34f4b9200d3189e2a9bed116; 2622 operations, normal/reduced motion at 30/60/120 Hz; parameters and every return, vertex and state strictly equal.

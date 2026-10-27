@@ -1,0 +1,19 @@
+TAP version 13
+# cloud: real surface mounted
+# cloud: press, drag and natural recovery passed
+# cloud: cancellation and color restore passed
+# Subtest: cloud×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle
+ok 1 - cloud×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle
+  ---
+  duration_ms: 9925.4492
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10956.9485

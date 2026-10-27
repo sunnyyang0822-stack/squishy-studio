@@ -4,11 +4,12 @@ const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const { chromium } = require('playwright');
 
-const base = 'http://127.0.0.1:4180';
+const port = process.env.DETAIL_TEST_PORT || '4180';
+const base = `http://127.0.0.1:${port}`;
 const path = '/squishy/cloud/';
 let browser, server;
 before(async () => {
-  server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: '4180' } });
+  server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: port } });
   for (let i = 0; i < 60; i++) {
     try { if ((await fetch(base)).ok) break; } catch {}
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -26,6 +27,66 @@ async function show(page, id) {
   if (await button.isVisible()) await button.click();
 }
 const current = (page, id) => page.locator(`.workflow-progress li[data-step="${id}"]`).getAttribute('aria-current');
+
+test('重新开始仅在黏土薄蜡制作步骤显示，圆球保留既有体验入口，保持配方与步骤', async () => {
+  const page = await browser.newPage();
+  await page.goto(base + path + '?style=orb&step=shell&waxThickness=thin&coreColor=mint&shellColor=sky');
+  await ready(page);
+  const restart = page.getByRole('button', { name: '重新开始', exact: true });
+  assert.equal(await restart.isVisible(), true);
+  const original = page.url();
+  await restart.click();
+  assert.equal(page.url(), original);
+  assert.equal(await current(page, 'shell'), 'step');
+  await next(page);
+  assert.equal(await restart.isVisible(), true);
+  await next(page);
+  assert.equal(await restart.isVisible(), false);
+  await page.getByRole('button', { name: '开始捏捏' }).click();
+  assert.equal(await restart.isVisible(), true);
+  for (const config of [
+    'style=orb&waxThickness=thin',
+    'style=orb&step=play',
+    'style=orb&step=play&waxThickness=thin&coreMaterial=marshmallow',
+    'style=orb&step=play&waxThickness=thin&coreMaterial=butter',
+    'style=donut&step=play&waxThickness=thin',
+    'style=orb&step=play&waxThickness=thin&shellMaterial=sugar',
+  ]) {
+    await page.goto(base + path + '?' + config); await ready(page);
+    assert.equal(await restart.isVisible(), false, config);
+    assert.equal(await page.locator('.step-back').count(), 1);
+  }
+  await page.close();
+});
+
+test('八种样式黏土从内芯下一步保留薄蜡配方与独立颜色，不改默认中蜡', async () => {
+  const page = await browser.newPage();
+  for (const style of ['orb', 'cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']) {
+    await page.goto(base + path + `?style=${style}&coreColor=mint&shellColor=sky`); await ready(page);
+    assert.equal(await current(page, 'core'), 'step');
+    assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).isVisible(), false);
+    assert.equal(await page.locator('.toy-mount').getAttribute('data-color'), 'mint');
+    assert.equal(new URL(page.url()).searchParams.has('waxThickness'), false, 'Default medium stays implicit');
+    await next(page);
+    assert.equal(await current(page, 'shell'), 'step');
+    await show(page, 'waxThickness');
+    assert.equal(await choice(page, '蜡的厚度', '中').isChecked(), true);
+    await choice(page, '蜡的厚度', '薄').check();
+    await page.waitForFunction(() => document.querySelector('.thin-wax-restart')?.disabled === false);
+    const params = new URL(page.url()).searchParams;
+    assert.equal(params.get('style'), style); assert.equal(params.get('step'), 'shell');
+    assert.equal(params.get('waxThickness'), 'thin'); assert.equal(params.get('coreColor'), 'mint'); assert.equal(params.get('shellColor'), 'sky');
+    assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), style);
+    assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'clay');
+    assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).isVisible(), true);
+    await page.getByRole('button', { name: '上一步', exact: true }).click();
+    await page.waitForFunction(() => document.querySelector('.toy-mount')?.dataset.color === 'mint');
+    await next(page);
+    await page.waitForFunction(() => document.querySelector('.thin-wax-restart')?.disabled === false);
+    assert.equal(new URL(page.url()).searchParams.get('waxThickness'), 'thin');
+  }
+  await page.close();
+});
 async function assertThreeAcross(page, name) {
   const boxes = await group(page, name).getByRole('radio').evaluateAll(inputs => inputs.map(input => input.getBoundingClientRect().toJSON()));
   assert.equal(boxes.length, 3, name);
@@ -49,7 +110,7 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   await page.goto(base + '/collections/');
   assert.equal(await page.locator('.collection-ready a[href*="style=orb"]').count(),1);
   assert.equal(await page.locator('.collection-pending').count(),0,'旧合集占位卡片已移除');
-  await page.getByRole('link', { name: '开始制作' }).click();
+  await page.getByRole('link', { name: '开始制作' }).and(page.locator('.collection-ready a[href*="style=orb"]')).click();
   await ready(page);
   assert.match(page.url(), /\/squishy\/cloud\//);
   assert.equal(await page.locator('.step-head').evaluate(el => el.classList.contains('sr-only')), true);
@@ -147,6 +208,7 @@ test('十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史�
   await choice(page, '内芯颜色', '薄荷绿').focus();
   await page.keyboard.press('ArrowRight');
   assert.equal(await group(page, '内芯颜色').getByRole('radio', { checked: true }).count(), 1);
+  const selectedCoreColor = await group(page, '内芯颜色').getByRole('radio', { checked: true }).inputValue();
   await next(page);
   assert.equal(await group(page, '外壳颜色').getByRole('radio').count(), 10);
   await choice(page, '外壳颜色', '奶油粉').check();
@@ -162,16 +224,21 @@ test('十色、蜡厚度条件焦点和切回恢复；键盘及浏览器历史�
   await show(page, 'waxThickness');
   assert.equal(await choice(page, '蜡的厚度', '厚').isChecked(), true);
   await page.goBack();
+  await page.waitForFunction(() => document.querySelector('[data-step=core]').getAttribute('aria-current') === 'step');
   assert.equal(await current(page, 'core'), 'step');
   await page.goForward();
+  await page.waitForFunction(() => document.querySelector('[data-step=shell]').getAttribute('aria-current') === 'step');
   assert.equal(await current(page, 'shell'), 'step');
   await show(page, 'waxThickness');
   assert.equal(await choice(page, '蜡的厚度', '厚').isChecked(), true);
   assert.equal(await page.locator('.toy-mount canvas').count(), 1);
   await page.reload(); await ready(page);
-  await progress(page,0);
+  await progress(page,1);
+  await show(page, 'waxThickness');
+  assert.equal(await choice(page, '蜡的厚度', '厚').isChecked(), true, '刷新保留外壳配方与步骤');
+  await page.getByRole('button', { name: '上一步' }).click();
   await show(page, 'coreColor');
-  assert.equal(await choice(page,'内芯颜色','奶油粉').isChecked(),true,'刷新开始新的默认配方');
+  assert.equal(await group(page, '内芯颜色').getByRole('radio', { checked: true }).inputValue(), selectedCoreColor, '刷新保留内芯配方');
   assert.equal(await current(page, 'core'), 'step');
   await page.goto(base + path + '?style=missing&step=invalid'); await ready(page);
   assert.equal(page.url(),base + path + '?style=orb');
@@ -190,6 +257,10 @@ test('加载失败可继续选择、前进及重试，快速换色保持最后�
   await page.getByRole('button', { name: '上一步' }).click();
   await show(page, 'coreColor');
   assert.equal(await choice(page, '内芯颜色', '薄荷绿').isChecked(), true);
+  // Returning to core starts another request; let that request fail while the
+  // route is still blocked so the button really exercises explicit retry.
+  await page.waitForSelector('.toy-stage[data-state="error"]');
+  assert.equal(await page.getByRole('button', { name: '重新加载' }).isVisible(), true);
   await page.unroute('**/squishy-orb.glb');
   await page.getByRole('button', { name: '重新加载' }).click();
   await ready(page);
@@ -339,5 +410,98 @@ test('动态高度、横竖屏与安全留白变化复用同一画布，配方�
   await page.locator('.step-next').scrollIntoViewIfNeeded();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   assert.equal(await canvas.evaluate(el=>el===document.querySelector('.toy-mount canvas')),true);
+  await page.close();
+});
+
+
+test('详情样式和配方直达刷新、五步及浏览器返回保持', async () => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  const errors = []; page.on('pageerror', error => errors.push(error.message));
+  await page.goto(base + path + '?style=donut&coreMaterial=butter');
+  await ready(page);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'donut');
+  assert.match(await page.title(), /甜甜圈/);
+  assert.equal(await choice(page, '内芯材质', '棉花糖').isDisabled(), false);
+  assert.equal(await choice(page, '内芯材质', '慢回弹').isDisabled(), false);
+  assert.equal(await choice(page, '内芯材质', '慢回弹').isChecked(), true);
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'slow-rebound');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-appearance-id'), 'full-matte');
+  assert.equal(await page.locator('.style-notice').isHidden(), true);
+  await show(page, 'coreColor'); await choice(page, '内芯颜色', '薄荷绿').check();
+  await next(page); await choice(page, '外壳颜色', '雾蓝').check();
+  await page.reload(); await ready(page);
+  assert.equal(await current(page, 'shell'), 'step');
+  assert.equal(await choice(page, '外壳颜色', '雾蓝').isChecked(), true);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'donut');
+  await next(page); await choice(page, '装饰', '3').check();
+  await next(page);
+  await page.reload();
+  await page.locator('.making-blank').waitFor({ state: 'visible' });
+  assert.equal(await current(page, 'making'), 'step');
+  await page.getByRole('button', { name: '开始捏捏' }).click(); await ready(page);
+  assert.equal(await current(page, 'play'), 'step');
+  await page.getByRole('button', { name: '返回修改' }).click();
+  assert.equal(await choice(page, '装饰', '3').isChecked(), true);
+  await page.goBack(); await ready(page);
+  assert.equal(await current(page, 'play'), 'step');
+  const starRecipe = new URL(page.url()); starRecipe.searchParams.set('style', 'star');
+  await page.goto(starRecipe.href); await ready(page);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'star');
+  await page.reload(); await ready(page);
+  assert.equal(await current(page, 'play'), 'step');
+  assert.match(await page.title(), /五角星/);
+  assert.equal(new URL(page.url()).searchParams.get('decoration'), 'three');
+  assert.equal(new URL(page.url()).searchParams.get('coreMaterial'), 'butter');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'slow-rebound');
+  assert.equal(await page.locator('.toy-mount').getAttribute('data-appearance-id'), 'full-matte');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('制作页去掉样式选择框，步骤条在页头中间且窄屏完整换行', async () => {
+  const page = await browser.newPage();
+  const errors = []; page.on('pageerror', error => errors.push(error.message));
+  await page.goto(base + path + '?style=donut'); await ready(page);
+  assert.equal(await page.locator('.style-picker, select[name="styleId"]').count(), 0);
+  assert.equal(await page.getByRole('combobox', { name: '捏捏样式' }).count(), 0);
+  assert.deepEqual(await page.locator('.detail-topbar > *').evaluateAll(items => items.map(item => item.className)), ['detail-back', 'workflow-progress', 'detail-brand']);
+  for (const theme of ['day', 'night']) {
+    await page.locator('html').evaluate((html, theme) => { html.dataset.theme = theme; }, theme);
+    for (const viewport of [{width:1440,height:900},{width:1024,height:768},{width:768,height:600},{width:760,height:600},{width:390,height:844},{width:320,height:568},{width:844,height:390}]) {
+      await page.setViewportSize(viewport);
+      // The existing renderer aligns the input overlay on its next resize frame.
+      await page.waitForFunction(() => document.documentElement.scrollWidth <= innerWidth);
+      const [back, progressBar, brand] = await Promise.all(['.detail-back','.workflow-progress','.detail-brand'].map(selector => page.locator(selector).boundingBox()));
+      assert.ok(back.height >= 44 && brand.height >= 44, '页头链接触控区域');
+      assert.ok(back.y === brand.y, '返回与品牌同排');
+      if (viewport.width > 760) {
+        assert.ok(progressBar.x > back.x + back.width && progressBar.x + progressBar.width < brand.x, '步骤条位于两个链接中间');
+        assert.ok(progressBar.y >= back.y && progressBar.y + progressBar.height <= back.y + back.height, '桌面步骤条与链接同排');
+      } else {
+        assert.ok(progressBar.y >= back.y + back.height, '窄屏步骤条换行');
+      }
+      assert.ok(progressBar.width >= 5 * 44, '五个步骤有足够空间');
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      assert.equal(await page.locator('.progress-label:visible').count(), 5);
+      if (process.env.HEADER_CAPTURE_DIR && [1440,390].includes(viewport.width)) {
+        const { mkdirSync } = require('node:fs'); mkdirSync(process.env.HEADER_CAPTURE_DIR, { recursive: true });
+        await page.screenshot({ path: `${process.env.HEADER_CAPTURE_DIR}/${viewport.width}-${theme}.png`, fullPage: true });
+      }
+    }
+  }
+  await page.setViewportSize({width:1440,height:900});
+  for (let index = 0; index < 5; index++) {
+    await progress(page,index);
+    if (index < 4) await page.locator('.step-next').click();
+  }
+  await ready(page);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'donut', '去掉选择框仍保留入口样式');
+  await page.locator('.detail-back').click();
+  assert.equal(new URL(page.url()).hash, '#style-donut');
+  await page.locator('#style-star .style-entry').click(); await ready(page);
+  assert.match(await page.title(), /五角星/);
+  assert.equal(new URL(page.url()).searchParams.get('style'), 'star', '通过合集仍可选择其他样式');
+  assert.deepEqual(errors, []);
   await page.close();
 });

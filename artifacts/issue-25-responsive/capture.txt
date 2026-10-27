@@ -1,0 +1,3 @@
+{"recordings":2,"errors":[],"exitCode":0}
+
+EXIT_CODE=0

@@ -1,0 +1,11 @@
+Bundle SHA-256: 3e8000326e0d4fd5bb87e5d25160be700460ded022c31500fedfa9528d6e785c
+npm run build:orb: exit 0 -> larger-layout-build.txt
+node .tmp/issue-38/layout-check.cjs: exit 0 -> larger-layout-measurements.txt; equivalent viewport and dominance assertions are checked in tests/thin-wax-browser.test.cjs.
+node --test tests/thin-wax-browser.test.cjs: 8/8 exit 0, 54404.8268ms -> larger-layout-browser-tests.txt.
+node .tmp/issue-38/layout-rotation.cjs: exit 0 -> larger-layout-rotation.txt (mouse background drag ~90deg, actual orb input remains inside canvas).
+node scripts/capture-thin-wax.cjs --capture-only: exit 0; desktop/mobile day/night, same layout bundle.
+node scripts/capture-thin-wax.cjs --performance-only: exit 0 after capture/tests stopped; same bundle hash.
+Performance: {"samples":570,"medianMs":6.400000000372529,"p95Ms":10.199999999254942,"maximumMs":18.100000001490116,"maximumCountJump":1,"measurement":"MutationObserver after renderer.render completion; all intervals retained; no video/GPU buffer probe"}
+Host Edge launch uses TEMP/TMP inside project .tmp/runtime; no temporary/profile files committed.
+No deformation, core-feel, damage, fragment-physics or collection-radius changes in this commit. Earlier cf10bbd 25 geometry+37 core regression and earlier full-suite logs are historical, not rerun as current results.
+PR remains draft and unmerged pending user visual review and GitHub checks.

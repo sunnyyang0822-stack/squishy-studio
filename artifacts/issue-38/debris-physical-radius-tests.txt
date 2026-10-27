@@ -1,0 +1,10 @@
+✔ repeated local presses can strip the complete real shell once without duplicate cells or regrowth (7787.4664ms)
+ℹ {"completeShellPanels":180,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":180,"minY":-1.348,"maxRadius":1.295915585738315,"pileTop":-0.6920854949460187,"gridCells":2194},"physicalMaxRadius":1.2991347350663738,"physicalSamples":44700}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7866.5623

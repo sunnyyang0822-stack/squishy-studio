@@ -1,10 +1,12 @@
 # 可复用圆球质感
 
+薄蜡是独立外壳，不是内芯质感。复用入口为 `getWaxPreset('thin-wax')`，见 [预设接入合同](thin-wax-preset.md)。按用户最新授权，制作预览为当前八种造型的 `clay × wax × thin` 和 `marshmallow × wax × thin` 调用同一预设：圆球、云朵、猫爪、圆柱、甜甜圈、三角锥、花朵、五角星。继续使用各自原内芯工厂和同一输入，不复制场景或调整已确认手感。内芯与薄蜡在屏幕上的大小、位置保持对齐，制作预览不使用托盘承接。默认中蜡、厚蜡及慢回弹不扩展；所有棉花糖的最终试捏仍保持原行为，不因预览启用而显示薄蜡或新增重开按钮。
+
+非圆球棉花糖由场景显式传入 `fullSurfaceSupport: true`，用于检查和约束实际壳层的内／外表面、边与断面；预设仅透传这一几何选项，默认仍为 `false`，不将它绑定成新的 `feelId`，也不修改内芯阻力、渐进按入、留痕或恢复参数。原黏土和圆球分支保持默认选项。棉花糖状态与测量边界见 [专项说明](issue-38-orb-marshmallow-wax.md)，壳芯颜色、状态与证据见 [薄蜡说明](issue-38-thin-wax.md)。新七款棉花糖已通过一次完整采样几何专项，仍需浏览器与视觉查验；猫爪贴合及性能继续诊断，不能以几何测试通过替代视觉通过。用户已接受猫爪以外的黏土视觉，猫爪仍需优化。交付先提供走查链接，经用户确认后才合并；GitHub 暂不可用时不绕过检查或合并。
+
 新增独立棉花糖：`getOrbFeel('marshmallow')` / `{ feelId: 'marshmallow' }`，工厂为 `src/orb-marshmallow.mjs`。单次局部按压从浅到深渐进（响应8/s、当前接触区2秒压力进程），离开的浅轨迹冻结，多次按压保留 .70 模型单位/至少24%安全半径的边界；释放和取消保留全部当前形态；只有用户显式恢复才复原。光学预设独立于形变，详见 [参数、测量、证据与接入](issue-26-marshmallow.md)。以下黏土参数与行为保持原样。当前登记以 `src/orb-feels.mjs` 为准。
 
 已确认的内陷行为正式命名为 **黏土**，稳定调用标识为 **`clay`**。命名的是按压行为，不是光学材质或颜色。默认圆球与后续调用它的样式共享同一实现。2026-10-22 按用户要求整体提高交互阻尼，见 [当前阻尼与实测](issue-16-clay-damping.md)。
-
-2026-10-23 用户走查确认当前棉花糖可保存为预设：局部渐进按压、连续浅轨迹、停住下一帧继续局部深入、旧轨迹及松手后保持；稳定预设ID为 marshmallow。后续样式直接复用该预设，未经新的手感需求不调整已确认参数。
 
 ## 预制材质与跨样式调用
 
@@ -29,7 +31,7 @@ const material = preset.createMaterial(sourceMaterial);
 
 注册表为 src/orb-presets.mjs 的不可变 orbPresets；稳定ID clay、marshmallow、slow-rebound。原 { feelId: 'marshmallow' } 仍兼容并取得同一光学工厂，显式feelId/appearanceId优先于preset默认值。shape/styleId不进入手感工厂，因此其他兼容样式无需复制场景即可调用。新版棉花糖足迹半径 .40（原 .66），滑动经过部分仅留下浅痕，停住后的持续加深只作用于当前接触区，历史轨迹逐顶点冻结；单点影响不到6%实际圆球顶点，足迹外顶点逐值不变；中心响应曲线、渐进过程和松手保持不变。
 
-预设可复用不表示任意模型已验证：当前形变适用于现有归一化近圆/椭球网格；比例或非凸新模型应验证足迹尺度、命中和穿面。大厅当前占位形状仍使用已验证圆球，没有新增模型保证。测试 tests/orb-presets.test.cjs 验证预设不可变、未知ID、工厂映射、独立形变和材质隔离。
+预设可复用不表示任意模型已验证：圆球沿原径向分支；本轮七款真实模型通过下述可选几何适配复用已确认工厂。其他比例或非凸模型仍应验证足迹尺度、命中和穿面。测试 tests/orb-presets.test.cjs 验证预设不可变、未知ID、工厂映射、独立形变和材质隔离。
 
 ## 新样式直接复用
 
@@ -68,7 +70,29 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 网格需有可写 POSITION/NORMAL、均匀连续表面；黏土的局部半径/采样距离按当前模型单位设定，适合归一化、近圆/椭球的外表面。换外观可直接复用；全新凹形、多部件或比例悬殊的模型需先验证坐标、尺度与接触，不能仅靠名称保证任何网格都获得相同效果。光泽和昼夜灯光由场景负责，不是黏土算法的依赖。
 
+## 非球形几何适配（Issue #30）
+
+慢回弹预览另支持当前输入射线的空间适配：`getPressDirection` 返回模型局部的向外单位方向，工厂将新增深度沿其反向累积，恢复沿历史位移返回。七款通过 `surfaceGeometry.contactRadius`/`createContactSafety` 限制沿射线的真实壳厚与面方向；原球提供独立 `getPressRadius`/`constrainPress`，保留原欧氏足迹。慢回弹专用 `continuousFootprint: true` 启用三角形内部距离。以上选项未提供时，三种工厂与固定交付基线逐帧严格相同；手感参数没有重新调节。新七模型的展示比例由资产决定，各质感统一 `[1,1,1]`，`full-matte` 光学不再拉伸雕刻模型。
+
+新七款支持 `clay`、`marshmallow` 和 `slow-rebound`。棉花糖明确复用 PR #32 的 `f9c223d87d52d603a721d726b54a0d5568c72956` 渐进局部按压版本；慢回弹复用 `aaaed2f19a5a2f3a34f4b9200d3189e2a9bed116` 主线已确认版本，参数见 `docs/issue-25-responsive-pressure.md`。统一调用 `createOrbPreview(mount, { styleId: 'donut', presetId: 'marshmallow' })`；黏土使用 `presetId: 'clay'`，慢回弹使用 `presetId: 'slow-rebound'` 并采用其默认 `full-matte` 外观。三者共用原 `prepare/commit/dispose` 生命周期。样式登记在 `src/squishy-styles.mjs`，与质感登记分开。
+
+`src/surface-clay.mjs` 向同一个 `getOrbFeel('clay').createDeformation` 传入可选 `surfaceGeometry`：只提供每顶点几何方向、可压入半径、表面邻域和路径采样。工厂的 `.66` 足迹、`.04` 采样间距、按压强度、5/s 响应、85% 留痕、释放与恢复逻辑未调参；未传此选项的圆球继续执行原分支。等价球空间查询有逐帧相等回归，原圆球测试原样保留。
+
+真实甜甜圈不能采用朝球心的方向或椭球补点，因此此可选几何契约必需。新适配沿真实网格图计算距离，不通过空孔补出球面路径。经每面有向体积验证的星形可参数化表面使用自身原始径向几何；猫爪、甜甜圈使用局部法线、内部厚度、曲率及三角形安全界限，界限只减不增地平滑。恢复始终回到各自原始网格。几何安全边界会影响薄处能压多深，不改变材料时序参数。
+
+棉花糖同样接收可选 `surfaceGeometry`：方向与安全厚度来自真实几何，当前接触区及待处理路径都用真实表面邻域，避免甜甜圈跨孔相互按压。`.40` 足迹、`.04` 路径采样、8/s 响应、2 秒局部压力进程、`.06` 浅滑痕、40ms 单帧保护、停住后下一帧局部加深与旧轨逐值冻结均保留。猫爪的实际位移安全约束只缩减违规三角形关联的新增位移，未改变材料压力或卸载规则。几何安全厚度可能限制薄处最终深度。
+
+`node scripts/check-marshmallow-baseline.cjs` 对固定 PR #32 head 验证正常/减少动态下原圆球逐帧位置、状态与返回值严格相等；七模型 CPU/GPU 用真实 GLB 检查渐进过程、局部驻留、保持与显式恢复，见 `tests/squishy-marshmallow*.test.cjs`。
+
+慢回弹同样只新增可选几何方向、安全厚度、沿面路径及邻域查询，不修改 `slowReboundParameters`。`node scripts/check-slow-rebound-baseline.cjs` 对固定主线验证正常/减少动态、30/60/120Hz 共2622操作，参数对象及逐帧位置/状态/返回值严格相等。七模型对应 `tests/squishy-slow-rebound*.test.cjs`，检查局部渐进、浅滑痕、取消后继续恢复、自然精确回到各自原始模型，以及 `full-matte` 配方/相机/旋转/清理。薄处达到几何安全上限后继续驻留不会越过该边界。
+
+猫爪采用三角形内部传播的一阶 Fast Marching 邻域，减少只沿网格边传播造成的压痕细褶；压力半径、模板时序与回弹参数不变。此近似保留钝角/非因果更新的单边回退，其他六款仍走原邻域及路径分支。局部实际位移安全投影保留原8%有向面积裕量，危险面只约束自身附近增量。细节、失败案例和证据见 `docs/issue-30-paw-revision.md`。
+
+这套适配已针对本次资产验证，不承诺任意输入网格都兼容。详细数学前提、已发现的失败案例、视觉证据与有限验证范围见 [独立验证](issue-30-validation.md) 和 [交付说明](issue-30-clay-styles.md)。
+
 ## 独立慢回弹 `slow-rebound`
+
+2026-10-23 走查反馈修订：120ms平滑起步、随后以pressSpeed .45模型单位/s匀速深入；长按限深提升至.46（径向安全限深50%），约0.82秒达到旧深度后可继续压深。拖动速度1.1、移动限深.20，停留.12秒后继续静止深压。原回弹.80/s、减少动态5/s、收敛.00001不变；不改灯光和外观。参数、速度曲线与证据见 [走查修订记录](issue-25-responsive-pressure.md)，下方保留原始交付历史。
 
 工厂为 `src/orb-slow-rebound.mjs` 的 `createSlowReboundDeformation`，参数集中在同文件 `slowReboundParameters`。通过 `getOrbFeel('slow-rebound')` 或 `createOrbPreview(mount, { feelId: 'slow-rebound' })` 调用，统一接口不变，每次调用独立分配原始网格快照、压痕、当地接触时间与显式恢复状态。它缓慢压入、缓慢完整回弹，不保留黏土的永久压痕。
 
@@ -82,7 +106,7 @@ const deformation = feel.createDeformation(positions, normals, { reducedMotion }
 
 自动回弹只在没有显式恢复时推进；`beginRestore/applyRestore` 交给现有换色时钟独占网格。`interruptRestore` 或新输入从当下形态接管，随后旧痕、新痕都继续自动恢复。取消结束施力但不瞬间清空形状。后台结束输入并暂停模拟，回到前台从当前网格继续；不会将后台墙钟时间作为一帧压入或回弹。减少动态效果保留缓慢按压，将释放恢复系数提高到5/s。
 
-外观与行为独立：`src/orb-appearance.mjs` 的 `full-matte` 将模型展示缩放为 `[1, 1.06, 1.10]`，使高度和前后厚度更饱满；十种颜色的线性着色统一乘 `.94`，保持色相、色卡标识及哑光参数。制作页仅给 `butter` 组合 `{ feelId: 'slow-rebound', appearanceId: 'full-matte' }`；`clay`、棉花糖使用原样的 `matte`（缩放 `[1,1,1]`、着色增益1）。直接调用 `getOrbFeel` 不会隐式修改模型或颜色。场景外观变化同样重建独立实例，颜色变化不重建。
+外观与行为独立：`src/orb-appearance.mjs` 的 `full-matte` 按用户最新要求与黏土／棉花糖圆球统一为 `[1, 1, 1]`，不再额外放大高度和前后厚度；十种颜色的线性着色统一乘 `.94`，保持色相、色卡标识及哑光参数。制作页仅给 `butter` 组合 `{ feelId: 'slow-rebound', appearanceId: 'full-matte' }`；`clay`、棉花糖使用原样的 `matte`（缩放 `[1,1,1]`、着色增益1）。直接调用 `getOrbFeel` 不会隐式修改模型或颜色。场景外观变化同样重建独立实例，颜色变化不重建。
 
 参数、几何量测、实际录屏、测试与回滚见 [Issue #25 交付记录](issue-25-slow-rebound.md)。这是适用于现有归一化圆球的受控视觉近似，不代表经过物性校准的真实记忆海绵。
 

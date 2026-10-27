@@ -1,0 +1,23 @@
+✔ paw core, cracks and actual shell uploads stay identical with certified nearest-query reuse disabled (27932.8834ms)
+✔ identical local queries reuse only unchanged live triangles and stay equal to a cache-disabled full BVH (883.4036ms)
+ℹ {"id":"paw","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":3124,"nearestTriangles":2342,"gridQueries":82,"gridSweeps":0,"cachedQueries":244}}
+ℹ {"id":"donut","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":4347,"nearestTriangles":2879,"gridQueries":67,"gridSweeps":0,"cachedQueries":242}}
+✔ a different triangle entering or leaving a cached search region invalidates the result; caches cannot cross tree instances (1.5234ms)
+✔ local live-triangle grid preserves full BVH results, including ties, dynamic refit and out-of-grid fallback (949.9934ms)
+ℹ {"id":"orb","actualGridQueries":1466,"actualGridSweeps":732}
+ℹ {"id":"paw","actualGridQueries":1501,"actualGridSweeps":726}
+ℹ {"id":"donut","actualGridQueries":1518,"actualGridSweeps":726}
+✔ same-panel edge deduplication preserves every distinct sampled position and exactly the same collision fraction (332.7723ms)
+ℹ {"id":"orb","logicalQueries":400,"actualQueries":293,"distinctSamplePairs":293}
+ℹ {"id":"paw","logicalQueries":400,"actualQueries":398,"distinctSamplePairs":398}
+ℹ {"id":"donut","logicalQueries":400,"actualQueries":299,"distinctSamplePairs":299}
+✔ finite-segment BVH pruning equals a complete live-triangle scan, including inside boxes, parallel axes and signed directions (989.5206ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28067.6657
+EXIT_CODE=0

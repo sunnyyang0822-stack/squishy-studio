@@ -1,0 +1,15 @@
+✔ real folded paw distinguishes a false face-normal penetration from a true penetration using independent ray parity (982.1552ms)
+ℹ {"expectedInside":false,"independentUniqueRayHits":[0,2,0],"robustSignedDistance":0.03808787054371515,"legacySignedDistance":-0.03808787054371515}
+ℹ {"expectedInside":true,"independentUniqueRayHits":[3,3,3],"robustSignedDistance":-0.0002773505469502473,"legacySignedDistance":-0.0002773505469502473}
+✔ closed concave solid with duplicated seam vertices has analytic inside/outside signs after dynamic refit (14.7943ms)
+✔ marshmallow paw clearance certificates preserve actual shell geometry through deep/drag/release/restore (21509.2036ms)
+ℹ {"samples":77,"thickness":0.014,"attachedMinSignedDistance":0.0027098422236632243,"detachedViolations":0}
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 22776.8288
+EXIT_CODE=0

@@ -1,0 +1,10 @@
+✔ a slanted curved chip contacting a high pile keeps its complete physical footprint inside the tray (38.4659ms)
+ℹ {"contactTop":-0.5239519073365981,"contactRadius":1.2906795784735718,"settledRadius":1.2906699013896046,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":5,"minY":-1.348,"maxRadius":1.2894901761494932,"pileTop":-0.5224519073365982,"gridCells":2523}}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 115.6109

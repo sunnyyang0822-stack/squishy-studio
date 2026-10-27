@@ -1,0 +1,29 @@
+PR #34: keyboard test still used 1100 ms wall time on software WebGL.
+The original >.02 real deformation assertion remains; fixed by advancing the existing test clock for 1100 ms.
+
+2026-10-23T04:45:20.0790107Z not ok 34 - donut×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放
+2026-10-23T04:45:20.0841475Z   ---
+2026-10-23T04:45:20.0850290Z   duration_ms: 174068.405438
+2026-10-23T04:45:20.0886374Z   type: 'test'
+2026-10-23T04:45:20.0910891Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/squishy-styles-browser.test.cjs:17:86'
+2026-10-23T04:45:20.0922335Z   failureType: 'testCodeFailure'
+2026-10-23T04:45:20.0937936Z   error: 'Keyboard fallback hits real ring surface instead of empty center'
+2026-10-23T04:45:20.0950399Z   code: 'ERR_ASSERTION'
+2026-10-23T04:45:20.0970387Z   name: 'AssertionError'
+2026-10-23T04:45:20.0983589Z   expected: true
+2026-10-23T04:45:20.1010253Z   actual: false
+2026-10-23T04:45:20.1010901Z   operator: '=='
+2026-10-23T04:45:20.1029240Z   stack: |-
+2026-10-23T04:45:20.1061552Z     TestContext.<anonymous> (/home/runner/work/squishy-studio/squishy-studio/tests/squishy-styles-browser.test.cjs:91:12)
+2026-10-23T04:45:20.1070416Z     async Test.run (node:internal/test_runner/test:1054:7)
+2026-10-23T04:45:20.1086298Z     async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+2026-10-23T04:45:20.1125430Z   ...
+2026-10-23T04:47:42.9102742Z # Subtest: pyramid×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放
+2026-10-23T04:47:42.9125279Z ok 35 - pyramid×clay：真实 GPU 按压、滑动、留痕、换色恢复、旋转、取消及离页释放
+2026-10-23T04:47:42.9160261Z   ---
+2026-10-23T04:47:42.9203955Z   duration_ms: 142838.733488
+2026-10-23T04:47:42.9232196Z   type: 'test'
+2026-10-23T04:47:42.9246183Z   ...
+2026-10-23T04:53:55.3561994Z # tests 38
+2026-10-23T04:53:55.3563455Z # pass 37
+2026-10-23T04:53:55.3564099Z # fail 1

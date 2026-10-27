@@ -1,0 +1,16 @@
+✔ cloud×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (7870.5337ms)
+✔ paw×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (11563.5066ms)
+✔ cylinder×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (6631.4711ms)
+✔ donut×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (6985.4833ms)
+✔ pyramid×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (5866.6202ms)
+✔ flower×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (7780.8777ms)
+✔ star×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (8060.9513ms)
+✔ phone native touch: donut and paw preserve slow recovery, touch cancellation and full-matte preset (23376.2051ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79127.661

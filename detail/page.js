@@ -1,7 +1,9 @@
-import { createDetailController, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames } from './state.mjs';
+import { createDetailController, canRestartThinWax, steps, stepNames, coreNames, fillingNames, materialNames, thicknessNames, decorationNames, colorNames, styleNames, defaultRecipe } from './state.mjs';
 import { orbColors } from './orb-colors.mjs';
 import { createModelPreview, createSilentAudio } from './adapters.js';
-import { previewStyle } from '../collections/styles.mjs';
+
+const styleNotice = document.createElement('p'); styleNotice.className = 'style-notice'; styleNotice.setAttribute('role', 'status');
+document.querySelector('.step-navigation').before(styleNotice);
 
 const stage = document.querySelector('.toy-stage');
 const mount = document.querySelector('.toy-mount');
@@ -9,6 +11,10 @@ const options = document.querySelector('.step-options');
 const retry = document.querySelector('.retry-button');
 const back = document.querySelector('.step-back');
 const next = document.querySelector('.step-next');
+const restart = document.createElement('button');
+restart.type = 'button'; restart.className = 'thin-wax-restart';
+restart.textContent = '重新开始'; restart.hidden = true;
+document.querySelector('.step-navigation').insertBefore(restart, next);
 const listeners = new AbortController();
 const on = (target, event, fn) => target.addEventListener(event, fn, { signal: listeners.signal });
 const groups = [
@@ -85,27 +91,37 @@ function showGroups(state) {
     for (const input of panel.fieldset.querySelectorAll('input')) input.checked = input.dataset.choice === recipe[id];
   }
 }
-const url = new URL(location.href);
-const styleId = url.searchParams.get('style') || 'orb';
-const initialUrl = new URL(location.href);
-const galleryPreview = previewStyle(initialUrl.searchParams.get('preview'));
-if (galleryPreview) {
-  const note = document.querySelector('.style-placeholder-note');
-  note.textContent = `${galleryPreview.name}造型准备中 · 当前使用圆球体验`;
-  note.hidden = false;
-  document.title = `${galleryPreview.name} · 圆球代体验｜Squishy Studio`;
-  document.querySelector('.detail-back').href = `/collections/#style-${galleryPreview.id}`;
-} else {
-  initialUrl.searchParams.delete('preview');
+const recipeKeys = Object.keys(defaultRecipe).filter(key => key !== 'styleId');
+function readLocation() {
+  const url = new URL(location.href);
+  return { styleId: Object.hasOwn(styleNames, url.searchParams.get('preview')) ? url.searchParams.get('preview') : url.searchParams.get('style') || 'orb', step: url.searchParams.get('step') || 'core',
+    recipe: Object.fromEntries(recipeKeys.filter(key => url.searchParams.has(key)).map(key => [key, url.searchParams.get(key)])) };
 }
-initialUrl.searchParams.set('style', 'orb');
-initialUrl.searchParams.delete('step');
-history.replaceState({ squishyStep: 'core' }, '', initialUrl);
+function saveLocation(state) {
+  const target = new URL(location.href);
+  target.searchParams.set('style', state.recipe.styleId);
+  target.searchParams.delete('preview');
+  if (state.step === 'core') target.searchParams.delete('step'); else target.searchParams.set('step', state.step);
+  for (const key of recipeKeys) {
+    if (state.recipe[key] === defaultRecipe[key]) target.searchParams.delete(key);
+    else target.searchParams.set(key, state.recipe[key]);
+  }
+  history.replaceState({ squishyStep: state.step }, '', target);
+}
+const initial = readLocation();
 controller = createDetailController({
   renderer: createModelPreview(mount, { feelId: 'clay', onUnavailable: () => controller.rendererUnavailable() }),
-  audio: createSilentAudio(), styleId,
+  audio: createSilentAudio(), ...initial,
   onChange(state) {
     const { step, recipe, resource } = state;
+    const styleName = styleNames[recipe.styleId];
+    document.querySelector('.detail-back').href = recipe.styleId === 'orb' ? '/collections/' : `/collections/#style-${recipe.styleId}`;
+    styleNotice.textContent = state.selectionNotice;
+    styleNotice.hidden = !styleNotice.textContent;
+    document.title = `制作${styleName}｜Squishy Studio`;
+    stage.setAttribute('aria-label', `${styleName}展示区`);
+    document.querySelector('.toy-area').setAttribute('aria-label', styleName);
+    saveLocation(state);
     document.querySelector('.step-panel').dataset.step = step;
     const making = step === 'making';
     stage.hidden = making;
@@ -113,7 +129,7 @@ controller = createDetailController({
     stage.dataset.state = resource;
     stage.setAttribute('aria-busy', String(resource === 'loading'));
     document.querySelector('.resource-message').hidden = resource === 'ready' && !state.configError;
-    document.querySelector('.resource-status').textContent = { loading: '加载中…', ready: state.configError ? '颜色更新失败' : '', error: '加载失败', unavailable: '无法显示圆球' }[resource];
+    document.querySelector('.resource-status').textContent = { loading: '加载中…', ready: state.configError ? '设置更新失败' : '', error: '加载失败', unavailable: '无法显示模型' }[resource];
     retry.hidden = !state.configError && (resource === 'ready' || resource === 'loading');
     for (const item of document.querySelectorAll('.workflow-progress li')) {
       const itemIndex = steps.indexOf(item.dataset.step), currentIndex = steps.indexOf(step);
@@ -129,22 +145,28 @@ controller = createDetailController({
     back.textContent = step === 'making' || step === 'play' ? '返回修改' : '上一步';
     next.hidden = step === 'play';
     next.textContent = step === 'making' ? '开始捏捏' : '下一步';
-    document.querySelector('.configuration-summary').textContent = `当前${stepNames[step]}：内芯${coreNames[recipe.coreMaterial]}、${colorNames[recipe.coreColor]}，填充${fillingNames[recipe.filling]}；外壳${materialNames[recipe.shellMaterial]}、${colorNames[recipe.shellColor]}；装饰${decorationNames[recipe.decoration]}`;
+    restart.hidden = !canRestartThinWax(step, recipe);
+    restart.disabled = resource !== 'ready' || state.configStatus === 'updating' || state.configError;
+    document.querySelector('.configuration-summary').textContent = `当前${stepNames[step]}，${styleNames[recipe.styleId]}：内芯${coreNames[recipe.coreMaterial]}、${colorNames[recipe.coreColor]}，填充${fillingNames[recipe.filling]}；外壳${materialNames[recipe.shellMaterial]}、${colorNames[recipe.shellColor]}；装饰${decorationNames[recipe.decoration]}`;
     document.querySelector('.configuration-error').hidden = !state.configError;
   },
 });
-function navigate(step, replace = false) {
+function navigate(step) {
   if (!steps.includes(step) || controller.getState().step === step) return;
+  const currentUrl = location.href;
   controller.setStep(step);
-  const target = new URL(location.href);
-  target.searchParams.set('step', step);
-  history[replace ? 'replaceState' : 'pushState']({ squishyStep: step }, '', target);
+  const targetUrl = location.href;
+  history.replaceState({ squishyStep: new URL(currentUrl).searchParams.get('step') || 'core' }, '', currentUrl);
+  history.pushState({ squishyStep: step }, '', targetUrl);
 }
 on(back, 'click', () => navigate(controller.getState().step === 'play' ? 'decoration' : steps[steps.indexOf(controller.getState().step) - 1]));
 on(next, 'click', () => navigate(steps[steps.indexOf(controller.getState().step) + 1]));
 on(retry, 'click', () => void controller.retry());
+on(restart, 'click', () => controller.restart());
 on(desktopLayout, 'change', () => showGroups(controller.getState()));
-on(window, 'popstate', event => controller.setStep(steps.includes(event.state?.squishyStep) ? event.state.squishyStep : 'core'));
+on(window, 'popstate', () => {
+  void controller.restoreLocation(readLocation());
+});
 on(window, 'pagehide', () => { controller.dispose(); listeners.abort(); });
 window.addEventListener('pageshow', event => { if (event.persisted) location.reload(); });
 void controller.load();

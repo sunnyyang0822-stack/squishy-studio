@@ -1,0 +1,29 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (2.7196ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.3016ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (3.3931ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (0.6101ms)
+✔ 薄蜡范围之外的制作结束保留原有自动恢复 (0.773ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (4.0708ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (0.8927ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (0.8722ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (0.468ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.3307ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (0.8743ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (0.4091ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.3006ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (4.4529ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (0.5433ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.3934ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.2012ms)
+✔ all registered marshmallow styles share the thin-wax making preview; slow rebound and legacy play remain excluded (0.7522ms)
+✔ every marshmallow core to shell keeps independent colors, the same feel and recipe, and persistent preview damage (5.614ms)
+✔ every marshmallow legacy final restores core while preserving hidden shell, and return configures preview without repair (1.8697ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98.5558
+EXIT_CODE=0

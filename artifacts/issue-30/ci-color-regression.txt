@@ -1,0 +1,20 @@
+Command: node --test tests/orb-color.test.cjs
+Exit code: 0
+Original 48 assertion-bearing lines preserved verbatim in order (compared to 891e11e^).
+
+✔ 同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压 (4848.3805ms)
+✔ 真实 GPU 颜色由顶部覆盖到底部，最终整球收束且闲置停止绘制 (1475.0775ms)
+✔ 换色重置真实GPU凹痕与旋转，快切仍从当前屏幕连续接续且可以重新操作 (6193.8215ms)
+✔ 换色取消键盘、鼠标捏压和正在旋转的owner，旧输入后续事件不会再修改重置模型 (3731.2829ms)
+✔ 减少动态时换色正确收束，动态偏好切换后可继续换色并停帧 (1851.0246ms)
+✔ 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：no-preference (4084.6942ms)
+✔ 真实GPU形态与颜色同步复原，首帧无跳变、同帧完成并停帧：reduce (3317.0029ms)
+✔ 新捏压或旋转中断自动复原，快速换色及减少动态切换从当前形态接续 (6634.9127ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 32930.1144

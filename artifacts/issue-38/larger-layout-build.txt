@@ -1,0 +1,5 @@
+
+> squishy-studio@1.0.0 build:orb
+> node scripts/build-orb.cjs
+
+exitCode=0

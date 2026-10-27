@@ -1,0 +1,70 @@
+✔ 慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与黏土可量测区分 (198.1213ms)
+ℹ {"firstFrame":0.0005195340062108065,"at100ms":0.01870221110012268,"at300ms":0.10772458813678205,"at3s":0.4588270465979823,"slowAfter2s":0.09263556769681042,"clayAfter2s":0.3133114409563414}
+✔ 厚实哑光外观独立于手感：仅full-matte增厚和加深，默认外观完全保留 (7.6305ms)
+✔ 反馈修订不改变用户确认的回弹曲线、减少动态恢复或最终收敛 (116.5049ms)
+✔ 按压有平滑起步，120ms后匀速深入，没有先猛陷再缓慢逼近的尾段 (139.0646ms)
+ℹ {"timesMs":[120,170,220],"values":[0.02693117683230104,0.04937379439387045,0.07181641195696759],"increments":[0.022442617561569407,0.022442617563097136]}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=false (147.0765ms)
+ℹ {"reduced":false,"stoppedAt":13.433333333333334,"maxFinalStep":0.000009238719940185547,"finalError":0}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=true (78.5729ms)
+ℹ {"reduced":true,"stoppedAt":2.15,"maxFinalStep":0.000009894371032714844,"finalError":0}
+✔ 驻留起点→滑动→驻留终点：中段浅、松手不造坑，整条路径恢复 (176.2781ms)
+ℹ {"angles":[-1,0,1],"depths":[0.09517979892276945,0.046099329173979804,0.4567108674928257]}
+✔ 长按后移到新位置，只接收当前帧接触量，不继承旧压深 (219.6408ms)
+✔ 连续滑动0.12s无驻留：无均匀深沟、路径连通且完全恢复 (120.8902ms)
+✔ 连续滑动0.8s无驻留：无均匀深沟、路径连通且完全恢复 (162.0518ms)
+✔ 连续滑动4s无驻留：无均匀深沟、路径连通且完全恢复 (137.5515ms)
+✔ 折返、交叉、重复揉压有界；旧痕和新痕最终共同消失 (348.56ms)
+✔ 深按、长按及多轮多方向按压无残差、不外翻、不越界 (1948.0132ms)
+✔ 稀疏跨越、同帧重复move不加深；不同刷新与事件密度处于有限误差内 (1051.7527ms)
+ℹ {"configurations":[{"dt":0.03333333333333333,"hz":30},{"dt":0.016666666666666666,"hz":60},{"dt":0.008333333333333333,"hz":120},{"dt":0.016666666666666666,"hz":10}],"maxCoordinateErrors":[0.0003871321678161621,0,0.00020897388458251953,0.0029563307762145996]}
+✔ 显式换色恢复独占时钟；快速重启、取消与输入中断连续接管 (243.0873ms)
+✔ 取消缓慢恢复；reset清空计时和旧路径；减少动态切换、实例和资产隔离 (475.3186ms)
+✔ sculpted models retain identical dimensions across all feels while the original orb keeps its approved scale (76.1476ms)
+✔ cloud×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (991.4832ms)
+✔ paw×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (20805.0027ms)
+✔ cylinder×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (1148.79ms)
+✔ donut×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (2001.8784ms)
+✔ pyramid×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (716.2594ms)
+✔ flower×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (1674.1095ms)
+✔ star×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (1162.5926ms)
+✔ cloud slow-rebound presses follow the input ray without centerward pinching (932.3057ms)
+✔ paw slow-rebound presses follow the input ray without centerward pinching (2584.7568ms)
+✔ cylinder slow-rebound presses follow the input ray without centerward pinching (814.4512ms)
+✔ donut slow-rebound presses follow the input ray without centerward pinching (1338.2427ms)
+✔ pyramid slow-rebound presses follow the input ray without centerward pinching (470.9395ms)
+✔ flower slow-rebound presses follow the input ray without centerward pinching (906.908ms)
+✔ star slow-rebound presses follow the input ray without centerward pinching (682.3829ms)
+✔ orb slow-rebound presses follow the input ray without centerward pinching (292.847ms)
+✔ 猫爪：四趾、心形主垫、连接处和背面均在指下明显压入 (14161.3949ms)
+✔ 等价球空间查询严格保留模板逐帧阻力、85%留痕、取消和恢复时序 (10.9647ms)
+✔ cloud：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (100.8324ms)
+✔ paw：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (4321.9727ms)
+✔ cylinder：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (107.2167ms)
+✔ donut：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (1150.532ms)
+✔ pyramid：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (53.9973ms)
+✔ flower：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (110.4882ms)
+✔ star：真实导出几何的局部形变保持黏土85%留痕并恢复本体 (87.1415ms)
+✔ cloud：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (977.1725ms)
+✔ paw：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (64818.2653ms)
+✔ cylinder：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (912.3729ms)
+✔ donut：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (1657.0618ms)
+✔ pyramid：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (563.7644ms)
+✔ flower：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (1185.9197ms)
+✔ star：中心、侧缘、连接区域反复深压无三角形翻转或塌陷 (1020.7604ms)
+✔ 甜甜圈内圈压痕不跨孔牵扯另一侧，中孔射线仍畅通 (970.8017ms)
+✔ 掌垫沿三角形内部传播，比边图更接近已知平面距离；其他模型仍为原边图 (43.9459ms)
+✔ 三角形压力波不直接跨越薄壳内部命中相近背面 (11.7783ms)
+✔ slow-rebound opts into triangle-interior footprints without changing spatial limits or other feels (34.6334ms)
+✔ 实际位移安全段检查首个折叠根，不能只接受同样合法的终点 (16.0026ms)
+✔ clay：未限制的可选几何hook逐帧保留模板结果及生命周期 (13.1622ms)
+✔ clay：真实厚猫爪所有输入生命周期保留原三角形面积安全裕量 (11034.8244ms)
+✔ 猫爪旧足迹长按饱和后，同一滑动仍可压入远处掌垫及背面 (7747.4787ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 56
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92500.23
