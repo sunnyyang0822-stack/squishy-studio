@@ -408,7 +408,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     };
     current.restore = ({ preserveShell = false } = {}) => { if (!preserveShell) wax?.reset(); current.selectColor(selectedColor.id, { restore: true }); };
     current.configure = config => {
-      const thinRecipe = feelId === 'clay' && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
+      const supportedWaxCore = feelId === 'clay' || (feelId === 'marshmallow' && config.waxCollection === false);
+      const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
       if (wax || thinRecipe) current.input.cancel({ preserveShape: changed });
       if (changed && (wax || thinRecipe)) { disposeWax(); current.selectColor(config.coreColor || config.color, { restore: true }); }
@@ -418,7 +419,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       collectionEnabled = config.waxCollection !== false;
       if (thinRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset('thin-wax').create({ geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled });
+        wax = getWaxPreset('thin-wax').create({ geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, fullSurfaceSupport: feelId === 'marshmallow' && isSurface });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }
@@ -437,7 +438,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (shadowsChanged) mesh.material.needsUpdate = true;
       // Navigating a fixed thin-wax recipe never recolors or repairs its core.
       current.selectColor(thinRecipe ? config.coreColor : config.color);
-      current.diagnostics = ({ exhaustive = false, surface = false, measure = true } = {}) => ({
+      current.diagnostics = ({ exhaustive = false, surface = false, measure = true, counters = false } = {}) => {
+        if (counters) return wax?.getQueryCounters(true);
+        return ({
         enabled: Boolean(wax && shellVisible), configKey: recipeKey,
         coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor,
         corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions),
@@ -449,6 +452,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
           projectedTray: [[-1.42 * debrisTray.scale.x, -1.35, 0], [1.42 * debrisTray.scale.x, -1.35, 0], [0, -1.35, 1.42], [0, -1.35, -1.42]].map(p => new THREE.Vector3(...p).project(camera).toArray()) },
         resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries },
       });
+      };
       mount.thinWaxDiagnostics = current.diagnostics;
     };
     motionPreference.addEventListener('change', event => {

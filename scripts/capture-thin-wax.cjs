@@ -9,8 +9,11 @@ const folder = path.resolve('artifacts/issue-38'), temporary = path.resolve('.tm
 const port = process.env.THIN_WAX_CAPTURE_PORT || '4229', base = `http://127.0.0.1:${port}`;
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const collectionCapture = process.env.THIN_WAX_CAPTURE_COLLECTION === '1';
+const coreMaterial = process.env.THIN_WAX_CAPTURE_CORE || 'clay';
+assert.ok(['clay', 'marshmallow'].includes(coreMaterial), 'Only verified orb cores may be captured');
+assert.ok(!collectionCapture || coreMaterial === 'clay', 'Marshmallow capture is limited to making preview');
 const captureMode = collectionCapture ? 'collection' : 'preview', captureStep = collectionCapture ? 'play' : 'shell';
-const reportFile = `${folder}/${captureMode}-validation.json`;
+const reportFile = `${folder}/${coreMaterial === 'clay' ? '' : `${coreMaterial}-`}${captureMode}-validation.json`;
 const performanceOnly = process.argv.includes('--performance-only'), captureOnly = process.argv.includes('--capture-only');
 const diag = (page, options = { measure: false }) => page.locator('.toy-mount').evaluate((el, options) => el.thinWaxDiagnostics(options), options);
 function brief(d) {
@@ -34,7 +37,7 @@ function brief(d) {
     const { squishyStyles } = await import('../src/squishy-styles.mjs');
     // Complete the sphere's vertical slice first, then each currently supported combination.
     const styles = performanceOnly ? [] : ['orb'];
-    for (const style of styles) for (const material of ['clay']) for (const touch of [false, true]) {
+    for (const style of styles) for (const material of [coreMaterial]) for (const touch of [false, true]) {
       const feel = material === 'butter' ? 'slow-rebound' : material;
       if (!squishyStyles[style].supportedFeels.includes(feel)) continue;
       const name = `${style}-${material}-${captureMode}-${touch ? 'mobile' : 'desktop'}`, viewport = touch ? { width: 390, height: 844 } : { width: 1280, height: 900 };
@@ -98,11 +101,12 @@ function brief(d) {
           item.measurements.push({ stage: `${theme}-continuous-timeline`, timeline });
           assert.equal(timeline[0].thinWax.detached, 0);
           assert.ok(timeline[2].thinWax.cracked > timeline[2].thinWax.detached, 'Most chain-fractured wax remains attached');
-          assert.ok(timeline[4].thinWax.cracked - timeline[4].thinWax.detached >= 3);
+          if (material === 'clay') assert.ok(timeline[4].thinWax.cracked - timeline[4].thinWax.detached >= 3);
+          else assert.ok(timeline[4].thinWax.panels - timeline[4].thinWax.detached > timeline[4].thinWax.detached, 'A deeply pressed local marshmallow footprint may strip completely while most of the coat stays attached');
           assert.ok(timeline[4].thinWax.detached > timeline[1].thinWax.detached, 'Continuing indentation keeps releasing chips');
           assert.equal(timeline[4].thinWax.localDetached, timeline[4].thinWax.localDamaged, 'The local coat can be completely stripped');
           await page.screenshot({ path: `${folder}/${name}-${theme}-held.png` });
-          await label('松开：内芯按原规则恢复，附着裂片保留，少量碎屑继续下落'); await send('up'); const stopped = await measure(`${theme}-mouseup`); await page.waitForTimeout(800); const released = await measure(`${theme}-release`, { geometry: true }); assert.equal(released.thinWax.detached, stopped.thinWax.detached, 'Release never propagates new damage');
+          await label(material === 'marshmallow' ? '松开：内芯完全留痕，裂片保留，碎屑继续下落' : '松开：内芯按原规则恢复，附着裂片保留，少量碎屑继续下落'); await send('up'); const stopped = await measure(`${theme}-mouseup`); await page.waitForTimeout(800); const released = await measure(`${theme}-release`, { geometry: true }); assert.equal(released.thinWax.detached, stopped.thinWax.detached, 'Release never propagates new damage');
           await label('重复深压破损边缘，连续拖动'); await send('down'); await page.waitForTimeout(1400);
           for (let i = 1; i <= 12; i++) { await send('move', { x: hit.x + i * 2, y: hit.y - i }); await page.waitForTimeout(35); }
           await measure(`${theme}-drag`); await send('up'); await page.waitForTimeout(700); await measure(`${theme}-drag-geometry`, { geometry: true });
@@ -188,7 +192,7 @@ function brief(d) {
     const perfContext = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
     try {
       const page = await perfContext.newPage();
-      await page.goto(`${base}/squishy/cloud/?style=orb&coreMaterial=clay&waxThickness=thin&step=${captureStep}`);
+      await page.goto(`${base}/squishy/cloud/?style=orb&coreMaterial=${coreMaterial}&waxThickness=thin&step=${captureStep}`);
       await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics?.().enabled);
       await page.evaluate(() => {
         const mount = document.querySelector('.toy-mount'); window.waxPerformance = { intervals: [], jumps: [], last: null, count: Number(mount.dataset.renderCount) };

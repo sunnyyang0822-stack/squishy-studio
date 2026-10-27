@@ -1,0 +1,68 @@
+{
+  "recordedAt": "2026-10-27T05:37:56.779Z",
+  "bundleSha256": "593ddff81bed85cbef3c3529c784805a68c3b623314f92abdef65f2f8b57775a",
+  "servedSha256": "593ddff81bed85cbef3c3529c784805a68c3b623314f92abdef65f2f8b57775a",
+  "previewHTTPStatus": 200,
+  "supportedMakingPreview": {
+    "clay": [
+      "orb",
+      "cloud",
+      "paw",
+      "cylinder",
+      "donut",
+      "pyramid",
+      "flower",
+      "star"
+    ],
+    "marshmallow": [
+      "orb",
+      "cloud",
+      "paw",
+      "cylinder",
+      "donut",
+      "pyramid",
+      "flower",
+      "star"
+    ]
+  },
+  "groups": [
+    {
+      "file": "final-expanded-unit-geometry.txt",
+      "passed": 100,
+      "failed": 0,
+      "exitCode": 0,
+      "description": "Pure Node unit, core, recipe, complete surface cache oracle, clay geometry and collision queries"
+    },
+    {
+      "file": "all-marshmallow-feature-normal-geometry.txt",
+      "passed": 7,
+      "failed": 0,
+      "exitCode": 0,
+      "description": "Seven actual marshmallow models, 469 identical core steps per model, complete inner/outer/edge/wall geometry"
+    },
+    {
+      "file": "feature-normal-independent-regression.txt",
+      "passed": 2,
+      "failed": 0,
+      "exitCode": 0,
+      "description": "Independent analytic concave solid and real folded paw ray-parity regression"
+    },
+    {
+      "file": "expanded-final-browser.txt",
+      "passed": 44,
+      "failed": 0,
+      "exitCode": 0,
+      "description": "Real browser clay/marshmallow input, uploads, thresholds, legacy boundaries, restoration and lifecycle"
+    }
+  ],
+  "timingSeconds": 0.5,
+  "thickness": 0.014,
+  "sourceNormalGap": 0.004,
+  "fragmentBudget": {
+    "total": 180,
+    "active": 24
+  },
+  "platform": "Windows host Edge; desktop mouse and desktop touch emulation. Physical phones and Safari unverified.",
+  "visualAcceptance": "User approved other clay styles; paw performance and newly extended marshmallow visuals await user inspection.",
+  "mergeRule": "Do not merge before the user explicitly approves this walkthrough."
+}

@@ -13,8 +13,9 @@ export const styleNames = Object.freeze(Object.fromEntries(Object.entries(squish
 export const defaultRecipe = Object.freeze({ styleId: 'orb', coreMaterial: 'clay', coreColor: 'rose', filling: 'none', shellMaterial: 'wax', shellColor: 'rose', waxThickness: 'medium', decoration: 'one' });
 const groups = Object.freeze({ styleId: styleNames, coreMaterial: coreNames, coreColor: colorNames, filling: fillingNames, shellMaterial: materialNames, shellColor: colorNames, waxThickness: thicknessNames, decoration: decorationNames });
 export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shellMaterial === 'wax' ? recipe.waxThickness : null });
-export const isThinWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && squishyStyles[recipe.styleId].supportedFeels.includes('clay') && recipe.coreMaterial === 'clay' && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
-export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && recipe.styleId === 'orb');
+export const isThinWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && squishyStyles[recipe.styleId].supportedFeels.includes(recipe.coreMaterial) && ['clay', 'marshmallow'].includes(recipe.coreMaterial) && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
+const isLegacyOrbClayWax = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && isThinWaxRecipe(recipe);
+export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && isLegacyOrbClayWax(recipe));
 // Fixed ordering makes identity independent of URL/object property order. Mode is
 // deliberately separate: navigating the same recipe must not repair its shell.
 export const recipeKeyFor = recipe => JSON.stringify(Object.keys(defaultRecipe).map(key => effectiveRecipe(recipe)[key]));
@@ -79,11 +80,11 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
     const wasMaking = state.step === 'making';
     state = { ...state, step }; refreshDerived();
     if (step === 'making') { ++revision; pending?.abort(); pending = undefined; renderer.stopInput?.(); emit(); return; }
-    const preserveDamage = isThinWaxRecipe(state.recipe) && (step !== 'play' || state.recipe.styleId === 'orb');
+    const preserveDamage = isThinWaxRecipe(state.recipe) && (step !== 'play' || isLegacyOrbClayWax(state.recipe));
     if (wasMaking && step === 'play' && !preserveDamage) {
-      // Non-orb final presentation keeps its legacy core restore without
+      // Preview-only recipes keep the legacy final core restore without
       // repairing the same recipe's temporarily hidden preview shell.
-      if (isThinWaxRecipe(state.recipe) && state.recipe.styleId !== 'orb') renderer.restore?.({ preserveShell: true });
+      if (isThinWaxRecipe(state.recipe) && !isLegacyOrbClayWax(state.recipe)) renderer.restore?.({ preserveShell: true });
       else renderer.restore?.();
     }
     void prepare(step === 'play' && !preserveDamage);
