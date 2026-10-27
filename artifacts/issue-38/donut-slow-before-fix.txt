@@ -1,0 +1,2 @@
+{"drag":{"samples":37,"medianMs":28.699999999254942,"p95Ms":90.40000000037253,"maxMs":115.40000000037253,"above33ms":9},"dragRecovery":{"samples":111,"medianMs":15.799999998882413,"p95Ms":23.90000000037253,"maxMs":26.199999999254942,"above33ms":0}}
+EXIT_CODE=0

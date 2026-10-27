@@ -8,7 +8,7 @@ for(const id of styles)test(`${id} slow-rebound thin wax: exact core, progressiv
  const positions=g.attributes.position.array,barePositions=rest.slice();let direction=[0,.17715299831526515,.9841833239736953];
  const options=()=>({surfaceGeometry:createSurfaceGeometry(rest.slice(),normals.slice(),mesh.indices,{...style.geometryOptions,continuousFootprint:true}),getPressDirection:()=>direction});
  const core=getOrbFeel('slow-rebound').createDeformation(positions,normals.slice(),options()),bare=getOrbFeel('slow-rebound').createDeformation(barePositions,normals.slice(),options());let now=0,frames=0,lastShellTime=0;
- const wax=getWaxPreset('thin-wax').create({styleId:id,geometry:g,restPositions:rest,restNormals:normals,fullSurfaceSupport:true,clock:()=>now}),phases=[];
+ const wax=getWaxPreset('thin-wax').create({styleId:id,compactPanels:['paw','donut'].includes(id),geometry:g,restPositions:rest,restNormals:normals,fullSurfaceSupport:true,clock:()=>now}),phases=[];
  const same=()=>{assert.deepEqual(positions,barePositions,'Every original slow-rebound core vertex is independent of the shell');assert.deepEqual(core.getState(),bare.getState());};
  const act=(method,...args)=>{core[method](...args);bare[method](...args);same();};
  function frame(sync=true){assert.deepEqual(core.step(1/60),bare.step(1/60));now+=1/60;frames++;if(sync){g.computeVertexNormals();const s=wax.step(now-lastShellTime);lastShellTime=now;if(!s.changed)wax.sync();}same();}

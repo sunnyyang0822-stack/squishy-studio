@@ -1,0 +1,2 @@
+{"press":{"samples":65,"medianMs":20.699999999254942,"p95Ms":81.09999999962747,"maxMs":143.40000000037253,"above33ms":16},"recovery":{"samples":75,"medianMs":29.199999999254942,"p95Ms":50.20000000111759,"maxMs":81.19999999925494,"above33ms":21},"drag":{"samples":38,"medianMs":55.09999999962747,"p95Ms":130.30000000074506,"maxMs":140.09999999962747,"above33ms":34},"dragRecovery":{"samples":77,"medianMs":22.299999998882413,"p95Ms":38.59999999962747,"maxMs":48.40000000037253,"above33ms":5}}
+EXIT_CODE=0

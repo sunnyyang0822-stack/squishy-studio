@@ -529,24 +529,12 @@ test('cancellation, blur, hidden document, hit loss and leave stop the same inpu
     assert.equal((await diagnostics(page)).thinWax.detached, 0, 'No damage keeps running at a stale hit');
     await press(page); await page.waitForTimeout(1250);
     const fresh = await projectedSurfaceContact(page, .6, .03);
-    await page.locator('.toy-mount').evaluate((el, fresh) => {
-      // Full triangle diagnostics can take hundreds of milliseconds on a
-      // software GPU. Sample the two endpoints in the browser itself and
-      // release within this task, so transport overhead cannot become dwell.
-      window.waxSweep = null;
-      window.addEventListener('pointermove', event => {
-        if (Math.hypot(event.clientX - fresh.x, event.clientY - fresh.y) > 2) return;
-        // This bubble listener runs after the product window pointermove handler.
-        const start = performance.now(), before = el.thinWaxDiagnostics({ measure: false }).thinWax;
-        setTimeout(() => {
-          window.dispatchEvent(new PointerEvent('pointerup', { pointerId: event.pointerId }));
-          window.waxSweep = { before, after: el.thinWaxDiagnostics({ measure: false }).thinWax, elapsed: performance.now() - start };
-        }, 120);
-      }, { once: true });
-    }, fresh);
+    // Observe the first real changed core GPU upload after the trusted move.
+    // A fixed setTimeout can be delayed beyond 0.5s by software rasterization.
+    await armWaxUploadEnd(page, { resultKey: 'waxFreshMove', startEvent: 'pointermove', minimumDepth: .0001 });
     await page.mouse.move(fresh.x, fresh.y);
-    await page.waitForFunction(() => window.waxSweep !== null);
-    const swept = await page.evaluate(() => window.waxSweep);
+    const observed = await readWaxUploadEnd(page, 'waxFreshMove');
+    const swept = { before: observed.before.thinWax, after: (await diagnostics(page)).thinWax, elapsed: observed.elapsed };
     t.diagnostic(JSON.stringify({ sweep: swept }));
     assert.ok(swept.elapsed < 500, `Fresh-region contact really ended before fracture: ${swept.elapsed}ms`);
     assert.ok(swept.before.dwell < .5, 'Crossing into a fresh region resets local continuous dwell');

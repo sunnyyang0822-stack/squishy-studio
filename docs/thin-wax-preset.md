@@ -48,6 +48,8 @@ function frame(dtSeconds) {
 
 ## 公共性能方案
 
+猫爪／甜甜圈的慢回弹制作预览修订候选新增 `compactPanels:true`，切分平面按真实曲面采样点的欧氏距离生成，避免球心锥在管面上切出长条；默认片总量和厚度不变。此分支自动使用 `relativeSupport` 的局部平移安全证书，仍逐个检查原完整体积样本；`relativeSupport:false` 可用于参考验证。其他组合保持原默认分块，不将候选自动扩展至黏土或棉花糖。数学界限、真实最长片尺寸、旋转下落及性能限制见 [两款修订说明](issue-38-compact-paw-donut.md)。
+
 以下优化已在公共薄蜡模块内实现，调用 `getWaxPreset('thin-wax').create(...)` 自动复用。非圆球棉花糖／慢回弹仍须由宿主显式传入 `fullSurfaceSupport:true`；优化不授权新增模型组合，也不改变已有内芯工厂、壳厚、裂纹密度、掉片时钟和碰撞采样数量。
 
 | 环节 | 复用规则 | 必须重新计算的情况 |

@@ -419,7 +419,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       collectionEnabled = config.waxCollection !== false;
       if (thinRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset('thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, fullSurfaceSupport: (feelId === 'marshmallow' || feelId === 'slow-rebound') && isSurface });
+        wax = getWaxPreset('thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: feelId === 'slow-rebound' && ['paw', 'donut'].includes(style.id), fullSurfaceSupport: (feelId === 'marshmallow' || feelId === 'slow-rebound') && isSurface });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }
