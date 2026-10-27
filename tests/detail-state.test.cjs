@@ -141,7 +141,7 @@ test('薄蜡范围之外的制作结束保留原有自动恢复', async () => {
     c.setStep('making'); c.setStep('play');
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(h.restored, 1, `${group}=${value}`);
-    assert.deepEqual(h.restoreOptions, [undefined], 'Legacy configurations retain the no-argument restore contract');
+    assert.deepEqual(h.restoreOptions, [group === 'coreMaterial' && value === 'butter' ? { preserveShell: true } : undefined], 'Thin slow-rebound orb preserves hidden preview damage; excluded configurations retain legacy restoration');
     c.restart(); assert.equal(h.restored, 1);
     c.dispose();
   }
@@ -184,7 +184,7 @@ test('八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土�
     assert.deepEqual(h.restoreOptions, styleId === 'orb' ? [] : [{ preserveShell: true }], 'Returning preview does not repair shell');
     for (const coreMaterial of ['marshmallow', 'butter']) {
       await c.select('coreMaterial', coreMaterial);
-      const previewEnabled = coreMaterial === 'marshmallow';
+      const previewEnabled = coreMaterial === 'marshmallow' || coreMaterial === 'butter' && styleId === 'orb';
       assert.equal(isThinWaxRecipe(c.getState().recipe), previewEnabled);
       assert.equal(canRestartThinWax('shell', c.getState().recipe), previewEnabled);
       assert.equal(canRestartThinWax('play', c.getState().recipe), false);

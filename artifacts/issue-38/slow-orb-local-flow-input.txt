@@ -1,0 +1,12 @@
+✔ 同一捕获与命中同时驱动芯壳；命中丢失终止驻留，不在旧位置继续施力 (3.8289ms)
+✔ local slow-rebound scope is orb making wax/thin only; all other shapes and legacy play stay excluded (0.7471ms)
+✔ slow orb making navigation preserves damage identity; final play restores core with hidden shell preserved (3.1002ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84.6353
+EXIT_CODE=0

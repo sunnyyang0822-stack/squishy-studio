@@ -408,7 +408,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     };
     current.restore = ({ preserveShell = false } = {}) => { if (!preserveShell) wax?.reset(); current.selectColor(selectedColor.id, { restore: true }); };
     current.configure = config => {
-      const supportedWaxCore = feelId === 'clay' || (feelId === 'marshmallow' && config.waxCollection === false);
+      const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
       const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
       if (wax || thinRecipe) current.input.cancel({ preserveShape: changed });

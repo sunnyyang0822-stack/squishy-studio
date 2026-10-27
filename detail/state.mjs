@@ -13,7 +13,7 @@ export const styleNames = Object.freeze(Object.fromEntries(Object.entries(squish
 export const defaultRecipe = Object.freeze({ styleId: 'orb', coreMaterial: 'clay', coreColor: 'rose', filling: 'none', shellMaterial: 'wax', shellColor: 'rose', waxThickness: 'medium', decoration: 'one' });
 const groups = Object.freeze({ styleId: styleNames, coreMaterial: coreNames, coreColor: colorNames, filling: fillingNames, shellMaterial: materialNames, shellColor: colorNames, waxThickness: thicknessNames, decoration: decorationNames });
 export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shellMaterial === 'wax' ? recipe.waxThickness : null });
-export const isThinWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && squishyStyles[recipe.styleId].supportedFeels.includes(recipe.coreMaterial) && ['clay', 'marshmallow'].includes(recipe.coreMaterial) && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
+export const isThinWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && squishyStyles[recipe.styleId].supportedFeels.includes(recipe.coreMaterial === 'butter' ? 'slow-rebound' : recipe.coreMaterial) && (['clay', 'marshmallow'].includes(recipe.coreMaterial) || recipe.coreMaterial === 'butter' && recipe.styleId === 'orb') && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
 const isLegacyOrbClayWax = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && isThinWaxRecipe(recipe);
 export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && isLegacyOrbClayWax(recipe));
 // Fixed ordering makes identity independent of URL/object property order. Mode is

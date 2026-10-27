@@ -120,8 +120,8 @@ test('style wax scope excludes slow rebound and preserves all preview-only legac
   for (const id of styles) for (const material of ['butter']) {
     const { page } = await open(id, material, 'shell');
     try {
-      const d = await diagnostic(page); assert.equal(d.enabled, false, `${id}/${material} remains outside wax scope`);
-      assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).count(), 0);
+      const d = await diagnostic(page); assert.equal(d.enabled, id === 'orb', `${id}/${material}: only the slow-rebound orb joins the local making preview`);
+      assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).count(), id === 'orb' ? 1 : 0);
       results.push({ id, material, enabled: d.enabled });
     } finally { await page.close(); }
   }
