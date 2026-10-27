@@ -18,4 +18,12 @@ node --test --test-concurrency=1 tests/wax-cache-surface.test.cjs tests/wax-coll
 
 性能数字属于 Windows Edge 桌面及触屏模拟，不等于手机真机验收。用户视觉确认与测试记录分开；其他外部模型、手机真机、Safari、慢回弹外壳及中／厚蜡不在本次发布验收范围。
 
+## 本分支浏览器、性能和录像
+
+本分支运行包 SHA-256 为 `efb4417fe1cb540598d1a38d4e3b8af32793e7af3aa906f7c24334cdb0041398`。真实浏览器命令为 `node --test --test-concurrency=1 tests/thin-wax-browser.test.cjs tests/wax-style-browser.test.cjs`，TEMP／TMP 在工作树 `.tmp/runtime`，独立测试端口为 4254／4255，使用宿主 Edge、默认 DPR1、不修改时钟或使用 CPU 限速。首次 20 项中 19 项通过，首个 orb 主交互因取消超时未完成（实际报告墙时 1017 秒、设定超时 90 秒）；原始输出保留在 `clay-release-browser.txt`，不将这次不完整运行伪称为 20/20 通过。同一主交互用完全相同断言重跑 `node --test --test-name-pattern='thin wax \+ clay: actual core geometry' tests/thin-wax-browser.test.cjs`，**1/1 通过、退出码0、16.51秒**，见 `clay-release-orb-main-retry.txt`。实际短按25.1ms，阈值前零掉片，首个超过阈值的已完成帧0.5083秒掉3片，真实GPU几何及全部穿入断言通过。两次运行合计覆盖全部20个不同浏览器案例。
+
+性能单独在端口4345的本发布服务器测量，脚本先验证实际提供的 `/assets/orb-preview.js` 与本地运行包哈希相等，再运行 `scripts/benchmark-thin-wax.cjs`，不会误测另一个工作树的4380服务。环境为390×844桌面触屏模拟、Intel UHD／ANGLE D3D11、全新配方实际按住4秒，测量未与本任务的其他自动化重CPU／GPU工作并发，仍无法控制使用者的桌面负载。本次48个完整渲染间隔的中位数 **91.0ms**、P95 **106.1ms**、最大 **107.1ms**，全部间隔原样保留于 `clay-release-paw-performance.json`，命令退出码0。此前其他阶段曾出现更好数字，不用它们替代本分支这次结果，也不据此宣称手机流畅。
+
+正常速度实际录像为 `clay-release-paw-desktop.webm` 与 `clay-release-paw-mobile.webm`，元数据见 `clay-release-paw-videos.json`，两例完成、页面错误为空、附着／脱落采样穿入违规均为0，退出码0，运行包哈希与性能测量一致。包含短触裂缝、跨0.5秒局部掉片、深按、滑动、松开继续向下掉落、近侧面厚度／间隙和重新开始。触屏片的捏压使用CDP真实触摸，旋转明确标注为鼠标辅助；视频按真实墙时录制，没有加速时钟，侧面截图仅辅助，不替代视频。可用 `node scripts/capture-clay-release-paw.cjs` 在本分支独立端口4256复现。
+
 回滚猫爪性能增量时普通 revert 对应优化提交并 `npm run build:orb`，保留先前黏土薄蜡基线；整体撤销时使用 PR 的普通 revert。无存储迁移，不强推、不改写历史，不自动关闭范围更大的 Issue #38。PR #39 仍用于未验收的棉花糖阶段，不在本次合并中。
