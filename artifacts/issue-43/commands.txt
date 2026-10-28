@@ -1,0 +1,30 @@
+Recorded commands (2026-10-28, Asia/Shanghai)
+
+Baseline: git fetch origin; git rev-parse origin/main
+Exit: 0; dfdd19229d4fe25b15198cbe5d8eb2b2c5055a9b
+
+node --test tests/thick-wax.test.cjs tests/thick-wax-flow.test.cjs tests/wax-presets.test.cjs tests/thin-wax.test.cjs tests/thin-wax-debris.test.cjs tests/wax-collision-cache.test.cjs tests/wax-collision-query.test.cjs tests/wax-cache-surface.test.cjs tests/wax-small-fragments.test.cjs tests/wax-support-certificates.test.cjs tests/orb-deformation.test.cjs tests/detail-state.test.cjs
+Exit: 0; 83/83 passed. Output: geometry-regression.txt
+
+node --test --test-name-pattern='every local' tests/thick-wax.test.cjs
+Exit: 0; extra actual detached-area regression added and verified.
+
+npm run build
+Exit: 0. Output: build.txt
+
+node --test tests/thick-wax-browser.test.cjs
+Exit: 0; 1/1 passed. Output: final-play-validation.txt
+Initial sandbox attempts could not launch Edge due to repeated Windows sandbox temp path ENAMETOOLONG. The successful run used the project-local .tmp/browser temporary directory outside that sandbox; no test assertion changed.
+
+node scripts/capture-thick-wax.cjs
+Exit: 0. Output: capture-validation.txt; metrics: comparison-validation.json
+
+node scripts/test-port-isolated.cjs
+Environment: TEST_PORT_OFFSET=3000; TEMP/TMP=project-local .tmp/browser
+Full unchanged assertion regression in progress; see full-tests.txt for live output. Temporary test copies are not delivery files and are removed by the runner.
+
+Preview: node server.mjs (PORT=4348, 127.0.0.1 only)
+HEAD /squishy/cloud/?style=orb&coreMaterial=clay&waxThickness=thick&step=shell returned HTTP 200.
+
+Repository visibility read through GitHub API: private=false, default_branch=main.
+Evidence bundle SHA256 matches rebuilt assets/orb-preview.js: b93bd4280745e4441773510a1bc39ecfd24d5e14881e44c8b6fa92ef4459d99e
