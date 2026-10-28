@@ -1,0 +1,415 @@
+{
+  "phone": "CDP native touch emulation; no physical phone tested",
+  "observations": [
+    {
+      "name": "desktop",
+      "label": "short press actual input duration",
+      "milliseconds": 58.59999999997672
+    },
+    {
+      "name": "desktop",
+      "label": "short press",
+      "maximum": 0.017970271789134448,
+      "changed": 112,
+      "center": [
+        0.016270917079729063,
+        0.34827051017638705,
+        0.9059687564356483
+      ],
+      "uploads": 10,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "progressive held press at nominal 100/300/600/1200ms",
+      "depths": [
+        0.03245290729948801,
+        0.13329055853641525,
+        0.23880698199262176,
+        0.36720757811661925
+      ],
+      "elapsedMilliseconds": [
+        111.5,
+        523.1999999999534,
+        1032.5999999999767,
+        1831.5
+      ]
+    },
+    {
+      "name": "desktop",
+      "label": "actual GPU progressive frames",
+      "count": 337,
+      "first": {
+        "milliseconds": 3.699999999953434,
+        "maximum": 0.017970271789134448
+      },
+      "last": {
+        "milliseconds": 2036.5999999999767,
+        "maximum": 0.39297778747543816
+      },
+      "largestIncrease": 0.003931538951959468
+    },
+    {
+      "name": "desktop",
+      "label": "long press",
+      "maximum": 0.3946579801660675,
+      "changed": 169,
+      "center": [
+        -0.3408664578480981,
+        0.3292165391345783,
+        0.84229464421645
+      ],
+      "uploads": 350,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "local endpoint dwell",
+      "changed": 94,
+      "frozenDented": 192,
+      "diameter": 0.7511039572548922
+    },
+    {
+      "name": "desktop",
+      "label": "dwell endpoints and slide",
+      "maximum": 0.4604469536245405,
+      "changed": 294,
+      "center": [
+        -0.023683679273874526,
+        0.32216850949876363,
+        0.8225557316240464
+      ],
+      "uploads": 589,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "fast swipe",
+      "maximum": 0.47363829017841647,
+      "changed": 403,
+      "center": [
+        -0.014818217303921114,
+        0.2783754468471558,
+        0.8319076240232649
+      ],
+      "uploads": 637,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "long swipe",
+      "maximum": 0.49383320615732873,
+      "changed": 403,
+      "center": [
+        0.016211846850979615,
+        0.23429993488725617,
+        0.844561332926364
+      ],
+      "uploads": 699,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "retrace kneading",
+      "maximum": 0.5361703597698727,
+      "changed": 403,
+      "center": [
+        0.013038120288131103,
+        0.20843445146845155,
+        0.851594162477717
+      ],
+      "uploads": 840,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "cancel",
+      "maximum": 0.5361703597698727,
+      "changed": 444,
+      "center": [
+        0.013071780999356675,
+        0.2136068439547109,
+        0.8499288576701783
+      ],
+      "uploads": 847,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "blur",
+      "maximum": 0.5361703597698727,
+      "changed": 444,
+      "center": [
+        0.013110494321427607,
+        0.21925291543560282,
+        0.8481085937444678
+      ],
+      "uploads": 854,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "hidden",
+      "maximum": 0.5361703597698727,
+      "changed": 444,
+      "center": [
+        0.013134014588040475,
+        0.22252147870421707,
+        0.8470534812202827
+      ],
+      "uploads": 859,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "interrupt explicit color restoration",
+      "maximum": 0.4975621691482275,
+      "changed": 444,
+      "center": [
+        0.01330337536918927,
+        0.22357534555939795,
+        0.847659179836845
+      ],
+      "uploads": 864,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "sparse move and release in one task",
+      "changed": 276,
+      "samples": [
+        0.0565347254490379,
+        0.05642648214083817,
+        0.055865673705433785,
+        0.05633185399320245,
+        0.05643018622681306,
+        0.05642980875939197,
+        0.056361059058265696
+      ],
+      "pressed": "false"
+    },
+    {
+      "name": "desktop",
+      "label": "subframe sparse swipe",
+      "maximum": 0.056535479849804254,
+      "changed": 285,
+      "center": [
+        0.03468603530247496,
+        0.3287273745607013,
+        0.8359118547472645
+      ],
+      "uploads": 888,
+      "contexts": 2
+    },
+    {
+      "name": "desktop",
+      "label": "direct marshmallow preset creates independent scene and releases GPU resources"
+    },
+    {
+      "name": "mobile-touch",
+      "label": "short press actual input duration",
+      "milliseconds": 88.69999999995343
+    },
+    {
+      "name": "mobile-touch",
+      "label": "short press",
+      "maximum": 0.021751204668260145,
+      "changed": 113,
+      "center": [
+        0.01625641656439037,
+        0.34834807558859643,
+        0.9059249765122397
+      ],
+      "uploads": 10,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "progressive held press at nominal 100/300/600/1200ms",
+      "depths": [
+        0.03769879234938461,
+        0.13802477260479076,
+        0.2493168350599408,
+        0.3871844807634757
+      ],
+      "elapsedMilliseconds": [
+        135.59999999997672,
+        547.6999999999534,
+        1084.1999999999534,
+        2052
+      ]
+    },
+    {
+      "name": "mobile-touch",
+      "label": "actual GPU progressive frames",
+      "count": 206,
+      "first": {
+        "milliseconds": 3.699999999953434,
+        "maximum": 0.021751204668260145
+      },
+      "last": {
+        "milliseconds": 2425,
+        "maximum": 0.40249600296463856
+      },
+      "largestIncrease": 0.007500232009803383
+    },
+    {
+      "name": "mobile-touch",
+      "label": "long press",
+      "maximum": 0.4031399558469311,
+      "changed": 170,
+      "center": [
+        -0.3382582400344681,
+        0.3294145852974044,
+        0.8426512967739362
+      ],
+      "uploads": 220,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "local endpoint dwell",
+      "changed": 93,
+      "frozenDented": 191,
+      "diameter": 0.7511039572548922
+    },
+    {
+      "name": "mobile-touch",
+      "label": "dwell endpoints and slide",
+      "maximum": 0.4647353266836902,
+      "changed": 294,
+      "center": [
+        -0.0051040754002392354,
+        0.3233658949880062,
+        0.8263097315292512
+      ],
+      "uploads": 388,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "fast swipe",
+      "maximum": 0.4762827016425925,
+      "changed": 402,
+      "center": [
+        0.0037867355453022693,
+        0.2827726147886554,
+        0.8341723729844102
+      ],
+      "uploads": 435,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "long swipe",
+      "maximum": 0.49408401196959767,
+      "changed": 402,
+      "center": [
+        0.021632168230145195,
+        0.24272239533343204,
+        0.8460863392181678
+      ],
+      "uploads": 547,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "retrace kneading",
+      "maximum": 0.5222919153516795,
+      "changed": 403,
+      "center": [
+        0.020158713749952803,
+        0.2198318288018389,
+        0.8502607037337117
+      ],
+      "uploads": 750,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "cancel",
+      "maximum": 0.5222919153516795,
+      "changed": 444,
+      "center": [
+        0.020100382872155348,
+        0.22510308849007313,
+        0.8485224502420122
+      ],
+      "uploads": 762,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "blur",
+      "maximum": 0.5222919153516795,
+      "changed": 444,
+      "center": [
+        0.02005295468598961,
+        0.22951484534074282,
+        0.8470657874460367
+      ],
+      "uploads": 777,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "hidden",
+      "maximum": 0.5222919153516795,
+      "changed": 444,
+      "center": [
+        0.0200109069152949,
+        0.23353864803924287,
+        0.8457356476926825
+      ],
+      "uploads": 790,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "interrupt explicit color restoration",
+      "maximum": 0.486081361087283,
+      "changed": 444,
+      "center": [
+        0.020182275618857864,
+        0.23515556548320157,
+        0.8468609731997638
+      ],
+      "uploads": 811,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "sparse move and release in one task",
+      "changed": 273,
+      "samples": [
+        0.05646920422636024,
+        0.05637839585909348,
+        0.055857261969409586,
+        0.05633344850445507,
+        0.0562965557539109,
+        0.05642908059896484,
+        0.05636015871318414
+      ],
+      "pressed": "false"
+    },
+    {
+      "name": "mobile-touch",
+      "label": "subframe sparse swipe",
+      "maximum": 0.05646920422636024,
+      "changed": 284,
+      "center": [
+        0.03495809356809225,
+        0.32883140583410214,
+        0.8359320102448476
+      ],
+      "uploads": 925,
+      "contexts": 2
+    },
+    {
+      "name": "mobile-touch",
+      "label": "direct marshmallow preset creates independent scene and releases GPU resources"
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.4283.62"
+}
