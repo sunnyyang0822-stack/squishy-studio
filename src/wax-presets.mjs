@@ -24,7 +24,14 @@ const thickWax = Object.freeze({
   parameters: thickWaxParameters,
   create(options = {}) {
     const { worldMatrix, ...shellOptions } = options;
-    const wax = createWaxShell({ ...shellOptions, collectionEnabled: options.collectionEnabled ?? false }, thickWaxParameters);
+    const wax = createWaxShell({
+      ...shellOptions,
+      detachedClearanceCertificates: options.detachedClearanceCertificates ?? options.styleId === 'donut',
+      // Large curved donut plates can need more than ten correction passes.
+      // The solver still stops immediately once every volume sample is safe.
+      detachedCollisionIterations: options.detachedCollisionIterations ?? (options.styleId === 'donut' ? 40 : 10),
+      collectionEnabled: options.collectionEnabled ?? false,
+    }, thickWaxParameters);
     if (worldMatrix) wax.setWorldMatrix(worldMatrix);
     return wax;
   },

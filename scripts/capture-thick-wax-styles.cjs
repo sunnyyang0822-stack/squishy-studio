@@ -8,7 +8,7 @@ const { installStyleProbe, ready, rotate } = require('../tests/helpers/squishy-b
 const { projectedMeshContact, geometryOK } = require('../tests/helpers/wax-style-probe.cjs');
 
 const supported = ['cloud', 'cylinder', 'donut', 'pyramid', 'flower', 'star'];
-const folder = path.resolve('artifacts/issue-43-styles');
+const folder = path.resolve(process.env.THICK_WAX_STYLES_CAPTURE_OUTPUT || 'artifacts/issue-43-styles');
 const temporary = path.resolve('.tmp/issue-43-styles-video');
 const port = process.env.THICK_WAX_STYLES_CAPTURE_PORT || '4353';
 const base = `http://127.0.0.1:${port}`;
