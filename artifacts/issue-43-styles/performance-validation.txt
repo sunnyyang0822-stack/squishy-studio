@@ -1,0 +1,301 @@
+{
+  "exitCode": 0,
+  "bundle": "5abe3bd7fadd6f2d91391b2199d934ff7edc6d2659bc2b7ff6b9236d9723afcb",
+  "currentBundle": "5abe3bd7fadd6f2d91391b2199d934ff7edc6d2659bc2b7ff6b9236d9723afcb",
+  "cases": 12,
+  "completed": 12,
+  "fullThemeSequences": 48,
+  "stages": [
+    {
+      "name": "cloud-clay-desktop-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "cloud-clay-mobile-emulated-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "cylinder-clay-desktop-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "cylinder-clay-mobile-emulated-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "donut-clay-desktop-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "donut-clay-mobile-emulated-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "pyramid-clay-desktop-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "pyramid-clay-mobile-emulated-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "flower-clay-desktop-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "flower-clay-mobile-emulated-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "star-clay-desktop-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    },
+    {
+      "name": "star-clay-mobile-emulated-comparison",
+      "operationThemes": [
+        "day",
+        "night"
+      ],
+      "measurements": 34
+    }
+  ],
+  "performance": [
+    {
+      "style": "cloud",
+      "thickness": "thin",
+      "theme": "day",
+      "samples": 252,
+      "medianMs": 12.099999999627471,
+      "p95Ms": 15.299999999813735,
+      "maximumMs": 26.5,
+      "coreMaximumDisplacement": 0.31643129672017917,
+      "detached": 20,
+      "resources": {
+        "calls": 3,
+        "triangles": 156300,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "cloud",
+      "thickness": "thick",
+      "theme": "day",
+      "samples": 439,
+      "medianMs": 5.699999999254942,
+      "p95Ms": 14.899999999441206,
+      "maximumMs": 44.5,
+      "coreMaximumDisplacement": 0.32291198413812877,
+      "detached": 5,
+      "resources": {
+        "calls": 3,
+        "triangles": 109116,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "cylinder",
+      "thickness": "thin",
+      "theme": "day",
+      "samples": 269,
+      "medianMs": 11.900000000372529,
+      "p95Ms": 15.800000000745058,
+      "maximumMs": 18.399999999441206,
+      "coreMaximumDisplacement": 0.34092922109556023,
+      "detached": 20,
+      "resources": {
+        "calls": 3,
+        "triangles": 146284,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "cylinder",
+      "thickness": "thick",
+      "theme": "day",
+      "samples": 248,
+      "medianMs": 6,
+      "p95Ms": 35.40000000037253,
+      "maximumMs": 51.700000000186265,
+      "coreMaximumDisplacement": 0.35376330692460306,
+      "detached": 5,
+      "resources": {
+        "calls": 3,
+        "triangles": 99452,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "donut",
+      "thickness": "thin",
+      "theme": "day",
+      "samples": 133,
+      "medianMs": 22.899999999441206,
+      "p95Ms": 29.100000000558794,
+      "maximumMs": 35.5,
+      "coreMaximumDisplacement": 0.236089231112651,
+      "detached": 15,
+      "resources": {
+        "calls": 3,
+        "triangles": 162680,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "donut",
+      "thickness": "thick",
+      "theme": "day",
+      "samples": 80,
+      "medianMs": 33.69999999925494,
+      "p95Ms": 87.59999999962747,
+      "maximumMs": 116.70000000018626,
+      "coreMaximumDisplacement": 0.22831261331322658,
+      "detached": 14,
+      "resources": {
+        "calls": 3,
+        "triangles": 101344,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "pyramid",
+      "thickness": "thin",
+      "theme": "day",
+      "samples": 364,
+      "medianMs": 8.099999999627471,
+      "p95Ms": 11.799999999813735,
+      "maximumMs": 16.100000000558794,
+      "coreMaximumDisplacement": 0.32045916417736897,
+      "detached": 21,
+      "resources": {
+        "calls": 3,
+        "triangles": 105108,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "pyramid",
+      "thickness": "thick",
+      "theme": "day",
+      "samples": 407,
+      "medianMs": 5.699999999254942,
+      "p95Ms": 24,
+      "maximumMs": 38.60000000055879,
+      "coreMaximumDisplacement": 0.3361887297001128,
+      "detached": 8,
+      "resources": {
+        "calls": 3,
+        "triangles": 68308,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "flower",
+      "thickness": "thin",
+      "theme": "day",
+      "samples": 192,
+      "medianMs": 16,
+      "p95Ms": 23.199999999254942,
+      "maximumMs": 27.700000000186265,
+      "coreMaximumDisplacement": 0.3043762873394126,
+      "detached": 20,
+      "resources": {
+        "calls": 3,
+        "triangles": 180744,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "flower",
+      "thickness": "thick",
+      "theme": "day",
+      "samples": 311,
+      "medianMs": 6.2999999998137355,
+      "p95Ms": 30.90000000037253,
+      "maximumMs": 73.70000000018626,
+      "coreMaximumDisplacement": 0.3151822964028937,
+      "detached": 8,
+      "resources": {
+        "calls": 3,
+        "triangles": 127864,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "star",
+      "thickness": "thin",
+      "theme": "day",
+      "samples": 255,
+      "medianMs": 12,
+      "p95Ms": 15.5,
+      "maximumMs": 16.600000000558794,
+      "coreMaximumDisplacement": 0.30292042025525373,
+      "detached": 20,
+      "resources": {
+        "calls": 3,
+        "triangles": 152972,
+        "geometries": 2
+      }
+    },
+    {
+      "style": "star",
+      "thickness": "thick",
+      "theme": "day",
+      "samples": 308,
+      "medianMs": 6.2000000001862645,
+      "p95Ms": 31,
+      "maximumMs": 66.6000000005588,
+      "coreMaximumDisplacement": 0.31750462920244116,
+      "detached": 8,
+      "resources": {
+        "calls": 3,
+        "triangles": 105820,
+        "geometries": 2
+      }
+    }
+  ],
+  "errors": []
+}

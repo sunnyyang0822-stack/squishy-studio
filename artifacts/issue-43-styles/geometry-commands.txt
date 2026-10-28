@@ -1,0 +1,14 @@
+Command: THICK_WAX_STYLE_CASE=donut node --test tests/thick-wax-styles.test.cjs
+Exit code: 0
+Result: 1/1 passed, zero skipped. Output: geometry-donut.txt
+
+Command: node --test tests/thick-wax-styles.test.cjs
+Environment: THICK_WAX_STYLE_CASE unset
+Exit code: 0
+Result: 6/6 passed, zero failed/skipped; duration 94666.3609ms. Output: geometry.txt
+Summary: geometry-summary.json
+
+Models: cloud, cylinder, donut, pyramid, flower, star; clay only. Paw excluded.
+No clock acceleration, no camera/render opacity/depth changes. This is real asset CPU kernel geometry verification, not browser visual acceptance or physical-device performance evidence.
+Checks: every original source face coverage, connected actual partition geometry, thin local thickness .014, thick local thickness .042 within 1e-5 at every inner/outer pair and sidewall edge, mean/median area growth; independent current-core BVH checks for all active shell/fragment triangles' vertices, face centers and edge midpoints, including both outer/inner faces and volumetric sidewalls; baseline clay POSITION equality. Eleven checkpoints across 246 real solver frames plus explicit half/full restore.
+Donut inner wall: original source face centroid xy dot authored normal xy < -.03. Report both inner-region clipped surface area and the full physical fragments touching that region, to distinguish partial classification slivers from actual fragment sizes.

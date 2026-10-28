@@ -1,0 +1,119 @@
+✖ cloud thick wax: real structural input, local thickness, cleanup and scope (8567.6004ms)
+✖ cylinder thick wax: real structural input, local thickness, cleanup and scope (6751.6417ms)
+✖ donut thick wax: real structural input, local thickness, cleanup and scope (14035.3309ms)
+✖ pyramid thick wax: real structural input, local thickness, cleanup and scope (6223.4584ms)
+✖ flower thick wax: real structural input, local thickness, cleanup and scope (7554.3178ms)
+✖ star thick wax: real structural input, local thickness, cleanup and scope (7016.5716ms)
+✔ thick wax remains excluded for paw and other cores (2892.3976ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 1
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53894.0024
+
+✖ failing tests:
+
+test at tests\thick-wax-styles-browser.test.cjs:27:29
+✖ cloud thick wax: real structural input, local thickness, cleanup and scope (8567.6004ms)
+  AssertionError [ERR_ASSERTION]: Repeated switching must release old shell GPU geometry
+  
+  3 !== 2
+  
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-styles\tests\thick-wax-styles-browser.test.cjs:55:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\thick-wax-styles-browser.test.cjs:27:29
+✖ cylinder thick wax: real structural input, local thickness, cleanup and scope (6751.6417ms)
+  AssertionError [ERR_ASSERTION]: Repeated switching must release old shell GPU geometry
+  
+  3 !== 2
+  
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-styles\tests\thick-wax-styles-browser.test.cjs:55:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\thick-wax-styles-browser.test.cjs:27:29
+✖ donut thick wax: real structural input, local thickness, cleanup and scope (14035.3309ms)
+  AssertionError [ERR_ASSERTION]: Repeated switching must release old shell GPU geometry
+  
+  3 !== 2
+  
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-styles\tests\thick-wax-styles-browser.test.cjs:55:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\thick-wax-styles-browser.test.cjs:27:29
+✖ pyramid thick wax: real structural input, local thickness, cleanup and scope (6223.4584ms)
+  AssertionError [ERR_ASSERTION]: Repeated switching must release old shell GPU geometry
+  
+  3 !== 2
+  
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-styles\tests\thick-wax-styles-browser.test.cjs:55:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\thick-wax-styles-browser.test.cjs:27:29
+✖ flower thick wax: real structural input, local thickness, cleanup and scope (7554.3178ms)
+  AssertionError [ERR_ASSERTION]: Repeated switching must release old shell GPU geometry
+  
+  3 !== 2
+  
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-styles\tests\thick-wax-styles-browser.test.cjs:55:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\thick-wax-styles-browser.test.cjs:27:29
+✖ star thick wax: real structural input, local thickness, cleanup and scope (7016.5716ms)
+  AssertionError [ERR_ASSERTION]: Repeated switching must release old shell GPU geometry
+  
+  3 !== 2
+  
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-styles\tests\thick-wax-styles-browser.test.cjs:55:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

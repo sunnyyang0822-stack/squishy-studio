@@ -1,0 +1,21 @@
+✔ cloud thick wax: real structural input, local thickness, cleanup and scope (9153.0919ms)
+ℹ {"style":"cloud","contact":{"face":9146,"point":[0.3948861062526703,0.05249119798342387,0.6253834962844849],"normal":[0.18523301184177401,0.1419664522012075,0.9721959233283997],"radialDot":0.08059793194515077,"score":0.00003235797665159331,"region":"lobe connection","x":519.1149894316982,"y":486.5737874298936},"thickness":0.042,"maxThicknessError":2.2772151122424367e-7,"detached":5,"cleanup":5,"initialResources":{"calls":3,"triangles":109116,"geometries":2},"afterFirstFloorUploadResources":{"calls":3,"triangles":109116,"geometries":3},"switchedResources":{"calls":3,"triangles":109116,"geometries":3}}
+✔ cylinder thick wax: real structural input, local thickness, cleanup and scope (8686.6302ms)
+ℹ {"style":"cylinder","contact":{"face":7908,"point":[0.14310797055562338,0.11266666650772095,0.988528569539388],"normal":[0.14040469626585642,0,0.9898983041445415],"radialDot":0.020093031139085425,"score":0.000587756083308539,"region":"curved front","x":455.5410116965779,"y":488.2235082509615},"thickness":0.042,"maxThicknessError":2.7002388136576627e-7,"detached":5,"cleanup":5,"initialResources":{"calls":3,"triangles":99452,"geometries":2},"afterFirstFloorUploadResources":{"calls":3,"triangles":99452,"geometries":3},"switchedResources":{"calls":3,"triangles":99452,"geometries":3}}
+✔ donut thick wax: real structural input, local thickness, cleanup and scope (17398.4954ms)
+ℹ {"style":"donut","contact":{"face":37,"point":[0.38342512647310895,0.006066811250933668,0.28227900465329486],"normal":[-0.7638531525929769,-0.012966513633728027,0.6420568029085796],"radialDot":-0.2929591570306436,"score":0.00004853769011124704,"region":"inner wall","x":516.2210921069312,"y":482.424956727825},"thickness":0.042,"maxThicknessError":2.2665416875289335e-7,"detached":7,"cleanup":7,"initialResources":{"calls":3,"triangles":101344,"geometries":2},"afterFirstFloorUploadResources":{"calls":3,"triangles":101344,"geometries":3},"switchedResources":{"calls":3,"triangles":101344,"geometries":3}}
+✔ pyramid thick wax: real structural input, local thickness, cleanup and scope (6736.1195ms)
+ℹ {"style":"pyramid","contact":{"face":4288,"point":[0.15477541585763296,-0.2553823987642924,0.701589028040568],"normal":[0.0038333172754695024,0.31293336550394696,0.9497668345769246],"radialDot":-0.079324370260356,"score":0.00005177481307118897,"region":"sloping face","x":404.38978865386974,"y":567.168627988298},"thickness":0.042,"maxThicknessError":2.3023277537920217e-7,"detached":8,"cleanup":8,"initialResources":{"calls":3,"triangles":68308,"geometries":2},"afterFirstFloorUploadResources":{"calls":3,"triangles":68308,"geometries":3},"switchedResources":{"calls":3,"triangles":68308,"geometries":3}}
+✔ flower thick wax: real structural input, local thickness, cleanup and scope (8852.0166ms)
+ℹ {"style":"flower","contact":{"face":10071,"point":[0.5383049249649048,0.035156945387522384,0.41886046528816223],"normal":[0.012133223625520865,-0.11850014825661978,0.9916953444480896],"radialDot":0.002365270792647131,"score":0.00035709105030550144,"region":"lobe connection","x":555.3282402859335,"y":481.441777461447},"thickness":0.042,"maxThicknessError":2.2394859360008734e-7,"detached":8,"cleanup":8,"initialResources":{"calls":3,"triangles":127864,"geometries":2},"afterFirstFloorUploadResources":{"calls":3,"triangles":127864,"geometries":3},"switchedResources":{"calls":3,"triangles":127864,"geometries":3}}
+✔ star thick wax: real structural input, local thickness, cleanup and scope (9059.0228ms)
+ℹ {"style":"star","contact":{"face":9316,"point":[0.4869573016961416,0.14230812589327493,0.47812584042549133],"normal":[0.16849955916404724,0.25966501235961914,0.9494292934735618],"radialDot":0.11900453193646529,"score":0.00022927690631917828,"region":"arm connection","x":542.3629657222693,"y":457.54080197451526},"thickness":0.042,"maxThicknessError":3.9715396028816574e-7,"detached":8,"cleanup":8,"initialResources":{"calls":3,"triangles":105820,"geometries":2},"afterFirstFloorUploadResources":{"calls":3,"triangles":105820,"geometries":3},"switchedResources":{"calls":3,"triangles":105820,"geometries":3}}
+✔ thick wax remains excluded for paw and other cores (2547.6115ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63171.4947

@@ -1,0 +1,34 @@
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false (40.6811ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true (28.1959ms)
+✔ 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染 (22.2775ms)
+✔ 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变 (21.6612ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=false (41.4973ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=true (46.5604ms)
+✔ 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留 (30.4948ms)
+✔ 单次stroke采用最大包络；重复采样与采样密度不会无界叠加 (56.0651ms)
+✔ 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳 (1523.9754ms)
+✔ 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心 (885.5948ms)
+✔ 下一stroke从永久base继续，异处按压不擦除旧路径 (55.6399ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false (29.797ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true (23.7285ms)
+✔ 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零 (18.2097ms)
+✔ 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效 (20.5197ms)
+✔ 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压 (17.9904ms)
+✔ thick registry shares only verified behavior, frozen parameters and separate instance state (1324.0787ms)
+✔ every local thick cross-section is triple thin; actual source partitions exceed twice linear size and cover identical holes (774.111ms)
+ℹ {"releasedMeanAreas":[0.05295874401790565,0.43761328509396563],"releasedAreaRatio":8.263286700039679,"thin":{"patches":180,"meanArea":0.06671903459358952},"thick":{"patches":36,"meanArea":0.33359517293472346,"range":[0.09635884139563647,0.6117765081891978],"cv":0.3517854776493507},"areaRatio":4.999999999502029,"equivalentDiameterRatio":2.2360679773884398}
+✔ unchanged dwell and no timed emptying; detached large plates keep original hole topology and rigid size (301.8033ms)
+✔ deep press, drag, repeated press, rotation and recovery preserve clay and complete thick fragment clearance (8013.6983ms)
+ℹ {"frames":248,"samples":3530100,"minimumSignedDistance":0.0032985242772245195,"detached":6}
+✔ thin-wax registry is immutable, rejects unknown ids and reuses verified parameters (51.6896ms)
+✔ preset defaults to falling cleanup with permanent holes; collection requires explicit opt-in (748.3053ms)
+✔ preset instances isolate geometry, color, clock, damage, reset and disposal (348.5686ms)
+✔ preset accepts initial world matrix without moving caller-owned rest data (214.1895ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10580.5373

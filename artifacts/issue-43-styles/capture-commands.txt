@@ -1,0 +1,23 @@
+Final evidence commands (2026-10-28, Asia/Shanghai)
+
+npm run build:orb
+Exit code: 0. Output: build.txt
+
+node --test tests/thick-wax-styles-browser.test.cjs
+Exit code: 0; 7/7 passed, none skipped. Output: browser-validation.txt
+
+node scripts/capture-thick-wax-styles.cjs --capture-only
+Exit code: 0; 12/12 recordings, each with thin/day, thin/night, thick/day, thick/night complete matched-operation sequences (48 total). Every sequence navigates afresh to reset damage and rotation.
+Output: capture-validation.txt; detailed stages: comparison-validation.json.
+Desktop viewport1280x900 and mobile emulation390x844 each cover both day/night full sequences. Mobile pressure is CDP touch; background rotation uses existing mouse gesture and is labelled. No physical-phone/Safari claim.
+192 matched intact/crack/falling/side PNGs; 12 normal-wall-time comparison videos. No clocks, speed or geometry were replaced for capture.
+
+node scripts/capture-thick-wax-styles.cjs --performance-only
+Exit code: 0; 12 samplesets = six styles x thin/thick, same day mobile structural contact, 3-second touch each. All contacts actually deform clay >0.01 and detach local wax. No video/GPU observer or concurrent parent geometry/full regression load. Summary: performance-validation.txt; complete original intervals, coordinates and resources: comparison-validation.json.
+Intervals are MutationObserver callbacks after renderer.render completion; not hardware-presented FPS. No interval outliers were filtered.
+
+TEMP/TMP for all browser runs: D:/squishy-studio/.worktrees/issue-43-thick-styles/.tmp/browser
+Bundle SHA256 for capture and performance: 5abe3bd7fadd6f2d91391b2199d934ff7edc6d2659bc2b7ff6b9236d9723afcb
+
+Earlier partial-theme capture/performance was superseded by the complete matching final run. Earlier browser-native dependency import and resource/switch baseline failures were fixed and rerun, without changing production geometry, timing or collision to manufacture passes.
+After merging origin/main, Windows checkout converted generated LF to CRLF, changing only raw filesystem SHA. Git blobs remained 5abe...; fresh build restored identical LF bytes before performance. No source or behavior change was needed.

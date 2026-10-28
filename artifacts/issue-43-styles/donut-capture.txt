@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+15 !== 0
+
+    at main (D:\squishy-studio\.worktrees\issue-43-thick-styles\scripts\capture-thick-wax-styles.cjs:96:145) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 15,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
