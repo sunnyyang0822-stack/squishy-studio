@@ -115,13 +115,13 @@ for (const id of styles) test(`${id} clay thin-wax making preview: real mesh inp
   } finally { await page.close(); }
 });
 
-test('style wax scope excludes slow rebound and preserves all preview-only legacy play', { timeout: 180000 }, async t => {
+test('style wax scope includes registered slow-rebound previews and preserves legacy play', { timeout: 180000 }, async t => {
   const results = [];
   for (const id of styles) for (const material of ['butter']) {
     const { page } = await open(id, material, 'shell');
     try {
-      const d = await diagnostic(page); assert.equal(d.enabled, id === 'orb', `${id}/${material}: only the slow-rebound orb joins the local making preview`);
-      assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).count(), id === 'orb' ? 1 : 0);
+      const d = await diagnostic(page); assert.equal(d.enabled, true, `${id}/${material}: supported slow-rebound styles join the making preview`);
+      assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).count(), 1);
       results.push({ id, material, enabled: d.enabled });
     } finally { await page.close(); }
   }

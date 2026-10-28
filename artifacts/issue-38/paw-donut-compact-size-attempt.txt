@@ -1,0 +1,44 @@
+✖ paw: compact cells bound shard length while covering every original source face (4270.2115ms)
+ℹ {"id":"paw","count":260,"oldMax":0.9886436370568179,"max":0.49958471567973173,"p95":0.4316794087154578}
+✖ donut: compact cells bound shard length while covering every original source face (2176.4793ms)
+ℹ {"id":"donut","count":260,"oldMax":1.0023251260667445,"max":0.48675753383561154,"p95":0.4503066366867575}
+✔ relative motion bounds include a triangle sweeping entirely through a region, and cancel a shared rigid translation (0.9666ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 1
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6615.4218
+
+✖ failing tests:
+
+test at tests\wax-compact-panels.test.cjs:2:33
+✖ paw: compact cells bound shard length while covering every original source face (4270.2115ms)
+  AssertionError [ERR_ASSERTION]: Every shard must fit inside a short model-space AABB diagonal
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-38-slow-styles-preview\tests\wax-compact-panels.test.cjs:6:580)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests\wax-compact-panels.test.cjs:2:33
+✖ donut: compact cells bound shard length while covering every original source face (2176.4793ms)
+  AssertionError [ERR_ASSERTION]: Every shard must fit inside a short model-space AABB diagonal
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-38-slow-styles-preview\tests\wax-compact-panels.test.cjs:6:580)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+EXIT_CODE=1

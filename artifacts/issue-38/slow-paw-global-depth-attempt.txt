@@ -1,0 +1,28 @@
+✔ paw slow-rebound wax: real mouse input, visible volume and natural recovery (27839.8712ms)
+ℹ {"style":"paw","mobile":false,"bare":{"x":141.390625,"y":179.6875,"width":556,"height":562.3125},"shell":{"x":141.390625,"y":179.6875,"width":556,"height":562.3125},"shortMs":372.29999999981374,"onset":0.5049999999999999,"firstDetached":3,"deepDetached":4,"loadedDepth":0.1568432087593461,"recoveringDepth":0.03571199647357902,"uploadError":{"core":0,"shell":0},"geometry":{"thickness":0.014,"gap":0.004,"tolerance":0.00001,"attachedMinGap":0.003999939968060502,"attachedMinSignedDistance":0.002899587975328659,"worstAttachedSample":{"panelId":184,"point":[0.14441947638988495,0.33013251423835754,0.12336930632591248],"distance":0.002899587975328659,"sampleKind":"inner-vertex","sourceFace":8628,"renderedVertex":101966,"cracked":true,"loose":false,"supportOnly":true,"complexSurface":true,"lift":0},"attachedMaxSignedDistance":0.0056436370854386665,"worstAttachedMaxSample":{"panelId":169,"point":[0.14156636595726013,0.32730719447135925,0.12359262630343437],"distance":0.0056436370854386665,"sampleKind":"inner-edge-midpoint","sourceFace":8628,"renderTriangleId":87855,"panelTriangle":79,"edge":1},"attachedOuterMaxSignedDistance":0.019512893332360236,"attachedWallMaxSignedDistance":0.01483419439463604,"worstAttachedCorrection":null,"attachedCorrectionMax":0,"attachedCorrectionTotalMax":0,"attachedCorrectedSamples":0,"maxThicknessError":1.1073117155147028e-7,"attachedSamples":32773,"attachedSurfaceSamples":390536,"attachedViolations":0,"detachedSweepSamples":13300,"logicalSweepSamples":45735,"duplicateSweepSamples":12251,"zeroLengthSweepSamples":20184,"detachedMinSignedDistance":null,"detachedSamples":0,"detachedInteriorSamples":0,"detachedViolations":0,"wallSamples":36626,"drawCalls":1,"shellVertices":139300,"shellTriangles":130336,"patches":278,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":0,"minY":null,"maxRadius":0,"pileTop":-1.35,"gridCells":0},"panelAreaCV":0.7293074104278295,"panelAreaRange":[0.0013959944619543574,0.19514552310836314],"method":"Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"}}
+✖ paw slow-rebound wax: real touch input, visible volume and natural recovery (10313.1791ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39085.215
+
+✖ failing tests:
+
+test at tests\wax-slow-rebound-style-browser.test.cjs:8:34
+✖ paw slow-rebound wax: real touch input, visible volume and natural recovery (10313.1791ms)
+  AssertionError [ERR_ASSERTION]: New deep strain detaches additional pieces
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-38-slow-styles-preview\tests\wax-slow-rebound-style-browser.test.cjs:24:50)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+EXIT_CODE=1

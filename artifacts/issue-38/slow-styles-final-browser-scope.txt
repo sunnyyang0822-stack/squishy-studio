@@ -1,0 +1,11 @@
+✔ style wax scope excludes slow rebound and preserves all preview-only legacy play (22274.5194ms)
+ℹ [{"id":"orb","material":"butter","enabled":true},{"id":"cloud","material":"butter","enabled":true},{"id":"paw","material":"butter","enabled":true},{"id":"cylinder","material":"butter","enabled":true},{"id":"donut","material":"butter","enabled":true},{"id":"pyramid","material":"butter","enabled":true},{"id":"flower","material":"butter","enabled":true},{"id":"star","material":"butter","enabled":true},{"id":"cloud","step":"play","enabled":false},{"id":"paw","step":"play","enabled":false},{"id":"cylinder","step":"play","enabled":false},{"id":"donut","step":"play","enabled":false},{"id":"pyramid","step":"play","enabled":false},{"id":"flower","step":"play","enabled":false},{"id":"star","step":"play","enabled":false},{"id":"orb","step":"play","enabled":false},{"id":"cloud","step":"play","enabled":false},{"id":"paw","step":"play","enabled":false},{"id":"cylinder","step":"play","enabled":false},{"id":"donut","step":"play","enabled":false},{"id":"pyramid","step":"play","enabled":false},{"id":"flower","step":"play","enabled":false},{"id":"star","step":"play","enabled":false}]
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23013.368
+EXIT_CODE=0

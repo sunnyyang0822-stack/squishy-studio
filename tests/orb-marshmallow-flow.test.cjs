@@ -26,7 +26,7 @@ test('all registered marshmallow styles share the thin-wax making preview; slow 
     assert.equal(canRestartThinWax('shell', { ...recipe, styleId }), true, styleId);
     assert.equal(canRestartThinWax('play', { ...recipe, styleId }), false, styleId);
     assert.equal(isThinWaxRecipe({ ...recipe, styleId, coreMaterial: 'clay' }), true, 'Existing clay scope stays enabled');
-    assert.equal(isThinWaxRecipe({ ...recipe, styleId, coreMaterial: 'butter' }), styleId === 'orb', 'Only the locally reviewed slow-rebound orb joins the making preview');
+    assert.equal(isThinWaxRecipe({ ...recipe, styleId, coreMaterial: 'butter' }), true, 'Registered slow-rebound shapes reuse the same making preview after orb approval');
   }
   for (const change of [{ waxThickness: 'medium' }, { waxThickness: 'thick' }, { shellMaterial: 'sugar' }, { shellMaterial: 'polish' }, { styleId: 'unknown' }]) {
     assert.equal(isThinWaxRecipe({ ...recipe, ...change }), false);

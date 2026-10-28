@@ -1,0 +1,49 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (2.981ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.39ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (4.5556ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (0.9496ms)
+✔ 薄蜡范围之外的制作结束保留原有自动恢复 (1.0084ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (5.2836ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (0.9147ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (1.522ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (0.5123ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.5018ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (1.016ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (0.5432ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.3735ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (8.0014ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (0.8672ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.6403ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.34ms)
+✔ all registered marshmallow styles share the thin-wax making preview; slow rebound and legacy play remain excluded (0.8073ms)
+✔ every marshmallow core to shell keeps independent colors, the same feel and recipe, and persistent preview damage (6.9177ms)
+✔ every marshmallow legacy final restores core while preserving hidden shell, and return configures preview without repair (2.3487ms)
+✔ 同一捕获与命中同时驱动芯壳；命中丢失终止驻留，不在旧位置继续施力 (3.9775ms)
+✔ slow-rebound wax/thin making scope includes approved registry shapes; legacy play stays excluded (0.8363ms)
+✔ slow orb making navigation preserves damage identity; final play restores core with hidden shell preserved (3.4758ms)
+✔ identical local queries reuse only unchanged live triangles and stay equal to a cache-disabled full BVH (1556.4874ms)
+ℹ {"id":"paw","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":3124,"nearestTriangles":2342,"gridQueries":82,"gridSweeps":0,"cachedQueries":244}}
+ℹ {"id":"donut","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":4347,"nearestTriangles":2879,"gridQueries":67,"gridSweeps":0,"cachedQueries":242}}
+✔ a different triangle entering or leaving a cached search region invalidates the result; caches cannot cross tree instances (2.0947ms)
+✔ local live-triangle grid preserves full BVH results, including ties, dynamic refit and out-of-grid fallback (1525.3943ms)
+ℹ {"id":"orb","actualGridQueries":1466,"actualGridSweeps":732}
+ℹ {"id":"paw","actualGridQueries":1501,"actualGridSweeps":726}
+ℹ {"id":"donut","actualGridQueries":1518,"actualGridSweeps":726}
+✔ same-panel edge deduplication preserves every distinct sampled position and exactly the same collision fraction (511.2857ms)
+ℹ {"id":"orb","logicalQueries":400,"actualQueries":293,"distinctSamplePairs":293}
+ℹ {"id":"paw","logicalQueries":400,"actualQueries":398,"distinctSamplePairs":398}
+ℹ {"id":"donut","logicalQueries":400,"actualQueries":299,"distinctSamplePairs":299}
+✔ finite-segment BVH pruning equals a complete live-triangle scan, including inside boxes, parallel axes and signed directions (1365.2236ms)
+✔ real folded paw distinguishes a false face-normal penetration from a true penetration using independent ray parity (1997.0929ms)
+ℹ {"expectedInside":false,"independentUniqueRayHits":[0,2,0],"robustSignedDistance":0.03808787054371515,"legacySignedDistance":-0.03808787054371515}
+ℹ {"expectedInside":true,"independentUniqueRayHits":[3,3,3],"robustSignedDistance":-0.0002773505469502473,"legacySignedDistance":-0.0002773505469502473}
+✔ closed concave solid with duplicated seam vertices has analytic inside/outside signs after dynamic refit (32.2904ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7902.8528
+EXIT_CODE=0

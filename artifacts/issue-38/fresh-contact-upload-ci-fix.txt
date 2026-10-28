@@ -1,0 +1,15 @@
+{"testRasterProfile":"default:0.5","browserRasterEnvironment":{"devicePixelRatio":0.5,"viewport":[1280,900],"cssCanvas":[791,808],"drawingBuffer":[395,404],"renderer":"ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)","measuredPerformance":false,"resources":{"calls":3,"triangles":76944,"geometries":2}}}
+✔ cancellation, blur, hidden document, hit loss and leave stop the same input lifecycle (10304.8809ms)
+ℹ {"action":"pointercancel","elapsed":29.800000000745058,"captured":true,"trustedDown":true}
+ℹ {"action":"blur","elapsed":14.300000000745058,"captured":true,"trustedDown":true}
+ℹ {"action":"hidden","elapsed":15.300000000745058,"captured":true,"trustedDown":true}
+ℹ {"sweep":{"before":{"active":true,"cracked":33,"attachedCracked":22,"attachedPartialBranches":20,"visibleLongCrackEdges":54,"detached":11,"living":11,"settled":0,"expired":0,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":11,"settled":0,"minY":-3.7976490753720302,"maxRadius":1.4281636695709161,"pileTop":-1.35,"gridCells":0},"firstBurst":3,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0.0012999999988831945,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":180,"visibleCrackRadius":0.53,"localDamaged":0,"localDetached":0,"chainWaveCount":1,"lastDamageTime":8.81310000000149,"heldStrain":0,"maxDetachedPerContact":180,"localRetainedFraction":1},"after":{"active":false,"cracked":33,"attachedCracked":22,"attachedPartialBranches":20,"visibleLongCrackEdges":54,"detached":11,"living":7,"settled":0,"expired":4,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":7,"settled":0,"minY":-3.2602166949719713,"maxRadius":1.467230773127288,"pileTop":-1.35,"gridCells":0},"firstBurst":3,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":180,"visibleCrackRadius":0.53,"localDamaged":0,"localDetached":0,"chainWaveCount":1,"lastDamageTime":8.81310000000149,"heldStrain":0,"maxDetachedPerContact":180,"localRetainedFraction":1},"elapsed":13.900000000372529}}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11275.0197
+EXIT_CODE=0

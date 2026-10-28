@@ -1,0 +1,13 @@
+✔ paw mouse: native partial GPU uploads stay current during deep press, drag, reset and recovery (9646.6872ms)
+ℹ {"mobile":false,"uploads":{"partialCalls":5904,"frames":83,"minFraction":0.07607595690219655,"meanFraction":0.19126550848910265},"actualGPUErrors":[{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0}],"geometry":{"minGap":0.003999939968060502,"minSigned":0.0035435042275456675,"thickness":0.014},"note":"Native upload observation and geometry validation, not a performance benchmark"}
+✔ paw touch: native partial GPU uploads stay current during deep press, drag, reset and recovery (8279.8855ms)
+ℹ {"mobile":true,"uploads":{"partialCalls":5042,"frames":79,"minFraction":0.05291981665575332,"meanFraction":0.16345212682189492},"actualGPUErrors":[{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0},{"shell":0,"core":0}],"geometry":{"minGap":0.003999939968060502,"minSigned":0.003523325244468537,"thickness":0.014},"note":"Native upload observation and geometry validation, not a performance benchmark"}
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18662.5469
+EXIT_CODE=0

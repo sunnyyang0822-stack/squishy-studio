@@ -3,11 +3,11 @@ const assert=require('node:assert/strict');
 const state=import('../detail/state.mjs');
 const settle=()=>new Promise(r=>setImmediate(r));
 
-test('local slow-rebound scope is orb making wax/thin only; all other shapes and legacy play stay excluded',async()=>{
+test('slow-rebound wax/thin making scope includes registered shapes; legacy play stays excluded',async()=>{
  const {defaultRecipe,styleNames,isThinWaxRecipe,canRestartThinWax,previewFor}=await state;
  for(const styleId of Object.keys(styleNames)){
   const recipe={...defaultRecipe,styleId,coreMaterial:'butter',waxThickness:'thin'};
-  assert.equal(isThinWaxRecipe(recipe),styleId==='orb');assert.equal(canRestartThinWax('shell',recipe),styleId==='orb');assert.equal(canRestartThinWax('play',recipe),false);
+  assert.equal(isThinWaxRecipe(recipe),true);assert.equal(canRestartThinWax('shell',recipe),true);assert.equal(canRestartThinWax('play',recipe),false);
   const p=previewFor('shell',recipe);assert.equal(p.feelId,'slow-rebound');assert.equal(p.presetId,'slow-rebound');assert.equal(p.appearanceId,'full-matte');assert.equal(p.waxCollection,false);
   for(const change of [{waxThickness:'medium'},{waxThickness:'thick'},{shellMaterial:'polish'},{shellMaterial:'sugar'}])assert.equal(isThinWaxRecipe({...recipe,...change}),false);
  }
