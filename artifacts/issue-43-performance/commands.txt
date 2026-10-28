@@ -1,0 +1,40 @@
+Task: optimize donut thick-wax interaction on codex/issue-43-thick-styles (PR #52), excluding paw and other cores.
+Before implementation: ec65e53; approved main baseline a9315d9.
+Final source commit: 1d253a4.
+
+node scripts/profile-thick-donut.cjs
+Exit: 0; label before; original shipped bundle 5abe3bd7fadd6f2d91391b2199d934ff7edc6d2659bc2b7ff6b9236d9723afcb.
+CPU profiles use separately instrumented unminified bundle; shipped-minified performance has no profiler, video, query counter or GPU observer.
+
+THICK_DONUT_PROFILE_LABEL=after; THICK_DONUT_PERFORMANCE_REPEATS=3; node scripts/profile-thick-donut.cjs
+Exit: 0. Intermediate cache-only budget10, superseded by final-budget40 below; retained for traceability.
+
+THICK_DONUT_PROFILE_LABEL=final-budget40; THICK_DONUT_PERFORMANCE_REPEATS=3; node scripts/profile-thick-donut.cjs
+Exit: 0. Final shipped bundle 0f771cb26cd1cefb8314440f47348b749caca9034c0e8da0464cadb8268b4147.
+Thin P95=27.8/27.2/27.4ms; thick=25.8/26.5/27.2ms; final thick P95 median26.5ms vs original77.0ms.
+Raw unfiltered intervals, contacts, core deformation, drop states and profiles: final-budget40-profile.json and cpuprofiles; summary: profile-summary.json.
+
+node --test tests/wax-detached-clearance.test.cjs tests/thick-wax-styles.test.cjs tests/thick-wax.test.cjs tests/wax-presets.test.cjs tests/wax-cache-surface.test.cjs tests/wax-collision-cache.test.cjs tests/wax-collision-query.test.cjs tests/thin-wax.test.cjs tests/thick-wax-flow.test.cjs tests/orb-deformation.test.cjs
+Exit: 0; 64/64 passed, no failures/skips. Output: final-regression.txt.
+Includes variable frame timings, exact on/off geometry equivalence under SAME budget40, and original budget10 failure (148 samples, min -0.00898786) vs budget40 complete-volume safety.
+
+node scripts/check-donut-runtime.cjs
+Historical cache-only budget10 diagnostic: 3 normal +5 night/screenshot twin runs; 1409 real-dt frames, uploaded position/normal arrays identical. Outputs: runtime-twin-check.json/runtime-night-twin-check.json/runtime-twin-summary.json.
+This isolated cache equivalence; it did not reproduce or disprove the later deterministic original collision-budget failure. Final-budget40 safety is independently checked in final-regression.txt.
+
+npm run build:orb
+Exit: 0; final-build.txt; final bundle SHA verified against final capture and final independent profile.
+
+node --test tests/thick-wax-styles-browser.test.cjs tests/thick-wax-browser.test.cjs
+Exit: 0; 8/8, no failures/skips. Output: final-browser-validation.txt.
+
+THICK_WAX_STYLE_CASES=donut
+THICK_WAX_STYLES_CAPTURE_OUTPUT=artifacts/issue-43-performance/final-donut-capture
+node scripts/capture-thick-wax-styles.cjs --capture-only
+Exit: 0; final-capture-validation.txt.
+2 videos cover desktop/mobile emulation x thin/thick x day/night = 8 full operation sequences, 68 stages, page errors0. Each thickness/theme starts fresh from same view/core/colors. Geometry, cleanup, navigation, last-selection/reset assertions kept intact.
+
+The earlier cache-only capture failed once with 15 detached penetrations; original evidence is retained in capture-validation.txt and donut-capture/. The failure led to deterministic reproduction with certificates disabled, and the donut-only correction-budget repair. No assertions removed or weakened; final verified evidence is in final-donut-capture/.
+
+Independent performance: Windows Edge/Chromium mobile emulation 390x844. Physical phones/Safari untested. No claim of guaranteed60fps (final highest interval62.7ms).
+Public repository retained. PR #52 remains draft; do not auto-merge other styles before review.

@@ -48,7 +48,7 @@ CPU profile另用同源码的非压缩bundle保留函数名，诊断时性能间
 
 最终可变步长（144/90/60/30Hz、55ms、100ms交替）等价对照包含197个活动碎片帧、约331万命中证书，实际最近面查询4253946→941928，降低77.9%；记录于 `final-regression.txt`。最终相关回归64/64通过、退出0，包含六款独立完整几何、薄蜡、内芯、缓存、流程及本轮两个专项。现有完整体积样式测试继续独立对内外面、顶点、边及侧壁做真实查询，不使用证书作为验证器。
 
-对应命令和退出码见 `commands.txt`、`regression.txt`、浏览器及录屏验证输出。旧六款证据保留其原bundleSHA，新优化甜甜圈单独归档，不把旧录屏冒作新构建。最终优化bundleSHA256：`0f771cb26cd1cefb8314440f47348b749caca9034c0e8da0464cadb8268b4147`。
+最终真实浏览器回归8/8通过、退出0（`final-browser-validation.txt`）；最终甜甜圈桌面/手机模拟各一条录屏，含薄昼/薄夜/厚昼/厚夜共8组完整操作、68阶段，所有几何/清理/快切/恢复检查通过、页面错误0、退出0（`final-capture-validation.txt`、`final-donut-capture/comparison-validation.json`）。对应命令和退出码见 `commands.txt`、`final-regression.txt`。旧六款证据保留其原bundleSHA，新优化甜甜圈单独归档，不把旧录屏冒作新构建。最终优化bundleSHA256：`0f771cb26cd1cefb8314440f47348b749caca9034c0e8da0464cadb8268b4147`。
 
 ## 审查与回滚
 

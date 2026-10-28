@@ -1,0 +1,2 @@
+donut-clay-desktop-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+donut-clay-mobile-emulated-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed

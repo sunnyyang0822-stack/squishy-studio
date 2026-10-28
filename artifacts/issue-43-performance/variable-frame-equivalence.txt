@@ -1,0 +1,10 @@
+✔ donut detached clearance certificates preserve exact geometry, collisions, damage and lifetime against full queries (15369.3553ms)
+ℹ {"hits":2227759,"queries":938665,"referenceQueries":3166424,"movingFrames":197,"reduction":0.7035567567704135}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15465.0721
