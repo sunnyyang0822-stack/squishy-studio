@@ -410,16 +410,18 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
       const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
+      const thickRecipe = feelId === 'clay' && style.id === 'orb' && config.shellMaterial === 'wax' && config.waxThickness === 'thick';
+      const waxRecipe = thinRecipe || thickRecipe;
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
-      if (wax || thinRecipe) current.input.cancel({ preserveShape: changed });
-      if (changed && (wax || thinRecipe)) { disposeWax(); current.selectColor(config.coreColor || config.color, { restore: true }); }
+      if (wax || waxRecipe) current.input.cancel({ preserveShape: changed });
+      if (changed && (wax || waxRecipe)) { disposeWax(); current.selectColor(config.coreColor || config.color, { restore: true }); }
       recipeKey = config.recipeKey;
       activeConfig = { ...config };
-      shellVisible = thinRecipe && config.mode !== 'core' && config.mode !== 'hidden';
+      shellVisible = waxRecipe && config.mode !== 'core' && config.mode !== 'hidden';
       collectionEnabled = config.waxCollection !== false;
-      if (thinRecipe && !wax) {
+      if (waxRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset('thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, fullSurfaceSupport: feelId === 'marshmallow' && isSurface });
+        wax = getWaxPreset(thickRecipe ? 'thick-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, fullSurfaceSupport: feelId === 'marshmallow' && isSurface });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }
@@ -437,7 +439,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (wax) wax.group.traverse(object => { if (object.isMesh) { object.castShadow = true; object.receiveShadow = true; } });
       if (shadowsChanged) mesh.material.needsUpdate = true;
       // Navigating a fixed thin-wax recipe never recolors or repairs its core.
-      current.selectColor(thinRecipe ? config.coreColor : config.color);
+      current.selectColor(waxRecipe ? config.coreColor : config.color);
       current.diagnostics = ({ exhaustive = false, surface = false, measure = true, counters = false } = {}) => {
         if (counters) return wax?.getQueryCounters(true);
         return ({

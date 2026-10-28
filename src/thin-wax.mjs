@@ -349,4 +349,6 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
 }
 
 export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
-export function createThinWax(options = {}) { return createVoronoiWax(options, options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters, createWaxCollisionTree); }
+// Shared shell factory; presets supply their own frozen geometry configuration.
+export function createWaxShell(options, parameters) { return createVoronoiWax(options, parameters, createWaxCollisionTree); }
+export function createThinWax(options = {}) { return createWaxShell(options, options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters); }

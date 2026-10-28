@@ -19,7 +19,7 @@ test('thin-wax registry is immutable, rejects unknown ids and reuses verified pa
   const { thinWaxParameters } = await import('../src/thin-wax.mjs');
   const preset = getWaxPreset();
   assert.ok(Object.isFrozen(waxPresets)); assert.ok(Object.isFrozen(preset));
-  assert.deepEqual(Object.keys(waxPresets), ['thin-wax']);
+  assert.deepEqual(Object.keys(waxPresets), ['thin-wax', 'thick-wax']);
   assert.equal(preset, getWaxPreset('thin-wax'));
   assert.equal(preset.id, 'thin-wax'); assert.equal(preset.material, 'wax'); assert.equal(preset.thickness, 'thin');
   assert.equal(preset.parameters, thinWaxParameters);
