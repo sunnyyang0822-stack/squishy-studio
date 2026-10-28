@@ -1,0 +1,12 @@
+✔ donut detached clearance certificates preserve exact geometry, collisions, damage and lifetime against full queries (17088.6069ms)
+ℹ {"hits":3312018,"queries":941928,"referenceQueries":4253946,"movingFrames":197,"reduction":0.778575468517936}
+✔ donut correction finishes after the old ten-pass budget is exhausted; all inner/outer edges and walls stay outside (17272.8393ms)
+ℹ {"oldViolations":148,"oldMinimum":-0.008987863267923049,"oldWorstSample":{"panelId":4,"point":[0.11267673224210739,1.1421167850494385,0.050717759877443314],"distance":-0.008987863267923049,"sampleKind":"inner-vertex","sourceFace":2786,"renderedVertex":6660},"newViolations":0,"newMinimum":0.002991238143636766,"completeVolume":{"minimumSignedDistance":0.0023944144798490547,"samples":292264}}
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 34461.4777

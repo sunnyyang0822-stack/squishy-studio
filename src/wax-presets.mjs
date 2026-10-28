@@ -14,6 +14,9 @@ const thinWax = Object.freeze({
   },
 });
 
+// Product support excludes paw; other cores remain owned by the host.
+export { thickWaxStyles } from './wax-preset-scope.mjs';
+
 // Model units, not optical material thickness. Gap and all behavior stay thin-wax.
 export const thickWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 3, seedCount: 36 });
 const thickWax = Object.freeze({
@@ -21,7 +24,14 @@ const thickWax = Object.freeze({
   parameters: thickWaxParameters,
   create(options = {}) {
     const { worldMatrix, ...shellOptions } = options;
-    const wax = createWaxShell({ ...shellOptions, collectionEnabled: options.collectionEnabled ?? false }, thickWaxParameters);
+    const wax = createWaxShell({
+      ...shellOptions,
+      detachedClearanceCertificates: options.detachedClearanceCertificates ?? options.styleId === 'donut',
+      // Large curved donut plates can need more than ten correction passes.
+      // The solver still stops immediately once every volume sample is safe.
+      detachedCollisionIterations: options.detachedCollisionIterations ?? (options.styleId === 'donut' ? 40 : 10),
+      collectionEnabled: options.collectionEnabled ?? false,
+    }, thickWaxParameters);
     if (worldMatrix) wax.setWorldMatrix(worldMatrix);
     return wax;
   },

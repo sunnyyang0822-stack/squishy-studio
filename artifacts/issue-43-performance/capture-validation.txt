@@ -1,0 +1,14 @@
+AssertionError [ERR_ASSERTION]: {"thickness":0.042,"gap":0.004,"tolerance":0.00001,"attachedMinGap":0.003999942018527575,"attachedMinSignedDistance":0.003454141313907743,"worstAttachedSample":{"panelId":10,"point":[0.03155686613172293,0.2766282558441162,0.0043033938854932785],"distance":0.003454141313907743,"sampleKind":"inner-edge-midpoint","sourceFace":2831,"renderTriangleId":13013,"panelTriangle":86,"edge":2,"cracked":true,"supportOnly":true,"complexSurface":true,"lift":0},"attachedMaxSignedDistance":0.0050415467670973995,"worstAttachedMaxSample":{"panelId":19,"point":[0.1774817854166031,-0.40956640243530273,0.2056143879890442],"distance":0.0050415467670973995,"sampleKind":"inner-edge-midpoint","sourceFace":10022,"renderTriangleId":24417,"panelTriangle":796,"edge":1},"attachedOuterMaxSignedDistance":null,"attachedWallMaxSignedDistance":0.0328138758969422,"worstAttachedCorrection":null,"attachedCorrectionMax":0,"attachedCorrectionTotalMax":0,"attachedCorrectedSamples":0,"maxThicknessError":2.033967262046743e-7,"attachedSamples":6912,"attachedSurfaceSamples":48694,"attachedViolations":0,"detachedSweepSamples":270,"logicalSweepSamples":7275,"duplicateSweepSamples":2207,"zeroLengthSweepSamples":4798,"detachedMinSignedDistance":-0.005554546175883483,"detachedSamples":1752,"detachedInteriorSamples":12516,"detachedViolations":15,"wallSamples":7822,"drawCalls":1,"shellVertices":42480,"shellTriangles":44528,"patches":44,"debris":{"floorY":-1.35,"radius":1.35,"moving":6,"settled":0,"minY":-2.7629474027379435,"maxRadius":1.267961242232313,"pileTop":-1.35,"gridCells":0},"panelAreaCV":0.7853839754687023,"panelAreaRange":[0.00915238057507743,0.7720881241998143],"method":"Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"}
+
+15 !== 0
+
+    at geometryOK (D:\squishy-studio\.worktrees\issue-43-thick-styles\tests\helpers\wax-style-probe.cjs:44:68)
+    at measure (D:\squishy-studio\.worktrees\issue-43-thick-styles\scripts\capture-thick-wax-styles.cjs:58:118)
+    at async main (D:\squishy-studio\.worktrees\issue-43-thick-styles\scripts\capture-thick-wax-styles.cjs:79:24) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 15,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

@@ -1,4 +1,5 @@
 import { squishyStyles } from '../src/squishy-styles.mjs';
+import { thickWaxStyles } from '../src/wax-preset-scope.mjs';
 import { colorNames } from './orb-colors.mjs';
 export { colorNames } from './orb-colors.mjs';
 
@@ -16,10 +17,10 @@ export const effectiveRecipe = recipe => ({ ...recipe, waxThickness: recipe.shel
 export const isThinWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && squishyStyles[recipe.styleId].supportedFeels.includes(recipe.coreMaterial === 'butter' ? 'slow-rebound' : recipe.coreMaterial) && (['clay', 'marshmallow'].includes(recipe.coreMaterial) || recipe.coreMaterial === 'butter' && recipe.styleId === 'orb') && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thin';
 const isLegacyOrbClayWax = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && isThinWaxRecipe(recipe);
 export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && isLegacyOrbClayWax(recipe));
-// Thick wax first ships for the already verified clay orb only. Keep the thin
-// predicate separate so adding this preset cannot broaden its support contract.
-export const isThickWaxRecipe = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thick';
-export const canRestartWax = (step, recipe) => canRestartThinWax(step, recipe) || isThickWaxRecipe(recipe) && ['shell', 'decoration', 'play'].includes(step);
+// Thick wax reuses the approved clay preset; paw is excluded. Keep the thin
+// predicate separate and keep non-orb final play on its existing core-only path.
+export const isThickWaxRecipe = recipe => thickWaxStyles.includes(recipe.styleId) && recipe.coreMaterial === 'clay' && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thick';
+export const canRestartWax = (step, recipe) => canRestartThinWax(step, recipe) || isThickWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && recipe.styleId === 'orb');
 // Fixed ordering makes identity independent of URL/object property order. Mode is
 // deliberately separate: navigating the same recipe must not repair its shell.
 export const recipeKeyFor = recipe => JSON.stringify(Object.keys(defaultRecipe).map(key => effectiveRecipe(recipe)[key]));
@@ -84,11 +85,11 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
     const wasMaking = state.step === 'making';
     state = { ...state, step }; refreshDerived();
     if (step === 'making') { ++revision; pending?.abort(); pending = undefined; renderer.stopInput?.(); emit(); return; }
-    const preserveDamage = isThickWaxRecipe(state.recipe) || isThinWaxRecipe(state.recipe) && (step !== 'play' || isLegacyOrbClayWax(state.recipe));
+    const preserveDamage = (isThickWaxRecipe(state.recipe) || isThinWaxRecipe(state.recipe)) && (step !== 'play' || isLegacyOrbClayWax(state.recipe) || isThickWaxRecipe(state.recipe) && state.recipe.styleId === 'orb');
     if (wasMaking && step === 'play' && !preserveDamage) {
       // Preview-only recipes keep the legacy final core restore without
       // repairing the same recipe's temporarily hidden preview shell.
-      if (isThinWaxRecipe(state.recipe) && !isLegacyOrbClayWax(state.recipe)) renderer.restore?.({ preserveShell: true });
+      if ((isThinWaxRecipe(state.recipe) || isThickWaxRecipe(state.recipe)) && !isLegacyOrbClayWax(state.recipe)) renderer.restore?.({ preserveShell: true });
       else renderer.restore?.();
     }
     void prepare(step === 'play' && !preserveDamage);

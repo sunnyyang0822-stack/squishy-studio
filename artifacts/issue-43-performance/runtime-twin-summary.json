@@ -1,0 +1,20 @@
+[
+  {
+    "name": "runtime-twin-check",
+    "exitCode": 0,
+    "rounds": 3,
+    "totalMutatingStepFrames": 529,
+    "firstDifferences": [],
+    "violations": [],
+    "maxArrayDifference": 0
+  },
+  {
+    "name": "runtime-night-twin-check",
+    "exitCode": 0,
+    "rounds": 5,
+    "totalMutatingStepFrames": 880,
+    "firstDifferences": [],
+    "violations": [],
+    "maxArrayDifference": 0
+  }
+]

@@ -117,7 +117,8 @@ function buildPanels(rest, index, count = 180) {
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, captureCorrectionGeometry = false } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, captureCorrectionGeometry = false, detachedClearanceCertificates = false, detachedCollisionIterations = 10 } = {}, config, makeCollisionTree) {
+  if (!Number.isInteger(detachedCollisionIterations) || detachedCollisionIterations < 10 || detachedCollisionIterations > 64) throw new RangeError('Wax detached collision iterations must be an integer from 10 to 64');
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
@@ -199,7 +200,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     if (worldMatrix.equals(next)) return;
     worldMatrix.copy(next); worldInverse.copy(next).invert(); worldLinear.setFromMatrix4(next); worldRevision++; dirty = true;
   }
-  let active = false, disposed = false, contact, anchor, since = 0, now = clock(), totalDetached = 0, dirty = true, sweepSamples = 0, sweepLogicalSamples = 0, zeroLengthSweepSamples = 0, attachedNearestSamples = 0, detachedNearestSamples = 0, stroke, chainWaves = 0, lastDamageTime = null, attachedCorrectionMax = 0, attachedCorrectionTotalMax = 0, attachedCorrectedSamples = 0;
+  let active = false, disposed = false, contact, anchor, since = 0, now = clock(), totalDetached = 0, dirty = true, sweepSamples = 0, sweepLogicalSamples = 0, zeroLengthSweepSamples = 0, attachedNearestSamples = 0, detachedNearestSamples = 0, detachedCertifiedSamples = 0, stroke, chainWaves = 0, lastDamageTime = null, attachedCorrectionMax = 0, attachedCorrectionTotalMax = 0, attachedCorrectedSamples = 0;
   let worstAttachedCorrection = null;
   let correctionGeometrySnapshot = null;
   const point = value => Array.isArray(value) || ArrayBuffer.isView(value) ? new THREE.Vector3(...value) : new THREE.Vector3(value.x, value.y, value.z);
@@ -325,9 +326,28 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     if (collisions.intersectsBox(bounds)) {
       // Translate the entire world-space chip out of the *current* live core.
       // Vertex, outer face, triangle center and edge samples stay rigid together.
-      for (let attempt = 0; attempt < 10; attempt++) {
+      const certificates = detachedClearanceCertificates ? (panel.detachedClearance ||= []) : null;
+      const coreMotion = certificates ? collisions.getMotionBound?.() : undefined;
+      for (let attempt = 0; attempt < detachedCollisionIterations; attempt++) {
+        let site = 0;
         let minimum = .003; const pushNormal = vec(), sample = point => {
+          const id = site++, prior = certificates?.[id];
+          // Positive clearance cannot cross the core surface while point
+          // motion plus surface motion stays below it. Summed maximum vertex
+          // motions bound every live triangle's Hausdorff motion. This proves
+          // this exact sample remains outside the correction threshold; no
+          // stale distance is returned and no near-collision sample is omitted.
+          if (prior && Number.isFinite(coreMotion)) {
+            const allowance = prior.distance - (coreMotion - prior.motion) - .003 - 1e-9;
+            if (allowance > 0 && point.distanceToSquared(prior.point) < allowance * allowance) {
+              detachedCertifiedSamples++; return;
+            }
+          }
           detachedNearestSamples++; const distance = collisions.signedDistance(point, normal);
+          if (certificates && Number.isFinite(coreMotion)) {
+            const saved = certificates[id] ||= { point: vec() };
+            saved.point.copy(point); saved.distance = distance; saved.motion = coreMotion;
+          }
           if (distance < minimum) { minimum = distance; pushNormal.copy(normal); }
         };
         for (const vertex of mapped) { sample(vertex.rendered); sample(vertex.rendered.clone().addScaledVector(vertex.renderedNormal, config.thickness)); }
@@ -359,7 +379,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         if (changed) for (let k = 0; k < 3; k++) normalAffected[index[t + k]] = 1;
       }
     }
-    crackDeformedSurface(); collisions.refit(); sweepSamples = 0; sweepLogicalSamples = 0; zeroLengthSweepSamples = 0; attachedNearestSamples = 0; detachedNearestSamples = 0;
+    crackDeformedSurface(); collisions.refit(); sweepSamples = 0; sweepLogicalSamples = 0; zeroLengthSweepSamples = 0; attachedNearestSamples = 0; detachedNearestSamples = 0; detachedCertifiedSamples = 0;
     const normal = vec(), base = vec(), tangent = vec(), original = vec();
     for (const panel of panels) {
       if (panel.dead) { for (let r = panel.start; r < panel.end; r++) output.fill(0, r * 3, r * 3 + 3); continue; }
@@ -595,16 +615,16 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       }
     }
     const falling = debris.advance(dt, now);
-    for (const id of debris.drainExpired()) { const panel = panels.find(p => p.id === id); if (panel) { panel.dead = true; panel.frozen = null; panel.mapped = null; panel.renderBounds = null; dirty = true; } }
+    for (const id of debris.drainExpired()) { const panel = panels.find(p => p.id === id); if (panel) { panel.dead = true; panel.frozen = null; panel.detachedClearance = null; panel.mapped = null; panel.renderBounds = null; dirty = true; } }
     if (falling) dirty = living = true;
 
     const changed = dirty; if (changed) sync(); return { changed, needsFrame: active || living };
   }
-  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
+  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.detachedClearance = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
   function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead && !debris.get(p.id)?.settled).length, settled: debris.state().settled, expired: panels.filter(p => p.dead).length, collectionEnabled: debris.isCollectionEnabled(), debris: debris.state(), firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: 0, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: config.maxLocalFragments, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, minSigned = Infinity, maxThicknessError = 0, attachedSamples = 0, attachedSurfaceSamples = 0, attachedViolations = 0, detachedSamples = 0, detachedInteriorSamples = 0, detachedMin = Infinity, detachedViolations = 0, wallSamples = 0;
-    const normal = vec(), sourcePoint = vec(); let currentPanel, sampleContext, worstAttachedSample = null;
+    const normal = vec(), sourcePoint = vec(); let currentPanel, sampleContext, worstAttachedSample = null, worstDetachedSample = null;
     let attachedMaxSignedDistance = -Infinity, attachedOuterMaxSignedDistance = -Infinity, attachedWallMaxSignedDistance = -Infinity, worstAttachedMaxSample = null;
     const sample = (position, detached, interior = false) => {
       const distance = collisions.signedDistance(position);
@@ -613,7 +633,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       }
       if (!detached && sampleContext?.sampleKind.startsWith('outer-')) attachedOuterMaxSignedDistance = Math.max(attachedOuterMaxSignedDistance, distance);
       if (!detached && sampleContext?.sampleKind.startsWith('wall-')) attachedWallMaxSignedDistance = Math.max(attachedWallMaxSignedDistance, distance);
-      if (detached) { detachedMin = Math.min(detachedMin, distance); if (interior) detachedInteriorSamples++; else detachedSamples++; if (distance < -.00001) detachedViolations++; }
+      if (detached) { if (distance < detachedMin) worstDetachedSample = { panelId: currentPanel.id, point: position.toArray(), distance, ...sampleContext }; detachedMin = Math.min(detachedMin, distance); if (interior) detachedInteriorSamples++; else detachedSamples++; if (distance < -.00001) detachedViolations++; }
       else { if (distance < minSigned) worstAttachedSample = { panelId: currentPanel.id, point: position.toArray(), distance, ...sampleContext,
         cracked: currentPanel.cracked, loose: currentPanel.loose, supportOnly: currentPanel.supportOnly, complexSurface: currentPanel.complexSurface, lift: currentPanel.lift }; minSigned = Math.min(minSigned, distance); attachedSurfaceSamples++; if (distance < -.00001) attachedViolations++; }
     };
@@ -658,9 +678,9 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     const areas = panels.map(p => p.area), averageArea = areas.reduce((a, b) => a + b, 0) / areas.length;
     const panelAreaCV = Math.sqrt(areas.reduce((sum, area) => sum + (area - averageArea) ** 2, 0) / areas.length) / averageArea;
-    return { thickness: config.thickness, gap: config.gap, tolerance: .00001, attachedMinGap: minGap, attachedMinSignedDistance: minSigned, worstAttachedSample, attachedMaxSignedDistance, worstAttachedMaxSample, attachedOuterMaxSignedDistance, attachedWallMaxSignedDistance, worstAttachedCorrection, attachedCorrectionMax, attachedCorrectionTotalMax, attachedCorrectedSamples, maxThicknessError, attachedSamples, attachedSurfaceSamples, attachedViolations, detachedSweepSamples: sweepSamples, logicalSweepSamples: sweepLogicalSamples, duplicateSweepSamples: sweepLogicalSamples - sweepSamples - zeroLengthSweepSamples, zeroLengthSweepSamples, detachedMinSignedDistance: Number.isFinite(detachedMin) ? detachedMin : null, detachedSamples, detachedInteriorSamples, detachedViolations, wallSamples, drawCalls: 1, shellVertices: records.length, shellTriangles: indices.length / 3, patches: panels.length, debris: debris.state(), panelAreaCV, panelAreaRange: [Math.min(...areas), Math.max(...areas)], method: 'Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks' };
+    return { thickness: config.thickness, gap: config.gap, tolerance: .00001, attachedMinGap: minGap, attachedMinSignedDistance: minSigned, worstAttachedSample, attachedMaxSignedDistance, worstAttachedMaxSample, attachedOuterMaxSignedDistance, attachedWallMaxSignedDistance, worstAttachedCorrection, attachedCorrectionMax, attachedCorrectionTotalMax, attachedCorrectedSamples, maxThicknessError, attachedSamples, attachedSurfaceSamples, attachedViolations, detachedSweepSamples: sweepSamples, logicalSweepSamples: sweepLogicalSamples, duplicateSweepSamples: sweepLogicalSamples - sweepSamples - zeroLengthSweepSamples, zeroLengthSweepSamples, worstDetachedSample, detachedMinSignedDistance: Number.isFinite(detachedMin) ? detachedMin : null, detachedSamples, detachedInteriorSamples, detachedViolations, wallSamples, drawCalls: 1, shellVertices: records.length, shellTriangles: indices.length / 3, patches: panels.length, debris: debris.state(), panelAreaCV, panelAreaRange: [Math.min(...areas), Math.max(...areas)], method: 'Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks' };
   }
-  function dispose() { if (disposed) return; end(); debris.reset(); disposed = true; shell.dispose(); material.dispose(); group.removeFromParent(); }
+  function dispose() { if (disposed) return; end(); debris.reset(); for (const panel of panels) panel.detachedClearance = null; disposed = true; shell.dispose(); material.dispose(); group.removeFromParent(); }
   function getSurfaceSnapshot() {
     const worldPositions = new Float32Array(output.length), worldNormals = new Float32Array(output.length), settled = new Uint8Array(records.length), supports = new Float32Array(output.length), sourceSupports = new Float32Array(output.length), sourceUnmoved = new Uint8Array(records.length), damage = new Uint8Array(records.length), referenceNormal = new Float32Array(output.length), layers = new Int8Array(records.length), panelIds = new Uint16Array(records.length), detached = new Uint8Array(records.length), loose = new Uint8Array(records.length), boundaryVertex = new Uint8Array(records.length), openBoundary = new Uint8Array(records.length);
     const support = vec(), normal = vec();
@@ -677,5 +697,5 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   }
   sync();
   function getCorrectionDiagnosticSnapshot() { return correctionGeometrySnapshot; }
-  return { group, begin, move, end, release: end, cancel: end, sync, step, reset, dispose, getState, getMetrics, getSurfaceSnapshot, getCorrectionDiagnosticSnapshot, getQueryCounters(enable = false) { return { ...collisions.getQueryCounters(enable), attachedNearestSamples, detachedNearestSamples, logicalSweepSamples: sweepLogicalSamples, actualSweepQueries: sweepSamples, zeroLengthSweepSamples, duplicateSweepSamples: sweepLogicalSamples - sweepSamples - zeroLengthSweepSamples }; }, setWorldMatrix, setCollectionEnabled(value) { debris.setCollectionEnabled(value); dirty = true; }, setGravity(value) { if (point(value).normalize().distanceTo(new THREE.Vector3(0, -1, 0)) > 1e-6) throw new RangeError('Wax debris gravity is world down; rotate the core with setWorldMatrix'); }, setReducedMotion(value) { reducedMotion = !!value; debris.setReducedMotion(value); } };
+  return { group, begin, move, end, release: end, cancel: end, sync, step, reset, dispose, getState, getMetrics, getSurfaceSnapshot, getCorrectionDiagnosticSnapshot, getQueryCounters(enable = false) { return { ...collisions.getQueryCounters(enable), attachedNearestSamples, detachedNearestSamples, detachedCertifiedSamples, logicalSweepSamples: sweepLogicalSamples, actualSweepQueries: sweepSamples, zeroLengthSweepSamples, duplicateSweepSamples: sweepLogicalSamples - sweepSamples - zeroLengthSweepSamples }; }, setWorldMatrix, setCollectionEnabled(value) { debris.setCollectionEnabled(value); dirty = true; }, setGravity(value) { if (point(value).normalize().distanceTo(new THREE.Vector3(0, -1, 0)) > 1e-6) throw new RangeError('Wax debris gravity is world down; rotate the core with setWorldMatrix'); }, setReducedMotion(value) { reducedMotion = !!value; debris.setReducedMotion(value); } };
 }

@@ -1,0 +1,33 @@
+Baseline: origin/main a9315d9a88174afa5163ed732791ce15e0219022 (approved orb thick wax PR #51; 30 GitHub checks succeeded before merge).
+Worktree: D:/squishy-studio/.worktrees/issue-43-thick-styles
+Branch: codex/issue-43-thick-styles
+
+node --test tests/thick-wax-flow.test.cjs tests/wax-presets.test.cjs tests/detail-state.test.cjs tests/orb-slow-rebound-wax-flow.test.cjs
+Exit: 0; 27/27, no failures/skips. Output: flow-regression.txt
+
+node --test tests/thick-wax.test.cjs tests/wax-presets.test.cjs tests/orb-deformation.test.cjs
+Exit: 0; 24/24, no failures/skips. Output: orb-regression.txt
+
+node --test tests/thick-wax-styles.test.cjs
+Exit: 0; 6/6. Output: geometry.txt; summary: geometry-summary.json; commands: geometry-commands.txt
+
+node --test tests/thick-wax-styles-browser.test.cjs
+Exit: 0; 7/7. Output: browser-validation.txt
+
+Merge integration: git merge origin/main
+Duplicated pre-merge orb commits produced content conflicts. Conflicts retained already-tested six-style extension; all product source files and generated JS equal f21fd08 after resolution.
+node --test tests/thick-wax-flow.test.cjs tests/wax-presets.test.cjs
+Exit: 0; 8/8 after conflict resolution. Merge commit: 6a088fc.
+git merge-base --is-ancestor origin/main HEAD
+Exit: 0; approved main baseline included without rewriting history.
+
+Full approved-orb baseline regression: node scripts/test-port-isolated.cjs
+TEST_PORT_OFFSET=3000; project-local TEMP/TMP; original assertions unchanged.
+Exit: 0; 351/351, zero failures/skips. Output copied to orb-baseline-full-tests.txt.
+This is the approved orb baseline full run, not a claim that all new-style branch tests were run in that exact full command.
+
+node --check scripts/capture-thick-wax-styles.cjs
+Exit: 0.
+Final capture/performance commands and raw outputs: capture-commands.txt, capture-validation.txt, performance-validation.txt.
+Physical phones and Safari: not tested.
+New styles remain for visual/performance review; paw and other cores excluded.

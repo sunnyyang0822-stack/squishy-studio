@@ -1,0 +1,12 @@
+cloud-clay-desktop-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+cloud-clay-mobile-emulated-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+cylinder-clay-desktop-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+cylinder-clay-mobile-emulated-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+donut-clay-desktop-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+donut-clay-mobile-emulated-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+pyramid-clay-desktop-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+pyramid-clay-mobile-emulated-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+flower-clay-desktop-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+flower-clay-mobile-emulated-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+star-clay-desktop-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
+star-clay-mobile-emulated-comparison: real-mesh pressure, thickness, geometry, cleanup and workflow passed
