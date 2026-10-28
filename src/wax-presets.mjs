@@ -14,6 +14,9 @@ const thinWax = Object.freeze({
   },
 });
 
+// Product support excludes paw; other cores remain owned by the host.
+export { thickWaxStyles } from './wax-preset-scope.mjs';
+
 // Model units, not optical material thickness. Gap and all behavior stay thin-wax.
 export const thickWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 3, seedCount: 36 });
 const thickWax = Object.freeze({

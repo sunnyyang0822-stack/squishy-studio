@@ -10,7 +10,7 @@ import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
 import { orbColors } from '../detail/orb-colors.mjs';
-import { getWaxPreset } from './wax-presets.mjs';
+import { getWaxPreset, thickWaxStyles } from './wax-presets.mjs';
 import { createWaxCollectionTray } from './wax-collection-tray.mjs';
 import { waxFallthroughPolicy } from './thin-wax-debris.mjs';
 
@@ -410,7 +410,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
       const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
-      const thickRecipe = feelId === 'clay' && style.id === 'orb' && config.shellMaterial === 'wax' && config.waxThickness === 'thick';
+      const thickRecipe = feelId === 'clay' && thickWaxStyles.includes(style.id) && (style.id === 'orb' || config.waxCollection === false) && config.shellMaterial === 'wax' && config.waxThickness === 'thick';
       const waxRecipe = thinRecipe || thickRecipe;
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
       if (wax || waxRecipe) current.input.cancel({ preserveShape: changed });

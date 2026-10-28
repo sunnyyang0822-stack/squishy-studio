@@ -4,7 +4,7 @@ const state = import('../detail/state.mjs');
 const settle = () => new Promise(resolve => setImmediate(resolve));
 const audio = () => ({ ready: false, setVolume() {}, dispose() {} });
 
-test('thick wax is restricted to the clay orb; thin predicates, default and other recipes remain independent', async () => {
+test('thick wax excludes paw and keeps non-orb final play independent; thin predicates, default and other recipes remain independent', async () => {
   const { defaultRecipe, styleNames, isThickWaxRecipe, isThinWaxRecipe, canRestartThinWax, canRestartWax } = await state;
   assert.equal(defaultRecipe.waxThickness, 'medium');
   for (const styleId of [...Object.keys(styleNames), 'unknown']) {
@@ -12,14 +12,14 @@ test('thick wax is restricted to the clay orb; thin predicates, default and othe
       for (const shellMaterial of ['wax', 'polish', 'sugar']) {
         for (const waxThickness of ['thin', 'medium', 'thick']) {
           const recipe = { ...defaultRecipe, styleId, coreMaterial, shellMaterial, waxThickness };
-          const thick = styleId === 'orb' && coreMaterial === 'clay' && shellMaterial === 'wax' && waxThickness === 'thick';
+          const thick = ['orb', 'cloud', 'cylinder', 'donut', 'pyramid', 'flower', 'star'].includes(styleId) && coreMaterial === 'clay' && shellMaterial === 'wax' && waxThickness === 'thick';
           assert.equal(isThickWaxRecipe(recipe), thick, JSON.stringify(recipe));
           if (waxThickness === 'thick') {
             assert.equal(isThinWaxRecipe(recipe), false);
             assert.equal(canRestartThinWax('shell', recipe), false);
           }
           for (const step of ['core', 'shell', 'decoration', 'making', 'play', 'unknown']) {
-            assert.equal(canRestartWax(step, recipe), canRestartThinWax(step, recipe) || thick && ['shell', 'decoration', 'play'].includes(step));
+            assert.equal(canRestartWax(step, recipe), canRestartThinWax(step, recipe) || thick && (['shell', 'decoration'].includes(step) || step === 'play' && styleId === 'orb'));
           }
         }
       }
@@ -87,4 +87,27 @@ test('rapid thin/thick/thin selection commits the latest recipe and disposes sta
   controller.dispose(); assert.equal(pending[3].signal.aborted, true);
   pending[3].resolve(); await late;
   assert.deepEqual(committed, ['thin', 'thin']); assert.deepEqual(released, ['thin', 'thick', 'thin', 'thick']);
+});
+
+test('non-orb clay thick wax stays a making preview; final core restore preserves hidden shell damage', async () => {
+  const { createDetailController } = await state;
+  for (const styleId of ['cloud', 'cylinder', 'donut', 'pyramid', 'flower', 'star']) {
+    const prepared = [], restored = [];
+    const controller = createDetailController({ styleId, recipe: { waxThickness: 'thick', coreColor: 'mint', shellColor: 'sky' }, audio: audio(), renderer: {
+      async prepare(config) { prepared.push(config); return { commit() {}, dispose() {} }; },
+      restore(options) { restored.push(options); }, stopInput() {}, dispose() {},
+    } });
+    try {
+      await controller.load(); controller.setStep('shell'); await settle();
+      const key = prepared.at(-1).recipeKey;
+      controller.setStep('decoration'); await settle();
+      controller.setStep('making'); controller.setStep('play'); await settle();
+      assert.deepEqual(restored, [{ preserveShell: true }], styleId);
+      const finalCount = prepared.length;
+      controller.restart(); assert.equal(prepared.length, finalCount); assert.equal(restored.length, 1);
+      controller.setStep('shell'); await settle();
+      assert.equal(prepared.at(-1).recipeKey, key); assert.equal(prepared.at(-1).waxCollection, false);
+      controller.restart(); assert.deepEqual(restored, [{ preserveShell: true }, undefined]);
+    } finally { controller.dispose(); }
+  }
 });
