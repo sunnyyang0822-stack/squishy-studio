@@ -1,0 +1,30 @@
+✔ paw: indexed nearest-vertex queries preserve original radii, directions and every slow-core step (2244.5059ms)
+ℹ {"id":"paw","rays":303,"frames":186}
+✔ changed-triangle bounds invalidate even a face sweeping completely across an unchanged shell region (29.0094ms)
+✔ cloud slow-rebound: reused shell and lazy feature normals equal fully recomputed actual Float32 geometry (11884.85ms)
+ℹ {"feelId":"slow-rebound","frames":146,"reused":20439,"thickness":0.014,"minGap":0.003999938887722484,"minActualSigned":0.003929020310222741}
+✔ cloud marshmallow: reused shell and lazy feature normals equal fully recomputed actual Float32 geometry (7511.3135ms)
+ℹ {"feelId":"marshmallow","frames":146,"reused":22818,"thickness":0.014,"minGap":0.003999938887722484,"minActualSigned":0.003929020310222741}
+✔ lazy feature normals match full feature normals after local motion, seam changes and restoration (259.6936ms)
+ℹ {"compared":1158}
+✔ grid ties preserve exact BVH closest face, sign and feature normal on all seven real meshes (2274.3583ms)
+ℹ {"compared":85065}
+✔ paw: moving-frame support equals exact uncached compact shell through press, drag and restoration (36421.5269ms)
+ℹ {"styleId":"paw","frames":146,"reused":29591,"relative":7447065,"thickness":0.014,"minGap":0.003999939968060502,"minActualSigned":0.0034836100253445414}
+✔ donut: moving-frame support equals exact uncached compact shell through press, drag and restoration (15870.6841ms)
+ℹ {"styleId":"donut","frames":146,"reused":31248,"relative":3424722,"thickness":0.014,"minGap":0.00399993757581546,"minActualSigned":0.003990200100417978}
+✔ paw spatial picking equals Three raycasts on live/rest surfaces, holes, sides, rotations and draw ranges (2309.9245ms)
+ℹ {"checks":4800,"maxError":0,"linearMs":1955.8840999999984,"spatialMs":20.074300000011874,"note":"Same queries, alternating CPU measurement order; not browser FPS"}
+✔ real paw fold corrections stay exact across moving, stationary, restore and repeated sync frames (8930.9488ms)
+ℹ {"compared":22,"corrections":18,"source":"Recorded real paw fold mesh changes, exact Float32 geometry comparison against all support caches disabled"}
+✔ pending wax upload ranges stay bounded across repeated syncs and independent buffer consumption (307.0277ms)
+ℹ {"panels":180,"positionRanges":180,"normalRanges":180,"floatsPerBuffer":38496}
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 88815.5292
+EXIT_CODE=0

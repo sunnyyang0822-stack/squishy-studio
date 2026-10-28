@@ -81,7 +81,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     let deformation;
     try {
       deformation = isSurface
-        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, { ...style.geometryOptions, continuousFootprint: feelId === 'slow-rebound' }), reducedMotion: motionPreference.matches,
+        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, { ...style.geometryOptions, continuousFootprint: feelId === 'slow-rebound', fastNearest: feelId === 'slow-rebound' && style.id === 'paw' }), reducedMotion: motionPreference.matches,
           ...pressOptions })
         : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches, ...pressOptions });
     } catch (error) { releaseObject(root); throw error; }
@@ -181,7 +181,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       ? `按住并拖动${style.name}，缓慢下陷，松开完整回弹；也可按住空格或回车`
       : `按住并拖动${style.name}，松开保留凹痕；也可按住空格或回车`);
     surface.setAttribute('aria-pressed', 'false');
-    const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2(), pickRay = new THREE.Ray(), pickInverse = new THREE.Matrix4(), pickPoint = new THREE.Vector3();
+    const fastWaxPicking = feelId === 'slow-rebound' && style.id === 'paw' && !mesh.isSkinnedMesh && !geometry.morphAttributes.position?.length && geometry.drawRange.start % 3 === 0;
     root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
     restSurface.matrixWorld.copy(mesh.matrixWorld);
     function hitTest(x, y, actual) {
@@ -192,6 +193,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       raycaster.setFromCamera(pointer, camera);
       // Validate the current rendered surface on press; use the undeformed
       // surface for a stable drag anchor, so a stationary press cannot drift.
+      if (fastWaxPicking && shellVisible && wax) {
+        pickRay.copy(raycaster.ray).applyMatrix4(pickInverse.copy(mesh.matrixWorld).invert());
+        if (actual && !wax.raycastLocal(pickRay, pickPoint, { side: mesh.material.side })) return null;
+        if (!wax.raycastLocal(pickRay, pickPoint, { rest: true, side: restSurface.material.side })) return null;
+        // Preserve the original world/local anchor round trip and the same
+        // camera ray used by the unchanged core's pressure direction getter.
+        return mesh.worldToLocal(pickPoint.applyMatrix4(mesh.matrixWorld)).toArray();
+      }
       if (actual && !raycaster.intersectObject(mesh, false).length) return null;
       const hit = raycaster.intersectObject(restSurface, false)[0];
       if (!hit) return null;
@@ -419,7 +428,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       collectionEnabled = config.waxCollection !== false;
       if (thinRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset('thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: feelId === 'slow-rebound' && ['paw', 'donut'].includes(style.id), fullSurfaceSupport: (feelId === 'marshmallow' || feelId === 'slow-rebound') && isSurface });
+        wax = getWaxPreset('thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, fastPicking: fastWaxPicking, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: feelId === 'slow-rebound' && ['paw', 'donut'].includes(style.id), fullSurfaceSupport: (feelId === 'marshmallow' || feelId === 'slow-rebound') && isSurface });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }
@@ -438,14 +447,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (shadowsChanged) mesh.material.needsUpdate = true;
       // Navigating a fixed thin-wax recipe never recolors or repairs its core.
       current.selectColor(thinRecipe ? config.coreColor : config.color);
-      current.diagnostics = ({ exhaustive = false, surface = false, measure = true, counters = false } = {}) => {
+      current.diagnostics = ({ exhaustive = false, surface = false, renderOnly = false, measure = true, counters = false } = {}) => {
         if (counters) return wax?.getQueryCounters(true);
         return ({
         enabled: Boolean(wax && shellVisible), configKey: recipeKey,
         coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor,
         corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions),
         coreState: deformation.getState(), thinWax: wax?.getState(), geometry: measure ? wax?.getMetrics({ exhaustive }) : undefined,
-        surface: surface ? wax?.getSurfaceSnapshot?.() : undefined,
+        surface: surface ? wax?.getSurfaceSnapshot?.({ renderOnly }) : undefined,
         debrisStage: { visible: debrisTray.visible, collectionEnabled, discardBelowY: waxFallthroughPolicy.discardBelowY,
           projectionMatrix: camera.projectionMatrix.toArray(), viewMatrix: camera.matrixWorldInverse.toArray(),
           projectedDiscardPlane: [[-2, -2], [-2, 2], [2, -2], [2, 2]].map(([x, z]) => new THREE.Vector3(x, waxFallthroughPolicy.discardBelowY, z).project(camera).toArray()), floorY: -1.35, radius: 1.35, trayHalfLength: 1.42 * debrisTray.scale.x, matrixWorld: mesh.matrixWorld.toArray(),

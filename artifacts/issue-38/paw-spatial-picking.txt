@@ -1,0 +1,11 @@
+✔ paw spatial picking equals Three raycasts on live/rest surfaces, holes, sides, rotations and draw ranges (2022.7721ms)
+ℹ {"checks":4800,"maxError":0,"linearMs":1728.597400000004,"spatialMs":14.61429999999558,"note":"Same queries, alternating CPU measurement order; not browser FPS"}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2095.6983
+EXIT_CODE=0

@@ -126,7 +126,7 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
   };
 }
 
-export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis, continuousFootprint = false, scalarThickness = true } = {}) {
+export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis, continuousFootprint = false, scalarThickness = true, fastNearest = false } = {}) {
   const rest = source.slice(), count = rest.length / 3;
   if (!indices?.length || sourceNormals.length !== rest.length) throw new TypeError('Surface clay requires indexed positions and normals');
   const directions = sourceNormals.slice(), radii = new Float32Array(count);
@@ -336,9 +336,33 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
     }
     return found;
   }
+  const nearestSeen = fastNearest ? new Uint32Array(count) : null, nearestStack = [];
+  let nearestStamp = 0;
+  const unusedVertices = [];
+  if (fastNearest) {
+    const referenced = new Uint8Array(count); for (const i of indices) referenced[i] = 1;
+    for (let i = 0; i < count; i++) if (!referenced[i]) unusedVertices.push(i);
+  }
   function nearest(p) {
     let best = Infinity, index = 0;
-    for (let i = 0; i < count; i++) { const d = distance(p, point(i)); if (d < best) { best = d; index = i; } }
+    if (!fastNearest) {
+      for (let i = 0; i < count; i++) { const d = distance(p, point(i)); if (d < best) { best = d; index = i; } }
+      return [index, best];
+    }
+    if ((nearestStamp = (nearestStamp + 1) >>> 0) === 0) { nearestSeen.fill(0); nearestStamp = 1; }
+    const offer = i => {
+      if (nearestSeen[i] === nearestStamp) return; nearestSeen[i] = nearestStamp;
+      // Keep the exact original distance arithmetic and lowest-index ties.
+      const d = distance(p, point(i)); if (d < best || d === best && i < index) { best = d; index = i; }
+    };
+    let pending = 1; nearestStack[0] = thicknessTree ??= build(triangles.map((_, i) => i));
+    while (pending) {
+      const node = nearestStack[--pending], x = Math.max(node.lo[0] - p[0], 0, p[0] - node.hi[0]), y = Math.max(node.lo[1] - p[1], 0, p[1] - node.hi[1]), z = Math.max(node.lo[2] - p[2], 0, p[2] - node.hi[2]), squared = best * best;
+      if (x * x + y * y + z * z > squared + 64 * Number.EPSILON * Math.max(1, squared)) continue;
+      if (node.ids) for (const t of node.ids) for (const i of triangles[t]) offer(i);
+      else { nearestStack[pending++] = node.left; nearestStack[pending++] = node.right; }
+    }
+    for (const i of unusedVertices) offer(i);
     return [index, best];
   }
   function search(p, radius, target = -1) {
