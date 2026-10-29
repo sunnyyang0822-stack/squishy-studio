@@ -15,7 +15,7 @@ const thinWax = Object.freeze({
 });
 
 // Model units, not optical material thickness. Gap and all behavior stay thin-wax.
-export const thickWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 3, seedCount: 36 });
+export const thickWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 3, seedCount: 36, maxInwardDeformation: .004 });
 const thickWax = Object.freeze({
   id: 'thick-wax', material: 'wax', thickness: 'thick',
   parameters: thickWaxParameters,

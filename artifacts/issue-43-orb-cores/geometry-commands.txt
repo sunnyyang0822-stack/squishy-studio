@@ -1,0 +1,10 @@
+Command: node --test tests/thick-wax-orb-cores.test.cjs
+Worktree: D:/squishy-studio/.worktrees/issue-43-thick-orb-cores
+Baseline: origin/main a9315d9a88174afa5163ed732791ce15e0219022
+Exit: 0; 4/4 tests, zero failures/skips; 86.40 seconds.
+Output: geometry.txt; summary: geometry-summary.json
+
+Coverage: marshmallow and slow-rebound orb, normal and reduced motion. Thick and thin trajectories are checked against independent bare-core positions, normals, states and step results. Slow-rebound receives the host's getPressDirection/contact-safety/radius contract. No core source parameters changed.
+Every active inner/outer vertex pair and actual volumetric sidewall thickness stays .042. Actual source triangle partition coverage is complete; 36 thick versus180 thin partitions, average area5x. Detached rendered triangles retain edge lengths and source/hole topology. Independent full BVH checks every inner/outer vertex, triangle edge midpoint, face center and sidewall at selected real-operation phases, not merely panel centers.
+Checks: short contact, first .5-second separation, two-second press, unload freeze/full natural recovery, shallow drag/cancel, repeated broken-rim press, world rotation, explicit color-lifecycle restore and reset.
+No browser/physical-phone/Safari acceptance claimed by these kernel tests.
