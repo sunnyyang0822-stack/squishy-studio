@@ -1,0 +1,33 @@
+Baseline: origin/main a9315d9a88174afa5163ed732791ce15e0219022
+Worktree: D:/squishy-studio/.worktrees/issue-43-thick-orb-cores
+Branch: codex/issue-43-thick-orb-cores
+Implementation commit: 88c11f8
+Scope: marshmallow orb and slow-rebound orb thick-wax making previews only. User review required; no merge.
+
+npm run build:orb
+Exit: 0. Output: build.txt
+
+node --test tests/thick-wax-flow.test.cjs tests/orb-slow-rebound-wax-flow.test.cjs tests/orb-marshmallow-flow.test.cjs tests/detail-state.test.cjs tests/wax-presets.test.cjs
+Exit: 0; 30/30, zero failures/skips. Output: flow-regression.txt
+
+node --test tests/thick-wax.test.cjs tests/wax-presets.test.cjs tests/orb-marshmallow-wax.test.cjs tests/orb-slow-rebound-wax.test.cjs tests/orb-marshmallow.test.cjs tests/orb-slow-rebound.test.cjs tests/orb-deformation.test.cjs tests/orb-shell-input.test.cjs
+Exit: 0; 60/60, zero failures/skips. Output: core-thin-regression.txt
+
+node --test tests/thick-wax-orb-cores.test.cjs
+Exit: 0; 4/4, zero failures/skips. Output: geometry.txt; summary: geometry-summary.json; command details: geometry-commands.txt
+
+node --test tests/thick-wax-orb-cores-browser.test.cjs
+Exit: 0; 3/3, zero failures/skips. Output: browser-validation.txt
+Earlier scope-test timeout was a test helper requiring an uninstalled GPU probe; repaired by waiting for actual ready product canvas and diagnostics. Product assertions/geometry/time not weakened.
+
+Core/wax Git blob preservation verified against a9315d9 for:
+src/orb-deformation.mjs, src/orb-marshmallow.mjs, src/orb-slow-rebound.mjs, src/thin-wax.mjs, src/thin-wax-panels.mjs, src/thin-wax-debris.mjs, src/wax-presets.mjs
+Output: baseline-preservation.txt; all unchanged.
+
+Preview server: node server.mjs with PORT=4364; 127.0.0.1 only; project-local .tmp logs.
+HEAD /squishy/cloud/?style=orb&coreMaterial=marshmallow&waxThickness=thick&step=shell returned200.
+
+Capture and independent performance commands/outputs recorded separately by capture script.
+Physical phones/Safari untested. Mobile is390x844 Chromium/CDP touch emulation; background rotation uses existing mouse gesture and is labelled.
+Public repository requirement follows current user instructions, overriding old baseline AGENTS.md private wording.
+PR #54 draft; related#43; do not auto-close#38/#41/#22; do not merge before user review.

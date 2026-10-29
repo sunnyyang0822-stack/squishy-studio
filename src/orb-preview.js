@@ -10,6 +10,7 @@ import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
 import { orbColors } from '../detail/orb-colors.mjs';
+import { updateIndexedNormals } from './orb-normals.mjs';
 import { getWaxPreset } from './wax-presets.mjs';
 import { createWaxCollectionTray } from './wax-collection-tray.mjs';
 import { waxFallthroughPolicy } from './thin-wax-debris.mjs';
@@ -309,7 +310,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
           geometry.attributes.normal.array.set(restNormals);
           geometry.attributes.normal.needsUpdate = true;
         } else {
-          geometry.computeVertexNormals();
+          if (feelId === 'slow-rebound' && !isSurface) updateIndexedNormals(geometry);
+          else geometry.computeVertexNormals();
           if (computedRestNormals) {
             // Blender and Three use different smoothing weights. Transport
             // only the deformation's normal delta, preserving the authored

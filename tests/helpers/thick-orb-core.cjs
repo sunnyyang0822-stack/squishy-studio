@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { readMesh } = require('./squishy-mesh.cjs');
 
-async function createThickOrbCore(feelId, { reducedMotion = false, presetId = 'thick-wax' } = {}) {
+async function createThickOrbCore(feelId, { reducedMotion = false, presetId = 'thick-wax', detachedClearanceCertificates = true } = {}) {
   const THREE = await import('three');
   const { getOrbFeel } = await import('../../src/orb-feels.mjs');
   const { getWaxPreset } = await import('../../src/wax-presets.mjs');
@@ -24,7 +24,7 @@ async function createThickOrbCore(feelId, { reducedMotion = false, presetId = 't
   const core = feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, options());
   const bare = feel.createDeformation(bareGeometry.attributes.position.array, bareGeometry.attributes.normal.array, options());
   const wax = getWaxPreset(presetId).create({ styleId: 'orb', geometry, restPositions: rest, restNormals,
-    clock: () => time, color: '#ffbbdd', reducedMotion });
+    clock: () => time, color: '#ffbbdd', reducedMotion, detachedClearanceCertificates });
   const tree = createWaxCollisionTree(geometry);
   function same() {
     assert.deepEqual(geometry.attributes.position.array, bareGeometry.attributes.position.array, 'Wax must not alter any approved core coordinate');

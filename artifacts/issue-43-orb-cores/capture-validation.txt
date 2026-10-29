@@ -1,0 +1,4 @@
+marshmallow-orb-desktop-comparison: four full thin/thick day/night sequences passed
+marshmallow-orb-mobile-emulated-comparison: four full thin/thick day/night sequences passed
+butter-orb-desktop-comparison: four full thin/thick day/night sequences passed
+butter-orb-mobile-emulated-comparison: four full thin/thick day/night sequences passed

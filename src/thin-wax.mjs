@@ -6,7 +6,7 @@ export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwe
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.
-export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, queryCache = true, featureNormals = false, restPositions } = {}) {
+export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, motionTracking = false, queryCache = true, featureNormals = false, restPositions } = {}) {
   let countQueries = false;
   const p = geometry.attributes.position, index = geometry.index.array;
   const a = new THREE.Vector3(), b = a.clone(), c = a.clone(), hit = a.clone();
@@ -94,10 +94,8 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       const faceChanged = t.a.x !== p.getX(index[i]) || t.a.y !== p.getY(index[i]) || t.a.z !== p.getZ(index[i]) || t.b.x !== p.getX(index[i + 1]) || t.b.y !== p.getY(index[i + 1]) || t.b.z !== p.getZ(index[i + 1]) || t.c.x !== p.getX(index[i + 2]) || t.c.y !== p.getY(index[i + 2]) || t.c.z !== p.getZ(index[i + 2]);
       if (!faceChanged) continue;
       changed = true;
-      if (gridHeads) {
-        frameMotionSquared = Math.max(frameMotionSquared, movementSquared(t.a, index[i]), movementSquared(t.b, index[i + 1]), movementSquared(t.c, index[i + 2]));
-        markChangedTriangle(t);
-      }
+      if (gridHeads || motionTracking) frameMotionSquared = Math.max(frameMotionSquared, movementSquared(t.a, index[i]), movementSquared(t.b, index[i + 1]), movementSquared(t.c, index[i + 2]));
+      if (gridHeads) markChangedTriangle(t);
       t.a.fromBufferAttribute(p, index[i]); t.b.fromBufferAttribute(p, index[i + 1]); t.c.fromBufferAttribute(p, index[i + 2]); t.getNormal(face.normal);
       if (gridHeads) markChangedTriangle(t);
       face.ab.subVectors(t.b, t.a); face.ac.subVectors(t.c, t.a);
@@ -345,7 +343,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (featureTieRegion) rememberQuery(siteHint, point, ...featureTieRegion, lastNearestFace, distance, distanceSquared);
     return distance;
   }
-  return { refit, sweep, signedDistance, getMotionBound: () => gridHeads ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
+  return { refit, sweep, signedDistance, getMotionBound: () => gridHeads || motionTracking ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
 export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });

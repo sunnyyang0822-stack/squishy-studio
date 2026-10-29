@@ -1,0 +1,24 @@
+✔ orb marshmallow thick wax keeps real gradual core, dwell, release, final scope and resource lifecycle (12124.8424ms)
+ℹ {"core":"marshmallow","shortMs":58.599999994039536,"timing":{"before":{"active":true,"cracked":3,"attachedCracked":3,"attachedPartialBranches":2,"visibleLongCrackEdges":5,"detached":0,"living":0,"settled":0,"expired":0,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":0,"minY":null,"maxRadius":0,"pileTop":-1.35,"gridCells":0},"firstBurst":0,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0.49620000000298026,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":36,"visibleCrackRadius":0.53,"localDamaged":0,"localDetached":0,"chainWaveCount":0,"lastDamageTime":null,"heldStrain":0,"maxDetachedPerContact":180,"localRetainedFraction":1},"onset":{"active":true,"cracked":3,"attachedCracked":0,"attachedPartialBranches":0,"visibleLongCrackEdges":5,"detached":3,"living":3,"settled":0,"expired":0,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":3,"settled":0,"minY":-0.24364708206175983,"maxRadius":1.0100000564809664,"pileTop":-1.35,"gridCells":0},"firstBurst":3,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0.5085000000000002,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":36,"visibleCrackRadius":0.53,"localDamaged":3,"localDetached":3,"chainWaveCount":1,"lastDamageTime":3.4832000000029804,"heldStrain":0,"maxDetachedPerContact":180,"localRetainedFraction":0},"trusted":true},"depth":0.36679942015005745,"recovery":0.36679942015005745,"detached":3,"originalResources":{"calls":3,"triangles":47232,"geometries":3},"warmedResources":{"calls":3,"triangles":47232,"geometries":3}}
+✔ orb butter thick wax keeps real gradual core, dwell, release, final scope and resource lifecycle (21326.243ms)
+ℹ {"core":"butter","shortMs":43.5,"timing":{"before":{"active":true,"cracked":5,"attachedCracked":5,"attachedPartialBranches":4,"visibleLongCrackEdges":6,"detached":0,"living":0,"settled":0,"expired":0,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":0,"minY":null,"maxRadius":0,"pileTop":-1.35,"gridCells":0},"firstBurst":0,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0.4973999999985099,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":36,"visibleCrackRadius":0.53,"localDamaged":0,"localDetached":0,"chainWaveCount":0,"lastDamageTime":null,"heldStrain":0,"maxDetachedPerContact":180,"localRetainedFraction":1},"onset":{"active":true,"cracked":5,"attachedCracked":2,"attachedPartialBranches":2,"visibleLongCrackEdges":6,"detached":3,"living":3,"settled":0,"expired":0,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":3,"settled":0,"minY":-0.24364708206175983,"maxRadius":1.009999970859219,"pileTop":-1.35,"gridCells":0},"firstBurst":3,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0.5028999999985095,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":36,"visibleCrackRadius":0.53,"localDamaged":3,"localDetached":3,"chainWaveCount":1,"lastDamageTime":2.92770000000298,"heldStrain":0,"maxDetachedPerContact":180,"localRetainedFraction":0},"trusted":true},"depth":0.4440946055357661,"recovery":0.25710320802146236,"detached":4,"originalResources":{"calls":3,"triangles":47232,"geometries":3},"warmedResources":{"calls":3,"triangles":47232,"geometries":3}}
+✖ new orb core thick wax does not enable other models, materials or final-play shells (31304.3122ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67246.0333
+
+✖ failing tests:
+
+test at tests\thick-wax-orb-cores-browser.test.cjs:68:1
+✖ new orb core thick wax does not enable other models, materials or final-play shells (31304.3122ms)
+  page.waitForFunction: Timeout 30000ms exceeded.
+      at ready (D:\squishy-studio\.worktrees\issue-43-thick-orb-cores\tests\helpers\squishy-browser.cjs:90:14)
+      at async TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-orb-cores\tests\thick-wax-orb-cores-browser.test.cjs:72:99) {
+    name: 'TimeoutError',
+    log: []
+  }
