@@ -1,7 +1,7 @@
-import { createThinWax, thinWaxParameters } from './thin-wax.mjs';
+import { createThinWax, createWaxShell, thinWaxParameters } from './thin-wax.mjs';
 
 // Shell presets compose with an independently owned core and its existing input.
-// Parameters stay owned by the verified implementation; no per-preset retuning.
+// Behavior parameters remain shared; each preset owns its geometry differences.
 const thinWax = Object.freeze({
   id: 'thin-wax', material: 'wax', thickness: 'thin',
   parameters: thinWaxParameters,
@@ -14,7 +14,20 @@ const thinWax = Object.freeze({
   },
 });
 
-export const waxPresets = Object.freeze({ 'thin-wax': thinWax });
+// Model units, not optical material thickness. Gap and all behavior stay thin-wax.
+export const thickWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 3, seedCount: 36 });
+const thickWax = Object.freeze({
+  id: 'thick-wax', material: 'wax', thickness: 'thick',
+  parameters: thickWaxParameters,
+  create(options = {}) {
+    const { worldMatrix, ...shellOptions } = options;
+    const wax = createWaxShell({ ...shellOptions, collectionEnabled: options.collectionEnabled ?? false }, thickWaxParameters);
+    if (worldMatrix) wax.setWorldMatrix(worldMatrix);
+    return wax;
+  },
+});
+
+export const waxPresets = Object.freeze({ 'thin-wax': thinWax, 'thick-wax': thickWax });
 
 export function getWaxPreset(id = 'thin-wax') {
   if (!Object.hasOwn(waxPresets, id)) throw new RangeError('Unknown wax preset: ' + id);

@@ -1,0 +1,16 @@
+Command: npm run build:orb
+Exit code: 0
+Output:
+> squishy-studio@1.0.0 build:orb
+> node scripts/build-orb.cjs
+
+Command: node scripts/capture-thick-wax.cjs
+Exit code: 0
+Output:
+thin-orb-clay-desktop: recorded and geometry/workflow checked
+thick-orb-clay-desktop: recorded and geometry/workflow checked
+thin-orb-clay-mobile-emulated: recorded and geometry/workflow checked
+thick-orb-clay-mobile-emulated: recorded and geometry/workflow checked
+
+Run: final 36-seed configuration; comparison-validation.json records bundle SHA256.
+Earlier 40-seed capture was interrupted when parameter selection changed, and is superseded by this full successful run.
