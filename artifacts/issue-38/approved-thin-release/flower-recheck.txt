@@ -1,0 +1,11 @@
+✔ flower slow-rebound wax: real mouse input, visible volume and natural recovery (32060.5715ms)
+ℹ {"style":"flower","mobile":false,"bare":{"x":109.890625,"y":166.6875,"width":619.015625,"height":599.96875},"shell":{"x":109.890625,"y":166.6875,"width":619.015625,"height":599.96875},"shortMs":473.39999999990687,"onset":0.6153999999999069,"firstDetached":3,"deepDetached":4,"loadedDepth":0.24299044237976403,"recoveringDepth":0.07652841054033424,"uploadError":{"core":0,"shell":0},"geometry":{"thickness":0.014,"gap":0.004,"tolerance":0.00001,"attachedMinGap":0.003999938543296498,"attachedMinSignedDistance":0.0039025874550025074,"worstAttachedSample":{"panelId":36,"point":[-0.010405190289020538,-0.33317938446998596,-0.4447041153907776],"distance":0.0039025874550025074,"sampleKind":"inner-vertex","sourceFace":6827,"renderedVertex":18994,"cracked":false,"loose":false,"supportOnly":false,"complexSurface":false,"lift":0},"attachedMaxSignedDistance":0.00882997100283468,"worstAttachedMaxSample":{"panelId":164,"point":[0.890541136264801,-0.10765794664621353,0.338203102350235],"distance":0.00882997100283468,"sampleKind":"inner-vertex","sourceFace":10732,"renderedVertex":81050},"attachedOuterMaxSignedDistance":0.02280253039564698,"attachedWallMaxSignedDistance":0.018124235151323352,"worstAttachedCorrection":null,"attachedCorrectionMax":0,"attachedCorrectionTotalMax":0,"attachedCorrectedSamples":0,"maxThicknessError":1.107545653522557e-7,"attachedSamples":20452,"attachedSurfaceSamples":243664,"attachedViolations":0,"detachedSweepSamples":3821,"logicalSweepSamples":14324,"duplicateSweepSamples":3851,"zeroLengthSweepSamples":6652,"detachedMinSignedDistance":null,"detachedSamples":0,"detachedInteriorSamples":0,"detachedViolations":0,"wallSamples":23668,"drawCalls":1,"shellVertices":89044,"shellTriangles":81720,"patches":180,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":0,"minY":null,"maxRadius":0,"pileTop":-1.35,"gridCells":0},"panelAreaCV":0.566340228133041,"panelAreaRange":[0.009030185772633549,0.17999642766736343],"method":"Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"}}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 33930.5519
+EXIT_CODE=0

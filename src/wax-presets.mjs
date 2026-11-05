@@ -22,7 +22,7 @@ const surfaceMediumWaxParameters = Object.freeze({ ...mediumWaxParameters, seedC
 const pawMediumWaxParameters = Object.freeze({ ...surfaceMediumWaxParameters, seedCount: 128 });
 const surfacePanelStyles = new Set(['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']);
 const mediumParametersForStyle = styleId => styleId === 'paw' ? pawMediumWaxParameters : surfacePanelStyles.has(styleId) ? surfaceMediumWaxParameters : mediumWaxParameters;
-const mediumGeometryOptions = Object.freeze({ freezeRenderedFragments: true, detachedQueryHints: true, supportClusters: true, featureTieConsensus: true, fullSurfaceSupport: false });
+const mediumGeometryOptions = Object.freeze({ freezeRenderedFragments: true, detachedQueryHints: true, supportClusters: true, featureTieConsensus: true, fullSurfaceSupport: false, cacheAttachedPanels: false });
 const optimizedMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, performanceOptimizations: true });
 const pawMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, fullSurfaceSupport: true });
 const mediumGeometryForStyle = styleId => styleId === 'paw' ? pawMediumGeometryOptions : surfacePanelStyles.has(styleId) ? optimizedMediumGeometryOptions : mediumGeometryOptions;

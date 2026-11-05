@@ -126,13 +126,13 @@ for (const id of styles) test(`${id} clay ${waxPreset} making preview: real mesh
   } finally { const video = page.video(); await page.close(); if (capture && video) await video.saveAs(path.join(captureFolder, `${id}-${waxPreset}.webm`)); }
 });
 
-test('style wax scope excludes slow rebound and preserves all preview-only legacy play', { timeout: 180000 }, async t => {
+test('style wax scope includes approved non-paw slow previews and preserves preview-only legacy play', { timeout: 180000 }, async t => {
   const results = [];
   for (const id of styles) for (const material of ['butter']) {
     const { page } = await open(id, material, 'shell');
     try {
-      const d = await diagnostic(page); assert.equal(d.enabled, id === 'orb', `${id}/${material}: only the slow-rebound orb joins the local making preview`);
-      assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).count(), id === 'orb' ? 1 : 0);
+      const d = await diagnostic(page); assert.equal(d.enabled, id !== 'paw', `${id}/${material}: approved slow previews exclude the pending paw`);
+      assert.equal(await page.getByRole('button', { name: '重新开始', exact: true }).count(), id !== 'paw' ? 1 : 0);
       results.push({ id, material, enabled: d.enabled });
     } finally { await page.close(); }
   }

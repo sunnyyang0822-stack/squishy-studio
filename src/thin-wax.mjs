@@ -6,7 +6,7 @@ export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwe
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.
-export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, motionTracking = false, queryCache = true, featureNormals = false, restPositions, featureTieConsensus = false, performanceOptimizations = false } = {}) {
+export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, motionTracking = false, queryCache = true, featureNormals = false, lazyFeatureNormals = true, exactGridTies = true, trackChanges = false, trackRelativeMotion = false, restPositions, featureTieConsensus = false, performanceOptimizations = false } = {}) {
   let countQueries = false;
   const p = geometry.attributes.position, index = geometry.index.array;
   const a = new THREE.Vector3(), b = a.clone(), c = a.clone(), hit = a.clone();
@@ -15,7 +15,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
   const faces = Array.from({ length: index.length / 3 }, (_, face) => {
     const i = face * 3, triangle = new THREE.Triangle(new THREE.Vector3().fromBufferAttribute(p, index[i]), new THREE.Vector3().fromBufferAttribute(p, index[i + 1]), new THREE.Vector3().fromBufferAttribute(p, index[i + 2]));
     const {a,b,c}=triangle;
-    return { triangle, ab: new THREE.Vector3().subVectors(triangle.b, triangle.a), ac: new THREE.Vector3().subVectors(triangle.c, triangle.a), normal: triangle.getNormal(new THREE.Vector3()), minX:Math.min(a.x,b.x,c.x),maxX:Math.max(a.x,b.x,c.x),minY:Math.min(a.y,b.y,c.y),maxY:Math.max(a.y,b.y,c.y),minZ:Math.min(a.z,b.z,c.z),maxZ:Math.max(a.z,b.z,c.z) };
+    return { triangle, ab: new THREE.Vector3().subVectors(triangle.b, triangle.a), ac: new THREE.Vector3().subVectors(triangle.c, triangle.a), normal: triangle.getNormal(new THREE.Vector3()), minX:Math.min(a.x,b.x,c.x),maxX:Math.max(a.x,b.x,c.x),minY:Math.min(a.y,b.y,c.y),maxY:Math.max(a.y,b.y,c.y),minZ:Math.min(a.z,b.z,c.z),maxZ:Math.max(a.z,b.z,c.z), ...(trackRelativeMotion ? { delta: new Float64Array(9), changed: false } : {}) };
   });
   const triangleBox = i => { const t = faces[i / 3].triangle; return new THREE.Box3().setFromPoints([t.a, t.b, t.c]); };
   function build(ids) {
@@ -27,11 +27,35 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     return { box, left: build(ids.slice(0, mid)), right: build(ids.slice(mid)) };
   }
   const root = build(Array.from({ length: index.length / 3 }, (_, i) => i * 3));
-  const features = featureNormals ? createWaxFeatureNormals(geometry, restPositions) : null;
+  function prepareMotion(node) {
+    node.sweptBox = node.box.clone(); node.changed = false;
+    if (!node.ids) { prepareMotion(node.left); prepareMotion(node.right); }
+  }
+  if (trackRelativeMotion) prepareMotion(root);
+  // Resolve grid ties with precisely the same near-child-first order as the
+  // BVH. At the first differing ancestor, its live child-box distances choose
+  // the earlier leaf; within one leaf retain the original triangle order.
+  // This avoids traversing the whole BVH again for a shared edge/vertex.
+  const facePaths = exactGridTies && featureNormals && nearestGrid ? new Array(faces.length) : null;
+  function indexPaths(node, path = []) {
+    if (node.ids) for (let order = 0; order < node.ids.length; order++) facePaths[node.ids[order] / 3] = { path, order };
+    else { indexPaths(node.left, [...path, node.left]); indexPaths(node.right, [...path, node.right]); }
+  }
+  if (facePaths) indexPaths(root);
+  function visitsBefore(first, second, point) {
+    const a = facePaths[first], b = facePaths[second];
+    for (let i = 0; i < Math.min(a.path.length, b.path.length); i++) if (a.path[i] !== b.path[i]) {
+      const parent = i ? a.path[i - 1] : root;
+      const leftFirst = boxDistanceSquared(parent.left.box, point) <= boxDistanceSquared(parent.right.box, point);
+      return a.path[i] === (leftFirst ? parent.left : parent.right);
+    }
+    return a.order < b.order;
+  }
+  const features = featureNormals ? createWaxFeatureNormals(geometry, restPositions, { lazy: lazyFeatureNormals }) : null;
   features?.refit(faces);
   // Optional exact local-query broad phase for densely tessellated concave
   // surfaces. Each live triangle occupies every cell touched by its AABB.
-  // Large/out-of-grid queries and ambiguous equal-distance faces use the BVH.
+  // Large/out-of-grid queries and legacy face-normal ties use the BVH.
   const cellSize = .025, gridOrigin = root.box.min.clone().addScalar(-cellSize);
   const gridSize = root.box.getSize(new THREE.Vector3()).divideScalar(cellSize).ceil().addScalar(2);
   const gridCells = gridSize.x * gridSize.y * gridSize.z;
@@ -124,6 +148,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
   const changedBounds = new THREE.Box3();
   const changedLeafBounds = [];
   function refit(node = root) {
+    if (trackRelativeMotion) node.sweptBox.copy(node.box);
     if (node === root) {
       changedBounds.makeEmpty();
       changedLeafBounds.length = 0;
@@ -143,13 +168,22 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (node.ids) for (const i of node.ids) {
       const face = faces[i / 3], t = face.triangle;
       const faceChanged = changedVertices[index[i]] || changedVertices[index[i + 1]] || changedVertices[index[i + 2]];
+      if (trackRelativeMotion) {
+        face.changed = faceChanged;
+        const delta = face.delta ||= new Float64Array(9);
+        delta[0] = p.getX(index[i]) - t.a.x; delta[1] = p.getY(index[i]) - t.a.y; delta[2] = p.getZ(index[i]) - t.a.z;
+        delta[3] = p.getX(index[i + 1]) - t.b.x; delta[4] = p.getY(index[i + 1]) - t.b.y; delta[5] = p.getZ(index[i + 1]) - t.b.z;
+        delta[6] = p.getX(index[i + 2]) - t.c.x; delta[7] = p.getY(index[i + 2]) - t.c.y; delta[8] = p.getZ(index[i + 2]) - t.c.z;
+      }
       if (!faceChanged) continue;
       changedFaces.push(i/3);
       if (!changed) { changedBounds.union(node.box); node.oldBox ||= new THREE.Box3(); node.oldBox.copy(node.box); changedLeafBounds.push(node.oldBox); }
       changed = true;
+      if (changedBounds) changedBounds.expandByPoint(t.a).expandByPoint(t.b).expandByPoint(t.c);
       if (gridHeads || motionTracking) frameMotionSquared = Math.max(frameMotionSquared, movementSquared(t.a, index[i]), movementSquared(t.b, index[i + 1]), movementSquared(t.c, index[i + 2]));
       if (gridHeads) markChangedTriangle(t);
       t.a.fromBufferAttribute(p, index[i]); t.b.fromBufferAttribute(p, index[i + 1]); t.c.fromBufferAttribute(p, index[i + 2]); t.getNormal(face.normal);
+      if (changedBounds) changedBounds.expandByPoint(t.a).expandByPoint(t.b).expandByPoint(t.c);
       if (gridHeads) markChangedTriangle(t);
       face.ab.subVectors(t.b, t.a); face.ac.subVectors(t.c, t.a);
       face.minX=Math.min(t.a.x,t.b.x,t.c.x);face.maxX=Math.max(t.a.x,t.b.x,t.c.x);face.minY=Math.min(t.a.y,t.b.y,t.c.y);face.maxY=Math.max(t.a.y,t.b.y,t.c.y);face.minZ=Math.min(t.a.z,t.b.z,t.c.z);face.maxZ=Math.max(t.a.z,t.b.z,t.c.z);
@@ -165,6 +199,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       changedBounds.union(node.box);
       changedLeafBounds.push(node.box);
     }
+    if (trackRelativeMotion) { node.changed = changed; node.sweptBox.union(node.box); }
     if (node === root && changed) {
       surfaceRevision++;
       features?.refit(faces);
@@ -174,6 +209,24 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     return changed;
   }
   const ray = new THREE.Ray();
+  const motionStack = [];
+  function relativeMotionInRegion(box, translation) {
+    if (!trackRelativeMotion) return Infinity;
+    let maximum = 0, pending = 1; motionStack[0] = root;
+    while (pending) {
+      const node = motionStack[--pending];
+      if (!node.sweptBox.intersectsBox(box)) continue;
+      if (!node.changed) { maximum = Math.max(maximum, translation.lengthSq()); continue; }
+      if (node.ids) for (const i of node.ids) {
+        const delta = faces[i / 3].delta;
+        for (let k = 0; k < 9; k += 3) {
+          const x = delta[k] - translation.x, y = delta[k + 1] - translation.y, z = delta[k + 2] - translation.z;
+          maximum = Math.max(maximum, x * x + y * y + z * z);
+        }
+      } else { motionStack[pending++] = node.left; motionStack[pending++] = node.right; }
+    }
+    return Math.sqrt(maximum) + 1e-10;
+  }
   function intersectsSegmentBox(box, maximumDistance) {
     // Expanded scalar slabs avoid per-node axis arrays and dynamic property
     // lookup; clipping math is identical for inside, parallel and negative rays.
@@ -382,10 +435,13 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
             if (d < distanceSquared) {
               secondSquared = performanceOptimizations ? Math.min(secondSquared, distanceSquared) : distanceSquared; distanceSquared = d; nearestFace = id; outwardNormal?.copy(face.normal);
               sign = (point.x - closest.x) * face.normal.x + (point.y - closest.y) * face.normal.y + (point.z - closest.z) * face.normal.z < 0 ? -1 : 1;
-            } else secondSquared = Math.min(secondSquared, d);
+            } else {
+              secondSquared = Math.min(secondSquared, d);
+              if (facePaths && d === distanceSquared && visitsBefore(id, nearestFace, point)) nearestFace = id;
+            }
           }
         }
-        if (Number.isFinite(distanceSquared) && secondSquared - distanceSquared > 64 * Number.EPSILON * Math.max(1, distanceSquared)) {
+        if (Number.isFinite(distanceSquared) && (features && facePaths || secondSquared - distanceSquared > 64 * Number.EPSILON * Math.max(1, distanceSquared))) {
           if (countQueries) counters.gridQueries++;
           lastNearestFace = nearestFace; if (siteHint) siteHint.faceIndex = nearestFace;
           const distance = features ? featureResult(point, outwardNormal, nearestFace) : sign * Math.sqrt(distanceSquared);
@@ -432,8 +488,8 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       if (countQueries) counters.nearestNodes++;
       if (lowerBound > Math.min(distanceSquared, initialBound)) continue;
       if (node.ids) for (const i of node.ids) {
-        if (countQueries) counters.nearestTriangles++;
         const face = faces[i / 3];
+        if (countQueries) counters.nearestTriangles++;
         closestOnFace(face, point); const d = closest.distanceToSquared(point);
         if (d < distanceSquared) { distanceSquared = d; lastNearestFace = i / 3; outwardNormal?.copy(face.normal); sign = (point.x - closest.x) * face.normal.x + (point.y - closest.y) * face.normal.y + (point.z - closest.z) * face.normal.z < 0 ? -1 : 1; }
       } else {
@@ -456,7 +512,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (featureTieRegion) rememberQuery(siteHint, point, ...featureTieRegion, lastNearestFace, distance, distanceSquared);
     return distance;
   }
-  return { refit, sweep, signedDistance, clearanceDistance: performanceOptimizations ? (point, normal, hint, threshold) => signedDistance(point, normal, hint, threshold) : undefined, changedNearBox: performanceOptimizations ? box => changedBounds.intersectsBox(box) && changedLeafBounds.some(changed => changed.intersectsBox(box)) : undefined, getMotionBound: () => gridHeads || motionTracking ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
+  return { refit, sweep, signedDistance, relativeMotionInRegion, getRefitFrame: () => refitFrame, intersectsChanges: box => !trackChanges || changedBounds.intersectsBox(box), clearanceDistance: performanceOptimizations ? (point, normal, hint, threshold) => signedDistance(point, normal, hint, threshold) : undefined, changedNearBox: performanceOptimizations ? box => changedBounds.intersectsBox(box) && changedLeafBounds.some(changed => changed.intersectsBox(box)) : undefined, getMotionBound: () => gridHeads || motionTracking ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
 export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
