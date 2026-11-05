@@ -1,0 +1,212 @@
+[
+  {
+    "styleId": "orb",
+    "coreMaterial": "clay",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "orb",
+    "coreMaterial": "marshmallow",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "orb",
+    "coreMaterial": "butter",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "cloud",
+    "coreMaterial": "clay",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "cloud",
+    "coreMaterial": "marshmallow",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "cloud",
+    "coreMaterial": "butter",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "cylinder",
+    "coreMaterial": "clay",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "cylinder",
+    "coreMaterial": "marshmallow",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "cylinder",
+    "coreMaterial": "butter",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "donut",
+    "coreMaterial": "clay",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "donut",
+    "coreMaterial": "marshmallow",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "donut",
+    "coreMaterial": "butter",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "pyramid",
+    "coreMaterial": "clay",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "pyramid",
+    "coreMaterial": "marshmallow",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "pyramid",
+    "coreMaterial": "butter",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "flower",
+    "coreMaterial": "clay",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "flower",
+    "coreMaterial": "marshmallow",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "flower",
+    "coreMaterial": "butter",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "star",
+    "coreMaterial": "clay",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "star",
+    "coreMaterial": "marshmallow",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  },
+  {
+    "styleId": "star",
+    "coreMaterial": "butter",
+    "coreColor": "rose",
+    "filling": "none",
+    "shellMaterial": "wax",
+    "shellColor": "rose",
+    "waxThickness": "medium",
+    "decoration": "one"
+  }
+]

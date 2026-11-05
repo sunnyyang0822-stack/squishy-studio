@@ -1,0 +1,17 @@
+✔ medium preset changes only physical thickness and real partition count (75.6066ms)
+{"orbGeometryComparison":[{"thickness":0.014,"count":180,"total":12.551218142083824,"mean":0.06972898967824347,"median":0.06384075042506225,"min":0.020772455316166182,"max":0.15801175976972953,"cv":0.3961969559861542,"thicknessError":1.0543282461146497e-7},{"thickness":0.028,"count":96,"total":12.551218140860238,"mean":0.13074185563396082,"median":0.12299663121068788,"min":0.031303341373325945,"max":0.2704212152096852,"cv":0.4151150645890338,"thicknessError":1.1034559030398405e-7}],"thicknessRatio":2,"meanAreaRatio":1.874999999817211,"medianAreaRatio":1.926616313119066}
+✔ medium mapping supports exactly 21 non-paw previews and preserves legacy final scope (18.4553ms)
+✔ actual orb triangles have larger irregular regions and modestly thicker solid walls (1594.4286ms)
+✔ medium timing, rigid detached shape, persistent damage and cleanup reuse thin contract (879.6816ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 0,0,0 (8507.6105ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 0,0,1.5707963267948966 (7754.09ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 1.5707963267948966,0.55,-0.4 (6855.9631ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25945.64
+EXIT_CODE=0

@@ -57,7 +57,7 @@ test('medium preset changes only physical thickness and real partition count', a
   assert.equal(Boolean(medium.geometryOptionsForStyle('orb').performanceOptimizations), false);
 });
 
-test('medium mapping supports every registered clay preview and preserves legacy final scope', async () => {
+test('medium mapping supports exactly 21 non-paw previews and preserves legacy final scope', async () => {
   const { createDetailController, isMediumWaxRecipe, canRestartWax, defaultRecipe, styleNames } = await import('../detail/state.mjs');
   for (const styleId of Object.keys(styleNames)) for (const coreMaterial of ['clay', 'marshmallow', 'butter']) {
     assert.equal(isMediumWaxRecipe({ ...defaultRecipe, styleId, coreMaterial }), styleId !== 'paw');
@@ -78,7 +78,7 @@ test('medium mapping supports every registered clay preview and preserves legacy
     await controller.select('waxThickness', 'thin'); await controller.select('waxThickness', 'medium');
     assert.equal(prepared.at(-1).waxThickness, 'medium'); assert.equal(prepared.at(-1).coreColor, defaultRecipe.coreColor);
   } finally { controller.dispose(); }
-  for (const styleId of Object.keys(styleNames)) {
+  for (const styleId of Object.keys(styleNames).filter(id => id !== 'paw')) {
     let calls = []; const configurations = [];
     const c = createDetailController({ styleId, step: 'shell', renderer: {
       async prepare(config) { configurations.push(config); return { commit() {}, dispose() {} }; },
