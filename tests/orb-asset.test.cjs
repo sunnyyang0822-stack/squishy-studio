@@ -19,7 +19,10 @@ test('圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形�
   assert.equal(gltf.accessors[p.indices].count / 3, 5120);
   assert.equal(gltf.accessors[p.attributes.NORMAL].count, position.count);
   assert.equal(gltf.accessors[p.attributes.COLOR_0].count, position.count);
-  assert.ok(position.min[1] > -.95 && position.max[1] < .95, 'Y-up with a soft flattened base');
+  for (let k = 0; k < 3; k++) {
+    assert.ok(Math.abs(position.min[k] + 1) < 2e-7 && Math.abs(position.max[k] - 1) < 2e-7, 'A centered unit sphere has the same diameter on every axis');
+  }
+  assert.deepEqual(gltf.nodes[0].scale || [1, 1, 1], [1, 1, 1]);
   assert.equal(gltf.materials[0].pbrMetallicRoughness.metallicFactor, 0);
   assert.ok(gltf.materials[0].pbrMetallicRoughness.roughnessFactor >= .3);
   assert.equal(gltf.materials[0].doubleSided, undefined);
@@ -39,4 +42,29 @@ test('圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形�
     unique.add(xyz.join(','));
   }
   assert.equal(unique.size, accessor.count, 'No split seam vertices that could open during CPU deformation');
+});
+
+test('圆球是真正等半径球面，法线向外且闭合；所有内芯与外壳共享这一原始形状', async () => {
+  const { readMesh, topology } = require('./helpers/squishy-mesh.cjs');
+  const mesh = readMesh('assets/models/squishy-orb.glb');
+  for (let i = 0; i < mesh.positions.length; i += 3) {
+    const point = mesh.positions.slice(i, i + 3), normal = mesh.normals.slice(i, i + 3);
+    const radius = Math.hypot(...point), length = Math.hypot(...normal);
+    assert.ok(Math.abs(radius - 1) < 2e-7, `Vertex ${i / 3} lies on the unit sphere, including its bottom: ${radius}`);
+    assert.ok(Math.abs(length - 1) < 1e-6);
+    assert.ok(point.reduce((sum, value, k) => sum + value * normal[k], 0) / radius > .999999, 'Smooth shading follows the actual spherical surface');
+  }
+  const structure = topology(mesh);
+  assert.equal(structure.components, 1);
+  assert.equal(structure.boundaryOrNonmanifold, 0);
+  assert.equal(structure.euler, 2);
+  assert.equal(structure.degenerate, 0);
+  const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
+  const { getModelPresentationScale, getOrbAppearance } = await import('../src/orb-appearance.mjs');
+  const { getOrbPreset } = await import('../src/orb-presets.mjs');
+  for (const id of ['clay', 'marshmallow', 'slow-rebound']) {
+    assert.equal(getSquishyStyle('orb').modelUrl, '/assets/models/squishy-orb.glb');
+    const appearance = getOrbAppearance(getOrbPreset(id).appearanceId);
+    assert.deepEqual(getModelPresentationScale(appearance, 'radial'), [1, 1, 1], `${id} must not turn the shared sphere into an ellipsoid`);
+  }
 });

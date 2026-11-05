@@ -163,9 +163,9 @@ test('主题颜色校正保留真实GPU凹痕、AO、旋转姿态与既有场景
   for (let i = 0; i < day.colors.length; i += 3) {
     const depth = Math.hypot(...[0,1,2].map(k => original.positions[i + k] - day.positions[i + k]));
     deepest = Math.max(deepest, depth);
-    const visibility = 1 - Math.min(.24, depth);
+    const visibility = 1 - .48 * (1 - Math.exp(-depth / .22));
     for (let k = 0; k < 3; k++) {
-      assert.ok(Math.abs(night.colors[i + k] - rgb[k] * visibility) < 1e-6, 'night preserves original cavity AO');
+      assert.ok(Math.abs(night.colors[i + k] - rgb[k] * visibility) < 1e-6, 'night preserves the same smooth depth-dependent cavity shade');
       assert.ok(Math.abs(day.colors[i + k] - pigment[k] * visibility) < 1e-6, 'day applies the same cavity AO after pigment correction');
     }
   }

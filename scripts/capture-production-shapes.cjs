@@ -1,0 +1,9 @@
+const fs=require('node:fs'),{chromium}=require('playwright');
+const {installStyleProbe,ready,stats,surfaceLight,point}=require('../tests/helpers/squishy-browser.cjs');
+(async()=>{const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'}),{getSquishyStyle}=await import('../src/squishy-styles.mjs'),rows=[];
+try{for(const [id,feel] of [['orb','clay'],['orb','marshmallow'],['orb','butter'],['star','butter'],['flower','butter'],['pyramid','butter'],['paw','butter'],['donut','butter'],['cloud','butter'],['cylinder','butter']]){
+const page=await browser.newPage({viewport:{width:1280,height:900}});await installStyleProbe(page,getSquishyStyle(id));await page.clock.install();await page.goto(`http://127.0.0.1:4246/squishy/cloud/?style=${id}&coreMaterial=${feel}`);await ready(page);
+await page.screenshot({path:`artifacts/slow-shape-lighting/production-${id}-${feel}-rest.png`});
+if(feel==='butter'){for(const theme of ['day','night']){await surfaceLight(page,theme);const p=await point(page,id==='donut'?.76:.5,id==='paw'?.68:.44);await page.clock.pauseAt(await page.evaluate(()=>Date.now()+500));await page.mouse.move(p.x,p.y);await page.mouse.down();await page.clock.runFor(1800);const pressed=await stats(page);if(pressed.maximum<.03)throw Error('No real pressure '+id);await page.screenshot({path:`artifacts/slow-shape-lighting/production-${id}-${theme}-deep.png`});await page.mouse.up();await page.clock.fastForward(16000);if((await stats(page)).maximum!==0)throw Error('Recovery '+id);await page.clock.resume();rows.push({id,feel,theme,pressed});}}
+await page.close();console.log(id+'/'+feel+' captured');}
+fs.writeFileSync('artifacts/slow-shape-lighting/production-interactions.json',JSON.stringify(rows,null,2));}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

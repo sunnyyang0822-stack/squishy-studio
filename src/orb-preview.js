@@ -6,6 +6,7 @@ import { getOrbFeel } from './orb-feels.mjs';
 import { getSquishyStyle } from './squishy-styles.mjs';
 import { createSurfaceGeometry } from './surface-clay.mjs';
 import { getOrbAppearance, getModelPresentationScale } from './orb-appearance.mjs';
+import { cavityVisibility, getOrbLighting } from './orb-lighting.mjs';
 import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
@@ -100,7 +101,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     // its projected bounds while turning; the object origin never orbits.
     if (!isSurface) pivot.position.copy(center);
     root.position.sub(center); pivot.add(root); scene.add(pivot);
-    const restingFloor = isSurface ? new THREE.Box3().setFromObject(root).min.y - .003 : -.908 * appearance.scale[1];
+    const restingFloor = new THREE.Box3().setFromObject(root).min.y - .003;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -125,7 +126,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     Object.assign(key.shadow.camera, { left: -1.65, right: 1.65, top: 1.65, bottom: -1.65, near: .1, far: 10 });
     key.shadow.bias = -.00002;
     key.shadow.normalBias = .002;
-    scene.add(key);
+    scene.add(key, key.target);
     const rim = new THREE.DirectionalLight(0xe9e4ff, .55);
     rim.position.set(3, 2, -3); scene.add(rim);
     // Static soft contact shadow. No shadow-map pass for this appearance gate.
@@ -148,8 +149,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     const camera = new THREE.OrthographicCamera(-2, 2, 1.6, -1.6, .1, 30);
     camera.position.set(...style.camera);
     camera.lookAt(0, -.02, 0);
-    const frontFill = isSurface ? new THREE.DirectionalLight(0xffffff, .95) : null;
-    if (frontFill) { frontFill.position.copy(camera.position); scene.add(frontFill); }
+    const frontFill = new THREE.DirectionalLight(0xffffff, .38);
+    frontFill.position.copy(camera.position); scene.add(frontFill);
     const events = new AbortController();
     // Core pigment stays independent from the optional solid wax coating.
     const sourceMaterial = mesh.material;
@@ -216,6 +217,11 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       const framingOffset = shellVisible && !collectionEnabled ? .4 : 0;
       camera.position.set(...style.camera); camera.position.y += framingOffset;
       camera.lookAt(0, framingOffset - .02, 0);
+      // View-relative grazing key reveals the slope of a dent on any rotated
+      // face. Broad fill remains independent so the far side never turns black.
+      key.position.set(-4.2, 3.3, 2.25).applyQuaternion(camera.quaternion);
+      key.target.position.set(0, framingOffset, 0);
+      frontFill.position.copy(camera.position);
       camera.top = halfHeight; camera.bottom = -halfHeight;
       camera.left = -halfHeight * width / height; camera.right = -camera.left;
       camera.updateProjectionMatrix();
@@ -250,25 +256,16 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (width < 1 || height < 1) return;
       if (width !== current.width || height !== current.height) resize(width, height);
       if (colorLightingDirty) {
-        // A neutral daylight response keeps pastel pigment clear; the broad
-        // pale fill lifts the grey underside without flattening the side key.
-        // Night restores its original filmic response and warm/purple lights.
+        const lighting = getOrbLighting(daylight);
         renderer.toneMapping = daylight ? THREE.NeutralToneMapping : THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = daylight ? 1.15 : .95;
-        fill.intensity = daylight ? .85 : .42;
+        renderer.toneMappingExposure = lighting.exposure;
+        fill.intensity = lighting.fill;
         fill.color.set(daylight ? 0xffffff : 0xfff7ef);
-        fill.groundColor.set(daylight ? 0xe4e6ed : 0x8a8293);
+        fill.groundColor.set(daylight ? 0xe4e6ed : 0xcac6da);
         key.color.set(daylight ? 0xffffff : 0xfff5ed);
-        if (isSurface) {
-          // Side-biased light exposes dent slopes; modest fill keeps the base
-          // readable without washing out the concavity. Sphere is unchanged.
-          fill.intensity = daylight ? .65 : .58;
-          fill.groundColor.set(daylight ? 0xe4e6ed : 0xcac6da);
-          key.intensity = daylight ? 2.7 : 2.5;
-          rim.intensity = daylight ? .55 : .65;
-          scene.environmentIntensity = daylight ? .28 : .25;
-          renderer.toneMappingExposure = daylight ? 1.05 : .95;
-        }
+        key.intensity = lighting.key; rim.intensity = lighting.rim;
+        frontFill.intensity = lighting.front;
+        scene.environmentIntensity = lighting.environment;
       }
       const dt = current.lastTime === null ? 1 / 60 : (time - current.lastTime) / 1000;
       const colorStep = coating.step(dt);
@@ -290,7 +287,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         // broad fill. It is a bounded visual approximation, not a shadow pass.
         for (let i = 0; i < colors.length; i += 3) {
           const depth = Math.hypot(restPositions[i] - positions[i], restPositions[i + 1] - positions[i + 1], restPositions[i + 2] - positions[i + 2]);
-          const visibility = 1 - Math.min(.24, depth);
+          const visibility = cavityVisibility(depth);
           // Daylight compensation preserves pastel chroma through the soft
           // studio lighting/tone mapping. The palette and coating clock stay
           // in their original color space; night uses the unmodified color.
