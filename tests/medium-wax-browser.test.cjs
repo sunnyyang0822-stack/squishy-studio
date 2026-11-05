@@ -33,7 +33,7 @@ for (const mobile of [false, true]) for (const theme of ['day', 'night']) test(`
   for (const thickness of ['thin', 'medium']) {
     const name = `${mobile ? 'mobile' : 'desktop'}-${theme}-${thickness}`;
     const viewport = mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 };
-    const context = await browser.newContext({ viewport, isMobile: mobile, hasTouch: mobile, ...(capture ? { recordVideo: { dir: output, size: viewport } } : {}) });
+    const context = await browser.newContext({ viewport, deviceScaleFactor: Number(process.env.THIN_WAX_TEST_DPR || 1), isMobile: mobile, hasTouch: mobile, ...(capture ? { recordVideo: { dir: output, size: viewport } } : {}) });
     const page = await context.newPage(), video = page.video(), errors = [];
     page.on('pageerror', error => errors.push(error.message));
     try {
@@ -58,13 +58,21 @@ for (const mobile of [false, true]) for (const theme of ['day', 'night']) test(`
       assert.equal(initial.presetId, `${thickness}-wax`); assert.equal(initial.geometry.thickness, thickness === 'thin' ? .014 : .028);
       assert.equal(initial.geometry.attachedViolations, 0); assert.equal(initial.debrisStage.visible, false);
       if (capture) await page.screenshot({ path: path.join(output, `${name}-intact.png`) });
-      const hit = await projectedSurfaceContact(page, 0, .03), client = mobile ? await context.newCDPSession(page) : null;
+      const hit = await projectedSurfaceContact(page, 0, .03), client = await context.newCDPSession(page);
       const down = async p => {
         if (mobile) await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: p.x, y: p.y, id: 0 }] });
         else { await page.mouse.move(p.x, p.y); await page.mouse.down(); }
       };
       const up = async () => mobile ? client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }) : page.mouse.up();
-      await down(hit); await page.waitForTimeout(180); await up();
+      // Dispatch release on the wall clock, independent of the press render
+      // ACK, so a slow first frame cannot extend the intended 180ms tap.
+      if (!mobile) await page.mouse.move(hit.x, hit.y);
+      const pressed = mobile ? client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: hit.x, y: hit.y, id: 0 }] }) : client.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: hit.x, y: hit.y, button: 'left', clickCount: 1 });
+      const released = new Promise((resolve, reject) => setTimeout(() => {
+        const ended = mobile ? client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }) : client.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: hit.x, y: hit.y, button: 'left', clickCount: 1 });
+        ended.then(resolve, reject);
+      }, 180));
+      await Promise.all([pressed, released]);
       const short = await diag(page); assert.equal(short.thinWax.detached, 0); assert.ok(short.thinWax.cracked > 0);
       if (capture) await page.screenshot({ path: path.join(output, `${name}-crack.png`) });
       await down(hit); await page.waitForTimeout(720);

@@ -1,0 +1,10 @@
+2026-11-05T06:35:11.1710669Z not ok 31 - cylinder marshmallow preview damage survives navigation and legacy play, resets only on restart or committed configuration
+2026-11-05T06:35:11.1713502Z   error: 'page.waitForFunction: Timeout 30000ms exceeded.'
+2026-11-05T06:36:06.0433193Z not ok 32 - donut marshmallow preview damage survives navigation and legacy play, resets only on restart or committed configuration
+2026-11-05T06:36:06.0438393Z   error: 'page.waitForFunction: Timeout 30000ms exceeded.'
+2026-11-05T06:36:55.1841583Z not ok 33 - pyramid marshmallow preview damage survives navigation and legacy play, resets only on restart or committed configuration
+2026-11-05T06:36:55.1844407Z   error: 'page.waitForFunction: Timeout 30000ms exceeded.'
+2026-11-05T06:37:48.8226480Z not ok 34 - flower marshmallow preview damage survives navigation and legacy play, resets only on restart or committed configuration
+2026-11-05T06:37:48.8230675Z   error: 'page.waitForFunction: Timeout 30000ms exceeded.'
+2026-11-05T06:38:40.8019004Z not ok 35 - star marshmallow preview damage survives navigation and legacy play, resets only on restart or committed configuration
+2026-11-05T06:38:40.8151798Z   error: 'page.waitForFunction: Timeout 30000ms exceeded.'

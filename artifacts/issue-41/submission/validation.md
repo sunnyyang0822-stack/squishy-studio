@@ -31,6 +31,10 @@
 
 首轮GitHub运行41978147496（head 40877cb）发现两条浏览器测试适配问题，摘录在`ci-shard4/5-failure-excerpt.txt`，完整原日志在忽略目录。资源切换测试用固定850ms准备损伤，软件渲染没有及时掉片；改为在最多10秒内等待真实损伤后松手，时序专项不变。本地 `node --test --test-name-pattern="rapid thickness changes" tests/medium-wax-browser.test.cjs` 1/1、exit 0，见`ci-lifecycle-fix-local.txt`。
 
+第二轮运行41979650986（head 3db497f）有4个分片及汇总门禁失败，原错误摘录保留。资源切换已通过；薄/中匹配对照仍有等待按下ACK后才计时导致的短按延长，现改为墙钟180ms独立释放并沿用0.5栅格。本地`THIN_WAX_TEST_DPR=0.5 node --test tests/medium-wax-browser.test.cjs` 5/5、exit 0，见`ci-matched-input-local.txt`。复杂样式0.5栅格仍有软件呈现造成排队，CI单独采用与现有飞行测试相同的0.125软件栅格（`MEDIUM_WAX_TEST_DPR`），CSS视口、核心几何、采样、真实输入、160ms和零误掉片均不变；本地云朵两内芯×两环境4组通过、exit 0，见`ci-dense-raster-input-local.txt`。原1x本地28组结果仍保留，不把低栅格CI当成设备视觉验收。
+
+第二轮还暴露旧范围断言：棉花糖薄蜡切中蜡原来等待禁用，现明确断言非猫爪中蜡启用、实际厚度0.028及完整几何，再切回薄蜡检查独立状态；八款导航测试均已本地通过。最初混合试跑`ci-scope-navigation-initial.txt`中8项通过、1项尝试修改默认中蜡换色测试的矩阵预期失败，保留真实exit 1。最终换色测试明确选择未实现糖壳以保持原裸芯自动恢复契约，GPU/位置/矩阵/画布复用断言不放宽；`node --test --test-name-pattern="同色无外壳" tests/orb-color.test.cjs` 1/1、exit 0，见`ci-color-legacy-final.txt`。默认中蜡导航损伤保留由中蜡专项覆盖。工作流契约2/2通过，见`ci-raster-workflow-local.txt`。产品源码与参数在这两轮适配中没有变化。
+
 另一个新增测试默认1x栅格，日志中160ms短按的pointerup处理延迟超过0.5秒而掉片；现沿用工作流已有`THIN_WAX_TEST_DPR=0.5`设置，CSS尺寸、真实操作、160ms短按、零掉片断言和完整几何均不变。本地设置`THIN_WAX_TEST_DPR=0.5 STYLES_REVIEW_CASE=orb`运行`node --test tests/medium-wax-core-browser.test.cjs`，圆球两内芯×两环境4组及三种猫爪排除通过，exit 0，见`ci-raster-input-local.txt`。没有更改产品输入或阈值，也未删减几何采样。
 
 最新圆球覆盖源面积薄/中均约12.55121814；分区180/96。薄/中均值0.069728989678/0.130741855634，平均面积比1.875；中位0.063840750425/0.122996631211，比1.926616；中蜡面积范围0.031303341373–0.270421215210、CV0.415115064589。实体厚度误差约1.10e-7模型单位，未放大模型或掉落显示比例。实测原始值位于`medium-final.txt`。

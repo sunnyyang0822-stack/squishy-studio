@@ -1,0 +1,10 @@
+✔ 同色无外壳流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压 (5151.5138ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6202.3393
+EXIT_CODE=0
