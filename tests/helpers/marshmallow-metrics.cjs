@@ -2,7 +2,7 @@ const { modelAttribute } = require('./orb-probe.cjs');
 module.exports = async function measure() {
   const { getOrbFeel } = await import('../../src/orb-feels.mjs');
   const rest = modelAttribute('POSITION'), normal = modelAttribute('NORMAL');
-  const point = a => [Math.sin(a), .0175, Math.cos(a)];
+  const point = a => [Math.sin(a), 0, Math.cos(a)];
   const sample = (p, a) => {
     const contact = point(a); let index = 0, nearest = Infinity;
     for (let i = 0; i < rest.length; i += 3) {

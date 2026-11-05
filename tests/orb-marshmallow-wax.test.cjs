@@ -19,7 +19,7 @@ async function fixture({ reducedMotion = false } = {}) {
     seconds += dt; const result = wax.step(dt); if (!result.changed) wax.sync(); same(); return result;
   }
   const frames = count => { for (let i = 0; i < count; i++) frame(); };
-  function contact(x = 0, y = .0175) {
+  function contact(x = 0, y = 0) {
     let closest = -1, distance = Infinity;
     for (let i = 0; i < rest.length; i += 3) if (normals[i + 2] > .25) { const d = (rest[i] - x) ** 2 + (rest[i + 1] - y) ** 2; if (d < distance) { distance = d; closest = i; } }
     return Array.from(rest.slice(closest, closest + 3));

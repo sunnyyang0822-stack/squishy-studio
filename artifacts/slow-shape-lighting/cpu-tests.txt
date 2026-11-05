@@ -1,0 +1,64 @@
+✔ 圆球 GLB 是无外部依赖的单网格标准 PBR，网格预算与形变输入有效 (8.1983ms)
+✔ 圆球是真正等半径球面，法线向外且闭合；所有内芯与外壳共享这一原始形状 (96.7048ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false (74.9631ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true (41.845ms)
+✔ 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染 (33.7418ms)
+✔ 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变 (25.3953ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=false (51.5962ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=true (53.8224ms)
+✔ 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留 (29.7726ms)
+✔ 单次stroke采用最大包络；重复采样与采样密度不会无界叠加 (56.7503ms)
+✔ 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳 (1330.4401ms)
+✔ 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心 (962.6639ms)
+✔ 下一stroke从永久base继续，异处按压不擦除旧路径 (64.6643ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false (30.1776ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true (26.4413ms)
+✔ 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零 (29.1428ms)
+✔ 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效 (23.4794ms)
+✔ 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压 (20.4932ms)
+✔ cavity shade remains smooth and legible from light contact to deep pressure (5.0624ms)
+✔ day and night retain broad fill while the grazing key models the dent (0.3767ms)
+✔ real GLB: visible progressive collapse, moderately faster than clay; release/cancel freezes every vertex and sleeps (276.3829ms)
+✔ real GLB: fast/slow/long/reversed/crossing paths, sparse events, event density and frame steps (1511.6992ms)
+✔ explicit restore, interruption, reset and instance isolation (11.8166ms)
+✔ measured GLB endpoint/middle curves with and without dwell: density and frame tolerances (1930.7727ms)
+✔ optical material isolation preserves clay defaults and source, with separate soft fibre response (37.8392ms)
+✔ real GLB triangles retain outward winding after multidirectional crossing and repeated kneading; no input teleport (119.4579ms)
+✔ deep collapse leaves a small bounded core and repeated strokes cannot drill through it (277.5174ms)
+✔ press has visible stages, one hold cannot hit the safety boundary, and a new press takes over continuously (132.4249ms)
+✔ stationary event density and frame rate do not accelerate pressing; reduced motion keeps its process (55.721ms)
+✔ a stalled render cannot skip the visible press process or consume a whole hold (4.371ms)
+✔ one press is local: outside .40 footprint is unchanged and affected area is under 6 percent (13.5584ms)
+✔ dwelling at a slide endpoint deepens only its local footprint; departed trail stays exactly frozen (68.4187ms)
+✔ subframe fast sweep is continuous between sparse endpoints without deepening the departed path (20.5438ms)
+✔ stopping after a fast swipe deepens on the very next frame without a pressure catch-up delay (36.1009ms)
+✔ 慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与黏土可量测区分 (190.6644ms)
+ℹ {"firstFrame":0.0005208253860473645,"at100ms":0.018750011920928997,"at300ms":0.10799998044967675,"at3s":0.46000003814697366,"slowAfter2s":0.09287238121032736,"clayAfter2s":0.3136377334594734}
+✔ 厚实哑光外观独立于手感：仅full-matte增厚和加深，默认外观完全保留 (2.2236ms)
+✔ 反馈修订不改变用户确认的回弹曲线、减少动态恢复或最终收敛 (110.4675ms)
+✔ 按压有平滑起步，120ms后匀速深入，没有先猛陷再缓慢逼近的尾段 (123.0888ms)
+ℹ {"timesMs":[120,170,220],"values":[0.02700001001358038,0.049499988555908314,0.07200002670288103],"increments":[0.022499978542327933,0.022500038146972712]}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=false (172.4272ms)
+ℹ {"reduced":false,"stoppedAt":13.433333333333334,"maxFinalStep":0.000009238719940185547,"finalError":0}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=true (78.0821ms)
+ℹ {"reduced":true,"stoppedAt":2.15,"maxFinalStep":0.000009894371032714844,"finalError":0}
+✔ 驻留起点→滑动→驻留终点：中段浅、松手不造坑，整条路径恢复 (145.5314ms)
+ℹ {"angles":[-1,0,1],"depths":[0.09542496778383948,0.04623240232467662,0.45788050050693363]}
+✔ 长按后移到新位置，只接收当前帧接触量，不继承旧压深 (183.8285ms)
+✔ 连续滑动0.12s无驻留：无均匀深沟、路径连通且完全恢复 (152.2065ms)
+✔ 连续滑动0.8s无驻留：无均匀深沟、路径连通且完全恢复 (124.8779ms)
+✔ 连续滑动4s无驻留：无均匀深沟、路径连通且完全恢复 (150.4683ms)
+✔ 折返、交叉、重复揉压有界；旧痕和新痕最终共同消失 (339.6275ms)
+✔ 深按、长按及多轮多方向按压无残差、不外翻、不越界 (1405.8409ms)
+✔ 稀疏跨越、同帧重复move不加深；不同刷新与事件密度处于有限误差内 (556.9128ms)
+ℹ {"configurations":[{"dt":0.03333333333333333,"hz":30},{"dt":0.016666666666666666,"hz":60},{"dt":0.008333333333333333,"hz":120},{"dt":0.016666666666666666,"hz":10}],"maxCoordinateErrors":[0.0003802776336669922,0,0.00021070241928100586,0.002964198589324951]}
+✔ 显式换色恢复独占时钟；快速重启、取消与输入中断连续接管 (133.3764ms)
+✔ 取消缓慢恢复；reset清空计时和旧路径；减少动态切换、实例和资产隔离 (259.9972ms)
+ℹ tests 50
+ℹ suites 0
+ℹ pass 50
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4743.1015

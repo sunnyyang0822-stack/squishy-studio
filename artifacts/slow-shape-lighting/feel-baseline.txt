@@ -1,0 +1,3 @@
+PASS orb-deformation.mjs: 1240 exact paired operations on the SAME new sphere, including reduced motion; baseline a9315d9a88174afa5163ed732791ce15e0219022
+PASS orb-marshmallow.mjs: 1240 exact paired operations on the SAME new sphere, including reduced motion; baseline a9315d9a88174afa5163ed732791ce15e0219022
+PASS orb-slow-rebound.mjs: 1240 exact paired operations on the SAME new sphere, including reduced motion; baseline a9315d9a88174afa5163ed732791ce15e0219022

@@ -1,0 +1,274 @@
+[
+  {
+    "id": "orb",
+    "feel": "butter",
+    "theme": "day",
+    "pressed": {
+      "maximum": 0.45907281584635456,
+      "changed": 222,
+      "center": [
+        0.02121480354147535,
+        0.4026531522116491,
+        0.8771297351653118
+      ],
+      "uploads": 113,
+      "vertices": 2562,
+      "finite": true
+    }
+  },
+  {
+    "id": "orb",
+    "feel": "butter",
+    "theme": "night",
+    "pressed": {
+      "maximum": 0.45907281584635456,
+      "changed": 222,
+      "center": [
+        0.02121480334973555,
+        0.40265315274132146,
+        0.8771297346918643
+      ],
+      "uploads": 227,
+      "vertices": 2562,
+      "finite": true
+    }
+  },
+  {
+    "id": "star",
+    "feel": "butter",
+    "theme": "day",
+    "pressed": {
+      "maximum": 0.27108733571806615,
+      "changed": 741,
+      "center": [
+        -0.0016984915108050767,
+        0.2164646302595687,
+        0.4928871643782357
+      ],
+      "uploads": 113,
+      "vertices": 6944,
+      "finite": true
+    }
+  },
+  {
+    "id": "star",
+    "feel": "butter",
+    "theme": "night",
+    "pressed": {
+      "maximum": 0.27108733571806615,
+      "changed": 741,
+      "center": [
+        -0.0016984917218784428,
+        0.21646463007857117,
+        0.4928871644749645
+      ],
+      "uploads": 227,
+      "vertices": 6944,
+      "finite": true
+    }
+  },
+  {
+    "id": "flower",
+    "feel": "butter",
+    "theme": "day",
+    "pressed": {
+      "maximum": 0.23565163466509106,
+      "changed": 657,
+      "center": [
+        0.0008677894418741715,
+        0.2408213267522977,
+        0.478781121316172
+      ],
+      "uploads": 113,
+      "vertices": 8654,
+      "finite": true
+    }
+  },
+  {
+    "id": "flower",
+    "feel": "butter",
+    "theme": "night",
+    "pressed": {
+      "maximum": 0.23565163466509106,
+      "changed": 657,
+      "center": [
+        0.0008677894418741715,
+        0.2408213267522977,
+        0.478781121316172
+      ],
+      "uploads": 226,
+      "vertices": 8654,
+      "finite": true
+    }
+  },
+  {
+    "id": "pyramid",
+    "feel": "butter",
+    "theme": "day",
+    "pressed": {
+      "maximum": 0.24287968008613453,
+      "changed": 482,
+      "center": [
+        0.03612817641644176,
+        0.13707657736379372,
+        0.5668455501349069
+      ],
+      "uploads": 114,
+      "vertices": 4100,
+      "finite": true
+    }
+  },
+  {
+    "id": "pyramid",
+    "feel": "butter",
+    "theme": "night",
+    "pressed": {
+      "maximum": 0.24287968008613453,
+      "changed": 482,
+      "center": [
+        0.03612817641644176,
+        0.13707657736379372,
+        0.5668455501349069
+      ],
+      "uploads": 228,
+      "vertices": 4100,
+      "finite": true
+    }
+  },
+  {
+    "id": "paw",
+    "feel": "butter",
+    "theme": "day",
+    "pressed": {
+      "maximum": 0.3091368800467506,
+      "changed": 1168,
+      "center": [
+        -0.0003368257626320774,
+        -0.2598963256899579,
+        0.5654896341370305
+      ],
+      "uploads": 114,
+      "vertices": 14468,
+      "finite": true
+    }
+  },
+  {
+    "id": "paw",
+    "feel": "butter",
+    "theme": "night",
+    "pressed": {
+      "maximum": 0.3091368800467506,
+      "changed": 1168,
+      "center": [
+        -0.0003368257626320774,
+        -0.2598963256899579,
+        0.5654896341370305
+      ],
+      "uploads": 228,
+      "vertices": 14468,
+      "finite": true
+    }
+  },
+  {
+    "id": "donut",
+    "feel": "butter",
+    "theme": "day",
+    "pressed": {
+      "maximum": 0.14876045350539477,
+      "changed": 603,
+      "center": [
+        0.5644935246135936,
+        0.20432972802921065,
+        0.3921187236425764
+      ],
+      "uploads": 114,
+      "vertices": 6144,
+      "finite": true
+    }
+  },
+  {
+    "id": "donut",
+    "feel": "butter",
+    "theme": "night",
+    "pressed": {
+      "maximum": 0.14876045350539477,
+      "changed": 603,
+      "center": [
+        0.5644935246879559,
+        0.20432972764315108,
+        0.39211872355409005
+      ],
+      "uploads": 227,
+      "vertices": 6144,
+      "finite": true
+    }
+  },
+  {
+    "id": "cloud",
+    "feel": "butter",
+    "theme": "day",
+    "pressed": {
+      "maximum": 0.32979680053394284,
+      "changed": 514,
+      "center": [
+        0.0007371995584559865,
+        0.22322613614534076,
+        0.6153074432164852
+      ],
+      "uploads": 113,
+      "vertices": 7136,
+      "finite": true
+    }
+  },
+  {
+    "id": "cloud",
+    "feel": "butter",
+    "theme": "night",
+    "pressed": {
+      "maximum": 0.32979680053394284,
+      "changed": 514,
+      "center": [
+        0.0007371995584559865,
+        0.22322613614534076,
+        0.6153074432164852
+      ],
+      "uploads": 226,
+      "vertices": 7136,
+      "finite": true
+    }
+  },
+  {
+    "id": "cylinder",
+    "feel": "butter",
+    "theme": "day",
+    "pressed": {
+      "maximum": 0.45744216764536905,
+      "changed": 490,
+      "center": [
+        -0.0020133245382999362,
+        0.2956884666717649,
+        0.9732671290281837
+      ],
+      "uploads": 113,
+      "vertices": 6424,
+      "finite": true
+    }
+  },
+  {
+    "id": "cylinder",
+    "feel": "butter",
+    "theme": "night",
+    "pressed": {
+      "maximum": 0.45744216764536905,
+      "changed": 490,
+      "center": [
+        -0.002013324627597438,
+        0.2956884665071054,
+        0.9732671290051043
+      ],
+      "uploads": 227,
+      "vertices": 6424,
+      "finite": true
+    }
+  }
+]
