@@ -81,7 +81,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     let deformation;
     try {
       deformation = isSurface
-        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, { ...style.geometryOptions, continuousFootprint: feelId === 'slow-rebound' }), reducedMotion: motionPreference.matches,
+        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, { ...style.geometryOptions, cacheSafety: feelId === 'slow-rebound' && style.id !== 'paw', continuousFootprint: feelId === 'slow-rebound' }), reducedMotion: motionPreference.matches,
           ...pressOptions })
         : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches, ...pressOptions });
     } catch (error) { releaseObject(root); throw error; }
@@ -410,7 +410,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || (feelId === 'marshmallow' && config.waxCollection === false);
       const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
-      const mediumRecipe = feelId === 'clay' && config.shellMaterial === 'wax' && config.waxThickness === 'medium' && (style.id === 'orb' || config.waxCollection === false);
+      const mediumCore = feelId === 'clay' || style.id !== 'paw' && ['marshmallow', 'slow-rebound'].includes(feelId) && config.waxCollection === false;
+      const mediumRecipe = mediumCore && config.shellMaterial === 'wax' && config.waxThickness === 'medium' && (style.id === 'orb' || config.waxCollection === false);
       const waxRecipe = thinRecipe || mediumRecipe;
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
       if (wax || waxRecipe) current.input.cancel({ preserveShape: changed });
@@ -421,7 +422,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       collectionEnabled = config.waxCollection !== false;
       if (waxRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset(mediumRecipe ? 'medium-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, fullSurfaceSupport: feelId === 'marshmallow' && isSurface });
+        wax = getWaxPreset(mediumRecipe ? 'medium-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, fullSurfaceSupport: isSurface && (feelId === 'marshmallow' || mediumRecipe && feelId === 'slow-rebound') });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }

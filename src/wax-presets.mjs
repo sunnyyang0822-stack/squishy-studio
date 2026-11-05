@@ -16,14 +16,16 @@ const thinWax = Object.freeze({
 
 // Physical thickness and actual Voronoi partition size/placement differ.
 // Contact timing, gap, fragment budgets and falling dynamics stay inherited.
+// Surface seeds keep recessed regions moderate; 32/48 oversized cells were rejected.
 const mediumWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 2, seedCount: 96 });
-const largeMediumWaxParameters = Object.freeze({ ...mediumWaxParameters, seedCount: 48, partitionSpace: 'surface' });
-const pawMediumWaxParameters = Object.freeze({ ...largeMediumWaxParameters, seedCount: 32 });
-const largePanelStyles = new Set(['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']);
-const mediumParametersForStyle = styleId => styleId === 'paw' ? pawMediumWaxParameters : largePanelStyles.has(styleId) ? largeMediumWaxParameters : mediumWaxParameters;
+const surfaceMediumWaxParameters = Object.freeze({ ...mediumWaxParameters, seedCount: 96, partitionSpace: 'surface' });
+const pawMediumWaxParameters = Object.freeze({ ...surfaceMediumWaxParameters, seedCount: 128 });
+const surfacePanelStyles = new Set(['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']);
+const mediumParametersForStyle = styleId => styleId === 'paw' ? pawMediumWaxParameters : surfacePanelStyles.has(styleId) ? surfaceMediumWaxParameters : mediumWaxParameters;
 const mediumGeometryOptions = Object.freeze({ freezeRenderedFragments: true, detachedQueryHints: true, supportClusters: true, featureTieConsensus: true, fullSurfaceSupport: false });
+const optimizedMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, performanceOptimizations: true });
 const pawMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, fullSurfaceSupport: true });
-const mediumGeometryForStyle = styleId => styleId === 'paw' ? pawMediumGeometryOptions : mediumGeometryOptions;
+const mediumGeometryForStyle = styleId => styleId === 'paw' ? pawMediumGeometryOptions : surfacePanelStyles.has(styleId) ? optimizedMediumGeometryOptions : mediumGeometryOptions;
 const mediumWax = Object.freeze({
   id: 'medium-wax', material: 'wax', thickness: 'medium',
   parameters: mediumWaxParameters,

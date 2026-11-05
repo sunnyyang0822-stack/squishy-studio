@@ -46,19 +46,21 @@ test('medium preset changes only physical thickness and real partition count', a
   for (const id of ['cloud','paw','cylinder','donut','pyramid','flower','star']) {
     const p = medium.parametersForStyle(id), geometry = medium.geometryOptionsForStyle(id);
     assert.ok(Object.isFrozen(p)); assert.ok(Object.isFrozen(geometry));
-    assert.equal(p.seedCount, id === 'paw' ? 32 : 48); assert.equal(p.partitionSpace, 'surface');
+    assert.equal(p.seedCount, id === 'paw' ? 128 : 96); assert.equal(p.partitionSpace, 'surface');
     assert.equal(p.thickness, thickness); assert.equal(p.dwell, thin.parameters.dwell);
     assert.equal(geometry.fullSurfaceSupport, id === 'paw');
+    assert.equal(Boolean(geometry.performanceOptimizations), id !== 'paw');
     assert.equal(geometry.detachedQueryHints, true); assert.equal(geometry.supportClusters, true); assert.equal(geometry.featureTieConsensus, true);
   }
   assert.equal(medium.parametersForStyle('orb'), medium.parameters);
+  assert.equal(Boolean(medium.geometryOptionsForStyle('orb').performanceOptimizations), false);
 });
 
 test('medium mapping supports every registered clay preview and preserves legacy final scope', async () => {
   const { createDetailController, isMediumWaxRecipe, canRestartWax, defaultRecipe, styleNames } = await import('../detail/state.mjs');
   for (const styleId of Object.keys(styleNames)) for (const coreMaterial of ['clay', 'marshmallow', 'butter']) {
-    assert.equal(isMediumWaxRecipe({ ...defaultRecipe, styleId, coreMaterial }), coreMaterial === 'clay');
-    assert.equal(canRestartWax('shell', { ...defaultRecipe, styleId, coreMaterial }), coreMaterial === 'clay');
+    assert.equal(isMediumWaxRecipe({ ...defaultRecipe, styleId, coreMaterial }), coreMaterial === 'clay' || styleId !== 'paw');
+    assert.equal(canRestartWax('shell', { ...defaultRecipe, styleId, coreMaterial }), coreMaterial === 'clay' || styleId !== 'paw');
     assert.equal(canRestartWax('play', { ...defaultRecipe, styleId, coreMaterial }), styleId === 'orb' && coreMaterial === 'clay');
   }
   for (const override of [{ shellMaterial: 'polish' }, { shellMaterial: 'sugar' }, { waxThickness: 'thick' }, { waxThickness: 'thin' }]) assert.equal(isMediumWaxRecipe({ ...defaultRecipe, ...override }), false);

@@ -131,7 +131,7 @@ test('rapid thickness changes clear old damage/resources; last selection wins an
       await select(name, value); await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().enabled === false);
       assert.equal((await diag(page)).presetId, null);
     }
-    for (const [style, material] of [['cloud', 'marshmallow'], ['orb', 'marshmallow'], ['orb', 'butter']]) {
+    for (const [style, material] of [['paw', 'marshmallow'], ['paw', 'butter']]) {
       await page.goto(`${base}/squishy/cloud/?style=${style}&coreMaterial=${material}&waxThickness=medium&step=shell`);
       await page.waitForFunction(() => document.querySelector('.toy-stage')?.dataset.state === 'ready');
       assert.equal((await diag(page)).enabled, false);

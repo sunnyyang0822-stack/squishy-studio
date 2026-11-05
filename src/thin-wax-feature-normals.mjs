@@ -25,11 +25,18 @@ export function createWaxFeatureNormals(geometry, restPositions = geometry.attri
     for (let i = 0; i < faces.length; i++) {
       const { ab: u, ac: v, normal } = faces[i], feature = topology[i];
       feature.points ||= [faces[i].triangle.a, faces[i].triangle.b, faces[i].triangle.c];
-      const x = u.y * v.z - u.z * v.y, y = u.z * v.x - u.x * v.z, z = u.x * v.y - u.y * v.x;
-      const area = Math.sqrt(x * x + y * y + z * z), dot = u.dot(v);
-      vertices[feature.corners[0]].addScaledVector(normal, Math.atan2(area, dot));
-      vertices[feature.corners[1]].addScaledVector(normal, Math.atan2(area, u.lengthSq() - dot));
-      vertices[feature.corners[2]].addScaledVector(normal, Math.atan2(area, v.lengthSq() - dot));
+      // Keep the original face accumulation order and Float64 arithmetic.
+      // Only reuse angles when both current triangle edges are bit-identical.
+      const cached = feature.angles ||= new Float64Array(9);
+      if (!feature.hasAngles || cached[0] !== u.x || cached[1] !== u.y || cached[2] !== u.z || cached[3] !== v.x || cached[4] !== v.y || cached[5] !== v.z) {
+        const x = u.y * v.z - u.z * v.y, y = u.z * v.x - u.x * v.z, z = u.x * v.y - u.y * v.x;
+        const area = Math.sqrt(x * x + y * y + z * z), dot = u.dot(v);
+        cached[0]=u.x;cached[1]=u.y;cached[2]=u.z;cached[3]=v.x;cached[4]=v.y;cached[5]=v.z;
+        cached[6]=Math.atan2(area,dot);cached[7]=Math.atan2(area,u.lengthSq()-dot);cached[8]=Math.atan2(area,v.lengthSq()-dot);feature.hasAngles=true;
+      }
+      vertices[feature.corners[0]].addScaledVector(normal, cached[6]);
+      vertices[feature.corners[1]].addScaledVector(normal, cached[7]);
+      vertices[feature.corners[2]].addScaledVector(normal, cached[8]);
       for (const edge of feature.edges) edge.normal.add(normal);
     }
     for (const normal of vertices) normal.normalize();
