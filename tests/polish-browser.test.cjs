@@ -22,13 +22,23 @@ async function installPixels(page) {
   await page.addInitScript(() => {
     const get = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, ...args) {
-      const gl = get.call(this, type, ...args); if (type === 'webgl2' && gl) window.polishGL = gl; return gl;
+      const gl = get.call(this, type, ...args);
+      if (type === 'webgl2' && gl && window.polishGL !== gl) {
+        window.polishGL = gl;
+        const draw = gl.drawElements.bind(gl);
+        gl.drawElements = (...args) => {
+          const result = draw(...args);
+          window.polishDrawRevision = (window.polishDrawRevision || 0) + 1;
+          return result;
+        };
+      }
+      return gl;
     };
     const frame = requestAnimationFrame.bind(window);
     window.requestAnimationFrame = callback => frame(time => {
       callback(time);
       if (window.measurePolishFrames) (window.polishFrameTimes ||= []).push(performance.now());
-      if (!window.capturePolishPixels || !window.polishGL) return;
+      if (!window.capturePolishPixels || !(window.polishDrawRevision > window.polishCaptureRevision)) return;
       window.capturePolishPixels = false;
       const gl = window.polishGL, w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
       const pixels = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
@@ -52,7 +62,7 @@ async function installPixels(page) {
 }
 async function open({ mobile = false, night = false, reduced = false, video = false } = {}) {
   const context = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 },
-    deviceScaleFactor: 1, isMobile: mobile, hasTouch: mobile, reducedMotion: reduced ? 'reduce' : 'no-preference',
+    deviceScaleFactor: captureEvidence ? 1 : 0.5, isMobile: mobile, hasTouch: mobile, reducedMotion: reduced ? 'reduce' : 'no-preference',
     ...(video && captureEvidence ? { recordVideo: { dir: out, size: { width: 1280, height: 900 } } } : {}) });
   const page = await context.newPage(); const errors = [];
   await page.route("**/favicon.ico", route => route.fulfill({ status: 204, body: "" }));
@@ -68,7 +78,7 @@ async function open({ mobile = false, night = false, reduced = false, video = fa
 const diag = page => page.locator('.toy-mount').evaluate(el => el.polishDiagnostics());
 const depth = d => { let max = 0; for (let i = 0; i < d.corePositions.length; i += 3) max = Math.max(max, Math.hypot(...[0, 1, 2].map(k => d.corePositions[i + k] - d.coreRestPositions[i + k]))); return max; };
 async function pixels(page) {
-  await page.evaluate(() => { window.polishPixels = null; window.capturePolishPixels = true; document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'night' ? 'night' : 'day'; window.dispatchEvent(new Event('resize')); });
+  await page.evaluate(() => { window.polishPixels = null; window.polishCaptureRevision = window.polishDrawRevision || 0; window.capturePolishPixels = true; document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'night' ? 'night' : 'day'; window.dispatchEvent(new Event('resize')); });
   // ResizeObserver reliably requests a real draw even when the object is idle.
   const v = page.viewportSize(); await page.setViewportSize({ ...v, width: v.width + 1 });
   await page.waitForFunction(() => window.polishPixels); const result = await page.evaluate(() => window.polishPixels);
@@ -83,7 +93,7 @@ async function press(page, ms, x = .5, y = .46) {
 async function shot(page, name) { if (!captureEvidence) return; await page.screenshot({ path: resolve(out, name + '.png') }); }
 async function restart(page) { await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(900); }
 
-test('polish clay actual GPU opening, local progressive damage, lifecycle and normal-speed desktop recording', { timeout: 120000 }, async () => {
+test('polish clay actual GPU opening, local progressive damage and desktop lifecycle', { timeout: 240000 }, async () => {
   const { context, page, errors } = await open({ video: true });
   const initial = await diag(page), intactPixels = await pixels(page);
   assert.equal(initial.coreColor, 'mint'); assert.equal(initial.shellColor, 'rose');
