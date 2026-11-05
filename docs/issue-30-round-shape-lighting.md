@@ -33,7 +33,7 @@
 - 新浏览器测试2/2通过：24次真实模型加载逐一检查原形顶点、三质感矩阵一致；昼夜深浅按压与旋转光照。
 - 原昼夜换色全部4/4通过，包括实际GPU每个颜色分量的凹陷阴影与色彩校正、主题切换保留原形与姿态、换色恢复。
 - 原三内芯圆球在桌面及390×844触屏模拟中的裸芯/外壳屏幕包围盒及真实模型矩阵一致，目标1/1通过。
-- 更广泛CPU和浏览器回归、最终PR检查结果以实际日志和GitHub最终head为准，运行中记录不作为完成依据。
+- 更广泛CPU回归 **212/212通过、0失败/跳过**，覆盖制作状态、三内芯、各模型几何以及薄/厚蜡、碰撞、裂缝、恢复等原有约束，见 `all-cpu-tests.txt`。原圆球换色、昼夜色彩与慢回弹浏览器回归 **20/20通过**，见 `orb-browser-regression.txt`。最终合并仍须等待GitHub最终head全部检查通过，局部测试不能替代完整PR检查。
 
 复现：启动 `PORT=4246 node server.mjs`；运行 `node scripts/capture-production-shapes.cjs` 捕获真实制作页面。前后光照对照先将 `git show a9315d9:assets/orb-preview.js` 保存为 `.tmp/baseline-preview.js`，再运行 `node scripts/capture-shape-lighting.cjs`。旧包仅通过浏览器路由用于对照，未覆盖产品文件；前后均加载同一个新球面。
 
