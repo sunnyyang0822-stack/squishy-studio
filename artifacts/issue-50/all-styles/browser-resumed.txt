@@ -1,0 +1,16 @@
+✔ star marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (17001.4722ms)
+✔ star butter polish: structural GLB contact, real GPU exposure, drag, release, side view (27423.5706ms)
+✔ cloud clay mobile emulation: night reduced motion structural touch (6364.9092ms)
+✔ cylinder marshmallow mobile emulation: night reduced motion structural touch (4772.4591ms)
+✔ donut butter mobile emulation: night reduced motion structural touch (9048.6259ms)
+✔ pyramid clay mobile emulation: night reduced motion structural touch (5205.8194ms)
+✔ flower marshmallow mobile emulation: night reduced motion structural touch (7388.4904ms)
+✔ star butter mobile emulation: night reduced motion structural touch (6001.3446ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84688.6593

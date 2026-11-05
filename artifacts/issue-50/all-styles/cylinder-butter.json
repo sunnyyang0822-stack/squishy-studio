@@ -1,0 +1,154 @@
+{
+  "environment": "Windows Edge headless desktop day 1280x900 DPR1; not phone hardware",
+  "style": "cylinder",
+  "core": "butter",
+  "contact": {
+    "face": 7908,
+    "point": [
+      0.14310797055562338,
+      0.11266666650772095,
+      0.988528569539388
+    ],
+    "normal": [
+      0.14040469626585642,
+      0,
+      0.9898983041445415
+    ],
+    "radialDot": 0.020093031139085425,
+    "score": 0.000587756083308539,
+    "region": "curved front",
+    "x": 455.5410116965779,
+    "y": 488.2235082509615
+  },
+  "intact": {
+    "opaque": 197425,
+    "green": 0,
+    "pink": 197425,
+    "dark": 0,
+    "width": 791,
+    "height": 808,
+    "greenComponentsAtLeast4Pixels": []
+  },
+  "opened": {
+    "opaque": 197234,
+    "green": 2728,
+    "pink": 194505,
+    "dark": 0,
+    "width": 790,
+    "height": 808,
+    "greenComponentsAtLeast4Pixels": [
+      2709
+    ]
+  },
+  "shallowDepth": 0.10016645290596461,
+  "deepDepth": 0.4584050809427418,
+  "releasedDepth": 0.3682719968337775,
+  "waitingDepth": 0.13369235463986692,
+  "deep": {
+    "id": "polish-shell",
+    "feelId": "slow-rebound",
+    "crackWidthGain": 1,
+    "recoveredWidthGain": 1.5,
+    "maxResidualOpening": 0.07000000029802322,
+    "rimEnabled": false,
+    "active": true,
+    "disposed": false,
+    "cycle": 1,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0.6393880248069763,
+    "maxOpening": 0.458405077457428,
+    "damagedVertices": 272,
+    "maxLocalContacts": 1,
+    "vertexBudget": 6424,
+    "roughness": 0.43
+  },
+  "deepMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.0032562264780817106,
+    "maxGap": 0.003500020601832525,
+    "samples": 89908,
+    "violations": 0,
+    "sourceFacePlaneSamples": 89908,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "dragMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.0032355961952740277,
+    "maxGap": 0.003500020601832525,
+    "samples": 89908,
+    "violations": 0,
+    "sourceFacePlaneSamples": 89908,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "sideMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.0034314553176545636,
+    "maxGap": 0.003500020601832525,
+    "samples": 89908,
+    "violations": 0,
+    "sourceFacePlaneSamples": 89908,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "recovered": {
+    "state": {
+      "id": "polish-shell",
+      "feelId": "slow-rebound",
+      "crackWidthGain": 1,
+      "recoveredWidthGain": 1.5,
+      "maxResidualOpening": 0.07000000029802322,
+      "rimEnabled": false,
+      "active": false,
+      "disposed": false,
+      "cycle": 1,
+      "detached": 0,
+      "falling": 0,
+      "fragmentCount": 0,
+      "maxDamage": 0.6399853229522705,
+      "maxOpening": 0,
+      "damagedVertices": 311,
+      "maxLocalContacts": 1,
+      "vertexBudget": 6424,
+      "roughness": 0.43
+    },
+    "metrics": {
+      "gap": 0.0035,
+      "minGap": 0.0034314553176545636,
+      "maxGap": 0.003500020601832525,
+      "samples": 89908,
+      "violations": 0,
+      "sourceFacePlaneSamples": 89908,
+      "detached": 0,
+      "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+    }
+  },
+  "reset": {
+    "id": "polish-shell",
+    "feelId": "slow-rebound",
+    "crackWidthGain": 1,
+    "recoveredWidthGain": 1.5,
+    "maxResidualOpening": 0,
+    "rimEnabled": false,
+    "active": false,
+    "disposed": false,
+    "cycle": 0,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0,
+    "maxOpening": 0,
+    "damagedVertices": 0,
+    "maxLocalContacts": 0,
+    "vertexBudget": 6424,
+    "roughness": 0.43
+  },
+  "resources": {
+    "calls": 2,
+    "triangles": 25688,
+    "geometries": 2
+  }
+}

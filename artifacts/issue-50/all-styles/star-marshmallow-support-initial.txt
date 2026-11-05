@@ -1,0 +1,158 @@
+{"supportFailure":true,"styleId":"star","feelId":"marshmallow","label":"slide-4/12","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0003414356375938531,"maxNearestGap":0.0035000565071433075,"violations":1,"worst":{"kind":"vertex","id":4362,"position":[0.09140484035015106,0.008009374141693115,0.23533974587917328]}}
+{"supportFailure":true,"styleId":"star","feelId":"marshmallow","label":"slide-8/12","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}}
+{"supportFailure":true,"styleId":"star","feelId":"marshmallow","label":"slide-12/12","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}}
+{"supportFailure":true,"styleId":"star","feelId":"marshmallow","label":"release-0.5s","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}}
+{"supportFailure":true,"styleId":"star","feelId":"marshmallow","label":"release-1s","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}}
+{"supportFailure":true,"styleId":"star","feelId":"marshmallow","label":"release-1.5s","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}}
+{"supportFailure":true,"styleId":"star","feelId":"marshmallow","label":"repeat-0","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}}
+✖ star marshmallow: independent whole-core polish support and exact bare-core trajectory (4436.8306ms)
+ℹ {"styleId":"star","feelId":"marshmallow","sourceModel":"/assets/models/squishy-star.glb","comparedFrames":521,"totalSamples":666464,"contacts":[[0.517266035079956,0.15690460801124573,0.4692803621292114],[-0.24759721755981445,-0.15694186091423035,0.5165594816207886]],"sampling":"all actual shell vertices, unique edge midpoints, triangle centroids against whole core at all reported phases; same normal transport as scene","phases":[{"label":"rest","depth":0,"samples":41654,"minSigned":0.003361706419429966,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"centroid","id":8237,"position":[0.7191573182741801,-0.9883809685707092,0.016741166201730568]}},{"label":"shallow-150ms","depth":0.03858838602900505,"samples":41654,"minSigned":0.003361706419429966,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"centroid","id":8237,"position":[0.7191573182741801,-0.9883809685707092,0.016741166201730568]}},{"label":"deep-3s","depth":0.3677414357662201,"samples":41654,"minSigned":0.0018899536007029002,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"edge","id":[3914,4785],"position":[0.6154652237892151,-0.0817804541438818,0.37889112532138824]}},{"label":"slide-4/12","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0003414356375938531,"maxNearestGap":0.0035000565071433075,"violations":1,"worst":{"kind":"vertex","id":4362,"position":[0.09140484035015106,0.008009374141693115,0.23533974587917328]}},{"label":"slide-8/12","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}},{"label":"slide-12/12","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}},{"label":"release-0.5s","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}},{"label":"release-1s","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}},{"label":"release-1.5s","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}},{"label":"repeat-0","depth":0.3677414357662201,"samples":41654,"minSigned":-0.0010924060733870835,"maxNearestGap":0.0035000565071433075,"violations":5,"worst":{"kind":"vertex","id":4362,"position":[0.0881192535161972,0.007411560043692589,0.22678090631961823]}},{"label":"repeat-1","depth":0.47073355317115784,"samples":41654,"minSigned":0.00014945570548085318,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"vertex","id":4362,"position":[0.08744865655899048,0.007494308985769749,0.22481447458267212]}},{"label":"restore-0","depth":0.47073355317115784,"samples":41654,"minSigned":0.00014945570548085318,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"vertex","id":4362,"position":[0.08744865655899048,0.007494308985769749,0.22481447458267212]}},{"label":"restore-0.25","depth":0.1985907107591629,"samples":41654,"minSigned":0.0005791897686121044,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"vertex","id":4359,"position":[0.14046315848827362,0.0026225389447063208,0.4091931879520416]}},{"label":"restore-0.5","depth":0.05884169414639473,"samples":41654,"minSigned":0.0017990417558565218,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"vertex","id":4359,"position":[0.17052923142910004,0.0020980278495699167,0.5033429861068726]}},{"label":"restore-0.75","depth":0.007355211768299341,"samples":41654,"minSigned":0.003361706419429966,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"centroid","id":8237,"position":[0.7191573182741801,-0.9883809685707092,0.016741166201730568]}},{"label":"restore-1","depth":0,"samples":41654,"minSigned":0.003361706419429966,"maxNearestGap":0.0035000565071433075,"violations":0,"worst":{"kind":"centroid","id":8237,"position":[0.7191573182741801,-0.9883809685707092,0.016741166201730568]}}]}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4625.5922
+
+✖ failing tests:
+
+test at tests\polish-styles-support.test.cjs:7:59
+✖ star marshmallow: independent whole-core polish support and exact bare-core trajectory (4436.8306ms)
+  AssertionError [ERR_ASSERTION]: star/marshmallow: whole-core shell support failed
+  + actual - expected
+  
+  + [
+  +   {
+  +     depth: 0.3677414357662201,
+  +     label: 'slide-4/12',
+  +     maxNearestGap: 0.0035000565071433075,
+  +     minSigned: -0.0003414356375938531,
+  +     samples: 41654,
+  +     violations: 1,
+  +     worst: {
+  +       id: 4362,
+  +       kind: 'vertex',
+  +       position: [
+  +         0.09140484035015106,
+  +         0.008009374141693115,
+  +         0.23533974587917328
+  +       ]
+  +     }
+  +   },
+  +   {
+  +     depth: 0.3677414357662201,
+  +     label: 'slide-8/12',
+  +     maxNearestGap: 0.0035000565071433075,
+  +     minSigned: -0.0010924060733870835,
+  +     samples: 41654,
+  +     violations: 5,
+  +     worst: {
+  +       id: 4362,
+  +       kind: 'vertex',
+  +       position: [
+  +         0.0881192535161972,
+  +         0.007411560043692589,
+  +         0.22678090631961823
+  +       ]
+  +     }
+  +   },
+  +   {
+  +     depth: 0.3677414357662201,
+  +     label: 'slide-12/12',
+  +     maxNearestGap: 0.0035000565071433075,
+  +     minSigned: -0.0010924060733870835,
+  +     samples: 41654,
+  +     violations: 5,
+  +     worst: {
+  +       id: 4362,
+  +       kind: 'vertex',
+  +       position: [
+  +         0.0881192535161972,
+  +         0.007411560043692589,
+  +         0.22678090631961823
+  +       ]
+  +     }
+  +   },
+  +   {
+  +     depth: 0.3677414357662201,
+  +     label: 'release-0.5s',
+  +     maxNearestGap: 0.0035000565071433075,
+  +     minSigned: -0.0010924060733870835,
+  +     samples: 41654,
+  +     violations: 5,
+  +     worst: {
+  +       id: 4362,
+  +       kind: 'vertex',
+  +       position: [
+  +         0.0881192535161972,
+  +         0.007411560043692589,
+  +         0.22678090631961823
+  +       ]
+  +     }
+  +   },
+  +   {
+  +     depth: 0.3677414357662201,
+  +     label: 'release-1s',
+  +     maxNearestGap: 0.0035000565071433075,
+  +     minSigned: -0.0010924060733870835,
+  +     samples: 41654,
+  +     violations: 5,
+  +     worst: {
+  +       id: 4362,
+  +       kind: 'vertex',
+  +       position: [
+  +         0.0881192535161972,
+  +         0.007411560043692589,
+  +         0.22678090631961823
+  +       ]
+  +     }
+  +   },
+  +   {
+  +     depth: 0.3677414357662201,
+  +     label: 'release-1.5s',
+  +     maxNearestGap: 0.0035000565071433075,
+  +     minSigned: -0.0010924060733870835,
+  +     samples: 41654,
+  +     violations: 5,
+  +     worst: {
+  +       id: 4362,
+  +       kind: 'vertex',
+  +       position: [
+  +         0.0881192535161972,
+  +         0.007411560043692589,
+  +         0.22678090631961823
+  +       ]
+  +     }
+  +   },
+  +   {
+  +     depth: 0.3677414357662201,
+  +     label: 'repeat-0',
+  +     maxNearestGap: 0.0035000565071433075,
+  +     minSigned: -0.0010924060733870835,
+  +     samples: 41654,
+  +     violations: 5,
+  +     worst: {
+  +       id: 4362,
+  +       kind: 'vertex',
+  +       position: [
+  +         0.0881192535161972,
+  +         0.007411560043692589,
+  +         0.22678090631961823
+  +       ]
+  +     }
+  +   }
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-50-polish\tests\polish-styles-support.test.cjs:98:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ { label: 'slide-4/12', depth: 0.3677414357662201, samples: 41654, minSigned: -0.0003414356375938531, maxNearestGap: 0.0035000565071433075, violations: 1, worst: [Object] }, { label: 'slide-8/12', depth: 0.3677414357662201, samples: 41654, minSigned: -0.0010924060733870835, maxNearestGap: 0.0035000565071433075, violations: 5, worst: [Object] }, { label: 'slide-12/12', depth: 0.3677414357662201, samples: 41654, minSigned: -0.0010924060733870835, maxNearestGap: 0.0035000565071433075, violations: 5, worst: [Object] }, { label: 'release-0.5s', depth: 0.3677414357662201, samples: 41654, minSigned: -0.0010924060733870835, maxNearestGap: 0.0035000565071433075, violations: 5, worst: [Object] }, { label: 'release-1s', depth: 0.3677414357662201, samples: 41654, minSigned: -0.0010924060733870835, maxNearestGap: 0.0035000565071433075, violations: 5, worst: [Object] }, { label: 'release-1.5s', depth: 0.3677414357662201, samples: 41654, minSigned: -0.0010924060733870835, maxNearestGap: 0.0035000565071433075, violations: 5, worst: [Object] }, { label: 'repeat-0', depth: 0.3677414357662201, samples: 41654, minSigned: -0.0010924060733870835, maxNearestGap: 0.0035000565071433075, violations: 5, worst: [Object] } ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

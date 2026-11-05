@@ -1,0 +1,95 @@
+{
+  "hardwarePhoneTested": false,
+  "style": "flower",
+  "core": "marshmallow",
+  "contact": {
+    "face": 10071,
+    "point": [
+      0.5383049249649048,
+      0.035156945387522384,
+      0.41886046528816223
+    ],
+    "normal": [
+      0.012133223625520865,
+      -0.11850014825661978,
+      0.9916953444480896
+    ],
+    "radialDot": 0.002365270792647131,
+    "score": 0.00035709105030550144,
+    "region": "lobe connection",
+    "x": 260.1057997542607,
+    "y": 349.1065778102619
+  },
+  "intact": {
+    "opaque": 63115,
+    "green": 0,
+    "pink": 63115,
+    "dark": 0,
+    "width": 359,
+    "height": 473,
+    "greenComponentsAtLeast4Pixels": []
+  },
+  "exposed": {
+    "opaque": 63115,
+    "green": 639,
+    "pink": 62458,
+    "dark": 0,
+    "width": 359,
+    "height": 473,
+    "greenComponentsAtLeast4Pixels": [
+      622,
+      8,
+      4
+    ]
+  },
+  "state": {
+    "id": "polish-shell",
+    "feelId": "marshmallow",
+    "crackWidthGain": 2.25,
+    "recoveredWidthGain": 1,
+    "maxResidualOpening": 0,
+    "rimEnabled": false,
+    "active": true,
+    "disposed": false,
+    "cycle": 1,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0.6393200755119324,
+    "maxOpening": 0.30046647787094116,
+    "damagedVertices": 226,
+    "maxLocalContacts": 1,
+    "vertexBudget": 8654,
+    "roughness": 0.43
+  },
+  "metrics": {
+    "gap": 0.0035,
+    "minGap": 0.002118177424161615,
+    "maxGap": 0.0035000356607185956,
+    "samples": 121128,
+    "violations": 0,
+    "sourceFacePlaneSamples": 121128,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "cancelled": {
+    "id": "polish-shell",
+    "feelId": "marshmallow",
+    "crackWidthGain": 2.25,
+    "recoveredWidthGain": 1,
+    "maxResidualOpening": 0,
+    "rimEnabled": false,
+    "active": false,
+    "disposed": false,
+    "cycle": 1,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0.6393200755119324,
+    "maxOpening": 0.3603452742099762,
+    "damagedVertices": 235,
+    "maxLocalContacts": 1,
+    "vertexBudget": 8654,
+    "roughness": 0.43
+  }
+}

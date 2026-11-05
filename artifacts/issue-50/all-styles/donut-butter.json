@@ -1,0 +1,154 @@
+{
+  "environment": "Windows Edge headless desktop day 1280x900 DPR1; not phone hardware",
+  "style": "donut",
+  "core": "butter",
+  "contact": {
+    "face": 37,
+    "point": [
+      0.38342512647310895,
+      0.006066811250933668,
+      0.28227900465329486
+    ],
+    "normal": [
+      -0.7638531525929769,
+      -0.012966513633728027,
+      0.6420568029085796
+    ],
+    "radialDot": -0.2929591570306436,
+    "score": 0.00004853769011124704,
+    "region": "inner wall",
+    "x": 516.2210921069312,
+    "y": 482.424956727825
+  },
+  "intact": {
+    "opaque": 252684,
+    "green": 0,
+    "pink": 252684,
+    "dark": 0,
+    "width": 791,
+    "height": 808,
+    "greenComponentsAtLeast4Pixels": []
+  },
+  "opened": {
+    "opaque": 252716,
+    "green": 323,
+    "pink": 252393,
+    "dark": 0,
+    "width": 790,
+    "height": 808,
+    "greenComponentsAtLeast4Pixels": [
+      310
+    ]
+  },
+  "shallowDepth": 0.11753621477322888,
+  "deepDepth": 0.1669754350812893,
+  "releasedDepth": 0.1455600558349916,
+  "waitingDepth": 0.03464485945198307,
+  "deep": {
+    "id": "polish-shell",
+    "feelId": "slow-rebound",
+    "crackWidthGain": 1,
+    "recoveredWidthGain": 1.5,
+    "maxResidualOpening": 0.026716070249676704,
+    "rimEnabled": false,
+    "active": true,
+    "disposed": false,
+    "cycle": 1,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0.4200912117958069,
+    "maxOpening": 0.16697543859481812,
+    "damagedVertices": 298,
+    "maxLocalContacts": 1,
+    "vertexBudget": 6144,
+    "roughness": 0.43
+  },
+  "deepMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.0034276254192905763,
+    "maxGap": 0.003500001416902026,
+    "samples": 86016,
+    "violations": 0,
+    "sourceFacePlaneSamples": 86016,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "dragMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.003385781030432892,
+    "maxGap": 0.0035000050064753,
+    "samples": 86016,
+    "violations": 0,
+    "sourceFacePlaneSamples": 86016,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "sideMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.003491059299787397,
+    "maxGap": 0.003494070263887218,
+    "samples": 86016,
+    "violations": 0,
+    "sourceFacePlaneSamples": 86016,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "recovered": {
+    "state": {
+      "id": "polish-shell",
+      "feelId": "slow-rebound",
+      "crackWidthGain": 1,
+      "recoveredWidthGain": 1.5,
+      "maxResidualOpening": 0.028885502368211746,
+      "rimEnabled": false,
+      "active": false,
+      "disposed": false,
+      "cycle": 1,
+      "detached": 0,
+      "falling": 0,
+      "fragmentCount": 0,
+      "maxDamage": 0.4653550088405609,
+      "maxOpening": 0,
+      "damagedVertices": 345,
+      "maxLocalContacts": 1,
+      "vertexBudget": 6144,
+      "roughness": 0.43
+    },
+    "metrics": {
+      "gap": 0.0035,
+      "minGap": 0.0034913966085561,
+      "maxGap": 0.003492748918551579,
+      "samples": 86016,
+      "violations": 0,
+      "sourceFacePlaneSamples": 86016,
+      "detached": 0,
+      "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+    }
+  },
+  "reset": {
+    "id": "polish-shell",
+    "feelId": "slow-rebound",
+    "crackWidthGain": 1,
+    "recoveredWidthGain": 1.5,
+    "maxResidualOpening": 0,
+    "rimEnabled": false,
+    "active": false,
+    "disposed": false,
+    "cycle": 0,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0,
+    "maxOpening": 0,
+    "damagedVertices": 0,
+    "maxLocalContacts": 0,
+    "vertexBudget": 6144,
+    "roughness": 0.43
+  },
+  "resources": {
+    "calls": 2,
+    "triangles": 24576,
+    "geometries": 2
+  }
+}

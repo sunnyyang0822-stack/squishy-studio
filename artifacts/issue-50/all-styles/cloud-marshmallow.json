@@ -1,0 +1,122 @@
+{
+  "environment": "Windows Edge headless desktop day 1280x900 DPR1; not phone hardware",
+  "style": "cloud",
+  "core": "marshmallow",
+  "contact": {
+    "face": 9146,
+    "point": [
+      0.3948861062526703,
+      0.05249119798342387,
+      0.6253834962844849
+    ],
+    "normal": [
+      0.18523301184177401,
+      0.1419664522012075,
+      0.9721959233283997
+    ],
+    "radialDot": 0.08059793194515077,
+    "score": 0.00003235797665159331,
+    "region": "lobe connection",
+    "x": 519.1149894316982,
+    "y": 486.5737874298936
+  },
+  "intact": {
+    "opaque": 266718,
+    "green": 0,
+    "pink": 266718,
+    "dark": 0,
+    "width": 791,
+    "height": 808,
+    "greenComponentsAtLeast4Pixels": []
+  },
+  "opened": {
+    "opaque": 266718,
+    "green": 861,
+    "pink": 265856,
+    "dark": 0,
+    "width": 791,
+    "height": 808,
+    "greenComponentsAtLeast4Pixels": [
+      854
+    ]
+  },
+  "shallowDepth": 0.07064870823469958,
+  "deepDepth": 0.3726439300926145,
+  "releasedDepth": 0.3900022443035616,
+  "waitingDepth": 0.3900022443035616,
+  "deep": {
+    "id": "polish-shell",
+    "feelId": "marshmallow",
+    "crackWidthGain": 2.25,
+    "recoveredWidthGain": 1,
+    "maxResidualOpening": 0,
+    "rimEnabled": false,
+    "active": true,
+    "disposed": false,
+    "cycle": 1,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0.6398090720176697,
+    "maxOpening": 0.37264391779899597,
+    "damagedVertices": 183,
+    "maxLocalContacts": 1,
+    "vertexBudget": 7136,
+    "roughness": 0.43
+  },
+  "deepMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.0024950874456240177,
+    "maxGap": 0.0035000229401022536,
+    "samples": 99876,
+    "violations": 0,
+    "sourceFacePlaneSamples": 99876,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "dragMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.00249517207874125,
+    "maxGap": 0.0035000229401022536,
+    "samples": 99876,
+    "violations": 0,
+    "sourceFacePlaneSamples": 99876,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "sideMetrics": {
+    "gap": 0.0035,
+    "minGap": 0.00249517207874125,
+    "maxGap": 0.0035000229401022536,
+    "samples": 99876,
+    "violations": 0,
+    "sourceFacePlaneSamples": 99876,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "reset": {
+    "id": "polish-shell",
+    "feelId": "marshmallow",
+    "crackWidthGain": 2.25,
+    "recoveredWidthGain": 1,
+    "maxResidualOpening": 0,
+    "rimEnabled": false,
+    "active": false,
+    "disposed": false,
+    "cycle": 0,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0,
+    "maxOpening": 0,
+    "damagedVertices": 0,
+    "maxLocalContacts": 0,
+    "vertexBudget": 7136,
+    "roughness": 0.43
+  },
+  "resources": {
+    "calls": 2,
+    "triangles": 28536,
+    "geometries": 2
+  }
+}
