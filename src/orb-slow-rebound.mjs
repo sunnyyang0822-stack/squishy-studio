@@ -20,8 +20,12 @@ export const slowReboundParameters = Object.freeze({
   maximumContactStep: .10,
 });
 
-export function createSlowReboundDeformation(positions, normals, { reducedMotion = false, surfaceGeometry, getPressDirection, constrainPress, getPressRadius } = {}) {
-  const p = slowReboundParameters;
+// Orb-only review: concentrated deep press, easier inward travel, original release.
+export const slowReboundOrbDepthLimits = Object.freeze({ maximumDepth: 1.80, radialLimit: .92, rayDepthRatio: 1.85, rimRadius: .48, concentration: 100, bottomSoftness: .30, shoulderFraction: .10, pressSpeed: 1.05 });
+
+export function createSlowReboundDeformation(positions, normals, { reducedMotion = false, surfaceGeometry, getPressDirection, getPressDepthScale, constrainPress, getPressRadius, depthLimits } = {}) {
+  const p = depthLimits ? { ...slowReboundParameters, maximumDepth: depthLimits.maximumDepth, radialLimit: depthLimits.radialLimit, pressSpeed: depthLimits.pressSpeed ?? slowReboundParameters.pressSpeed } : slowReboundParameters;
+  if (!(p.maximumDepth > 0 && Number.isFinite(p.maximumDepth) && p.radialLimit > 0 && p.radialLimit < 1)) throw new RangeError('Invalid slow rebound depth limits');
   const rest = positions.slice(), count = positions.length / 3;
   const offsets = new Float32Array(count), restoreOffsets = new Float32Array(count);
   const contactTime = new Float32Array(count);
@@ -29,18 +33,24 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
   // Optional spatial adapter: pressure travels along the input ray, never toward
   // a non-spherical model's center. Stored vectors keep old dents stable on rotation.
   const contactVectors = getPressDirection ? new Float32Array(rest.length) : null;
+  // Directional orb compression may pass its center, but still leaves at least
+  // 7.5% of the complete front-to-back chord. Radial deformation stays below 1.
+  const depthRatio = contactVectors ? (depthLimits?.rayDepthRatio ?? p.radialLimit) : p.radialLimit;
+  if (!(Number.isFinite(depthRatio) && depthRatio > 0 && depthRatio < 2)) throw new RangeError('Invalid slow rebound directional depth ratio');
   const previousVectors = contactVectors ? contactVectors.slice() : null;
   const constrainContact = contactVectors ? (surfaceGeometry?.createContactSafety() ?? constrainPress) : null;
-  let pressDirection = [0, 0, 1];
+  let pressDirection = [0, 0, 1], contactDepthScale = 1;
   const contactRadius = getPressRadius ?? (surfaceGeometry?.contactRadius ? (i, direction) => surfaceGeometry.contactRadius(i, direction) : null);
   const rayLimits = contactVectors && contactRadius ? new Float32Array(count).fill(-1) : null;
-  function captureDirection() {
+  function captureDirection(point) {
     if (!contactVectors) return;
-    const value = getPressDirection(), length = Math.hypot(...value);
+    const value = getPressDirection(point), length = Math.hypot(...value);
     if (value.length !== 3 || !Number.isFinite(length) || length < 1e-6) throw new RangeError('Invalid press direction');
     const normalized = value.map(n => n / length);
     if (normalized.some((n, k) => Math.abs(n - pressDirection[k]) > 1e-7)) rayLimits?.fill(-1);
     pressDirection = normalized;
+    contactDepthScale = getPressDepthScale?.(point) ?? 1;
+    if (!(Number.isFinite(contactDepthScale) && contactDepthScale > 0 && contactDepthScale <= 1)) throw new RangeError('Invalid slow rebound contact depth scale');
   }
   const constrainOffsets = contactVectors ? null : surfaceGeometry?.constrainOffsets;
   const renderedOffsets = constrainOffsets ? new Float32Array(count) : null;
@@ -60,13 +70,13 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
   const axes = low.map((v, k) => Math.max(.001, (high[k] - v) / 2));
   for (let i = 0; i < count; i++) {
     const j = i * 3, radius = Math.hypot(...origin.map((v, k) => rest[j + k] - v));
-    limits[i] = Math.min(p.maximumDepth, (surfaceGeometry ? surfaceGeometry.radii[i] : radius) * p.radialLimit);
+    limits[i] = Math.min(p.maximumDepth, (surfaceGeometry ? surfaceGeometry.radii[i] : radius) * depthRatio);
     for (let k = 0; k < 3; k++) directions[j + k] = surfaceGeometry ? surfaceGeometry.directions[j + k] : (rest[j + k] - origin[k]) / Math.max(.001, radius);
   }
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   let active = false, restoring = false, dirty = false, held = 0, strokeTravel = 0, lastMovement = -Infinity;
   let center = [0, 0, 1], pending = [];
-  function endContact() { active = false; held = 0; strokeTravel = 0; lastMovement = -Infinity; pending = []; contactTime.fill(0); }
+  function endContact() { active = false; held = 0; strokeTravel = 0; lastMovement = -Infinity; pending = []; contactDepthScale = 1; contactTime.fill(0); }
   function interruptRestore() { restoring = false; }
   function writePositions() {
     let accepted = 1;
@@ -116,8 +126,8 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
     return { distance, points };
   }
   return {
-    begin(point) { interruptRestore(); endContact(); active = true; center = [...point]; captureDirection(); },
-    move(point) { if (active) { pending.push([...point]); captureDirection(); } },
+    begin(point) { interruptRestore(); endContact(); active = true; center = [...point]; captureDirection(point); },
+    move(point) { if (active) { pending.push([...point]); captureDirection(point); } },
     release: endContact,
     cancel: endContact,
     reset() {
@@ -173,6 +183,28 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
         const dragging = strokeTravel >= p.dragThreshold && held - lastMovement <= p.dragGraceSeconds;
         motionTransition = active && dragging;
         const inwardSpeed = dragging ? p.dragSpeed : p.pressSpeed;
+        // An orb uses one fixed, rounded shoulder throughout the
+        // press. Growing the footprint mid-press makes the outer vertices lag
+        // behind the center and triggers uneven per-face safety corrections.
+        // Keep it stable on drag/dwell handoff too. Drag's shallow depth limit
+        // and the center's press speed remain unchanged.
+        const footprintRadius = depthLimits?.rimRadius ?? p.radius;
+        // A logarithmic bowl puts the extra travel into a deeper center while
+        // keeping the same outer radius. Only the final narrow shoulder tapers
+        // to untouched skin with zero first and second derivatives.
+        const concentration = dragging ? 0 : (depthLimits?.concentration ?? 0);
+        const contactWeight = q2 => {
+          if (!concentration) return (1 - q2) ** 3;
+          const tail = Math.min(1, (1 - q2) / (depthLimits?.shoulderFraction ?? .15));
+          const shoulder = tail ** 3 * (10 + tail * (-15 + 6 * tail));
+          // Round the innermost floor/wall junction without extending the
+          // footprint or changing the center's depth. A C2 quintic remap only
+          // affects the innermost .263 model units; the outer wall is unchanged.
+          const softness = depthLimits?.bottomSoftness ?? 0;
+          const floorT = softness ? Math.min(1, q2 / softness) : 1;
+          const bowlQ2 = q2 * floorT ** 3 * (10 + floorT * (-15 + 6 * floorT));
+          return (1 - Math.log1p(concentration * bowlQ2) / Math.log1p(concentration)) * shoulder;
+        };
         if (surfaceInfluences) {
           surfaceInfluences.fill(0);
           for (const path of contacts) for (const point of path.points) {
@@ -187,14 +219,15 @@ export function createSlowReboundDeformation(positions, normals, { reducedMotion
           let influence = 0;
           if (surfaceInfluences) influence = surfaceInfluences[i];
           else for (const path of contacts) for (const point of path.points) {
-            const q2 = ((rest[j] - point[0]) ** 2 + (rest[j + 1] - point[1]) ** 2 + (rest[j + 2] - point[2]) ** 2) / p.radius ** 2;
-            if (q2 < 1) influence += (1 - q2) ** 3 * path.distance / path.points.length;
+            const q2 = ((rest[j] - point[0]) ** 2 + (rest[j + 1] - point[1]) ** 2 + (rest[j + 2] - point[2]) ** 2) / footprintRadius ** 2;
+            if (q2 < 1) influence += contactWeight(q2) * path.distance / path.points.length;
           }
           let limit = limits[i];
           if (rayLimits && influence > 0) {
-            if (rayLimits[i] < 0) rayLimits[i] = Math.min(p.maximumDepth, contactRadius(i, pressDirection) * p.radialLimit);
+            if (rayLimits[i] < 0) rayLimits[i] = Math.min(p.maximumDepth, contactRadius(i, pressDirection) * depthRatio);
             limit = Math.min(limit, rayLimits[i]);
           }
+          limit *= contactDepthScale;
           const target = Math.min(limit, dragging ? p.dragDepth : p.maximumDepth) * Math.min(1, influence), before = offsets[i];
           // Each vertex yields gradually after local contact. A long hold at A
           // cannot give a freshly visited B the same fully yielded response.

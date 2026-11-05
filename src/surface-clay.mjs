@@ -25,7 +25,7 @@ class Heap {
 // independent per-vertex box, this keeps the correlated, broad clay footprint.
 // The rest face's projected signed area along a straight offset segment is a
 // quadratic polynomial. Its first zero bounds every intermediate position.
-export function createOffsetSafety(rest, directions, indices, { vectorOffsets = false } = {}) {
+export function createOffsetSafety(rest, directions, indices, { vectorOffsets = false, uniform = false, adaptiveChart = false } = {}) {
   const count = rest.length / 3, faces = new Float64Array(indices.length / 3 * 4);
   const previous = new Float64Array(rest.length), delta = new Float64Array(rest.length);
   const slots = vectorOffsets ? rest.length : count;
@@ -42,6 +42,7 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
     if (!(faces[f + 3] > 0)) throw new RangeError('Offset safety requires nondegenerate faces');
     for (let j = 0; j < 3; j++) incident[indices[t + j]].push(t / 3);
   }
+  const originalFaces = adaptiveChart ? faces.slice() : null;
   function segmentLimit(from, to, triangle = -1, margin = .08001) {
     function prepare(i) { for (let k = 0; k < 3; k++) {
       const j = i * 3 + k;
@@ -85,6 +86,45 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
     let proposed = 0;
     for (let i = 0; i < slots; i++) proposed = Math.max(proposed, Math.abs(candidate[i] - from[i]));
     if (proposed === 0) return 1;
+    if (adaptiveChart) {
+      // A steep, valid cavity wall may turn >90 degrees from its rest normal.
+      // Use a bisector chart for each accepted/rest face instead of treating
+      // that rotation as a fold. The same exact quadratic segment checks still
+      // protect the whole step and its route back to rest. Unit chart normals
+      // divided by original face area preserve the absolute 8% area margin.
+      for (let t = 0; t < indices.length; t += 3) {
+        const a = indices[t] * 3, b = indices[t + 1] * 3, c = indices[t + 2] * 3, f = t / 3 * 4;
+        const p = j => rest[j] - (vectorOffsets ? from[j] : directions[j] * from[Math.floor(j / 3)]);
+        const ux = p(b) - p(a), uy = p(b + 1) - p(a + 1), uz = p(b + 2) - p(a + 2);
+        const vx = p(c) - p(a), vy = p(c + 1) - p(a + 1), vz = p(c + 2) - p(a + 2);
+        const x = uy * vz - uz * vy, y = uz * vx - ux * vz, z = ux * vy - uy * vx;
+        const length = Math.hypot(x, y, z), restLength = Math.sqrt(originalFaces[f + 3]);
+        const bx = x / length + originalFaces[f] / restLength;
+        const by = y / length + originalFaces[f + 1] / restLength;
+        const bz = z / length + originalFaces[f + 2] / restLength;
+        const chartLength = Math.hypot(bx, by, bz);
+        if (!(chartLength > 1e-6 && length > 0)) throw new RangeError('Invalid orb safety chart');
+        faces[f] = bx / chartLength; faces[f + 1] = by / chartLength; faces[f + 2] = bz / chartLength;
+        faces[f + 3] = restLength;
+      }
+    }
+    if (uniform) {
+      // Preserve the rounded orb's complete displacement field. Independent
+      // triangle clipping leaves angular patches under deep oblique contact.
+      const requested = candidate.slice();
+      const assign = alpha => { for (let i = 0; i < slots; i++) candidate[i] = from[i] + (requested[i] - from[i]) * alpha; };
+      let alpha = segmentLimit(from, candidate);
+      assign(alpha);
+      if (segmentLimit(zeros, candidate, -1, .08) < 1) {
+        let low = 0, high = alpha;
+        for (let step = 0; step < 25; step++) {
+          const mid = (low + high) / 2; assign(mid);
+          if (segmentLimit(zeros, candidate, -1, .08) === 1) low = mid; else high = mid;
+        }
+        alpha = low; assign(alpha);
+      }
+      return alpha;
+    }
     queued.fill(1); visits.fill(0);
     for (let t = 0; t < triangleCount; t++) queue[t] = t;
     let head = 0, tail = triangleCount;
@@ -337,7 +377,7 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
     return { found, previous, distances, seed, offset };
   }
   return {
-    createContactSafety: () => createOffsetSafety(rest, null, indices, { vectorOffsets: true }),
+    createContactSafety: ({ uniform = false, adaptiveChart = false } = {}) => createOffsetSafety(rest, null, indices, { vectorOffsets: true, uniform, adaptiveChart }),
     // Half the real shell chord along this input ray. Back-facing vertices are
     // outside this contact even if a surface neighborhood wraps over a rim.
     contactRadius(i, outward) {

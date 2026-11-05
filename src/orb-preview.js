@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { getOrbPreset } from './orb-presets.mjs';
 import { getOrbFeel } from './orb-feels.mjs';
+import { slowReboundOrbDepthLimits } from './orb-slow-rebound.mjs';
 import { getSquishyStyle } from './squishy-styles.mjs';
 import { createSurfaceGeometry } from './surface-clay.mjs';
 import { getOrbAppearance, getModelPresentationScale } from './orb-appearance.mjs';
@@ -79,9 +80,24 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
     const orbPressGeometry = feelId === 'slow-rebound' && !isSurface
       ? createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array) : null;
+    let orbContactNormal, orbContactDepthScale = 1;
     const pressOptions = feelId === 'slow-rebound' ? {
-      getPressDirection: () => raycaster.ray.direction.clone().transformDirection(mesh.matrixWorld.clone().invert()).negate().toArray(),
-      ...(!isSurface ? { constrainPress: orbPressGeometry.createContactSafety(), getPressRadius: (i, direction) => orbPressGeometry.contactRadius(i, direction) } : {}),
+      getPressDirection: () => {
+        const direction = raycaster.ray.direction.clone().transformDirection(mesh.matrixWorld.clone().invert()).negate();
+        if (orbPressGeometry && orbContactNormal) {
+          // A grazing camera ray has little thickness at the visible rim. Ease
+          // side contact toward its actual local normal, keeping central input
+          // exactly on the view ray and preserving the true surface hit.
+          const angleT = THREE.MathUtils.clamp((direction.dot(orbContactNormal) - .20) / .65, 0, 1);
+          const blend = angleT ** 3 * (10 + angleT * (-15 + 6 * angleT));
+          // At the silhouette retain more of the finger's inward direction;
+          // a full normal turn plus central depth creates a sideways slit.
+          direction.lerp(orbContactNormal, .65 * (1 - blend)).normalize();
+          orbContactDepthScale = .78 + .22 * blend;
+        }
+        return direction.toArray();
+      },
+      ...(!isSurface ? { depthLimits: slowReboundOrbDepthLimits, getPressDepthScale: () => orbContactDepthScale, constrainPress: orbPressGeometry.createContactSafety({ uniform: true, adaptiveChart: true }), getPressRadius: (i, direction) => orbPressGeometry.contactRadius(i, direction) } : {}),
     } : {};
     let deformation;
     try {
@@ -204,6 +220,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (actual && !raycaster.intersectObject(mesh, false).length) return null;
       const hit = raycaster.intersectObject(restSurface, false)[0];
       if (!hit) return null;
+      if (orbPressGeometry) orbContactNormal = (hit.normal ?? hit.face.normal).clone().normalize();
       return mesh.worldToLocal(hit.point).toArray();
     }
     const current = { renderer, scene, environment, camera, events, restSurface, surface, disposeWax, frame: 0, count: 0, lastTime: null, width: 0, height: 0 };
