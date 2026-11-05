@@ -18,4 +18,6 @@
 - `$env:WAX_SLOW_STYLE='cloud,cylinder,donut,pyramid,flower,star'; $env:WAX_SLOW_RECORD='1'; node --test --test-concurrency=1 tests/wax-slow-rebound-style-browser.test.cjs`：`browser-initial.txt` 首轮 7/8、退出 1，花朵实际短按达到 519.7ms 超过原阈值，原记录保留。单独设置 `WAX_SLOW_STYLE='flower'` 原断言重验 `flower-recheck.txt`：1/1、退出 0，实际短按 473.4ms；全部八种鼠标／触屏场景有通过记录，未放宽阈值或改产品时间。最终花朵正常速度录像取通过版本。
 - `$env:THIN_WAX_TEST_DPR='0.5'; node --test --test-name-pattern='cancellation, blur' tests/thin-wax-browser.test.cjs`：`input-lifecycle.txt`，1/1、退出 0。测试观察原生滑动后的首笔实际 GPU 上传再结束短按，避免软件光栅化阻塞固定定时器；仍要求真实施力少于 500ms、新区域不掉片。
 
+首轮 GitHub 分片 1 发现两处旧范围测试仍断言“慢回弹仅圆球”，并遗漏了新增预览的重开按钮。更新断言为本次批准的非猫爪范围，保留猫爪排除和全部旧最终体验边界，不改变产品代码。`node --test tests/orb-marshmallow-flow.test.cjs` 为 3/3、退出 0，记录 `scope-flow-ci-fix.txt`；`THIN_WAX_TEST_DPR=0.5 node --test --test-name-pattern='style wax scope' tests/wax-style-browser.test.cjs` 为 1/1、退出 0，记录 `scope-browser-ci-fix.txt`，逐个真实页面确认七款慢回弹预览启用、猫爪禁用及旧最终体验无壳。
+
 回滚以普通 revert 本 PR 的合并提交并 `npm run build:orb`，不改写共享历史，无持久数据迁移。PR 关联 #38，不自动关闭大范围 Issue。用户已批准非猫爪范围；所有本地验证与 GitHub 必需检查通过后才能合并，并核对远端 main。
