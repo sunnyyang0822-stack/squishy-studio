@@ -28,6 +28,7 @@ const pawMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, fullS
 const mediumGeometryForStyle = styleId => styleId === 'paw' ? pawMediumGeometryOptions : surfacePanelStyles.has(styleId) ? optimizedMediumGeometryOptions : mediumGeometryOptions;
 const mediumWax = Object.freeze({
   id: 'medium-wax', material: 'wax', thickness: 'medium',
+  name: '中蜡·双倍薄蜡厚度',
   parameters: mediumWaxParameters,
   parametersForStyle: mediumParametersForStyle,
   geometryOptions: mediumGeometryOptions,

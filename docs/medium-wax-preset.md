@@ -1,5 +1,7 @@
 # 中蜡预设 medium-wax（Issue #41）
 
+预设名称：**中蜡·双倍薄蜡厚度**。代码名称保存在 `getWaxPreset('medium-wax').name`；稳定调用 ID 为 `medium-wax`，后续查找、复用均使用该 ID。名称只作识别，不改变参数或支持范围。
+
 用户已授权保存走查候选并创建本地提交。本分支 codex/issue-41-medium-wax 基于明确的薄蜡交付0406a4ac8e92c078b3da5ccd4299d6acdf9817f2；本次不推送、不合并，不关闭#38或#22。最新origin/main另有后续薄蜡、厚蜡和流程交付，后续发布前须集成并复核，不能用本分支覆盖main。仓库按用户最新指令保持Public。
 
 ## 调用与范围

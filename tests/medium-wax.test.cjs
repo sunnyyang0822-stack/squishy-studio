@@ -35,6 +35,7 @@ test('medium preset changes only physical thickness and real partition count', a
   const { getWaxPreset } = await import('../src/wax-presets.mjs');
   const { thinWaxParameters } = await import('../src/thin-wax.mjs');
   const thin = getWaxPreset(), medium = getWaxPreset('medium-wax');
+  assert.equal(medium.name, '中蜡·双倍薄蜡厚度');
   assert.equal(thin.parameters, thinWaxParameters);
   assert.deepEqual(thin.parameters, { thickness: .014, gap: .004, dwell: .5, localRadius: .16, chainDuration: .063, visibleDeformation: .004, extraFractureDelay: .06, extraFractureStrain: .015, maxLocalFragments: 180, maxFragments: 180, maxLivingFragments: 24 });
   assert.equal(medium.material, 'wax'); assert.equal(medium.thickness, 'medium');
