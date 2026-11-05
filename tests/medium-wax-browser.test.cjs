@@ -97,12 +97,18 @@ for (const mobile of [false, true]) for (const theme of ['day', 'night']) test(`
 });
 
 test('rapid thickness changes clear old damage/resources; last selection wins and unsupported recipes stay disabled', { timeout: 120000 }, async () => {
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: Number(process.env.THIN_WAX_TEST_DPR || 1) });
   try {
     await page.goto(`${base}/squishy/cloud/?style=orb&coreMaterial=clay&coreColor=mint&shellColor=rose&waxThickness=medium&step=shell`);
     await page.waitForFunction(() => document.querySelector('.toy-mount')?.thinWaxDiagnostics?.().enabled);
     const original = await diag(page);
-    await page.locator('.orb-input').focus(); await page.keyboard.down('Space'); await page.waitForTimeout(850); await page.keyboard.up('Space');
+    await page.locator('.orb-input').focus(); await page.keyboard.down('Space');
+    // This lifecycle test needs a damaged shell before replacement. Wait for
+    // actual damage rather than assuming the software renderer fits 850ms.
+    // Dwell onset remains covered by the dedicated timing tests above.
+    try {
+      await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).thinWax.detached > 0, undefined, { timeout: 10000 });
+    } finally { await page.keyboard.up('Space'); }
     assert.ok((await diag(page)).thinWax.detached > 0);
     const select = async (name, value) => page.locator(`input[name="${name}"][value="${value}"]`).evaluate(input => {
       input.checked = true; input.dispatchEvent(new Event('change', { bubbles: true }));

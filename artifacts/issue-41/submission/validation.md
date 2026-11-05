@@ -29,6 +29,10 @@
 
 ## 最新模型测量与历史视觉证据
 
+首轮GitHub运行41978147496（head 40877cb）发现两条浏览器测试适配问题，摘录在`ci-shard4/5-failure-excerpt.txt`，完整原日志在忽略目录。资源切换测试用固定850ms准备损伤，软件渲染没有及时掉片；改为在最多10秒内等待真实损伤后松手，时序专项不变。本地 `node --test --test-name-pattern="rapid thickness changes" tests/medium-wax-browser.test.cjs` 1/1、exit 0，见`ci-lifecycle-fix-local.txt`。
+
+另一个新增测试默认1x栅格，日志中160ms短按的pointerup处理延迟超过0.5秒而掉片；现沿用工作流已有`THIN_WAX_TEST_DPR=0.5`设置，CSS尺寸、真实操作、160ms短按、零掉片断言和完整几何均不变。本地设置`THIN_WAX_TEST_DPR=0.5 STYLES_REVIEW_CASE=orb`运行`node --test tests/medium-wax-core-browser.test.cjs`，圆球两内芯×两环境4组及三种猫爪排除通过，exit 0，见`ci-raster-input-local.txt`。没有更改产品输入或阈值，也未删减几何采样。
+
 最新圆球覆盖源面积薄/中均约12.55121814；分区180/96。薄/中均值0.069728989678/0.130741855634，平均面积比1.875；中位0.063840750425/0.122996631211，比1.926616；中蜡面积范围0.031303341373–0.270421215210、CV0.415115064589。实体厚度误差约1.10e-7模型单位，未放大模型或掉落显示比例。实测原始值位于`medium-final.txt`。
 
 最新main已更新圆球模型，旧模型面积数值只作历史证据。已确认候选录像、匹配操作和昼夜/桌面/手机模拟证据索引在`../approved-medium/validation.md`，每份证据记录自身版本，不冒称是本次集成后的录像。最新浏览器截图位于忽略的`.tmp/issue-41/medium-wax-core-browser`。本轮功能回归与CPU测试并行，观察帧间隔不能用作独立性能对比；专门A/B原始间隔仍在`approved-medium`。复杂样式可能有慢帧，不承诺全款60fps。
