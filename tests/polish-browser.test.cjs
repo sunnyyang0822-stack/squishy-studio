@@ -4,6 +4,7 @@ const { spawn } = require('node:child_process');
 const { existsSync, mkdirSync, writeFileSync } = require('node:fs');
 const { resolve } = require('node:path');
 const { chromium } = require('playwright');
+const captureEvidence = process.env.CI !== 'true';
 const port = process.env.POLISH_TEST_PORT || '4250';
 const base = `http://127.0.0.1:${port}`;
 const out = resolve(process.env.POLISH_ARTIFACT_DIR || 'artifacts/issue-50');
@@ -52,7 +53,7 @@ async function installPixels(page) {
 async function open({ mobile = false, night = false, reduced = false, video = false } = {}) {
   const context = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 },
     deviceScaleFactor: 1, isMobile: mobile, hasTouch: mobile, reducedMotion: reduced ? 'reduce' : 'no-preference',
-    ...(video ? { recordVideo: { dir: out, size: { width: 1280, height: 900 } } } : {}) });
+    ...(video && captureEvidence ? { recordVideo: { dir: out, size: { width: 1280, height: 900 } } } : {}) });
   const page = await context.newPage(); const errors = [];
   await page.route("**/favicon.ico", route => route.fulfill({ status: 204, body: "" }));
   page.on('pageerror', e => errors.push(String(e))); page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
@@ -79,7 +80,7 @@ async function location(page, x = .5, y = .46) {
 async function press(page, ms, x = .5, y = .46) {
   const p = await location(page, x, y); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(ms); return p;
 }
-async function shot(page, name) { await page.screenshot({ path: resolve(out, name + '.png') }); }
+async function shot(page, name) { if (!captureEvidence) return; await page.screenshot({ path: resolve(out, name + '.png') }); }
 async function restart(page) { await page.getByRole('button', { name: '重新开始', exact: true }).click(); await page.waitForTimeout(900); }
 
 test('polish clay actual GPU opening, local progressive damage, lifecycle and normal-speed desktop recording', { timeout: 120000 }, async () => {
@@ -142,7 +143,7 @@ test('polish clay actual GPU opening, local progressive damage, lifecycle and no
   await page.mouse.up();
   const b = await page.locator('.toy-stage').boundingBox();
   await page.mouse.move(b.x + 10, b.y + 20); await page.mouse.down(); await page.mouse.move(b.x + 170, b.y + 25, { steps: 24 }); await page.mouse.up(); await page.waitForTimeout(200); await shot(page, 'side-rotated');
-  await page.locator('.toy-mount canvas').screenshot({ path: resolve(out, 'side-rotated-closeup.png') });
+  if (captureEvidence) await page.locator('.toy-mount canvas').screenshot({ path: resolve(out, 'side-rotated-closeup.png') });
   const settled = await diag(page);
   for (const d of [shallow, deep, first, repeated, settled]) {
     assert.equal(d.state.detached, 0); assert.equal(d.state.falling, 0); assert.equal(d.state.fragmentCount, 0);
@@ -165,7 +166,7 @@ test('polish clay actual GPU opening, local progressive damage, lifecycle and no
   await page.waitForTimeout(900); const recolored = await diag(page); assert.equal(recolored.coreColor, 'mint'); assert.equal(recolored.shellColor, 'sky'); await shot(page, 'shell-color-changed');
   assert.deepEqual(errors, []);
   writeFileSync(resolve(out, 'desktop-browser.json'), JSON.stringify({ environment: 'Windows Edge desktop; not phone hardware; document.hidden override tests background mechanism only', performanceSample, takeover: takeover.state, intactPixels, openedPixels, saturatedPixels, shallowDepth: depth(shallow), deepDepth: depth(deep), first: first.state, repeated: repeated.state, settled: settled.state, metrics: settled.metrics, reset: reset.state, resources: settled.resources }, null, 2));
-  const video = page.video(); await context.close(); await video.saveAs(resolve(out, 'desktop-normal-speed.webm')); await video.delete();
+  const video = page.video(); await context.close(); if (video) { await video.saveAs(resolve(out, 'desktop-normal-speed.webm')); await video.delete(); }
 });
 
 test('polish clay mobile emulation, night, reduced motion and cancellation remain real shell', { timeout: 90000 }, async () => {

@@ -1,6 +1,7 @@
 const {test,before,after}=require('node:test');
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
+const captureEvidence = process.env.CI !== 'true';
 const {spawn}=require('node:child_process');
 const fs=require('node:fs'),path=require('node:path');
 const out=path.resolve('artifacts/issue-50/conditional-rim');
@@ -63,7 +64,7 @@ for(const core of ['clay','marshmallow','butter']) for(const sameColor of [true,
    const d=await p.locator('.toy-mount').evaluate(e=>{const d=e.polishDiagnostics();return {enabled:d.enabled,state:d.state,metrics:d.metrics,core:d.coreColor,shell:d.shellColor,positions:d.corePositions};});
    assert.equal(d.core,sameColor?'rose':'mint');assert.equal(d.shell,'rose');assert.equal(d.enabled,true);assert.equal(d.state.rimEnabled,sameColor);assert.equal(d.metrics.violations,0);
    assert.deepEqual(d.positions,geometryBefore,'Both GPU treatments use the exact same core surface');
-   await p.screenshot({path:path.join(out,core+'-'+(sameColor?'same':'different')+'-'+(rim?'visible-rim':'rim-disabled-control')+'.png')});
+   if (captureEvidence) await p.screenshot({path:path.join(out,core+'-'+(sameColor?'same':'different')+'-'+(rim?'visible-rim':'rim-disabled-control')+'.png')});
    renders.push({pixels:await p.evaluate(()=>window.sameColorPixels),state:d.state});
   }
   let darker=0,opaque=0,alphaMismatch=0;

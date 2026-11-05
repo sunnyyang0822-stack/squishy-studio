@@ -4,6 +4,7 @@ const { spawn } = require('node:child_process');
 const { existsSync, mkdirSync, writeFileSync } = require('node:fs');
 const { resolve } = require('node:path');
 const { chromium } = require('playwright');
+const captureEvidence = process.env.CI !== 'true';
 const port = process.env.POLISH_PROGRESSION_PORT || '4256';
 const base = `http://127.0.0.1:${port}`;
 const out = resolve(process.env.POLISH_PROGRESSION_ARTIFACT_DIR || 'artifacts/issue-50/progression');
@@ -62,7 +63,7 @@ async function installPixels(page) {
   });
 }
 async function open(core, { coreColor = 'mint', video = true } = {}) {
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1, reducedMotion: 'no-preference', ...(video ? { recordVideo: { dir: out, size: { width: 1280, height: 900 } } } : {}) });
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1, reducedMotion: 'no-preference', ...(video && captureEvidence ? { recordVideo: { dir: out, size: { width: 1280, height: 900 } } } : {}) });
   const page = await context.newPage(), errors = [];
   await page.route('**/favicon.ico', route => route.fulfill({ status: 204, body: '' }));
   page.on('pageerror', e => errors.push(String(e))); page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
@@ -78,7 +79,7 @@ function depth(d) { let max = 0; for (let i = 0; i < d.corePositions.length; i +
 async function pixels(page) { await page.evaluate(() => { window.progressionPixels = null; window.captureProgressionPixels = true; window.captureAfterRevision = window.progressionDrawRevision || 0; }); const v = page.viewportSize(); await page.setViewportSize({ ...v, width: v.width + 1 }); await page.waitForFunction(() => window.progressionPixels); const r = await page.evaluate(() => window.progressionPixels); await page.setViewportSize(v); return r; }
 async function point(page) { const b = await page.locator('.orb-input').boundingBox(); return { x: b.x + b.width * .5, y: b.y + b.height * .46 }; }
 async function press(page, ms) { const p = await point(page); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(ms); }
-async function shot(page, name, closeup = false) { await (closeup ? page.locator('.toy-mount canvas') : page).screenshot({ path: resolve(out, `${name}.png`) }); }
+async function shot(page, name, closeup = false) { if (!captureEvidence) return; await (closeup ? page.locator('.toy-mount canvas') : page).screenshot({ path: resolve(out, `${name}.png`) }); }
 function filmOK(d) { assert.equal(d.state.fragmentCount, 0); assert.equal(d.state.detached, 0); assert.equal(d.metrics.violations, 0, JSON.stringify(d.metrics)); assert.ok(d.metrics.minGap > 0); }
 async function side(page, name) { const s = await page.locator('.toy-stage').boundingBox(); await page.mouse.move(s.x + 10, s.y + 20); await page.mouse.down(); await page.mouse.move(s.x + 150, s.y + 25, { steps: 24 }); await page.mouse.up(); await shot(page, name, true); }
 async function saveVideo(page, context, name) { const video = page.video(); await context.close(); if (video) { await video.saveAs(resolve(out, `${name}.webm`)); await video.delete(); } }

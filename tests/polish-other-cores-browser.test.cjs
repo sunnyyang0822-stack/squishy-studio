@@ -4,6 +4,7 @@ const { spawn } = require('node:child_process');
 const { existsSync, mkdirSync, writeFileSync } = require('node:fs');
 const { resolve } = require('node:path');
 const { chromium } = require('playwright');
+const captureEvidence = process.env.CI !== 'true';
 const port = process.env.POLISH_OTHER_CORES_PORT || '4252';
 const base = `http://127.0.0.1:${port}`;
 const out = resolve('artifacts/issue-50/three-cores');
@@ -54,7 +55,7 @@ async function installPixels(page) {
 async function open(core, mobile = false) {
   const context = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 }, deviceScaleFactor: 1,
     isMobile: mobile, hasTouch: mobile, reducedMotion: mobile ? 'reduce' : 'no-preference',
-    ...(!mobile ? { recordVideo: { dir: out, size: { width: 1280, height: 900 } } } : {}) });
+    ...(!mobile && captureEvidence ? { recordVideo: { dir: out, size: { width: 1280, height: 900 } } } : {}) });
   const page = await context.newPage(), errors = [];
   await page.route('**/favicon.ico', route => route.fulfill({ status: 204, body: '' }));
   page.on('pageerror', e => errors.push(String(e))); page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
@@ -75,7 +76,7 @@ async function pixels(page) {
 }
 async function point(page, x = .5, y = .46) { const b = await page.locator('.orb-input').boundingBox(); return { x: b.x + b.width * x, y: b.y + b.height * y }; }
 async function press(page, ms, x, y) { const p = await point(page, x, y); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.waitForTimeout(ms); return p; }
-async function shot(page, name) { await page.screenshot({ path: resolve(out, `${name}.png`) }); }
+async function shot(page, name) { if (!captureEvidence) return; await page.screenshot({ path: resolve(out, `${name}.png`) }); }
 function filmOK(d) {
   assert.equal(d.state.detached, 0); assert.equal(d.state.falling, 0); assert.equal(d.state.fragmentCount, 0);
   assert.equal(d.metrics.violations, 0, JSON.stringify(d.metrics)); assert.ok(d.metrics.samples > 10000);
@@ -115,14 +116,14 @@ for (const core of ['marshmallow', 'butter']) {
       await page.waitForTimeout(250); const slid = await diag(page); filmOK(slid); await shot(page, `${core}-long-hold-slide`);
       const stage = await page.locator('.toy-stage').boundingBox();
       await page.mouse.move(stage.x + 10, stage.y + 20); await page.mouse.down(); await page.mouse.move(stage.x + 150, stage.y + 25, { steps: 24 }); await page.mouse.up();
-      await page.locator('.toy-mount canvas').screenshot({ path: resolve(out, `${core}-side-rotated-closeup.png`) });
+      if (captureEvidence) await page.locator('.toy-mount canvas').screenshot({ path: resolve(out, `${core}-side-rotated-closeup.png`) });
       filmOK(await diag(page));
       await page.mouse.move(stage.x + 150, stage.y + 25); await page.mouse.down(); await page.mouse.move(stage.x + 10, stage.y + 20, { steps: 24 }); await page.mouse.up();
       await page.locator('.step-back').click(); await page.waitForFunction(() => !document.querySelector('.toy-mount').polishDiagnostics().enabled);
       await page.locator('.step-next').click(); await page.waitForFunction(() => document.querySelector('.toy-mount').polishDiagnostics().enabled);
       const navigation = await diag(page); assert.equal(navigation.state.maxDamage, slid.state.maxDamage); assert.equal(navigation.state.cycle, slid.state.cycle);
       assert.ok((await pixels(page)).green > 0, 'Actual reopened coating still shows historical damaged region');
-      if (core === 'butter') { await waitRecovered(page); const recovered = await diag(page); assert.ok(depth(recovered) < .00002); assert.equal(recovered.state.maxDamage, slid.state.maxDamage); filmOK(recovered); await page.locator('.toy-mount canvas').screenshot({ path: resolve(out, `${core}-fully-recovered-closeup.png`) }); report.recovered = { depth: depth(recovered), state: recovered.state, metrics: recovered.metrics }; await shot(page, `${core}-fully-recovered-history`); }
+      if (core === 'butter') { await waitRecovered(page); const recovered = await diag(page); assert.ok(depth(recovered) < .00002); assert.equal(recovered.state.maxDamage, slid.state.maxDamage); filmOK(recovered); if (captureEvidence) await page.locator('.toy-mount canvas').screenshot({ path: resolve(out, `${core}-fully-recovered-closeup.png`) }); report.recovered = { depth: depth(recovered), state: recovered.state, metrics: recovered.metrics }; await shot(page, `${core}-fully-recovered-history`); }
       else { await page.waitForTimeout(500); const frozen = await diag(page); assert.deepEqual(frozen.corePositions, navigation.corePositions); }
       const count = await page.locator('.toy-mount').getAttribute('data-render-count'); await page.waitForTimeout(300); assert.equal(await page.locator('.toy-mount').getAttribute('data-render-count'), count, 'Settled original core and shell stop rendering');
       await restart(page); const reset = await diag(page); assert.ok(depth(reset) < .00002); assert.equal(reset.state.maxDamage, 0); filmOK(reset); await shot(page, `${core}-restart`);
@@ -138,7 +139,7 @@ for (const core of ['marshmallow', 'butter']) {
       assert.equal(await page.locator('.toy-mount canvas').count(), 1); const latest = await diag(page); assert.equal(latest.coreColor, 'mint'); assert.equal(latest.shellColor, 'rose'); filmOK(latest); assert.deepEqual(errors, []);
       Object.assign(report, { beforePixels, openedPixels: opened, shallowDepth: depth(shallow), deepDepth: depth(deep), first: released.state, repeat: repeated.state, releasedDepth: depth(released), afterWaitingDepth: depth(waiting), slidingMetrics: slid.metrics, navigation: navigation.state, reset: reset.state, takeover: takeover.state, latest: latest.state });
       writeFileSync(resolve(out, `${core}-desktop.json`), JSON.stringify(report, null, 2));
-    } finally { const video = page.video(); await context.close(); await video.saveAs(resolve(out, `${core}-desktop-normal-speed.webm`)); await video.delete(); }
+    } finally { const video = page.video(); await context.close(); if (video) { await video.saveAs(resolve(out, `${core}-desktop-normal-speed.webm`)); await video.delete(); } }
   });
   test(`${core} polish mobile emulation night reduced motion real touch and cancellation`, { timeout: 45000 }, async () => {
     const { context, page, errors } = await open(core, true);
