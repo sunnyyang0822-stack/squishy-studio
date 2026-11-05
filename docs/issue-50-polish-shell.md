@@ -39,3 +39,5 @@
 从明确origin/main dfdd192独立分支 `codex/issue-50-polish-shell` 开发，首个提交1870f5d。提交前合并origin/main a9315d9（主线厚蜡），合并提交d194b05，保留其全部预设/测试与行为；共享构建包重新生成。原工作目录与协作者文件未动，仓库保持Public。
 
 回滚本PR引入的源码/流程/文档提交并执行 `npm run build:orb`，或合并后使用普通revert；不要回滚主线厚蜡或改写共享历史。无数据迁移。GitHub检查及合并后远端main包含交付提交的结果由最终PR记录。
+
+交付PR：[保存已确认指甲油脆皮预设 #55](https://github.com/sunnyyang0822-stack/squishy-studio/pull/55)。相关源码提交1870f5d，同步主线d194b05，合同与证据b259996。

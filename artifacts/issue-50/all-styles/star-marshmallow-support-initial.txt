@@ -22,7 +22,7 @@ test at tests\polish-styles-support.test.cjs:7:59
 ✖ star marshmallow: independent whole-core polish support and exact bare-core trajectory (4436.8306ms)
   AssertionError [ERR_ASSERTION]: star/marshmallow: whole-core shell support failed
   + actual - expected
-  
+
   + [
   +   {
   +     depth: 0.3677414357662201,
@@ -145,7 +145,7 @@ test at tests\polish-styles-support.test.cjs:7:59
   +   }
   + ]
   - []
-  
+
       at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-50-polish\tests\polish-styles-support.test.cjs:98:12)
       at async Test.run (node:internal/test_runner/test:1409:7)
       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {

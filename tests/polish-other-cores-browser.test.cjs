@@ -20,11 +20,24 @@ after(async () => { await browser?.close(); server?.kill(); });
 async function installPixels(page) {
   await page.addInitScript(() => {
     const get = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function(type, ...args) { const gl = get.call(this, type, ...args); if (type === 'webgl2' && gl) window.polishOtherGL = gl; return gl; };
+    HTMLCanvasElement.prototype.getContext = function(type, ...args) {
+      const gl = get.call(this, type, ...args);
+      if (type === 'webgl2' && gl) {
+        window.polishOtherGL = gl;
+        if (!gl.polishOtherDrawHook) {
+          gl.polishOtherDrawHook = true;
+          const draw = gl.drawElements.bind(gl);
+          gl.drawElements = (...a) => { const result = draw(...a); window.otherDrawRevision = (window.otherDrawRevision || 0) + 1; return result; };
+        }
+      }
+      return gl;
+    };
     const frame = requestAnimationFrame.bind(window);
     window.requestAnimationFrame = callback => frame(time => {
       callback(time);
-      if (!window.captureOtherPixels || !window.polishOtherGL) return;
+      // An unrelated rAF may run after WebGL's default framebuffer was cleared.
+      // Only sample the callback which actually submitted a fresh scene draw.
+      if (!window.captureOtherPixels || !window.polishOtherGL || !(window.otherDrawRevision > window.otherCaptureAfterRevision)) return;
       window.captureOtherPixels = false;
       const gl = window.polishOtherGL, w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
       const p = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, p);
@@ -56,7 +69,7 @@ async function open(core, mobile = false) {
 const diag = page => page.locator('.toy-mount').evaluate(el => el.polishDiagnostics());
 function depth(d) { let max = 0; for (let i = 0; i < d.corePositions.length; i += 3) max = Math.max(max, Math.hypot(...[0, 1, 2].map(k => d.corePositions[i + k] - d.coreRestPositions[i + k]))); return max; }
 async function pixels(page) {
-  await page.evaluate(() => { window.otherPixels = null; window.captureOtherPixels = true; });
+  await page.evaluate(() => { window.otherPixels = null; window.captureOtherPixels = true; window.otherCaptureAfterRevision = window.otherDrawRevision || 0; });
   const v = page.viewportSize(); await page.setViewportSize({ ...v, width: v.width + 1 });
   await page.waitForFunction(() => window.otherPixels); const r = await page.evaluate(() => window.otherPixels); await page.setViewportSize(v); return r;
 }
