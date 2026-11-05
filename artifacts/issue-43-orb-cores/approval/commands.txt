@@ -4,3 +4,8 @@ TEMP/TMP=.tmp/browser
 node --test tests/thick-wax-orb-cores-browser.test.cjs
 exit 0; 3/3 passed; 41711.3632ms
 Product build unchanged from 39f0dfd. Test waits for actual deep deformation; all original assertions preserved.
+Release-event snapshot follow-up
+THIN_WAX_TEST_DPR=0.5; TEMP/TMP=.tmp/browser
+node --test tests/thick-wax-orb-cores-browser.test.cjs
+exit 0; 3/3 passed; 30732.0334ms
+Snapshot copied in real pointerup after product input handlers, before next animation frame. Trust and original >0.2 assertion preserved. Marshmallow exact frozen coordinates and slow natural recovery pass.
