@@ -2,7 +2,7 @@
 
 宿主应传入 `styleId`。猫爪与甜甜圈按用户要求选用small分块：260种子、连通片上限280，同时活动仍24；其他样式保持原180预算。`parameters` 仍表示基础薄蜡参数，small参数独立登记于 `smallThinWaxParameters`，不改变厚度、输入或内芯。当前大小及性能验证见 [追加说明](issue-38-small-shards-and-mm-paw.md)。
 
-稳定 ID 为 `thin-wax`，入口 `src/wax-presets.mjs`。它直接组合现有 `createThinWax`，`parameters` 与 `thinWaxParameters` 是同一只读对象，不复制场景、输入或手感算法。制作外壳／装饰步骤为当前八种造型的黏土 × 蜡 × 薄和棉花糖 × 蜡 × 薄调用同一预设：圆球、云朵、猫爪、圆柱、甜甜圈、三角锥、花朵、五角星。慢回弹及中／厚蜡不启用；所有棉花糖最终试捏保持原行为，不显示预览壳、不新增重开按钮。棉花糖的状态、几何与验证边界见 [专项说明](issue-38-orb-marshmallow-wax.md)。本合同仍不把任意外部模型视作自动验收通过。
+稳定 ID 为 `thin-wax`，入口 `src/wax-presets.mjs`。它直接组合现有 `createThinWax`，`parameters` 与 `thinWaxParameters` 是同一只读对象，不复制场景、输入或手感算法。制作外壳／装饰步骤为当前八种造型的黏土 × 蜡 × 薄和棉花糖 × 蜡 × 薄调用同一预设：圆球、云朵、猫爪、圆柱、甜甜圈、三角锥、花朵、五角星。慢回弹圆球及猫爪以外的六款制作预览也已批准接入；中／厚蜡不在本次扩展范围；所有棉花糖最终试捏保持原行为，不显示预览壳、不新增重开按钮。棉花糖的状态、几何与验证边界见 [专项说明](issue-38-orb-marshmallow-wax.md)。本合同仍不把任意外部模型视作自动验收通过。
 
 ```js
 import { getWaxPreset } from './wax-presets.mjs';
@@ -75,3 +75,7 @@ tray.material.color.setHex(night ? style.nightColor : style.dayColor);
 当前新七款棉花糖完整采样几何专项已有 7/7 通过记录，见 `artifacts/issue-38/all-marshmallow-full-support-geometry.txt`，不代表视觉或性能已经通过。猫爪的实际贴合和卡顿仍在诊断；其余黏土视觉已获用户确认，新棉花糖组合仍需提供走查链接给用户检查。保持阶段性 PR 未合并，只有用户查验确认且必需检查通过后才合并；GitHub 暂不可用时保留本地证据，不绕过该条件。真机及 Safari 尚未验收。
 
 预设与收集盘回归：`node --test tests/wax-presets.test.cjs tests/wax-collection-tray.test.cjs`。覆盖默认下落清理／破洞保留、显式收集、实例隔离及收集盘实际体积和地面高度。现有几何、时序与碎片测试仍由 `tests/thin-wax.test.cjs` 负责。
+
+## 2026-11-05 批准范围与公共优化
+
+七款非猫爪样式 × 三内芯共 21 组合已获用户批准。调用、性能失效规则、真实厚度／间隔、最新 main 集成及回滚见 [薄蜡发布说明](issue-38-approved-thin-release.md)。慢回弹猫爪与原 PR47 的猫爪专项优化不在本次交付范围；已有猫爪版本保留。
