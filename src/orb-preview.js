@@ -436,7 +436,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     current.restore = ({ preserveShell = false } = {}) => { if (!preserveShell) { wax?.reset(); polish?.reset(); } current.selectColor(selectedColor.id, { restore: true }); };
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
-      const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
+      const supportedThinCore = supportedWaxCore || config.waxCollection === false && feelId === 'slow-rebound' && style.id !== 'paw';
+      const thinRecipe = supportedThinCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
       const thickRecipe = supportedWaxCore && style.id === 'orb' && config.shellMaterial === 'wax' && config.waxThickness === 'thick';
       const waxRecipe = thinRecipe || thickRecipe;
       const polishRecipe = ['clay', 'marshmallow', 'slow-rebound'].includes(feelId) && style.id !== 'paw' && config.shellMaterial === 'polish';
@@ -457,7 +458,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (polish) { polish.group.visible = shellVisible && polishRecipe; polish.sync(); }
       if (waxRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset(thickRecipe ? 'thick-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, fullSurfaceSupport: feelId === 'marshmallow' && isSurface });
+        wax = getWaxPreset(thickRecipe ? 'thick-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: thinRecipe && feelId === 'slow-rebound' && style.id === 'donut', cacheAttachedPanels: style.id !== 'paw', fullSurfaceSupport: (feelId === 'marshmallow' || thinRecipe && feelId === 'slow-rebound') && isSurface });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }

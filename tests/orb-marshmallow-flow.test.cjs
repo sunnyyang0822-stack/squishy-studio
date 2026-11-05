@@ -15,7 +15,7 @@ function harness(createDetailController) {
   return { controller, prepared, restored };
 }
 
-test('all registered marshmallow styles share the thin-wax making preview; slow rebound and legacy play remain excluded', async () => {
+test('registered marshmallow styles retain thin wax; reviewed non-paw slow styles join only the making preview', async () => {
   const { isThinWaxRecipe, canRestartThinWax, defaultRecipe, styleNames } = await stateModule;
   const recipe = { ...defaultRecipe, coreMaterial: 'marshmallow', waxThickness: 'thin' };
   assert.equal(isThinWaxRecipe(recipe), true);
@@ -26,7 +26,7 @@ test('all registered marshmallow styles share the thin-wax making preview; slow 
     assert.equal(canRestartThinWax('shell', { ...recipe, styleId }), true, styleId);
     assert.equal(canRestartThinWax('play', { ...recipe, styleId }), false, styleId);
     assert.equal(isThinWaxRecipe({ ...recipe, styleId, coreMaterial: 'clay' }), true, 'Existing clay scope stays enabled');
-    assert.equal(isThinWaxRecipe({ ...recipe, styleId, coreMaterial: 'butter' }), styleId === 'orb', 'Only the locally reviewed slow-rebound orb joins the making preview');
+    assert.equal(isThinWaxRecipe({ ...recipe, styleId, coreMaterial: 'butter' }), styleId !== 'paw', 'Reviewed slow-rebound styles join the making preview; the pending paw remains excluded');
   }
   for (const change of [{ waxThickness: 'medium' }, { waxThickness: 'thick' }, { shellMaterial: 'sugar' }, { shellMaterial: 'polish' }, { styleId: 'unknown' }]) {
     assert.equal(isThinWaxRecipe({ ...recipe, ...change }), false);

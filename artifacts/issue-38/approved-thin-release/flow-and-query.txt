@@ -1,0 +1,67 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (5.7647ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.7463ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (11.2266ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (1.8971ms)
+✔ 尚未实现外壳的制作结束保留原有自动恢复 (2.2343ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (8.9456ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (1.9994ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (2.2667ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (0.8984ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.7858ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (2.072ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (1.1091ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.9117ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (10.0791ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (1.2849ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.918ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.5447ms)
+✔ slow-rebound wax/thin making scope includes registered shapes; legacy play stays excluded (1.9315ms)
+✔ slow orb making navigation preserves damage identity; final play restores core with hidden shell preserved (13.6095ms)
+✔ polish maps all non-paw styles and their three cores to the same independent shell; wax thickness has no effect (3.7424ms)
+✔ same orb/clay polish recipe preserves damage through every step; explicit restart is separate (11.6283ms)
+✔ same orb/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.7801ms)
+✔ same orb/butter polish recipe preserves damage through every step; explicit restart is separate (1.4087ms)
+✔ same cloud/clay polish recipe preserves damage through every step; explicit restart is separate (1.304ms)
+✔ same cloud/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.2725ms)
+✔ same cloud/butter polish recipe preserves damage through every step; explicit restart is separate (1.3571ms)
+✔ same cylinder/clay polish recipe preserves damage through every step; explicit restart is separate (1.8347ms)
+✔ same cylinder/marshmallow polish recipe preserves damage through every step; explicit restart is separate (2.3967ms)
+✔ same cylinder/butter polish recipe preserves damage through every step; explicit restart is separate (1.6496ms)
+✔ same donut/clay polish recipe preserves damage through every step; explicit restart is separate (1.4906ms)
+✔ same donut/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.1013ms)
+✔ same donut/butter polish recipe preserves damage through every step; explicit restart is separate (1.3791ms)
+✔ same pyramid/clay polish recipe preserves damage through every step; explicit restart is separate (1.2388ms)
+✔ same pyramid/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.2035ms)
+✔ same pyramid/butter polish recipe preserves damage through every step; explicit restart is separate (1.7564ms)
+✔ same flower/clay polish recipe preserves damage through every step; explicit restart is separate (1.3459ms)
+✔ same flower/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.5201ms)
+✔ same flower/butter polish recipe preserves damage through every step; explicit restart is separate (3.0999ms)
+✔ same star/clay polish recipe preserves damage through every step; explicit restart is separate (1.2013ms)
+✔ same star/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.1657ms)
+✔ same star/butter polish recipe preserves damage through every step; explicit restart is separate (1.6104ms)
+✔ unsupported polish selections remain explicit bare-core previews and clear the notice when supported again (1.4936ms)
+✔ rapid shell and colour requests commit only the latest polish recipe and dispose stale handles (0.8781ms)
+✔ cloud: scalar real-triangle thickness preserves original radii, directions and every slow-core step (2596.5056ms)
+ℹ {"id":"cloud","rays":303,"frames":186}
+✔ paw: scalar real-triangle thickness preserves original radii, directions and every slow-core step (5595.1242ms)
+ℹ {"id":"paw","rays":303,"frames":186}
+✔ donut: scalar real-triangle thickness preserves original radii, directions and every slow-core step (3693.2832ms)
+ℹ {"id":"donut","rays":303,"frames":186}
+✔ thick wax is restricted to three orb cores with legacy final scope; thin predicates, default and other recipes remain independent (5.0367ms)
+✔ clay orb thick-wax navigation preserves damage and colors through final play; explicit restart restores once (10.8171ms)
+✔ rapid thin/thick/thin selection commits the latest recipe and disposes stale or late handles (1.2329ms)
+✔ marshmallow and slow-rebound thick orb previews preserve damage into hidden final play and restore each original core (3.4945ms)
+✔ approved thin wax has 21 non-paw recipes; pending slow paw and other shell presets stay excluded (10.3788ms)
+✔ thin-wax registry is immutable, rejects unknown ids and reuses verified parameters (66.7957ms)
+✔ preset defaults to falling cleanup with permanent holes; collection requires explicit opt-in (771.2028ms)
+✔ preset instances isolate geometry, color, clock, damage, reset and disposal (320.846ms)
+✔ preset accepts initial world matrix without moving caller-owned rest data (448.609ms)
+ℹ tests 55
+ℹ suites 0
+ℹ pass 55
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14881.2845
+EXIT_CODE=0

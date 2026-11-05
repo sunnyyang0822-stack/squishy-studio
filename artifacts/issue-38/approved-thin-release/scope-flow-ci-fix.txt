@@ -1,0 +1,12 @@
+✔ registered marshmallow styles retain thin wax; reviewed non-paw slow styles join only the making preview (1.2179ms)
+✔ every marshmallow core to shell keeps independent colors, the same feel and recipe, and persistent preview damage (10.1389ms)
+✔ every marshmallow legacy final restores core while preserving hidden shell, and return configures preview without repair (3.7757ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 154.3061
+EXIT_CODE=0
