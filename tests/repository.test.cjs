@@ -15,18 +15,24 @@ test('PR 检查安装依赖和浏览器并执行完整测试', async () => {
   assert.match(workflow, /npm run build/);
   assert.match(workflow, /files=\(tests\/\*\.test\.cjs\)/);
   const separatedFiles = ['tests/squishy-styles-browser.test.cjs', 'tests/squishy-marshmallow-browser.test.cjs', 'tests/squishy-slow-rebound-browser.test.cjs'];
-  assert.deepEqual([...workflow.matchAll(/"\$file" != (tests\/[\w-]+\.test\.cjs)/g)].map(m => m[1]), separatedFiles, 'Only the three fully separated browser suites may be excluded from generic shards');
+  const polishStyleFile = 'tests/polish-styles-browser.test.cjs';
+  assert.deepEqual([...workflow.matchAll(/"\$file" != (tests\/[\w-]+\.test\.cjs)/g)].map(m => m[1]), [...separatedFiles, polishStyleFile], 'Only browser suites covered by dedicated jobs may be excluded from generic shards');
   assert.match(workflow, /\]\]; then\s+general\+=\("\$file"\)/);
   assert.match(workflow, /node --test --test-concurrency=1 --test-shard=\$\{\{ matrix\.shard \}\}\/6 "\$\{general\[@\]\}"/);
   assert.match(workflow, /export PLAYWRIGHT_BROWSER_PATH=/);
-  assert.match(workflow, /browser-tests:\s+name: browser-tests\s+needs: \[browser-shards, style-cases\]\s+if: \$\{\{ always\(\) \}\}/);
-  for (const dependency of ['browser-shards', 'style-cases']) {
+  assert.match(workflow, /browser-tests:\s+name: browser-tests\s+needs: \[browser-shards, style-cases, polish-style-cases\]\s+if: \$\{\{ always\(\) \}\}/);
+  for (const dependency of ['browser-shards', 'style-cases', 'polish-style-cases']) {
     assert.ok(workflow.includes(`test "\${{ needs.${dependency}.result }}" = success`));
   }
   assert.match(workflow, /node scripts\/run-style-ci-case\.cjs "\$\{\{ matrix\.case \}\}"/);
   const matrixCases = workflow.match(/case: \[([^\]]+)\]/)[1].split(',').map(id => id.trim());
   const { squishyStyles } = await import('../src/squishy-styles.mjs');
   const styleIds = Object.keys(squishyStyles).filter(id => id !== 'orb');
+  const polishJob = workflow.split('  polish-style-cases:')[1].split('  browser-tests:')[0];
+  const polishStyles = polishJob.match(/style: \[([^\]]+)\]/)[1].split(',').map(id => id.trim());
+  assert.deepEqual(polishStyles, styleIds.filter(id => id !== 'paw'));
+  assert.ok(polishJob.includes('POLISH_STYLE_CASE: ${{ matrix.style }}'));
+  assert.ok(polishJob.includes('node --test ' + polishStyleFile));
   const expectedCases = [...styleIds, 'loading-race', ...styleIds.map(id => `${id}-marshmallow`), ...styleIds.map(id => `${id}-slow-rebound`), 'slow-rebound-touch'];
   assert.deepEqual(matrixCases, expectedCases, 'All 21 model/feel combinations, the loading race and native touch must run');
   const { caseNames, argumentsForCase, validateTapResult } = require('../scripts/run-style-ci-case.cjs');
