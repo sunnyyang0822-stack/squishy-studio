@@ -31,23 +31,24 @@
   },
   "opened": {
     "opaque": 136568,
-    "green": 1252,
-    "pink": 135316,
+    "green": 1860,
+    "pink": 134708,
     "dark": 0,
     "width": 790,
     "height": 808,
     "greenComponentsAtLeast4Pixels": [
-      889,
-      362
+      1326,
+      533
     ]
   },
-  "shallowDepth": 0.04936616274920915,
-  "deepDepth": 0.37322357778450865,
-  "releasedDepth": 0.38956620885470605,
-  "waitingDepth": 0.38956620885470605,
+  "shallowDepth": 0.04727535495446715,
+  "deepDepth": 0.3525001429056902,
+  "releasedDepth": 0.38954365925455536,
+  "waitingDepth": 0.38954365925455536,
   "deep": {
     "id": "polish-shell",
     "feelId": "marshmallow",
+    "globalWidthGain": 1.5,
     "crackWidthGain": 2.25,
     "recoveredWidthGain": 1,
     "maxResidualOpening": 0,
@@ -59,7 +60,7 @@
     "falling": 0,
     "fragmentCount": 0,
     "maxDamage": 0.6392062902450562,
-    "maxOpening": 0.37322357296943665,
+    "maxOpening": 0.35250014066696167,
     "damagedVertices": 154,
     "maxLocalContacts": 1,
     "vertexBudget": 4100,
@@ -67,7 +68,7 @@
   },
   "deepMetrics": {
     "gap": 0.0035,
-    "minGap": 0.002539044917027544,
+    "minGap": 0.0025845574747453324,
     "maxGap": 0.00350002608787141,
     "samples": 57372,
     "violations": 0,
@@ -77,7 +78,7 @@
   },
   "dragMetrics": {
     "gap": 0.0035,
-    "minGap": 0.0020747769402111147,
+    "minGap": 0.002063395625098558,
     "maxGap": 0.00350002608787141,
     "samples": 57372,
     "violations": 0,
@@ -87,7 +88,7 @@
   },
   "sideMetrics": {
     "gap": 0.0035,
-    "minGap": 0.0021628924681031474,
+    "minGap": 0.0021377486802110026,
     "maxGap": 0.00350002608787141,
     "samples": 57372,
     "violations": 0,
@@ -98,6 +99,7 @@
   "reset": {
     "id": "polish-shell",
     "feelId": "marshmallow",
+    "globalWidthGain": 1.5,
     "crackWidthGain": 2.25,
     "recoveredWidthGain": 1,
     "maxResidualOpening": 0,

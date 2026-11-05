@@ -31,19 +31,19 @@
   },
   "exposed": {
     "opaque": 41209,
-    "green": 180,
-    "pink": 41029,
+    "green": 266,
+    "pink": 40942,
     "dark": 0,
     "width": 358,
     "height": 473,
     "greenComponentsAtLeast4Pixels": [
-      159,
-      4
+      257
     ]
   },
   "state": {
     "id": "polish-shell",
     "feelId": "slow-rebound",
+    "globalWidthGain": 1.5,
     "crackWidthGain": 1,
     "recoveredWidthGain": 1.5,
     "maxResidualOpening": 0.03923274949193001,
@@ -63,7 +63,7 @@
   },
   "metrics": {
     "gap": 0.0035,
-    "minGap": 0.0032458425206288778,
+    "minGap": 0.0032458421472802068,
     "maxGap": 0.003500012892874689,
     "samples": 97188,
     "violations": 0,
@@ -74,6 +74,7 @@
   "cancelled": {
     "id": "polish-shell",
     "feelId": "slow-rebound",
+    "globalWidthGain": 1.5,
     "crackWidthGain": 1,
     "recoveredWidthGain": 1.5,
     "maxResidualOpening": 0.039343830198049545,
@@ -85,8 +86,8 @@
     "falling": 0,
     "fragmentCount": 0,
     "maxDamage": 0.6381121873855591,
-    "maxOpening": 0.18061035871505737,
-    "damagedVertices": 339,
+    "maxOpening": 0.21945209801197052,
+    "damagedVertices": 338,
     "maxLocalContacts": 1,
     "vertexBudget": 6944,
     "roughness": 0.43

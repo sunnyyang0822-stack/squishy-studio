@@ -30,31 +30,29 @@
     "greenComponentsAtLeast4Pixels": []
   },
   "opened": {
-    "opaque": 274464,
-    "green": 1362,
-    "pink": 273099,
+    "opaque": 274370,
+    "green": 2033,
+    "pink": 272337,
     "dark": 0,
-    "width": 791,
+    "width": 790,
     "height": 808,
     "greenComponentsAtLeast4Pixels": [
-      950,
-      348,
-      26,
-      5,
-      4,
+      2007,
+      8,
       4
     ]
   },
-  "shallowDepth": 0.09766239462509735,
-  "deepDepth": 0.24299044305390063,
-  "releasedDepth": 0.20086090778377713,
-  "waitingDepth": 0.06077465432547015,
+  "shallowDepth": 0.11258964615627036,
+  "deepDepth": 0.2429904563607713,
+  "releasedDepth": 0.20087700546277606,
+  "waitingDepth": 0.07131972646398446,
   "deep": {
     "id": "polish-shell",
     "feelId": "slow-rebound",
+    "globalWidthGain": 1.5,
     "crackWidthGain": 1,
     "recoveredWidthGain": 1.5,
-    "maxResidualOpening": 0.03887847065925598,
+    "maxResidualOpening": 0.03887847438454628,
     "rimEnabled": false,
     "active": true,
     "disposed": false,
@@ -71,7 +69,7 @@
   },
   "deepMetrics": {
     "gap": 0.0035,
-    "minGap": 0.0033283031681758677,
+    "minGap": 0.0033283033452501934,
     "maxGap": 0.0035000356607185956,
     "samples": 121128,
     "violations": 0,
@@ -81,7 +79,7 @@
   },
   "dragMetrics": {
     "gap": 0.0035,
-    "minGap": 0.0033730156860383156,
+    "minGap": 0.003373081121260049,
     "maxGap": 0.0035000356607185956,
     "samples": 121128,
     "violations": 0,
@@ -103,6 +101,7 @@
     "state": {
       "id": "polish-shell",
       "feelId": "slow-rebound",
+      "globalWidthGain": 1.5,
       "crackWidthGain": 1,
       "recoveredWidthGain": 1.5,
       "maxResidualOpening": 0.03995649144053459,
@@ -134,6 +133,7 @@
   "reset": {
     "id": "polish-shell",
     "feelId": "slow-rebound",
+    "globalWidthGain": 1.5,
     "crackWidthGain": 1,
     "recoveredWidthGain": 1.5,
     "maxResidualOpening": 0,

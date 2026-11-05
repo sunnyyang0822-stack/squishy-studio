@@ -1,0 +1,14 @@
+✔ clay: same pigment has rims without changing real apertures (23991.5344ms)
+✔ clay: different pigments have no rims without changing real apertures (22611.9452ms)
+✔ marshmallow: same pigment has rims without changing real apertures (21950.4166ms)
+✔ marshmallow: different pigments have no rims without changing real apertures (21755.0069ms)
+✔ butter: same pigment has rims without changing real apertures (34829.4364ms)
+✔ butter: different pigments have no rims without changing real apertures (34467.8916ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 160627.3435

@@ -31,22 +31,23 @@
   },
   "opened": {
     "opaque": 252716,
-    "green": 323,
-    "pink": 252393,
+    "green": 487,
+    "pink": 252229,
     "dark": 0,
     "width": 790,
     "height": 808,
     "greenComponentsAtLeast4Pixels": [
-      310
+      477
     ]
   },
-  "shallowDepth": 0.11753621477322888,
-  "deepDepth": 0.1669754350812893,
-  "releasedDepth": 0.1455600558349916,
-  "waitingDepth": 0.03464485945198307,
+  "shallowDepth": 0.10008967970290523,
+  "deepDepth": 0.1669754344071526,
+  "releasedDepth": 0.1449825361837039,
+  "waitingDepth": 0.06067753483246336,
   "deep": {
     "id": "polish-shell",
     "feelId": "slow-rebound",
+    "globalWidthGain": 1.5,
     "crackWidthGain": 1,
     "recoveredWidthGain": 1.5,
     "maxResidualOpening": 0.026716070249676704,
@@ -66,7 +67,7 @@
   },
   "deepMetrics": {
     "gap": 0.0035,
-    "minGap": 0.0034276254192905763,
+    "minGap": 0.003427625442097348,
     "maxGap": 0.003500001416902026,
     "samples": 86016,
     "violations": 0,
@@ -76,8 +77,8 @@
   },
   "dragMetrics": {
     "gap": 0.0035,
-    "minGap": 0.003385781030432892,
-    "maxGap": 0.0035000050064753,
+    "minGap": 0.0033913973759203356,
+    "maxGap": 0.003499995843711731,
     "samples": 86016,
     "violations": 0,
     "sourceFacePlaneSamples": 86016,
@@ -86,8 +87,8 @@
   },
   "sideMetrics": {
     "gap": 0.0035,
-    "minGap": 0.003491059299787397,
-    "maxGap": 0.003494070263887218,
+    "minGap": 0.0034895423301641087,
+    "maxGap": 0.00349781035241099,
     "samples": 86016,
     "violations": 0,
     "sourceFacePlaneSamples": 86016,
@@ -98,6 +99,7 @@
     "state": {
       "id": "polish-shell",
       "feelId": "slow-rebound",
+      "globalWidthGain": 1.5,
       "crackWidthGain": 1,
       "recoveredWidthGain": 1.5,
       "maxResidualOpening": 0.028885502368211746,
@@ -108,7 +110,7 @@
       "detached": 0,
       "falling": 0,
       "fragmentCount": 0,
-      "maxDamage": 0.4653550088405609,
+      "maxDamage": 0.46535494923591614,
       "maxOpening": 0,
       "damagedVertices": 345,
       "maxLocalContacts": 1,
@@ -129,6 +131,7 @@
   "reset": {
     "id": "polish-shell",
     "feelId": "slow-rebound",
+    "globalWidthGain": 1.5,
     "crackWidthGain": 1,
     "recoveredWidthGain": 1.5,
     "maxResidualOpening": 0,

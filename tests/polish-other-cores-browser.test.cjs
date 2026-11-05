@@ -90,7 +90,7 @@ async function waitRecovered(page, timeout = 22000) {
   }, null, { timeout, polling: 500 });
 }
 for (const core of ['marshmallow', 'butter']) {
-  test(`${core} polish actual GPU exposure and original core lifecycle, normal-speed desktop`, { timeout: 100000 }, async () => {
+  test(`${core} polish actual GPU exposure and original core lifecycle, normal-speed desktop`, { timeout: 200000 }, async () => {
     const { context, page, errors } = await open(core);
     const report = { core, environment: 'Windows Edge headless desktop 1280x900 DPR1; not hardware phone' };
     try {

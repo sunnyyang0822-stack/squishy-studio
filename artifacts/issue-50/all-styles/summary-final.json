@@ -1,6 +1,6 @@
 {
-  "bundleSHA256": "43f4468d069dc856723fb7c8367870c20014b795ae446375da13daf2d831ed4d",
-  "verification": "Same unchanged bundle: prior interrupted run 16 passing desktop cases in browser.txt; remaining two desktop and six mobile cases 8/8 completed in browser-resumed.txt; not a single 24/24 run.",
+  "bundleSHA256": "aae95d5440bdc33caa683cf4df94b8d9184c7153989b487c2e4da1c8a97296d1",
+  "verification": "Final merged-main bundle, globalWidthGain 1.5: one uninterrupted run passed all 18 desktop combinations and 6 mobile night reduced-motion cases (24/24). Log: ../submission/polish-styles-browser-final.txt. Historical interrupted-run logs are retained separately.",
   "desktopCases": [
     {
       "style": "cloud",
