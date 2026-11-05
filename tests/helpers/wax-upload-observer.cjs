@@ -43,8 +43,8 @@ async function installWaxGPUObserver(page) {
   });
 }
 
-async function armWaxUploadEnd(page, { resultKey = 'waxShortContact', action = 'pointerup', minimumChange = .0001, minimumDepth = .001 } = {}) {
-  await page.locator('.toy-mount').evaluate((mount, { resultKey, action, minimumChange, minimumDepth }) => {
+async function armWaxUploadEnd(page, { resultKey = 'waxShortContact', action = 'pointerup', minimumChange = .0001, minimumDepth = .001, startEvent = 'pointerdown' } = {}) {
+  await page.locator('.toy-mount').evaluate((mount, { resultKey, action, minimumChange, minimumDepth, startEvent }) => {
     const probe = window.waxGPUObserver, baseline = mount.thinWaxDiagnostics({ measure: false });
     let coreBuffer;
     for (const [buffer, values] of probe.buffers) {
@@ -53,7 +53,7 @@ async function armWaxUploadEnd(page, { resultKey = 'waxShortContact', action = '
     }
     if (!coreBuffer) throw Error('No actual position buffer matches the current core; normals/colors cannot arm the observer');
     window[resultKey] = null;
-    window.addEventListener('pointerdown', event => {
+    window.addEventListener(startEvent, event => {
       const start = performance.now(), surface = document.querySelector('.orb-input');
       const observe = (buffer, uploaded) => {
         if (buffer !== coreBuffer) return;
@@ -80,7 +80,7 @@ async function armWaxUploadEnd(page, { resultKey = 'waxShortContact', action = '
       };
       probe.uploadObservers.add(observe);
     }, { capture: true, once: true });
-  }, { resultKey, action, minimumChange, minimumDepth });
+  }, { resultKey, action, minimumChange, minimumDepth, startEvent });
 }
 
 async function readWaxUploadEnd(page, resultKey = 'waxShortContact') {
