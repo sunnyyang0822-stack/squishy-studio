@@ -1,5 +1,17 @@
 # 奶油圆球：阶段 1A 可编辑资产交接
 
+## 2026-11-05 正圆球修订（当前形状）
+
+按用户要求，所有圆球内芯和外壳统一使用真正的单位球面，取消早期资产的纵向压缩与压平底部。旧资产的 glTF Y 范围为 `[-.905,.94]`，半径最低 `.905`，因此即使显示缩放为 `[1,1,1]`，仍不是正圆。本轮在独立后台 Blender 中把原有2,562个顶点径向投影到半径1，保留5,120三角形、单连续网格、PBR材质与顶点色；使用向外球面法线。当前三轴直径均为2，最大半径误差约 `1.18e-7`（Float32导出精度），GLB为124,316B。所有内芯和外壳从这个共同rest网格生成，不依赖按预设各做一次拉伸，也不修改任何手感工厂的参数。
+
+可编辑 `.blend` 与运行时 `.glb` 已同步。常规导出继续使用 `export.py`，脚本会拒绝导出旧的非球形网格。若从旧源文件迁移或重现归一化，在独立后台进程运行：
+
+```powershell
+& 'C:\Program Files\Blender Foundation\Blender 4.4\blender.exe' --background 'assets-source/squishy-orb/squishy-orb.blend' --python 'assets-source/squishy-orb/round.py'
+```
+
+`round.py` 保存源文件并调用同目录的 `export.py`，禁用自动备份，不覆盖其他Blender窗口的未保存内容。`tests/orb-asset.test.cjs` 检查所有顶点的半径、三轴尺寸、法线、闭合单连通拓扑和三个预设的等比展示。以下旧阶段说明作为历史交接背景保留；“微压平底部”不再是当前几何标准。
+
 当前内陷质感正式命名为 **黏土（`clay`）**；新外观可沿用同一调用入口，见 [质感复用说明](../../docs/orb-feels.md)。
 
 当前运行时深压阻力与换色重置规则见 [最新说明](../../docs/issue-16-pressure-reset.md)，本轮没有修改源文件或GLB。
@@ -17,8 +29,8 @@
 | 表面拓扑 | 2,562 顶点、5,120 三角形；均匀连续网格，无拆分 seam 顶点 |
 | 材质 | 单一不透明标准 PBR，roughness 0.35、metallic 0；`COLOR_0` 顶点色承载奶油粉渐变 |
 | 依赖 | 无贴图、无外部链接库、无必需 glTF 扩展 |
-| 运行时文件 | `assets/models/squishy-orb.glb`，124,324 bytes，一个可见 mesh |
-| 坐标与尺度 | 场景单位缩放 1，原点位于中心；Blender Z-up 导出为 glTF Y-up；glTF 包围盒尺寸约 `(2, 1.845, 2)` |
+| 运行时文件 | `assets/models/squishy-orb.glb`，124,316 bytes，一个可见 mesh |
+| 坐标与尺度 | 场景单位缩放 1，原点位于中心；Blender Z-up 导出为 glTF Y-up；glTF 包围盒尺寸 `(2, 2, 2)`，半径1 |
 | 来源 | 项目自制资产，无外部生成素材 |
 
 `Soft_Core_REFERENCE_ONLY` 是源场景内隐藏的结构参考，只供后续设计讨论，不导出到 GLB。当前单表面并不代表已经实现实际壳厚、内芯物理结构或可碎裂壳体。

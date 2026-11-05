@@ -13,6 +13,7 @@ bpy.ops.object.select_all(action='DESELECT')
 orb = scene.objects['Orb_Surface']
 assert len(orb.data.vertices) == 2562
 assert len(orb.data.polygons) == 5120
+assert max(abs(vertex.co.length - 1) for vertex in orb.data.vertices) < 1e-6, 'Export the round source; run round.py to migrate the old flattened orb'
 assert not any(item.library for item in bpy.data.objects)
 assert not any(image.source == 'FILE' for image in bpy.data.images)
 orb.hide_set(False)

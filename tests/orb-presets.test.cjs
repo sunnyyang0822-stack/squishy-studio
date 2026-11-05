@@ -20,7 +20,7 @@ test('immutable ready-to-use presets compose separate material and deformation i
     const rest = modelAttribute('POSITION'), positions = rest.slice(), other = rest.slice();
     const d = preset.createDeformation(positions, modelAttribute('NORMAL'));
     const independent = preset.createDeformation(other, modelAttribute('NORMAL'));
-    d.begin([0,.0175,1]); d.step(.03);
+    d.begin([0,0,1]); d.step(.03);
     assert.notDeepEqual(positions, rest); assert.deepEqual(other, rest);
     assert.equal(independent.getState().active, false);
     a.dispose(); b.dispose(); source.dispose();
