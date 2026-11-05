@@ -1,0 +1,109 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (4.5522ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.9708ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (7.9303ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (1.6015ms)
+✔ 薄蜡范围之外的制作结束保留原有自动恢复 (1.2362ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (11.7546ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (2.8657ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (6.2344ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (1.2259ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.8802ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (2.8851ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (1.2977ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (1.304ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (15.1813ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (1.5857ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.9246ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.5181ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false (67.899ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true (51.3806ms)
+✔ 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染 (39.6427ms)
+✔ 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变 (55.9384ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=false (84.8365ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=true (67.1752ms)
+✔ 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留 (43.8022ms)
+✔ 单次stroke采用最大包络；重复采样与采样密度不会无界叠加 (114.4215ms)
+✔ 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳 (2772.0879ms)
+✔ 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心 (2056.2416ms)
+✔ 下一stroke从永久base继续，异处按压不擦除旧路径 (101.5734ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false (64.4891ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true (47.4132ms)
+✔ 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零 (40.5829ms)
+✔ 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效 (49.6623ms)
+✔ 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压 (41.8263ms)
+✔ thick wax is restricted to the clay orb; thin predicates, default and other recipes remain independent (11.1173ms)
+✔ clay orb thick-wax navigation preserves damage and colors through final play; explicit restart restores once (10.0787ms)
+✔ rapid thin/thick/thin selection commits the latest recipe and disposes stale or late handles (1.9577ms)
+✔ thick registry shares only verified behavior, frozen parameters and separate instance state (2569.0889ms)
+✔ every local thick cross-section is triple thin; actual source partitions exceed twice linear size and cover identical holes (1735.4965ms)
+ℹ {"thin":{"patches":180,"meanArea":0.06671903459358952},"thick":{"patches":36,"meanArea":0.33359517293472346,"range":[0.09635884139563647,0.6117765081891978],"cv":0.3517854776493507},"areaRatio":4.999999999502029,"equivalentDiameterRatio":2.2360679773884398}
+✔ unchanged dwell and no timed emptying; detached large plates keep original hole topology and rigid size (846.1872ms)
+✔ deep press, drag, repeated press, rotation and recovery preserve clay and complete thick fragment clearance (21551.3751ms)
+ℹ {"frames":248,"samples":3530100,"minimumSignedDistance":0.0032985242772245195,"detached":6}
+✔ collection disabled falls below the former floor, expires offscreen and cannot respawn the same body (55.0904ms)
+✔ disabling a populated collection releases settled bodies and clears every support cell (7.3521ms)
+✔ uncollected body lifetime uses actual elapsed seconds when a coarse frame cannot integrate the whole interval (1.3357ms)
+✔ released bodies fall faster in world Y for three differently rotated source surfaces (3.1022ms)
+✔ a slanted curved chip contacting a high pile keeps its complete physical footprint inside the tray (22.352ms)
+ℹ {"contactTop":-0.5239519073365981,"contactRadius":1.2906795784735718,"settledRadius":1.2906699013896046,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":5,"minY":-1.348,"maxRadius":1.2894901761494932,"pileTop":-0.5224519073365982,"gridCells":2523}}
+✔ floor contact preserves real bodies past the former lifetime and settled vertices remain exact (4.9687ms)
+✔ a body created at the end of a coarse frame cannot integrate motion before its birth (1.9591ms)
+✔ successive real polygon bodies accumulate above earlier surfaces and reset clears the support field (17.7859ms)
+✔ thin wax is a separate closed-volume shell with independently owned color and measured nonzero thickness (1662.8244ms)
+✔ actual continuous dwell exceeds 0.5 seconds; one brittle local wave retains most plates and releases only a few small chips (2092.6082ms)
+✔ released wax chips fall promptly under gravity instead of ejecting sideways (1538.792ms)
+✔ actual detached world vertices fall down after toy rotation, then remain fixed on the floor while the toy turns (5497.1971ms)
+ℹ {"rotation":[0,0,0],"uniqueVertices":42,"meanWorldYDrop":0.12298324848970446,"meanCornerLateral":0.06619204014601919}
+ℹ {"rotation":[0,0,1.5707963267948966],"uniqueVertices":42,"meanWorldYDrop":0.07350189309744608,"meanCornerLateral":0.10245171459415155}
+ℹ {"rotation":[1.5707963267948966,0.55,-0.4],"uniqueVertices":42,"meanWorldYDrop":0.13551533506030128,"meanCornerLateral":0.05890962007662631}
+✔ actual clay dent and dragged deformation all receive local crack geometry before any chip can fall (2369.1731ms)
+✔ additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone (714.0419ms)
+✔ short taps, cancellation, hit loss and sliding cannot borrow previous dwell time (546.675ms)
+✔ deep clay press and recovery keep original core behavior and measured shell clearance (11844.5945ms)
+✔ bounded moving budget, persistent settled chips, reduced motion and idempotent cleanup (723.8944ms)
+✔ broken rims remain outside the live clay after world rotation 0,0,0 (14104.6196ms)
+✔ broken rims remain outside the live clay after world rotation 0,0,1.5707963267948966 (12322.7269ms)
+✔ broken rims remain outside the live clay after world rotation 1.5707963267948966,0.55,-0.4 (10454.3317ms)
+✔ live chips stay capped at 24 while continued deep pressure can strip each local cohort (6153.9662ms)
+✔ preview fall-through removes actual fragment drawing, preserves holes and frees the moving budget (5678.4338ms)
+✔ switching an existing collection off keeps shell damage and lets the old pile fall away without revival (984.3401ms)
+✔ repeated local presses can strip the complete real shell once without duplicate cells or regrowth (2775.4001ms)
+ℹ {"completeShellPanels":180,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":180,"minY":-1.348,"maxRadius":1.2965012280695674,"pileTop":-0.7293940313041808,"gridCells":2219},"physicalMaxRadius":1.2997206990418424,"physicalSamples":44700,"coreBottom":-0.20499997138977055,"physicalPileTop":-0.7308940291404724,"pileCoreGap":0.5258940577507019}
+✔ one local press leaves remote real render positions, normals and colors exactly unchanged (1995.184ms)
+✔ creating a shell over an old bare-core dent retains original contact coordinates (520.9118ms)
+✔ detached curved plates retain frozen edge lengths while the original core continues deforming (2198.436ms)
+✔ irregular area distribution, rapid connected cracking and strain-limited saturation replace regular scales and timed emptying (392.7899ms)
+✔ random Voronoi cutting covers the complete real orb GLB surface with no intact-shell holes (287.9151ms)
+✔ retained shells open connected partial boundary chains while unbroken boundary bridges remain geometrically closed (342.6841ms)
+✔ paw core, cracks and actual shell uploads stay identical with certified nearest-query reuse disabled (77596.0686ms)
+✔ identical local queries reuse only unchanged live triangles and stay equal to a cache-disabled full BVH (4026.378ms)
+ℹ {"id":"paw","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":3124,"nearestTriangles":2342,"gridQueries":82,"gridSweeps":0,"cachedQueries":244}}
+ℹ {"id":"donut","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":4347,"nearestTriangles":2879,"gridQueries":67,"gridSweeps":0,"cachedQueries":242}}
+✔ a different triangle entering or leaving a cached search region invalidates the result; caches cannot cross tree instances (8.0182ms)
+✔ local live-triangle grid preserves full BVH results, including ties, dynamic refit and out-of-grid fallback (4147.9369ms)
+ℹ {"id":"orb","actualGridQueries":1466,"actualGridSweeps":732}
+ℹ {"id":"paw","actualGridQueries":1501,"actualGridSweeps":726}
+ℹ {"id":"donut","actualGridQueries":1518,"actualGridSweeps":726}
+✔ same-panel edge deduplication preserves every distinct sampled position and exactly the same collision fraction (1507.9322ms)
+ℹ {"id":"orb","logicalQueries":400,"actualQueries":293,"distinctSamplePairs":293}
+ℹ {"id":"paw","logicalQueries":400,"actualQueries":398,"distinctSamplePairs":398}
+ℹ {"id":"donut","logicalQueries":400,"actualQueries":299,"distinctSamplePairs":299}
+✔ finite-segment BVH pruning equals a complete live-triangle scan, including inside boxes, parallel axes and signed directions (3470.5584ms)
+✔ thin-wax registry is immutable, rejects unknown ids and reuses verified parameters (108.7785ms)
+✔ preset defaults to falling cleanup with permanent holes; collection requires explicit opt-in (1667.7352ms)
+✔ preset instances isolate geometry, color, clock, damage, reset and disposal (918.188ms)
+✔ preset accepts initial world matrix without moving caller-owned rest data (838.5713ms)
+✔ paw: both cores share smaller connected wax plates with unchanged thickness and active budget (14034.2618ms)
+ℹ {"id":"paw","oldCount":173,"count":278,"meanAreaRatio":0.6223038293224177,"p90AreaRatio":0.5850844201892739}
+✔ donut: both cores share smaller connected wax plates with unchanged thickness and active budget (7359.8234ms)
+ℹ {"id":"donut","oldCount":166,"count":271,"meanAreaRatio":0.6125462066492622,"p90AreaRatio":0.6161370845980977}
+✔ marshmallow paw clearance certificates preserve actual shell geometry through deep/drag/release/restore (64994.9496ms)
+ℹ {"samples":77,"thickness":0.014,"attachedMinSignedDistance":0.0027098422236632243,"detachedViolations":0}
+ℹ tests 83
+ℹ suites 0
+ℹ pass 83
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85528.1117

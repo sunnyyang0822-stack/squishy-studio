@@ -18,7 +18,7 @@ function displacement(f, point) {
   }
   return Math.hypot(...[0, 1, 2].map(k => f.positions[nearest + k] - f.rest[nearest + k]));
 }
-const front = theta => [Math.sin(theta), .0175, Math.cos(theta)];
+const front = theta => [Math.sin(theta), 0, Math.cos(theta)];
 
 for (const reduced of [false, true]) test(`黏土快速划过和长按后移到新位置均渐进内陷；减少动态=${reduced}`, async () => {
   const quick = await fixture(reduced), held = await fixture(reduced);
@@ -202,7 +202,7 @@ test('30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定�
 
 test('多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心', async () => {
   const { rest, positions, deformation: d } = await fixture();
-  const points = [[1, .0175, 0], [-1, .0175, 0], [0, .94, 0], [0, -.905, 0], [0, .0175, 1], [0, .0175, -1]];
+  const points = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]];
   for (let repeat = 0; repeat < 30; repeat++) {
     d.begin(points[repeat % points.length]);
     if (repeat % 3 === 2) d.move(points[(repeat + 1) % points.length], 1);

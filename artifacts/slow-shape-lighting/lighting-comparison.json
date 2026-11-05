@@ -1,0 +1,400 @@
+{
+  "bundleSHA256": "a6150e370e690283999a066b6bbe15b9267773194147890f69d51eb0500001bf",
+  "baseline": "a9315d9 lighting on the SAME new round sphere geometry",
+  "measurements": [
+    {
+      "variant": "before",
+      "theme": "day",
+      "state": "shallow",
+      "maximum": 0.15282227964498,
+      "changed": 231,
+      "center": [
+        0.01944015032499412,
+        0.3032869368871288,
+        0.9154507948810542
+      ],
+      "uploads": 26,
+      "vertices": 2562,
+      "finite": true,
+      "darkeningP90": 8.00520000000003,
+      "darkeningMean": 1.7872724583332953
+    },
+    {
+      "variant": "before",
+      "theme": "day",
+      "state": "deep",
+      "maximum": 0.4585666552928222,
+      "changed": 232,
+      "center": [
+        0.01944242406611093,
+        0.30334944235670463,
+        0.9155946336232312
+      ],
+      "uploads": 139,
+      "vertices": 2562,
+      "finite": true,
+      "darkeningP90": 60.772999999999996,
+      "darkeningMean": 22.335073861110175
+    },
+    {
+      "variant": "before",
+      "theme": "night",
+      "state": "shallow",
+      "maximum": 0.15282227964498,
+      "changed": 231,
+      "center": [
+        0.01944015032499412,
+        0.3032869368871288,
+        0.9154507948810542
+      ],
+      "uploads": 26,
+      "vertices": 2562,
+      "finite": true,
+      "darkeningP90": 18.295199999999994,
+      "darkeningMean": 3.7380629722225502
+    },
+    {
+      "variant": "before",
+      "theme": "night",
+      "state": "deep",
+      "maximum": 0.4585666552928222,
+      "changed": 232,
+      "center": [
+        0.019442423799242468,
+        0.3033494416743311,
+        0.9155946337268344
+      ],
+      "uploads": 138,
+      "vertices": 2562,
+      "finite": true,
+      "darkeningP90": 84.09299999999999,
+      "darkeningMean": 32.23060347222282
+    },
+    {
+      "variant": "after",
+      "theme": "day",
+      "state": "shallow",
+      "maximum": 0.15282227964498,
+      "changed": 231,
+      "center": [
+        0.01944015032499412,
+        0.3032869368871288,
+        0.9154507948810542
+      ],
+      "uploads": 26,
+      "vertices": 2562,
+      "finite": true,
+      "darkeningP90": 16.005199999999974,
+      "darkeningMean": 4.680624291666602
+    },
+    {
+      "variant": "after",
+      "theme": "day",
+      "state": "deep",
+      "maximum": 0.4585666552928222,
+      "changed": 232,
+      "center": [
+        0.01944242406611093,
+        0.30334944235670463,
+        0.9155946336232312
+      ],
+      "uploads": 139,
+      "vertices": 2562,
+      "finite": true,
+      "darkeningP90": 77.4778,
+      "darkeningMean": 34.26169645833448
+    },
+    {
+      "variant": "after",
+      "theme": "night",
+      "state": "shallow",
+      "maximum": 0.15282227964498,
+      "changed": 231,
+      "center": [
+        0.01944015032499412,
+        0.3032869368871288,
+        0.9154507948810542
+      ],
+      "uploads": 26,
+      "vertices": 2562,
+      "finite": true,
+      "darkeningP90": 27.585200000000043,
+      "darkeningMean": 8.180071680556129
+    },
+    {
+      "variant": "after",
+      "theme": "night",
+      "state": "deep",
+      "maximum": 0.4585666552928222,
+      "changed": 232,
+      "center": [
+        0.01944242406611093,
+        0.30334944235670463,
+        0.9155946336232312
+      ],
+      "uploads": 139,
+      "vertices": 2562,
+      "finite": true,
+      "darkeningP90": 91.23340000000002,
+      "darkeningMean": 38.66995697222168
+    }
+  ],
+  "views": [
+    {
+      "variant": "before",
+      "theme": "day",
+      "face": "front",
+      "light": {
+        "count": 39136,
+        "p05": 137.8458,
+        "median": 188.6136,
+        "blackFraction": 0,
+        "meanRGB": [
+          232.21668029435813,
+          163.1982062551104,
+          190.85614268192967
+        ]
+      }
+    },
+    {
+      "variant": "before",
+      "theme": "day",
+      "face": "side",
+      "light": {
+        "count": 39139,
+        "p05": 137.8458,
+        "median": 188.6136,
+        "blackFraction": 0,
+        "meanRGB": [
+          232.2126523416541,
+          163.19589156595723,
+          190.85377756202254
+        ]
+      }
+    },
+    {
+      "variant": "before",
+      "theme": "day",
+      "face": "back",
+      "light": {
+        "count": 39135,
+        "p05": 137.8458,
+        "median": 188.6136,
+        "blackFraction": 0,
+        "meanRGB": [
+          232.2163280950556,
+          163.19925897534176,
+          190.85731442442827
+        ]
+      }
+    },
+    {
+      "variant": "before",
+      "theme": "day",
+      "face": "bottom",
+      "light": {
+        "count": 39141,
+        "p05": 137.8458,
+        "median": 188.6136,
+        "blackFraction": 0,
+        "meanRGB": [
+          232.21749572059989,
+          163.1996883063795,
+          190.8581794026724
+        ]
+      }
+    },
+    {
+      "variant": "before",
+      "theme": "night",
+      "face": "front",
+      "light": {
+        "count": 39136,
+        "p05": 115.36919999999999,
+        "median": 187.51999999999998,
+        "blackFraction": 0,
+        "meanRGB": [
+          204.36168744889616,
+          168.24402085036795,
+          180.5095564186427
+        ]
+      }
+    },
+    {
+      "variant": "before",
+      "theme": "night",
+      "face": "side",
+      "light": {
+        "count": 39139,
+        "p05": 115.36919999999999,
+        "median": 187.51999999999998,
+        "blackFraction": 0,
+        "meanRGB": [
+          204.35846598022434,
+          168.24121720023507,
+          180.50565931679398
+        ]
+      }
+    },
+    {
+      "variant": "before",
+      "theme": "night",
+      "face": "back",
+      "light": {
+        "count": 39135,
+        "p05": 115.36919999999999,
+        "median": 187.51999999999998,
+        "blackFraction": 0,
+        "meanRGB": [
+          204.36363868659768,
+          168.24665900089434,
+          180.51082151526765
+        ]
+      }
+    },
+    {
+      "variant": "before",
+      "theme": "night",
+      "face": "bottom",
+      "light": {
+        "count": 39141,
+        "p05": 115.36919999999999,
+        "median": 187.51999999999998,
+        "blackFraction": 0,
+        "meanRGB": [
+          204.36212667024347,
+          168.2462379601952,
+          180.51107534299072
+        ]
+      }
+    },
+    {
+      "variant": "after",
+      "theme": "day",
+      "face": "front",
+      "light": {
+        "count": 39136,
+        "p05": 127.3484,
+        "median": 184.6858,
+        "blackFraction": 0,
+        "meanRGB": [
+          225.82757563368764,
+          157.78592600163532,
+          185.065336263287
+        ]
+      }
+    },
+    {
+      "variant": "after",
+      "theme": "day",
+      "face": "side",
+      "light": {
+        "count": 39139,
+        "p05": 127.3484,
+        "median": 184.6858,
+        "blackFraction": 0,
+        "meanRGB": [
+          225.82470170418253,
+          157.78320856434758,
+          185.0644625565293
+        ]
+      }
+    },
+    {
+      "variant": "after",
+      "theme": "day",
+      "face": "back",
+      "light": {
+        "count": 39135,
+        "p05": 127.3484,
+        "median": 184.6858,
+        "blackFraction": 0,
+        "meanRGB": [
+          225.82836335760828,
+          157.7859716366424,
+          185.06618116775266
+        ]
+      }
+    },
+    {
+      "variant": "after",
+      "theme": "day",
+      "face": "bottom",
+      "light": {
+        "count": 39141,
+        "p05": 127.3484,
+        "median": 184.6858,
+        "blackFraction": 0,
+        "meanRGB": [
+          225.83012697682736,
+          157.7870263917631,
+          185.06857259651005
+        ]
+      }
+    },
+    {
+      "variant": "after",
+      "theme": "night",
+      "face": "front",
+      "light": {
+        "count": 39136,
+        "p05": 123.79839999999999,
+        "median": 187.5922,
+        "blackFraction": 0,
+        "meanRGB": [
+          206.26911283728538,
+          170.55235588716272,
+          183.41841271463613
+        ]
+      }
+    },
+    {
+      "variant": "after",
+      "theme": "night",
+      "face": "side",
+      "light": {
+        "count": 39139,
+        "p05": 123.79839999999999,
+        "median": 187.66039999999998,
+        "blackFraction": 0,
+        "meanRGB": [
+          206.26740591226144,
+          170.55032065203505,
+          183.41641329620072
+        ]
+      }
+    },
+    {
+      "variant": "after",
+      "theme": "night",
+      "face": "back",
+      "light": {
+        "count": 39135,
+        "p05": 123.79839999999999,
+        "median": 187.66039999999998,
+        "blackFraction": 0,
+        "meanRGB": [
+          206.27101060431838,
+          170.55415868148717,
+          183.42056982240962
+        ]
+      }
+    },
+    {
+      "variant": "after",
+      "theme": "night",
+      "face": "bottom",
+      "light": {
+        "count": 39141,
+        "p05": 123.79839999999999,
+        "median": 187.5922,
+        "blackFraction": 0,
+        "meanRGB": [
+          206.27160777701133,
+          170.55522342300912,
+          183.42165504202754
+        ]
+      }
+    }
+  ]
+}

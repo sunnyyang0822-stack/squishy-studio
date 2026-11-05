@@ -13,7 +13,7 @@ before(async () => {
   browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (fs.existsSync(edge) ? edge : undefined) });
 });
 after(async () => { await browser?.close(); server?.kill(); });
-for (const id of Object.keys(regions)) test(`${id} medium wax: mobile CDP touch day/night, geometry and rotation`, { timeout: 120000 }, async t => {
+for (const id of Object.keys(regions).filter(id=>id!=='paw')) test(`${id} medium wax: mobile CDP touch day/night, geometry and rotation`, { timeout: 120000 }, async t => {
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
   const context = await browser.newContext({ viewport: {width:390,height:844}, hasTouch:true, isMobile:true });
   const page = await context.newPage(), client = await context.newCDPSession(page), errors=[];

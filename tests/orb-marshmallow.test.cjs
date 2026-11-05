@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const { modelAttribute } = require('./helpers/orb-probe.cjs');
-const front = a => [Math.sin(a), .0175, Math.cos(a)];
+const front = a => [Math.sin(a), 0, Math.cos(a)];
 async function fixture(id = 'marshmallow') {
   const { getOrbFeel } = await import('../src/orb-feels.mjs');
   const rest = modelAttribute('POSITION'), positions = rest.slice();
@@ -51,13 +51,13 @@ test('real GLB: fast/slow/long/reversed/crossing paths, sparse events, event den
     assert.ok(Math.max(...samples) < .5);
     f.d.release(); const snapshot = f.positions.slice(); advance(f.d, 2); assert.deepEqual(f.positions, snapshot);
     for (let repeat = 0; repeat < 15; repeat++) {
-      f.d.begin(front(1)); f.d.move(front(-1), 1); f.d.move([0, .94, 0], 1); f.d.move(front(1), 1);
+      f.d.begin(front(1)); f.d.move(front(-1), 1); f.d.move([0, 1, 0], 1); f.d.move(front(1), 1);
       advance(f.d, .1); f.d.release();
     }
     assert.ok(f.positions.every(Number.isFinite)); assert.ok(f.d.getState().depth <= .700001);
     for (let i = 0; i < f.rest.length; i += 3) {
-      const r = Math.hypot(f.rest[i], f.rest[i + 1] - .0175, f.rest[i + 2]);
-      const current = Math.hypot(f.positions[i], f.positions[i + 1] - .0175, f.positions[i + 2]);
+      const r = Math.hypot(f.rest[i], f.rest[i + 1] - 0, f.rest[i + 2]);
+      const current = Math.hypot(f.positions[i], f.positions[i + 1] - 0, f.positions[i + 2]);
       assert.ok(current >= r * .239);
     }
   }
@@ -108,11 +108,11 @@ test('real GLB triangles retain outward winding after multidirectional crossing 
   const stride = { 5121: 1, 5123: 2, 5125: 4 }[accessor.componentType];
   const read = stride === 4 ? 'readUInt32LE' : stride === 2 ? 'readUInt16LE' : 'readUInt8';
   const indices = Array.from({ length: accessor.count }, (_, i) => bytes[read](start + i * stride));
-  const points = [[1, .0175, 0], [-1, .0175, 0], [0, .94, 0], [0, -.905, 0], front(0), [0, .0175, -1]];
+  const points = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], front(0), [0, 0, -1]];
   for (let repeat = 0; repeat < 30; repeat++) {
     f.d.begin(points[repeat % 6]); f.d.move(points[(repeat + 1) % 6], 1); advance(f.d, .2); f.d.release();
     for (let i = 0; i < indices.length; i += 3) {
-      const p = indices.slice(i, i + 3).map(index => [f.positions[index * 3], f.positions[index * 3 + 1] - .0175, f.positions[index * 3 + 2]]);
+      const p = indices.slice(i, i + 3).map(index => [f.positions[index * 3], f.positions[index * 3 + 1] - 0, f.positions[index * 3 + 2]]);
       const u = p[1].map((v, k) => v - p[0][k]), v = p[2].map((v, k) => v - p[0][k]);
       const n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
       assert.ok(n.reduce((sum, v, k) => sum + v * p[0][k], 0) > 0, 'No inverted triangle ' + i / 3);
@@ -128,7 +128,7 @@ test('deep collapse leaves a small bounded core and repeated strokes cannot dril
   assert.ok(depth(f, 0) > .68 && depth(f, 0) <= .700001);
   let index = 0;
   for (let i = 3; i < f.rest.length; i += 3) if (f.rest[i + 2] > f.rest[index + 2]) index = i;
-  const radius = Math.hypot(f.positions[index], f.positions[index + 1] - .0175, f.positions[index + 2]);
+  const radius = Math.hypot(f.positions[index], f.positions[index + 1] - 0, f.positions[index + 2]);
   assert.ok(radius > .23 && radius < .33, 'remaining front core radius: ' + radius);
   const frozen = f.positions.slice();
   advance(f.d, 30);

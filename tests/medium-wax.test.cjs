@@ -60,8 +60,8 @@ test('medium preset changes only physical thickness and real partition count', a
 test('medium mapping supports every registered clay preview and preserves legacy final scope', async () => {
   const { createDetailController, isMediumWaxRecipe, canRestartWax, defaultRecipe, styleNames } = await import('../detail/state.mjs');
   for (const styleId of Object.keys(styleNames)) for (const coreMaterial of ['clay', 'marshmallow', 'butter']) {
-    assert.equal(isMediumWaxRecipe({ ...defaultRecipe, styleId, coreMaterial }), coreMaterial === 'clay' || styleId !== 'paw');
-    assert.equal(canRestartWax('shell', { ...defaultRecipe, styleId, coreMaterial }), coreMaterial === 'clay' || styleId !== 'paw');
+    assert.equal(isMediumWaxRecipe({ ...defaultRecipe, styleId, coreMaterial }), styleId !== 'paw');
+    assert.equal(canRestartWax('shell', { ...defaultRecipe, styleId, coreMaterial }), styleId !== 'paw');
     assert.equal(canRestartWax('play', { ...defaultRecipe, styleId, coreMaterial }), styleId === 'orb' && coreMaterial === 'clay');
   }
   for (const override of [{ shellMaterial: 'polish' }, { shellMaterial: 'sugar' }, { waxThickness: 'thick' }, { waxThickness: 'thin' }]) assert.equal(isMediumWaxRecipe({ ...defaultRecipe, ...override }), false);

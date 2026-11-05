@@ -33,7 +33,7 @@ jobs:
           # Only thin-wax browser tests read this; preserve CSS size and real clocks.
           THIN_WAX_TEST_DPR: "0.5"
           # Free-flight needs two real frames inside a ~0.2s airborne window.
-          THIN_WAX_FLIGHT_DPR: "0.25"
+          THIN_WAX_FLIGHT_DPR: "0.125"
         # Match local Chrome/Edge's new headless mode instead of headless shell.
         run: |
           export PLAYWRIGHT_BROWSER_PATH="$(node -p "require('playwright').chromium.executablePath()")"
@@ -41,7 +41,7 @@ jobs:
           files=(tests/*.test.cjs)
           general=()
           for file in "${files[@]}"; do
-            if [[ "$file" != tests/squishy-styles-browser.test.cjs && "$file" != tests/squishy-marshmallow-browser.test.cjs && "$file" != tests/squishy-slow-rebound-browser.test.cjs ]]; then
+            if [[ "$file" != tests/squishy-styles-browser.test.cjs && "$file" != tests/squishy-marshmallow-browser.test.cjs && "$file" != tests/squishy-slow-rebound-browser.test.cjs && "$file" != tests/polish-styles-browser.test.cjs ]]; then
               general+=("$file")
             fi
           done
@@ -68,9 +68,32 @@ jobs:
           npm run build
           node scripts/run-style-ci-case.cjs "${{ matrix.case }}"
 
+  polish-style-cases:
+    name: polish-style (${{ matrix.style }})
+    strategy:
+      fail-fast: false
+      matrix:
+        style: [cloud, cylinder, donut, pyramid, flower, star]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Check three cores and mobile touch in WebGL
+        env:
+          POLISH_STYLE_CASE: ${{ matrix.style }}
+        run: |
+          export PLAYWRIGHT_BROWSER_PATH="$(node -p "require('playwright').chromium.executablePath()")"
+          npm run build:orb
+          node --test tests/polish-styles-browser.test.cjs
+
   browser-tests:
     name: browser-tests
-    needs: [browser-shards, style-cases]
+    needs: [browser-shards, style-cases, polish-style-cases]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
@@ -78,3 +101,4 @@ jobs:
         run: |
           test "${{ needs.browser-shards.result }}" = success
           test "${{ needs.style-cases.result }}" = success
+          test "${{ needs.polish-style-cases.result }}" = success

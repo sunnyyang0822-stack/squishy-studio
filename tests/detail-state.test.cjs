@@ -133,15 +133,15 @@ test('重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改�
   c.dispose(); c.restart(); assert.equal(h.restored, 1);
 });
 
-test('已实现蜡预设范围之外的制作结束保留原有自动恢复', async () => {
+test('尚未实现外壳的制作结束保留原有自动恢复', async () => {
   const { createDetailController } = await stateModule;
-  for (const [group, value] of [['waxThickness', 'thick'], ['coreMaterial', 'butter'], ['shellMaterial', 'polish']]) {
+  for (const [group, value] of [['coreMaterial', 'butter'], ['shellMaterial', 'sugar']]) {
     const h = harness(createDetailController), c = h.controller;
     await c.load(); await c.select('waxThickness', 'thin'); await c.select(group, value);
     c.setStep('making'); c.setStep('play');
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(h.restored, 1, `${group}=${value}`);
-    assert.deepEqual(h.restoreOptions, [undefined], 'Legacy configurations retain the no-argument restore contract');
+    assert.deepEqual(h.restoreOptions, [group === 'coreMaterial' && value === 'butter' ? { preserveShell: true } : undefined], 'Thin slow-rebound orb preserves hidden preview damage; excluded configurations retain legacy restoration');
     c.restart(); assert.equal(h.restored, 1);
     c.dispose();
   }
@@ -184,7 +184,7 @@ test('八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土�
     assert.deepEqual(h.restoreOptions, styleId === 'orb' ? [] : [{ preserveShell: true }], 'Returning preview does not repair shell');
     for (const coreMaterial of ['marshmallow', 'butter']) {
       await c.select('coreMaterial', coreMaterial);
-      const previewEnabled = coreMaterial === 'marshmallow';
+      const previewEnabled = coreMaterial === 'marshmallow' || coreMaterial === 'butter' && styleId === 'orb';
       assert.equal(isThinWaxRecipe(c.getState().recipe), previewEnabled);
       assert.equal(canRestartThinWax('shell', c.getState().recipe), previewEnabled);
       assert.equal(canRestartThinWax('play', c.getState().recipe), false);

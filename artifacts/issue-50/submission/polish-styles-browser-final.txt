@@ -1,0 +1,32 @@
+✔ cloud clay polish: structural GLB contact, real GPU exposure, drag, release, side view (14196.6857ms)
+✔ cloud marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (11342.8525ms)
+✔ cloud butter polish: structural GLB contact, real GPU exposure, drag, release, side view (22420.2316ms)
+✔ cylinder clay polish: structural GLB contact, real GPU exposure, drag, release, side view (10568.606ms)
+✔ cylinder marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (11744.0403ms)
+✔ cylinder butter polish: structural GLB contact, real GPU exposure, drag, release, side view (23004.8948ms)
+✔ donut clay polish: structural GLB contact, real GPU exposure, drag, release, side view (12496.2554ms)
+✔ donut marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (12109.9528ms)
+✔ donut butter polish: structural GLB contact, real GPU exposure, drag, release, side view (23034.3485ms)
+✔ pyramid clay polish: structural GLB contact, real GPU exposure, drag, release, side view (8902.7274ms)
+✔ pyramid marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (9149.1415ms)
+✔ pyramid butter polish: structural GLB contact, real GPU exposure, drag, release, side view (20791.6229ms)
+✔ flower clay polish: structural GLB contact, real GPU exposure, drag, release, side view (12485.5947ms)
+✔ flower marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (12069.9135ms)
+✔ flower butter polish: structural GLB contact, real GPU exposure, drag, release, side view (23398.9542ms)
+✔ star clay polish: structural GLB contact, real GPU exposure, drag, release, side view (11482.8311ms)
+✔ star marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (11451.7732ms)
+✔ star butter polish: structural GLB contact, real GPU exposure, drag, release, side view (22274.9539ms)
+✔ cloud clay mobile emulation: night reduced motion structural touch (4009.4183ms)
+✔ cylinder marshmallow mobile emulation: night reduced motion structural touch (3776.8592ms)
+✔ donut butter mobile emulation: night reduced motion structural touch (5020.2489ms)
+✔ pyramid clay mobile emulation: night reduced motion structural touch (3264.0968ms)
+✔ flower marshmallow mobile emulation: night reduced motion structural touch (4174.2475ms)
+✔ star butter mobile emulation: night reduced motion structural touch (3959.7447ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 298180.0015

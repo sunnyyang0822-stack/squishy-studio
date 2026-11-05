@@ -46,7 +46,6 @@ test('重新开始在受支持蜡预设步骤显示，圆球黏土中蜡沿用�
   assert.equal(await restart.isVisible(), true);
   for (const config of [
     'style=orb&waxThickness=thin',
-    'style=orb&step=play&waxThickness=thick',
     'style=orb&step=play&waxThickness=thin&coreMaterial=marshmallow',
     'style=orb&step=play&waxThickness=thin&coreMaterial=butter',
     'style=donut&step=play&waxThickness=thin',

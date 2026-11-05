@@ -3,11 +3,12 @@ const modulePromise=import('../detail/state.mjs');
 test('medium sphere mapping only adds marshmallow and butter preview; defaults and unsupported combinations remain bounded',async()=>{
   const {isMediumWaxRecipe,canRestartWax,defaultRecipe,previewFor,styleNames}=await modulePromise;
   for(const styleId of Object.keys(styleNames))for(const coreMaterial of ['clay','marshmallow','butter']){
-    const recipe={...defaultRecipe,styleId,coreMaterial},enabled=coreMaterial==='clay'||styleId!=='paw';
+    const recipe={...defaultRecipe,styleId,coreMaterial},enabled=styleId!=='paw';
     assert.equal(isMediumWaxRecipe(recipe),enabled);assert.equal(canRestartWax('shell',recipe),enabled);assert.equal(canRestartWax('decoration',recipe),enabled);
     assert.equal(canRestartWax('play',recipe),styleId==='orb'&&coreMaterial==='clay');
     assert.equal(canRestartWax('core',recipe),false);assert.equal(canRestartWax('making',recipe),false);
   }
+  assert.equal(Object.keys(styleNames).flatMap(styleId=>['clay','marshmallow','butter'].map(coreMaterial=>({...defaultRecipe,styleId,coreMaterial}))).filter(isMediumWaxRecipe).length,21);
   for(const coreMaterial of ['marshmallow','butter']){
     const recipe={...defaultRecipe,coreMaterial},p=previewFor('shell',recipe);
     assert.equal(p.presetId,coreMaterial==='butter'?'slow-rebound':'marshmallow');assert.equal(p.feelId,p.presetId);assert.equal(p.appearanceId,coreMaterial==='butter'?'full-matte':'matte');assert.equal(p.waxCollection,false);

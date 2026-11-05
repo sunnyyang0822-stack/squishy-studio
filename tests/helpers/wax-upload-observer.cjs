@@ -43,8 +43,8 @@ async function installWaxGPUObserver(page) {
   });
 }
 
-async function armWaxUploadEnd(page, { resultKey = 'waxShortContact', action = 'pointerup', minimumChange = .0001 } = {}) {
-  await page.locator('.toy-mount').evaluate((mount, { resultKey, action, minimumChange }) => {
+async function armWaxUploadEnd(page, { resultKey = 'waxShortContact', action = 'pointerup', minimumChange = .0001, minimumDepth = .001 } = {}) {
+  await page.locator('.toy-mount').evaluate((mount, { resultKey, action, minimumChange, minimumDepth }) => {
     const probe = window.waxGPUObserver, baseline = mount.thinWaxDiagnostics({ measure: false });
     let coreBuffer;
     for (const [buffer, values] of probe.buffers) {
@@ -67,7 +67,7 @@ async function armWaxUploadEnd(page, { resultKey = 'waxShortContact', action = '
           depthSquared = Math.max(depthSquared, squared);
         }
         const gpuDepth = Math.sqrt(depthSquared);
-        if (gpuDepth <= .001 || changedSinceDown <= minimumChange) return;
+        if (gpuDepth <= minimumDepth || changedSinceDown <= minimumChange) return;
         const before = mount.thinWaxDiagnostics({ measure: false }); let gpuCoreError = 0;
         for (let i = 0; i < uploaded.length; i++) gpuCoreError = Math.max(gpuCoreError, Math.abs(uploaded[i] - before.corePositions[i]));
         const sampledElapsed = performance.now() - start, captured = surface.hasPointerCapture(event.pointerId), drawsAtRelease = probe.draws;
@@ -76,11 +76,11 @@ async function armWaxUploadEnd(page, { resultKey = 'waxShortContact', action = '
         else if (action === 'miss') window.dispatchEvent(new PointerEvent('pointermove', { pointerId: event.pointerId, clientX: 5, clientY: 5 }));
         else window.dispatchEvent(action === 'blur' ? new Event('blur') : new PointerEvent(action, { pointerId: event.pointerId }));
         window[resultKey] = { before, state: before.thinWax, core: before.corePositions, elapsed: performance.now() - start, sampledElapsed,
-          captured, trustedDown: event.isTrusted, trusted: event.isTrusted, gpuDepth, changedSinceDown, gpuCoreError, drawsAtRelease, actualGPU: true };
+          captured, trustedDown: event.isTrusted, trusted: event.isTrusted, gpuDepth, changedSinceDown, minimumDepth, minimumChange, gpuCoreError, drawsAtRelease, actualGPU: true };
       };
       probe.uploadObservers.add(observe);
     }, { capture: true, once: true });
-  }, { resultKey, action, minimumChange });
+  }, { resultKey, action, minimumChange, minimumDepth });
 }
 
 async function readWaxUploadEnd(page, resultKey = 'waxShortContact') {
@@ -89,7 +89,7 @@ async function readWaxUploadEnd(page, resultKey = 'waxShortContact') {
   assert.ok(result.elapsed < 500, `Actual force ended before the fracture threshold: ${JSON.stringify({ elapsed: result.elapsed, sampledElapsed: result.sampledElapsed, gpuDepth: result.gpuDepth })}`);
   assert.equal(result.trustedDown, true); assert.equal(result.captured, true); assert.equal(result.actualGPU, true);
   assert.equal(result.before.coreState.active, true, 'The original core input is active when its changed position buffer uploads');
-  assert.ok(result.gpuDepth > .001 && result.changedSinceDown > .0001, 'A changed, genuinely uploaded core deformation precedes force termination');
+  assert.ok(result.gpuDepth > (result.minimumDepth ?? .001) && result.changedSinceDown > (result.minimumChange ?? .0001), 'A changed, genuinely uploaded core deformation precedes force termination');
   assert.ok(result.gpuCoreError <= 1e-6, `The actual uploaded position buffer matches the sampled core: ${result.gpuCoreError}`);
   assert.ok(result.drawsAfter > result.drawsAtRelease, 'The native renderer still completes real draws after the observed upload');
   return result;

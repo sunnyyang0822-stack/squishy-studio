@@ -22,12 +22,12 @@ test at tests\medium-wax-style-geometry.test.cjs:5:1
 ✖ actual supported clay models: medium wax coverage, connected plates and live-core geometric diagnostics (28882.468ms)
   AssertionError [ERR_ASSERTION]: Unsupported geometry diagnostics: paw
   + actual - expected
-  
+
   + [
   +   'paw'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\medium-wax-style-geometry.test.cjs:61:10)
       at async Test.run (node:internal/test_runner/test:1409:7)
       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {

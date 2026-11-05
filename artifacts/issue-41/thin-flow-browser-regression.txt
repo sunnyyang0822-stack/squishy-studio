@@ -52,9 +52,9 @@
 test at tests\detail.test.cjs:31:1
 ✖ 重新开始仅在黏土薄蜡制作步骤显示，圆球保留既有体验入口，保持配方与步骤 (7917.9602ms)
   AssertionError [ERR_ASSERTION]: style=orb&step=play
-  
+
   true !== false
-  
+
       at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\detail.test.cjs:56:12)
       at runNextTicks (node:internal/process/task_queues:65:5)
       at process.processImmediate (node:internal/timers:541:9)

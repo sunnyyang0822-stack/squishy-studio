@@ -138,7 +138,7 @@ function buildPanels(rest, index, count = 180, surfaceSites = false) {
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, supportCertificates = true, detachedClearanceCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
@@ -221,7 +221,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const material = new THREE.MeshStandardMaterial({ color, roughness: .64, metalness: 0, vertexColors: true });
   const mesh = new THREE.Mesh(shell, material); mesh.frustumCulled = false;
   const group = new THREE.Group(); group.name = 'Thin_Wax_Voronoi'; group.add(mesh);
-  const collisions = makeCollisionTree(geometry, { nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, restPositions: rest, featureTieConsensus, performanceOptimizations });
+  const collisions = makeCollisionTree(geometry, { motionTracking: config.maxInwardDeformation !== undefined, nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, restPositions: rest, featureTieConsensus, performanceOptimizations });
   const visibleCrackEdges = new Set();
   const debris = createWaxDebris({ thickness: config.thickness, reducedMotion, collectionEnabled });
   const worldMatrix = new THREE.Matrix4(), worldInverse = new THREE.Matrix4(), worldLinear = new THREE.Matrix3();
@@ -363,9 +363,16 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       const hints = detachedQueryHints ? (panel.detachedHints ||= []) : null;
       // Translate the entire world-space chip out of the *current* live core.
       // Vertex, outer face, triangle center and edge samples stay rigid together.
+      const certificates = detachedClearanceCertificates && config.maxInwardDeformation !== undefined ? (panel.detachedClearance ||= []) : null;
+      const coreMotion = certificates ? collisions.getMotionBound() : undefined;
       for (let attempt = 0; attempt < 10; attempt++) {
-        let queryIndex = 0;
+        let queryIndex = 0, site = 0;
         let minimum = .003; const pushNormal = vec(), sample = (point, ball) => {
+          const id = site++, prior = certificates?.[id];
+          if (prior && Number.isFinite(coreMotion)) {
+            const allowance = prior.distance - (coreMotion - prior.motion) - .003 - 1e-9;
+            if (allowance > 0 && point.distanceToSquared(prior.point) < allowance * allowance) return;
+          }
           const hint = hints ? (hints[queryIndex++] ||= { faceIndex: panel.vertices[0].sourceFace }) : undefined;
           if (ball && ball.distance > .003 && point.distanceToSquared(ball.point) < (ball.distance - .003 - 1e-10) ** 2) return;
           const motion = hint ? collisions.getMotionBound?.() : undefined, certificate = hint?.clearance;
@@ -375,6 +382,10 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
             if (allowance > 0 && dx * dx + dy * dy + dz * dz < allowance * allowance) return;
           }
           detachedNearestSamples++; const distance = hint ? collisions.signedDistance(point, normal, hint) : collisions.signedDistance(point, normal);
+          if (certificates && Number.isFinite(coreMotion)) {
+            const saved = certificates[id] ||= { point: vec() };
+            saved.point.copy(point); saved.distance = distance; saved.motion = coreMotion;
+          }
           if (hint && Number.isFinite(motion)) {
             const saved = hint.clearance ||= {}; saved.x = point.x; saved.y = point.y; saved.z = point.z; saved.distance = distance; saved.motion = motion;
           }
@@ -426,7 +437,19 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       if (panel.detached && debris.get(panel.id)) { renderDetached(panel, mapped); continue; }
       const sameCrackMask = panel.cachedCrackCount === visibleCrackEdges.size || panel.cachedCrackMask && panel.openVertexMask.every((value, i) => value === panel.cachedCrackMask[i]);
       if (performanceOptimizations && fullSurfaceSupport && !panel.detached && panel.attachedCacheBounds && !panel.sourceIds.some(id=>attributeChanged[id]) && sameCrackMask && panel.cachedCracked === panel.cracked && panel.cachedLoose === panel.loose && panel.cachedLift === panel.lift && panel.cachedFractureAt === panel.fractureAt && panel.cachedStrainCracked === panel.strainCracked && collisions.changedNearBox && !collisions.changedNearBox(panel.attachedCacheBounds)) { panel.cachedCrackCount = visibleCrackEdges.size; continue; }
-      for (let i = 0; i < panel.vertices.length; i++) { map(panel.vertices[i], source, mapped[i].p); map(panel.vertices[i], normals, mapped[i].n).normalize(); mapped[i].support.copy(mapped[i].p).addScaledVector(mapped[i].n, config.gap); }
+      for (let i = 0; i < panel.vertices.length; i++) {
+        const vertex = mapped[i], restVertex = panel.vertices[i];
+        map(restVertex, source, vertex.p); map(restVertex, normals, vertex.n).normalize();
+        // Thick brittle wax keeps its authored curvature over an inward dent.
+        // Outward core motion still has priority; thin wax keeps its original path.
+        if (config.maxInwardDeformation !== undefined) {
+          vertex.liveP ||= vec(); vertex.liveN ||= vec(); vertex.liveP.copy(vertex.p); vertex.liveN.copy(vertex.n);
+          const restNormal = map(restVertex, referenceNormals, normal).normalize();
+          const inward = Math.max(-config.maxInwardDeformation, vertex.p.clone().sub(restVertex.p).dot(restNormal));
+          vertex.p.copy(restVertex.p).addScaledVector(restNormal, inward); vertex.n.copy(restNormal);
+        }
+        vertex.support.copy(vertex.p).addScaledVector(vertex.n, config.gap);
+      }
       const center = vec(); for (const vertex of mapped) center.add(vertex.p); center.multiplyScalar(1 / mapped.length);
       const outward = vec(); for (const vertex of mapped) outward.add(vertex.n); outward.normalize();
       if (panel.detached) { renderDetached(panel, mapped); continue; }
@@ -491,8 +514,9 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         // A true tangent crack on a curved/nonconvex patch must retain the
         // source-normal clearance. This no-op for safe vertices keeps the
         // original orb path unchanged while protecting thin connections.
-        const clearance = vertex.rendered.clone().sub(vertex.p).dot(vertex.n);
-        if (clearance < config.gap - .000001) vertex.rendered.addScaledVector(vertex.n, config.gap - clearance + .000001);
+        const supportPoint = vertex.liveP || vertex.p, supportNormal = vertex.liveN || vertex.n;
+        const clearance = vertex.rendered.clone().sub(supportPoint).dot(supportNormal);
+        if (clearance < config.gap - .000001) vertex.rendered.addScaledVector(supportNormal, config.gap - clearance + .000001);
       }
       if (fullSurfaceSupport && (panel.cracked || mapped.some((vertex, i) => vertex.p.distanceToSquared(panel.vertices[i].p) > 1e-14))) {
         const beforeCorrection = panel.fullSupportBefore ||= mapped.map(() => vec());
@@ -683,7 +707,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
 
     const changed = dirty; if (changed) sync(); return { changed, needsFrame: active || living };
   }
-  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.attachedCacheBounds = null; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
+  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.attachedCacheBounds = null; p.detachedClearance = null; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
   function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead && !debris.get(p.id)?.settled).length, settled: debris.state().settled, expired: panels.filter(p => p.dead).length, collectionEnabled: debris.isCollectionEnabled(), debris: debris.state(), firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: 0, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: config.maxLocalFragments, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, minSigned = Infinity, maxThicknessError = 0, attachedSamples = 0, attachedSurfaceSamples = 0, attachedViolations = 0, detachedSamples = 0, detachedInteriorSamples = 0, detachedMin = Infinity, detachedViolations = 0, wallSamples = 0;

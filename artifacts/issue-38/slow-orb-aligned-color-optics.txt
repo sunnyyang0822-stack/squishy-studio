@@ -1,0 +1,10 @@
+✔ 三质感共用圆球真实GPU比例；慢回弹十色在昼夜统一小幅加深，黏土与棉花糖保持原外观 (17789.8115ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18443.7538
+EXIT_CODE=0

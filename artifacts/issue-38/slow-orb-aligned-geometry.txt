@@ -1,0 +1,53 @@
+✔ local slow-rebound scope is orb making wax/thin only; all other shapes and legacy play stay excluded (0.6909ms)
+✔ slow orb making navigation preserves damage identity; final play restores core with hidden shell preserved (3.1105ms)
+✔ local slow-rebound orb + thin wax: exact bare-core trajectory, live recovery support and permanent holes (normal) (4676.2008ms)
+ℹ {"reducedMotion":false,"comparedCoreFrames":1048,"records":[{"label":"deep press","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003843323182307845,"detachedMinSigned":3.1909324216683443,"attachedSamples":54686,"detachedSamples":518,"wallSamples":12444,"thicknessError":2.1976400113588035e-7},{"label":"natural recovery 1","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0038495959995793008,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 30","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003921236400741325,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 120","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003986965522797987,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 400","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 800","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"fully rebounded with permanent holes","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"fast sweep cancelled","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003988839020620459,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"repeated rim press","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.00388856745086347,"detachedMinSigned":0.10296513971001772,"attachedSamples":51938,"detachedSamples":2748,"wallSamples":12346,"thicknessError":2.3023791881522648e-7}]}
+✔ local slow-rebound orb + thin wax: exact bare-core trajectory, live recovery support and permanent holes (reduced) (2427.2076ms)
+ℹ {"reducedMotion":true,"comparedCoreFrames":371,"records":[{"label":"deep press","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003843323182307845,"detachedMinSigned":3.300464782858875,"attachedSamples":54686,"detachedSamples":518,"wallSamples":12444,"thicknessError":4.2126670288245016e-7},{"label":"natural recovery 1","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003879923933882233,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 30","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.00399405075616342,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"natural recovery 120","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"fully rebounded with permanent holes","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.0039944112994093305,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"fast sweep cancelled","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003988934763894437,"detachedMinSigned":null,"attachedSamples":54686,"detachedSamples":0,"wallSamples":12346,"thicknessError":1.0527582675577685e-7},{"label":"repeated rim press","thickness":0.014,"gap":0.004,"minNormalGap":0.00399994316375401,"minActualSigned":0.003988589427339965,"detachedMinSigned":0.13175236174789962,"attachedSamples":51128,"detachedSamples":3558,"wallSamples":12346,"thicknessError":2.2310436662009714e-7}]}
+✔ 慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与黏土可量测区分 (91.3094ms)
+ℹ {"firstFrame":0.0005195340062108065,"at100ms":0.01870221110012268,"at300ms":0.10772458813678205,"at3s":0.4588270465979823,"slowAfter2s":0.09263556769681042,"clayAfter2s":0.3133114409563414}
+✔ 厚实哑光外观独立于手感：仅full-matte增厚和加深，默认外观完全保留 (1.2257ms)
+✔ 反馈修订不改变用户确认的回弹曲线、减少动态恢复或最终收敛 (60.1339ms)
+✔ 按压有平滑起步，120ms后匀速深入，没有先猛陷再缓慢逼近的尾段 (67.8933ms)
+ℹ {"timesMs":[120,170,220],"values":[0.02693117683230104,0.04937379439387045,0.07181641195696759],"increments":[0.022442617561569407,0.022442617563097136]}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=false (96.6615ms)
+ℹ {"reduced":false,"stoppedAt":13.433333333333334,"maxFinalStep":0.000009238719940185547,"finalError":0}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=true (45.3923ms)
+ℹ {"reduced":true,"stoppedAt":2.15,"maxFinalStep":0.000009894371032714844,"finalError":0}
+✔ 驻留起点→滑动→驻留终点：中段浅、松手不造坑，整条路径恢复 (90.6748ms)
+ℹ {"angles":[-1,0,1],"depths":[0.09517979892276945,0.046099329173979804,0.4567108674928257]}
+✔ 长按后移到新位置，只接收当前帧接触量，不继承旧压深 (107.6451ms)
+✔ 连续滑动0.12s无驻留：无均匀深沟、路径连通且完全恢复 (63.8841ms)
+✔ 连续滑动0.8s无驻留：无均匀深沟、路径连通且完全恢复 (77.1684ms)
+✔ 连续滑动4s无驻留：无均匀深沟、路径连通且完全恢复 (85.1449ms)
+✔ 折返、交叉、重复揉压有界；旧痕和新痕最终共同消失 (193.8629ms)
+✔ 深按、长按及多轮多方向按压无残差、不外翻、不越界 (816.5178ms)
+✔ 稀疏跨越、同帧重复move不加深；不同刷新与事件密度处于有限误差内 (330.1232ms)
+ℹ {"configurations":[{"dt":0.03333333333333333,"hz":30},{"dt":0.016666666666666666,"hz":60},{"dt":0.008333333333333333,"hz":120},{"dt":0.016666666666666666,"hz":10}],"maxCoordinateErrors":[0.0003871321678161621,0,0.00020897388458251953,0.0029563307762145996]}
+✔ 显式换色恢复独占时钟；快速重启、取消与输入中断连续接管 (82.3767ms)
+✔ 取消缓慢恢复；reset清空计时和旧路径；减少动态切换、实例和资产隔离 (156.1252ms)
+✔ sculpted models retain identical dimensions across all feels while the original orb keeps its approved scale (29.4035ms)
+✔ cloud×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (559.0345ms)
+✔ paw×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (11121.8631ms)
+✔ cylinder×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (743.1142ms)
+✔ donut×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (1153.9294ms)
+✔ pyramid×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (486.4431ms)
+✔ flower×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (990.0664ms)
+✔ star×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (801.7745ms)
+✔ cloud slow-rebound presses follow the input ray without centerward pinching (592.9736ms)
+✔ paw slow-rebound presses follow the input ray without centerward pinching (1366.804ms)
+✔ cylinder slow-rebound presses follow the input ray without centerward pinching (599.3706ms)
+✔ donut slow-rebound presses follow the input ray without centerward pinching (913.2419ms)
+✔ pyramid slow-rebound presses follow the input ray without centerward pinching (347.7317ms)
+✔ flower slow-rebound presses follow the input ray without centerward pinching (673.7081ms)
+✔ star slow-rebound presses follow the input ray without centerward pinching (529.5269ms)
+✔ orb slow-rebound presses follow the input ray without centerward pinching (236.2295ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 30908.5362
+EXIT_CODE=0

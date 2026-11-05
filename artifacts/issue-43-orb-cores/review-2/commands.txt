@@ -1,0 +1,19 @@
+Worktree: D:/squishy-studio/.worktrees/issue-43-thick-orb-cores
+Baseline: origin/main a9315d9a88174afa5163ed732791ce15e0219022
+Review baseline: 88c11f896dd34c51e683cdaac3da902fed95d1b2
+npm run build:orb
+exit 0
+node --test tests/thick-wax-shape.test.cjs tests/thick-wax.test.cjs tests/thick-wax-orb-cores.test.cjs tests/wax-collision-query.test.cjs tests/wax-collision-cache.test.cjs tests/wax-cache-surface.test.cjs tests/thin-wax.test.cjs tests/orb-slow-rebound.test.cjs tests/orb-marshmallow.test.cjs tests/orb-deformation.test.cjs tests/wax-presets.test.cjs tests/thick-wax-flow.test.cjs
+exit 0; 96 passed; raw tests.txt
+TEMP/TMP set to worktree .tmp/browser
+node --test tests/thick-wax-orb-cores-browser.test.cjs
+exit 0; 3 passed; raw browser.txt
+node scripts/measure-thick-orb-review.cjs
+Separate exclusive run after geometry/browser tests completed; raw performance.json and screenshots.
+Baseline bundle served by Playwright route from git show 88c11f8:assets/orb-preview.js; current bundle served from local port 4364. New browser page for every case. Real 4s hold +2s recovery. No speedup or clock override. Three paired repetitions. Desktop Chromium only, no physical phone or Safari.
+
+performance exit 0
+node scripts/benchmark-orb-normals.cjs
+exit 0; five alternating batches of 80 updates; raw normals-benchmark.json
+
+Final selected 96 tests: exit 0, 110004.1184ms. Final browser 3 tests: exit 0, 48985.2443ms.

@@ -1,0 +1,22 @@
+Environment: Windows Edge headless; desktop and phone emulation, not physical mobile hardware.
+Product tree: a98a836 with test-only follow-up; source preset/core/wax unchanged.
+Independent local servers used POLISH_TEST_PORT=4260, POLISH_OTHER_CORES_PORT=4262, POLISH_RIM_PORT=4264, POLISH_PROGRESSION_PORT=4266, POLISH_STYLES_PORT=4267, DETAIL_TEST_PORT=4268 where applicable.
+All commands below exited 0. Browser checks: 56 passed, 0 failed.
+node --test --test-concurrency=1 tests/polish-browser.test.cjs
+  2 passed; polish-browser.txt
+node --test --test-concurrency=1 tests/polish-progression-browser.test.cjs tests/polish-other-cores-browser.test.cjs
+  7 passed; progression-and-cores-final.txt
+node --test --test-concurrency=1 tests/polish-same-color-browser.test.cjs
+  6 passed; polish-rim-final.txt
+node --test --test-concurrency=1 tests/polish-styles-browser.test.cjs
+  24 passed; polish-styles-browser-final.txt
+node --test --test-concurrency=1 tests/thick-wax-browser.test.cjs
+  1 passed; thick-wax-browser-final.txt
+node --test --test-concurrency=1 tests/detail.test.cjs
+  11 passed; detail-final.txt
+node --test --test-concurrency=1 tests/orb-browser.test.cjs
+  5 passed; orb-browser-final.txt
+CPU checks: 140 passed, 0 failed; exact command and raw output in cpu-validation.txt.
+Merged-main extra polish/thick-wax/detail state checks: 44 passed.
+Historical interrupted/failed attempts are not counted as passes here.
+GitHub final-head check result belongs to PR #55; no claim of success before it completes.

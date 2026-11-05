@@ -1,0 +1,66 @@
+[
+  {
+    "variant": "before",
+    "theme": "day",
+    "state": "shallow",
+    "maximum": 0.15282227964498,
+    "darkeningP90": 8.00520000000003,
+    "darkeningMean": 1.7872724583332953
+  },
+  {
+    "variant": "before",
+    "theme": "day",
+    "state": "deep",
+    "maximum": 0.4585666552928222,
+    "darkeningP90": 60.772999999999996,
+    "darkeningMean": 22.335073861110175
+  },
+  {
+    "variant": "before",
+    "theme": "night",
+    "state": "shallow",
+    "maximum": 0.15282227964498,
+    "darkeningP90": 18.295199999999994,
+    "darkeningMean": 3.7380629722225502
+  },
+  {
+    "variant": "before",
+    "theme": "night",
+    "state": "deep",
+    "maximum": 0.4585666552928222,
+    "darkeningP90": 84.09299999999999,
+    "darkeningMean": 32.23060347222282
+  },
+  {
+    "variant": "after",
+    "theme": "day",
+    "state": "shallow",
+    "maximum": 0.15282227964498,
+    "darkeningP90": 16.005199999999974,
+    "darkeningMean": 4.680624291666602
+  },
+  {
+    "variant": "after",
+    "theme": "day",
+    "state": "deep",
+    "maximum": 0.4585666552928222,
+    "darkeningP90": 77.4778,
+    "darkeningMean": 34.26169645833448
+  },
+  {
+    "variant": "after",
+    "theme": "night",
+    "state": "shallow",
+    "maximum": 0.15282227964498,
+    "darkeningP90": 27.585200000000043,
+    "darkeningMean": 8.180071680556129
+  },
+  {
+    "variant": "after",
+    "theme": "night",
+    "state": "deep",
+    "maximum": 0.4585666552928222,
+    "darkeningP90": 91.23340000000002,
+    "darkeningMean": 38.66995697222168
+  }
+]

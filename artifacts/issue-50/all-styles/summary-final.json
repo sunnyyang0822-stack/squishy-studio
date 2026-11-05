@@ -1,0 +1,123 @@
+{
+  "bundleSHA256": "aae95d5440bdc33caa683cf4df94b8d9184c7153989b487c2e4da1c8a97296d1",
+  "verification": "Final merged-main bundle, globalWidthGain 1.5: one uninterrupted run passed all 18 desktop combinations and 6 mobile night reduced-motion cases (24/24). Log: ../submission/polish-styles-browser-final.txt. Historical interrupted-run logs are retained separately.",
+  "desktopCases": [
+    {
+      "style": "cloud",
+      "core": "clay",
+      "evidence": "cloud-clay.json"
+    },
+    {
+      "style": "cloud",
+      "core": "marshmallow",
+      "evidence": "cloud-marshmallow.json"
+    },
+    {
+      "style": "cloud",
+      "core": "butter",
+      "evidence": "cloud-butter.json"
+    },
+    {
+      "style": "cylinder",
+      "core": "clay",
+      "evidence": "cylinder-clay.json"
+    },
+    {
+      "style": "cylinder",
+      "core": "marshmallow",
+      "evidence": "cylinder-marshmallow.json"
+    },
+    {
+      "style": "cylinder",
+      "core": "butter",
+      "evidence": "cylinder-butter.json"
+    },
+    {
+      "style": "donut",
+      "core": "clay",
+      "evidence": "donut-clay.json"
+    },
+    {
+      "style": "donut",
+      "core": "marshmallow",
+      "evidence": "donut-marshmallow.json"
+    },
+    {
+      "style": "donut",
+      "core": "butter",
+      "evidence": "donut-butter.json"
+    },
+    {
+      "style": "pyramid",
+      "core": "clay",
+      "evidence": "pyramid-clay.json"
+    },
+    {
+      "style": "pyramid",
+      "core": "marshmallow",
+      "evidence": "pyramid-marshmallow.json"
+    },
+    {
+      "style": "pyramid",
+      "core": "butter",
+      "evidence": "pyramid-butter.json"
+    },
+    {
+      "style": "flower",
+      "core": "clay",
+      "evidence": "flower-clay.json"
+    },
+    {
+      "style": "flower",
+      "core": "marshmallow",
+      "evidence": "flower-marshmallow.json"
+    },
+    {
+      "style": "flower",
+      "core": "butter",
+      "evidence": "flower-butter.json"
+    },
+    {
+      "style": "star",
+      "core": "clay",
+      "evidence": "star-clay.json"
+    },
+    {
+      "style": "star",
+      "core": "marshmallow",
+      "evidence": "star-marshmallow.json"
+    },
+    {
+      "style": "star",
+      "core": "butter",
+      "evidence": "star-butter.json"
+    }
+  ],
+  "mobileCases": [
+    {
+      "style": "cloud",
+      "evidence": "cloud-clay-mobile-night-reduced.json"
+    },
+    {
+      "style": "cylinder",
+      "evidence": "cylinder-marshmallow-mobile-night-reduced.json"
+    },
+    {
+      "style": "donut",
+      "evidence": "donut-butter-mobile-night-reduced.json"
+    },
+    {
+      "style": "pyramid",
+      "evidence": "pyramid-clay-mobile-night-reduced.json"
+    },
+    {
+      "style": "flower",
+      "evidence": "flower-marshmallow-mobile-night-reduced.json"
+    },
+    {
+      "style": "star",
+      "evidence": "star-butter-mobile-night-reduced.json"
+    }
+  ],
+  "phoneHardwareTested": false
+}

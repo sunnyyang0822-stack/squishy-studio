@@ -6,7 +6,7 @@ export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwe
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.
-export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, queryCache = true, featureNormals = false, restPositions, featureTieConsensus = false, performanceOptimizations = false } = {}) {
+export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, motionTracking = false, queryCache = true, featureNormals = false, restPositions, featureTieConsensus = false, performanceOptimizations = false } = {}) {
   let countQueries = false;
   const p = geometry.attributes.position, index = geometry.index.array;
   const a = new THREE.Vector3(), b = a.clone(), c = a.clone(), hit = a.clone();
@@ -147,9 +147,8 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       changedFaces.push(i/3);
       if (!changed) { changedBounds.union(node.box); node.oldBox ||= new THREE.Box3(); node.oldBox.copy(node.box); changedLeafBounds.push(node.oldBox); }
       changed = true;
-      if (gridHeads) {
-        markChangedTriangle(t);
-      }
+      if (gridHeads || motionTracking) frameMotionSquared = Math.max(frameMotionSquared, movementSquared(t.a, index[i]), movementSquared(t.b, index[i + 1]), movementSquared(t.c, index[i + 2]));
+      if (gridHeads) markChangedTriangle(t);
       t.a.fromBufferAttribute(p, index[i]); t.b.fromBufferAttribute(p, index[i + 1]); t.c.fromBufferAttribute(p, index[i + 2]); t.getNormal(face.normal);
       if (gridHeads) markChangedTriangle(t);
       face.ab.subVectors(t.b, t.a); face.ac.subVectors(t.c, t.a);
@@ -457,8 +456,9 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (featureTieRegion) rememberQuery(siteHint, point, ...featureTieRegion, lastNearestFace, distance, distanceSquared);
     return distance;
   }
-  return { refit, sweep, signedDistance, clearanceDistance: performanceOptimizations ? (point, normal, hint, threshold) => signedDistance(point, normal, hint, threshold) : undefined, changedNearBox: performanceOptimizations ? box => changedBounds.intersectsBox(box) && changedLeafBounds.some(changed => changed.intersectsBox(box)) : undefined, getMotionBound: () => gridHeads ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
+  return { refit, sweep, signedDistance, clearanceDistance: performanceOptimizations ? (point, normal, hint, threshold) => signedDistance(point, normal, hint, threshold) : undefined, changedNearBox: performanceOptimizations ? box => changedBounds.intersectsBox(box) && changedLeafBounds.some(changed => changed.intersectsBox(box)) : undefined, getMotionBound: () => gridHeads || motionTracking ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
 export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
-export function createThinWax(options = {}, parameters = options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters) { return createVoronoiWax(options, parameters, createWaxCollisionTree); }
+export function createWaxShell(options, parameters) { return createVoronoiWax(options, parameters, createWaxCollisionTree); }
+export function createThinWax(options = {}, parameters = options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters) { return createWaxShell(options, parameters); }

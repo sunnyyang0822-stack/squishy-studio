@@ -1,0 +1,49 @@
+{
+  "darkerPixels": 2121,
+  "opaque": 236590,
+  "alphaMismatch": 0,
+  "states": [
+    {
+      "id": "polish-shell",
+      "feelId": "slow-rebound",
+      "globalWidthGain": 1.5,
+      "crackWidthGain": 1,
+      "recoveredWidthGain": 1.5,
+      "maxResidualOpening": 0.07000000029802322,
+      "rimEnabled": true,
+      "active": false,
+      "disposed": false,
+      "cycle": 1,
+      "detached": 0,
+      "falling": 0,
+      "fragmentCount": 0,
+      "maxDamage": 0.6386176943778992,
+      "maxOpening": 0,
+      "damagedVertices": 137,
+      "maxLocalContacts": 1,
+      "vertexBudget": 2562,
+      "roughness": 0.43
+    },
+    {
+      "id": "polish-shell",
+      "feelId": "slow-rebound",
+      "globalWidthGain": 1.5,
+      "crackWidthGain": 1,
+      "recoveredWidthGain": 1.5,
+      "maxResidualOpening": 0.07000000029802322,
+      "rimEnabled": true,
+      "active": false,
+      "disposed": false,
+      "cycle": 1,
+      "detached": 0,
+      "falling": 0,
+      "fragmentCount": 0,
+      "maxDamage": 0.6386176943778992,
+      "maxOpening": 0,
+      "damagedVertices": 137,
+      "maxLocalContacts": 1,
+      "vertexBudget": 2562,
+      "roughness": 0.43
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# Preserve upstream trailing blank lines; pinned-source hashes validate vendored content.
+.agents/skills/** whitespace=-blank-at-eof
+.agents/skill-sources/emilkowalski/performance-cheatsheet.md whitespace=-blank-at-eof
+# These two upstream examples intentionally retain trailing spaces; hashes remain enforced.
+.agents/skills/impeccable/reference/harden.md whitespace=-blank-at-eof,-blank-at-eol
+.agents/skills/impeccable/reference/optimize.md whitespace=-blank-at-eof,-blank-at-eol
+# The Windows launcher requires CRLF in the working tree; Git stores normalized text.
+.agents/skills/impeccable/scripts/impeccable.cmd text eol=crlf
+.agents/skills/impeccable/scripts/impeccable text eol=lf
