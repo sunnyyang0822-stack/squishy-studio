@@ -10,6 +10,7 @@ import { bindOrbInput } from './orb-input.js';
 import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
 import { orbColors } from '../detail/orb-colors.mjs';
+import { getPolishPreset } from './polish-shell.mjs';
 import { getWaxPreset } from './wax-presets.mjs';
 import { createWaxCollectionTray } from './wax-collection-tray.mjs';
 import { waxFallthroughPolicy } from './thin-wax-debris.mjs';
@@ -60,6 +61,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     old.renderer.domElement.remove();
     old.surface.remove();
     delete mount.dataset.renderCount;
+    delete mount.polishDiagnostics;
     if (mount.thinWaxDiagnostics === old.diagnostics) delete mount.thinWaxDiagnostics;
   }
 
@@ -69,8 +71,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       releaseObject(root); throw new Error('Invalid squishy surface');
     }
     const geometry = mesh.geometry;
+    let polish;
     let wax, recipeKey, activeConfig, shellVisible = false, collectionEnabled = true;
-    function disposeWax() { wax?.dispose(); wax = undefined; }
+    function disposeWax() { wax?.dispose(); wax = undefined; polish?.dispose(); polish = undefined; }
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
     const orbPressGeometry = feelId === 'slow-rebound' && !isSurface
       ? createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array) : null;
@@ -143,7 +146,11 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = restingFloor;
     scene.add(floor);
-    const debrisTray = createWaxCollectionTray(); scene.add(debrisTray);
+    // Allocate the existing wax tray only when a wax collection recipe uses it.
+    // Polish owns no collection geometry or fragment resources.
+    let debrisTray = new THREE.Group();
+    debrisTray.material = { color: new THREE.Color() };
+    let trayCreated = false;
 
     const camera = new THREE.OrthographicCamera(-2, 2, 1.6, -1.6, .1, 30);
     camera.position.set(...style.camera);
@@ -324,6 +331,10 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         }
         geometry.computeBoundingSphere();
       }
+      if (polish && shellVisible) {
+        const polishStep = polish.step(dt);
+        needsFrame ||= polishStep.needsFrame;
+      }
       if (wax && shellVisible) {
         pivot.updateMatrixWorld(true);
         wax.setWorldMatrix(mesh.matrixWorld);
@@ -344,8 +355,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
     }
     current.input = bindOrbInput({ surface, hitTest: (x, y, actual) => hitTest(x, y, actual || shellVisible), deformation, invalidate, onBegin: interruptRestore,
-      onContact(point, phase) { if (shellVisible) wax?.[phase === 'begin' ? 'begin' : 'move'](point); },
-      onEnd() { wax?.end(); },
+      onContact(point, phase) { if (shellVisible) { wax?.[phase === 'begin' ? 'begin' : 'move'](point); polish?.[phase === 'begin' ? 'begin' : 'move'](point); } },
+      onEnd() { wax?.end(); polish?.end(); },
       endOnMiss: () => shellVisible,
       keyboardPoint: isSurface ? box => {
         // A ring has no surface at its projected center. Keyboard input must
@@ -406,17 +417,26 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       coating.select(new THREE.Color(next.hex).toArray(), heights, { restart: restore });
       renderer.domElement.setAttribute('aria-label', `${next.name}${isSurface ? style.name : '圆球'}，${interactionLabel}`);
     };
-    current.restore = ({ preserveShell = false } = {}) => { if (!preserveShell) wax?.reset(); current.selectColor(selectedColor.id, { restore: true }); };
+    current.restore = ({ preserveShell = false } = {}) => { if (!preserveShell) { wax?.reset(); polish?.reset(); } current.selectColor(selectedColor.id, { restore: true }); };
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
       const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
+      const polishRecipe = ['clay', 'marshmallow', 'slow-rebound'].includes(feelId) && style.id !== 'paw' && config.shellMaterial === 'polish';
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
-      if (wax || thinRecipe) current.input.cancel({ preserveShape: changed });
-      if (changed && (wax || thinRecipe)) { disposeWax(); current.selectColor(config.coreColor || config.color, { restore: true }); }
+      if (wax || polish || thinRecipe || polishRecipe) current.input.cancel({ preserveShape: changed });
+      if (changed && (wax || polish || thinRecipe || polishRecipe)) { disposeWax(); current.selectColor(config.coreColor || config.color, { restore: true }); }
       recipeKey = config.recipeKey;
       activeConfig = { ...config };
-      shellVisible = thinRecipe && config.mode !== 'core' && config.mode !== 'hidden';
-      collectionEnabled = config.waxCollection !== false;
+      shellVisible = (thinRecipe || polishRecipe) && config.mode !== 'core' && config.mode !== 'hidden';
+      collectionEnabled = !polishRecipe && config.waxCollection !== false;
+      if (thinRecipe && collectionEnabled && !trayCreated) { debrisTray = createWaxCollectionTray(); scene.add(debrisTray); trayCreated = true; }
+      if (polishRecipe && !polish) {
+        const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
+        const coreColor = orbColors.find(color => color.id === config.coreColor) || orbColors[0];
+        polish = getPolishPreset('polish-shell').create({ geometry, restPositions, restNormals, color: shellColor.hex, coreColor: coreColor.hex, feelId, ...(isSurface ? { surfaceGeometry: createSurfaceGeometry(restPositions, restNormals, geometry.index.array, { ...style.geometryOptions, continuousFootprint: feelId === 'slow-rebound' }) } : {}) });
+        mesh.add(polish.group);
+      }
+      if (polish) { polish.group.visible = shellVisible && polishRecipe; polish.sync(); }
       if (thinRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
         wax = getWaxPreset('thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, fullSurfaceSupport: feelId === 'marshmallow' && isSurface });
@@ -430,14 +450,16 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       debrisTray.material.color.set(daylight ? 0xf2e6de : 0x514754);
       Object.assign(key.shadow.camera, shellVisible ? { left: -2.4, right: 2.4, top: 2.4, bottom: -2.4 } : { left: -1.65, right: 1.65, top: 1.65, bottom: -1.65 }); key.shadow.camera.updateProjectionMatrix();
       if (current.width && current.height) resize(current.width, current.height);
-      const shadowsChanged = renderer.shadowMap.enabled !== shellVisible;
-      renderer.shadowMap.enabled = shellVisible;
-      key.castShadow = shellVisible;
-      mesh.receiveShadow = shellVisible;
+      const shellShadows = shellVisible && thinRecipe;
+      const shadowsChanged = renderer.shadowMap.enabled !== shellShadows;
+      renderer.shadowMap.enabled = shellShadows;
+      key.castShadow = shellShadows;
+      mesh.receiveShadow = shellShadows;
       if (wax) wax.group.traverse(object => { if (object.isMesh) { object.castShadow = true; object.receiveShadow = true; } });
       if (shadowsChanged) mesh.material.needsUpdate = true;
       // Navigating a fixed thin-wax recipe never recolors or repairs its core.
-      current.selectColor(thinRecipe ? config.coreColor : config.color);
+      current.selectColor(thinRecipe || polishRecipe ? config.coreColor : config.color);
+      mount.polishDiagnostics = () => ({ enabled: Boolean(polish && shellVisible), supported: polishRecipe, feelId, state: polish?.getState(), metrics: polish?.getMetrics(), surface: polish?.getSurfaceSnapshot(), corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions), coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor, resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries } });
       current.diagnostics = ({ exhaustive = false, surface = false, measure = true, counters = false } = {}) => {
         if (counters) return wax?.getQueryCounters(true);
         return ({
