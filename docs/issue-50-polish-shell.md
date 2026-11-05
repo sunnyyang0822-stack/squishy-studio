@@ -42,6 +42,8 @@ GPU取样仅在实际提交新场景绘制的rAF回调后读取，避免默认�
 
 从明确origin/main dfdd192独立分支 `codex/issue-50-polish-shell` 开发，首个提交1870f5d。提交前合并origin/main a9315d9（主线厚蜡），合并提交d194b05，保留其全部预设/测试与行为；共享构建包重新生成。原工作目录与协作者文件未动，仓库保持Public。
 
+交付期间主线另合入8d26c4c（厚蜡圆球另外两内芯与法线优化）。继续合并该基线，保留其厚蜡范围、最终试捏规则与 `updateIndexedNormals`；冲突仅协调两种外壳各自判定和import，重新生成构建包。额外流程/三内芯回归91/91通过，日志 `submission/latest-main-integration.txt`。上述56项及最终宽度全样式证据捕获于76b711e；最新合并后的共享接口浏览器补验见 `submission/latest-main-browser.txt`，不把先前证据误标为重新拍摄。
+
 回滚本PR引入的源码/流程/文档提交并执行 `npm run build:orb`，或合并后使用普通revert；不要回滚主线厚蜡或改写共享历史。无数据迁移。GitHub检查及合并后远端main包含交付提交的结果由最终PR记录。
 
 交付PR：[保存已确认指甲油脆皮预设 #55](https://github.com/sunnyyang0822-stack/squishy-studio/pull/55)。相关源码提交1870f5d，同步主线d194b05，合同与证据b259996。

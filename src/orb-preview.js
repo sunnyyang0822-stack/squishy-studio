@@ -11,6 +11,7 @@ import { bindOrbRotation } from './orb-rotation.js';
 import { createOrbColor } from './orb-color.mjs';
 import { orbColors } from '../detail/orb-colors.mjs';
 import { getPolishPreset } from './polish-shell.mjs';
+import { updateIndexedNormals } from './orb-normals.mjs';
 import { getWaxPreset } from './wax-presets.mjs';
 import { createWaxCollectionTray } from './wax-collection-tray.mjs';
 import { waxFallthroughPolicy } from './thin-wax-debris.mjs';
@@ -316,7 +317,8 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
           geometry.attributes.normal.array.set(restNormals);
           geometry.attributes.normal.needsUpdate = true;
         } else {
-          geometry.computeVertexNormals();
+          if (feelId === 'slow-rebound' && !isSurface) updateIndexedNormals(geometry);
+          else geometry.computeVertexNormals();
           if (computedRestNormals) {
             // Blender and Three use different smoothing weights. Transport
             // only the deformation's normal delta, preserving the authored
@@ -421,7 +423,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
       const thinRecipe = supportedWaxCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
-      const thickRecipe = feelId === 'clay' && style.id === 'orb' && config.shellMaterial === 'wax' && config.waxThickness === 'thick';
+      const thickRecipe = supportedWaxCore && style.id === 'orb' && config.shellMaterial === 'wax' && config.waxThickness === 'thick';
       const waxRecipe = thinRecipe || thickRecipe;
       const polishRecipe = ['clay', 'marshmallow', 'slow-rebound'].includes(feelId) && style.id !== 'paw' && config.shellMaterial === 'polish';
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
