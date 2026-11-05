@@ -1,5 +1,5 @@
 {
-  "bundleSHA256": "fdc749438f7035ec4f6002744e76bf1347b2fccb1035ad09492eff4e5a256394",
+  "bundleSHA256": "a6150e370e690283999a066b6bbe15b9267773194147890f69d51eb0500001bf",
   "baseline": "a9315d9 lighting on the SAME new round sphere geometry",
   "measurements": [
     {
@@ -128,11 +128,11 @@
       "maximum": 0.4585666552928222,
       "changed": 232,
       "center": [
-        0.019442423799242468,
-        0.3033494416743311,
-        0.9155946337268344
+        0.01944242406611093,
+        0.30334944235670463,
+        0.9155946336232312
       ],
-      "uploads": 138,
+      "uploads": 139,
       "vertices": 2562,
       "finite": true,
       "darkeningP90": 91.23340000000002,
