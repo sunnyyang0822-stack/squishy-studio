@@ -1,0 +1,54 @@
+✔ cloud clay polish: structural GLB contact, real GPU exposure, drag, release, side view (12592.516ms)
+✔ cloud marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (10157.2253ms)
+✔ cloud butter polish: structural GLB contact, real GPU exposure, drag, release, side view (21792.4045ms)
+✔ cylinder clay polish: structural GLB contact, real GPU exposure, drag, release, side view (9019.7739ms)
+✔ cylinder marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (8845.4765ms)
+✔ cylinder butter polish: structural GLB contact, real GPU exposure, drag, release, side view (20746.8763ms)
+✔ donut clay polish: structural GLB contact, real GPU exposure, drag, release, side view (9531.7105ms)
+✔ donut marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (9947.5704ms)
+✔ donut butter polish: structural GLB contact, real GPU exposure, drag, release, side view (21103.0902ms)
+✔ pyramid clay polish: structural GLB contact, real GPU exposure, drag, release, side view (9346.4757ms)
+✔ pyramid marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (9916.84ms)
+✔ pyramid butter polish: structural GLB contact, real GPU exposure, drag, release, side view (22155.1319ms)
+✔ flower clay polish: structural GLB contact, real GPU exposure, drag, release, side view (12485.8615ms)
+✔ flower marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (11230.1032ms)
+✔ flower butter polish: structural GLB contact, real GPU exposure, drag, release, side view (22375.0122ms)
+✔ star clay polish: structural GLB contact, real GPU exposure, drag, release, side view (9628.5ms)
+✖ star marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (6983.0536ms)
+✔ star butter polish: structural GLB contact, real GPU exposure, drag, release, side view (22022.7479ms)
+✔ cloud clay mobile emulation: night reduced motion structural touch (3963.9786ms)
+✔ cylinder marshmallow mobile emulation: night reduced motion structural touch (4082.6158ms)
+✔ donut butter mobile emulation: night reduced motion structural touch (5065.8177ms)
+✔ pyramid clay mobile emulation: night reduced motion structural touch (3425.5092ms)
+✔ flower marshmallow mobile emulation: night reduced motion structural touch (4025.0078ms)
+✔ star butter mobile emulation: night reduced motion structural touch (4567.9322ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 23
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 276585.1284
+
+✖ failing tests:
+
+test at tests\polish-styles-browser.test.cjs:88:55
+✖ star marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (6983.0536ms)
+  AssertionError [ERR_ASSERTION]: drag: {"gap":0.0035,"minGap":-0.0005723743716932637,"maxGap":0.003500012892874689,"samples":97188,"violations":2,"sourceFacePlaneSamples":97188,"detached":0,"limitation":"Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."}
+
+  2 !== 0
+
+      at filmOK (D:\squishy-studio\.worktrees\issue-50-polish\tests\polish-styles-browser.test.cjs:84:125)
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-50-polish\tests\polish-styles-browser.test.cjs:97:204)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processImmediate (node:internal/timers:541:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

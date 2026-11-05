@@ -1,0 +1,27 @@
+✔ independent immutable polish preset, opaque satin coating and fresh instance state (256.2522ms)
+✔ actual local depth grows cracks and openings, remote core and damage stay intact (254.7408ms)
+✔ one long hold and dense move events contribute one local contact, repeated cycles accumulate with a fixed budget (579.0451ms)
+✔ frame step and stationary move density do not materially change damage (370.7686ms)
+✔ sparse and dense moving samples share actual depth history; a sliding new region starts at one contact (88.1763ms)
+✔ actual shell face, edge and centroid samples remain outside deep clay and explicit restore (262.2276ms)
+✔ independent full-core ray queries check real deep shell edges and face centers (438.7955ms)
+✔ crack mask discards a real coating while independent core ray intersection stays visible (803.3728ms)
+✔ release retains history, reset clears it, cancel/hidden end cannot detach and idle stops (436.2356ms)
+✔ first contact keeps large cells; repeated pressure overlays finer layers without shrinking primary pieces (969.8459ms)
+✔ maximum layered damage preserves film coverage and crossing cracks without unbounded erosion (3465.6991ms)
+✔ crack rim is enabled only for identical core and film pigment, without changing apertures (502.1745ms)
+✔ marshmallow film cracks by 60ms at small actual pressure, without changing its core yield (3402.2292ms)
+✔ fine cracks develop from the primary network with a blended junction instead of an unrelated overlay (1314.4383ms)
+✔ slow-rebound coating remembers a small bounded area loss after the actual core fully recovers (2593.8992ms)
+✔ residual film contraction stays bounded even at maximum damage and extreme depth (948.6498ms)
+✔ only marshmallow film gains another 50% aperture width over the previous 1.5 preset, without changing branches or rim color rules (42.3621ms)
+✔ slow rebound recovered aperture is 50% wider while held aperture and other cores remain unchanged (44.7631ms)
+✔ global aperture multiplier adds exactly 50% for all layers and every core, including recovered slow rebound (44.4698ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17098.717

@@ -1,0 +1,190 @@
+{
+  "cases": 18,
+  "frames": 9378,
+  "samples": 11345376,
+  "minSigned": 0.00017777905930374947,
+  "maxNearestGap": 0.0035000625285015255,
+  "violations": 0,
+  "records": [
+    {
+      "style": "cloud",
+      "feel": "clay",
+      "frames": 521,
+      "samples": 684896,
+      "phases": 16,
+      "minSigned": 0.0028580097684960098,
+      "maxNearestGap": 0.0035000625285015255,
+      "violations": 0
+    },
+    {
+      "style": "cloud",
+      "feel": "marshmallow",
+      "frames": 521,
+      "samples": 684896,
+      "phases": 16,
+      "minSigned": 0.00019591961542673517,
+      "maxNearestGap": 0.0035000625285015255,
+      "violations": 0
+    },
+    {
+      "style": "cloud",
+      "feel": "slow-rebound",
+      "frames": 521,
+      "samples": 684896,
+      "phases": 16,
+      "minSigned": 0.003292397994283442,
+      "maxNearestGap": 0.0035000625285015255,
+      "violations": 0
+    },
+    {
+      "style": "cylinder",
+      "feel": "clay",
+      "frames": 521,
+      "samples": 616544,
+      "phases": 16,
+      "minSigned": 0.002832847295381853,
+      "maxNearestGap": 0.0035000544144417525,
+      "violations": 0
+    },
+    {
+      "style": "cylinder",
+      "feel": "marshmallow",
+      "frames": 521,
+      "samples": 616544,
+      "phases": 16,
+      "minSigned": 0.00019999006316983835,
+      "maxNearestGap": 0.003500058285104604,
+      "violations": 0
+    },
+    {
+      "style": "cylinder",
+      "feel": "slow-rebound",
+      "frames": 521,
+      "samples": 616544,
+      "phases": 16,
+      "minSigned": 0.0030885928875599065,
+      "maxNearestGap": 0.003500054500506488,
+      "violations": 0
+    },
+    {
+      "style": "donut",
+      "feel": "clay",
+      "frames": 521,
+      "samples": 589824,
+      "phases": 16,
+      "minSigned": 0.0030952344057277826,
+      "maxNearestGap": 0.0035000537384091467,
+      "violations": 0
+    },
+    {
+      "style": "donut",
+      "feel": "marshmallow",
+      "frames": 521,
+      "samples": 589824,
+      "phases": 16,
+      "minSigned": 0.00017777905930374947,
+      "maxNearestGap": 0.0035000537384091467,
+      "violations": 0
+    },
+    {
+      "style": "donut",
+      "feel": "slow-rebound",
+      "frames": 521,
+      "samples": 589824,
+      "phases": 16,
+      "minSigned": 0.003329588338313178,
+      "maxNearestGap": 0.0035000537384091467,
+      "violations": 0
+    },
+    {
+      "style": "pyramid",
+      "feel": "clay",
+      "frames": 521,
+      "samples": 393440,
+      "phases": 16,
+      "minSigned": 0.002452518313756189,
+      "maxNearestGap": 0.003500041589491267,
+      "violations": 0
+    },
+    {
+      "style": "pyramid",
+      "feel": "marshmallow",
+      "frames": 521,
+      "samples": 393440,
+      "phases": 16,
+      "minSigned": 0.0006895207006379124,
+      "maxNearestGap": 0.003500041589491267,
+      "violations": 0
+    },
+    {
+      "style": "pyramid",
+      "feel": "slow-rebound",
+      "frames": 521,
+      "samples": 393440,
+      "phases": 16,
+      "minSigned": 0.0031845930509079,
+      "maxNearestGap": 0.003500041589491267,
+      "violations": 0
+    },
+    {
+      "style": "flower",
+      "feel": "clay",
+      "frames": 521,
+      "samples": 830624,
+      "phases": 16,
+      "minSigned": 0.0028353858216963418,
+      "maxNearestGap": 0.0035000591533473884,
+      "violations": 0
+    },
+    {
+      "style": "flower",
+      "feel": "marshmallow",
+      "frames": 521,
+      "samples": 830624,
+      "phases": 16,
+      "minSigned": 0.000523644148771024,
+      "maxNearestGap": 0.0035000591533473884,
+      "violations": 0
+    },
+    {
+      "style": "flower",
+      "feel": "slow-rebound",
+      "frames": 521,
+      "samples": 830624,
+      "phases": 16,
+      "minSigned": 0.0031891522465905273,
+      "maxNearestGap": 0.0035000591533473884,
+      "violations": 0
+    },
+    {
+      "style": "star",
+      "feel": "clay",
+      "frames": 521,
+      "samples": 666464,
+      "phases": 16,
+      "minSigned": 0.002416144315416136,
+      "maxNearestGap": 0.0035000565071433075,
+      "violations": 0
+    },
+    {
+      "style": "star",
+      "feel": "marshmallow",
+      "frames": 521,
+      "samples": 666464,
+      "phases": 16,
+      "minSigned": 0.00019999958436334143,
+      "maxNearestGap": 0.0035000565071433075,
+      "violations": 0
+    },
+    {
+      "style": "star",
+      "feel": "slow-rebound",
+      "frames": 521,
+      "samples": 666464,
+      "phases": 16,
+      "minSigned": 0.0029845738531144904,
+      "maxNearestGap": 0.0035000565071433075,
+      "violations": 0
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+✔ thick clay orb final play preserves making damage, collects real fragments, returns and restarts (7011.2423ms)
+ℹ {"makingDetached":4,"playSettled":6,"returnedDetached":6,"resetDetached":0,"geometry":{"thickness":0.042,"gap":0.004,"tolerance":0.00001,"attachedMinGap":0.00399994316375401,"attachedMinSignedDistance":0.003959769356233921,"worstAttachedSample":{"panelId":4,"point":[0.03397527243942022,0.6346991658210754,0.7171472907066345],"distance":0.003959769356233921,"sampleKind":"inner-edge-midpoint","sourceFace":949,"renderTriangleId":2625,"panelTriangle":168,"edge":1,"cracked":true,"supportOnly":false,"complexSurface":false,"lift":0},"attachedMaxSignedDistance":0.0048912096009576175,"worstAttachedMaxSample":{"panelId":4,"point":[-0.2626263350248337,0.6483365297317505,0.6819598376750946],"distance":0.0048912096009576175,"sampleKind":"inner-edge-midpoint","sourceFace":942,"renderTriangleId":2607,"panelTriangle":159,"edge":1},"attachedOuterMaxSignedDistance":null,"attachedWallMaxSignedDistance":0.032862967702953744,"worstAttachedCorrection":null,"attachedCorrectionMax":0,"attachedCorrectionTotalMax":0,"attachedCorrectedSamples":0,"maxThicknessError":1.559370385942338e-7,"attachedSamples":4318,"attachedSurfaceSamples":29810,"attachedViolations":0,"detachedSweepSamples":194,"logicalSweepSamples":1391,"duplicateSweepSamples":404,"zeroLengthSweepSamples":793,"detachedMinSignedDistance":0.6832541261518996,"detachedSamples":982,"detachedInteriorSamples":6826,"detachedViolations":0,"wallSamples":5476,"drawCalls":1,"shellVertices":21552,"shellTriangles":21056,"patches":36,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":6,"minY":-1.348,"maxRadius":1.3122092822514249,"pileTop":-0.8339497703325376,"gridCells":884},"panelAreaCV":0.3517854776493507,"panelAreaRange":[0.09635884139563645,0.6117765081891978],"method":"Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"}}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8026.6942

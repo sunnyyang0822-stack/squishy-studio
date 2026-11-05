@@ -1,0 +1,11 @@
+✔ marshmallow polish opens at the actual first 60ms light pressure and branches blend during repeated contacts (20758.17ms)
+✔ slow rebound polish keeps a bounded residual exposed aperture after its core reaches exact rest (20528.8135ms)
+✔ same-color rim visual evidence preserves the same scene, camera and day lighting (1858.333ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45032.9048

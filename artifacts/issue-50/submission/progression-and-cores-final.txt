@@ -1,0 +1,15 @@
+✔ marshmallow polish actual GPU exposure and original core lifecycle, normal-speed desktop (18685.2081ms)
+✔ marshmallow polish mobile emulation night reduced motion real touch and cancellation (4641.5085ms)
+✔ butter polish actual GPU exposure and original core lifecycle, normal-speed desktop (28194.9628ms)
+✔ butter polish mobile emulation night reduced motion real touch and cancellation (5682.1394ms)
+✔ marshmallow polish opens on the first shallow rendered pressure frame after the 60ms target and branches blend during repeated contacts (11235.2652ms)
+✔ slow rebound polish keeps a bounded residual exposed aperture after its core reaches exact rest (17838.0117ms)
+✔ same-color rim visual evidence preserves the same scene, camera and day lighting (1481.5575ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 89784.5612

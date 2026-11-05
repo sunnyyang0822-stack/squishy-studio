@@ -1,0 +1,97 @@
+{
+  "hardwarePhoneTested": false,
+  "style": "donut",
+  "core": "butter",
+  "contact": {
+    "face": 37,
+    "point": [
+      0.38342512647310895,
+      0.006066811250933668,
+      0.28227900465329486
+    ],
+    "normal": [
+      -0.7638531525929769,
+      -0.012966513633728027,
+      0.6420568029085796
+    ],
+    "radialDot": -0.2929591570306436,
+    "score": 0.00004853769011124704,
+    "region": "inner wall",
+    "x": 241.3737156158061,
+    "y": 349.577514609388
+  },
+  "intact": {
+    "opaque": 58090,
+    "green": 0,
+    "pink": 58090,
+    "dark": 0,
+    "width": 359,
+    "height": 473,
+    "greenComponentsAtLeast4Pixels": []
+  },
+  "exposed": {
+    "opaque": 57768,
+    "green": 108,
+    "pink": 57660,
+    "dark": 0,
+    "width": 358,
+    "height": 473,
+    "greenComponentsAtLeast4Pixels": [
+      57,
+      26,
+      18
+    ]
+  },
+  "state": {
+    "id": "polish-shell",
+    "feelId": "slow-rebound",
+    "globalWidthGain": 1.5,
+    "crackWidthGain": 1,
+    "recoveredWidthGain": 1.5,
+    "maxResidualOpening": 0.0267160777002573,
+    "rimEnabled": false,
+    "active": true,
+    "disposed": false,
+    "cycle": 1,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0.4200913608074188,
+    "maxOpening": 0.1669754832983017,
+    "damagedVertices": 298,
+    "maxLocalContacts": 1,
+    "vertexBudget": 6144,
+    "roughness": 0.43
+  },
+  "metrics": {
+    "gap": 0.0035,
+    "minGap": 0.0034276252807149982,
+    "maxGap": 0.003500001410856249,
+    "samples": 86016,
+    "violations": 0,
+    "sourceFacePlaneSamples": 86016,
+    "detached": 0,
+    "limitation": "Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."
+  },
+  "cancelled": {
+    "id": "polish-shell",
+    "feelId": "slow-rebound",
+    "globalWidthGain": 1.5,
+    "crackWidthGain": 1,
+    "recoveredWidthGain": 1.5,
+    "maxResidualOpening": 0.0267160777002573,
+    "rimEnabled": false,
+    "active": false,
+    "disposed": false,
+    "cycle": 1,
+    "detached": 0,
+    "falling": 0,
+    "fragmentCount": 0,
+    "maxDamage": 0.4200913608074188,
+    "maxOpening": 0.1536760777235031,
+    "damagedVertices": 303,
+    "maxLocalContacts": 1,
+    "vertexBudget": 6144,
+    "roughness": 0.43
+  }
+}

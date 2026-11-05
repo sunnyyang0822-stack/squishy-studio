@@ -1,0 +1,31 @@
+✖ star marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (10895.7525ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12121.7975
+
+✖ failing tests:
+
+test at tests\polish-styles-browser.test.cjs:88:55
+✖ star marshmallow polish: structural GLB contact, real GPU exposure, drag, release, side view (10895.7525ms)
+  AssertionError [ERR_ASSERTION]: drag: {"gap":0.0035,"minGap":-0.0005323929862991218,"maxGap":0.003500012892874689,"samples":97188,"violations":2,"sourceFacePlaneSamples":97188,"detached":0,"limitation":"Source-face sample clearance; independent whole-core intersection and GPU images are separate checks."}
+
+  2 !== 0
+
+      at filmOK (D:\squishy-studio\.worktrees\issue-50-polish\tests\polish-styles-browser.test.cjs:84:125)
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-50-polish\tests\polish-styles-browser.test.cjs:97:317)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processImmediate (node:internal/timers:541:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

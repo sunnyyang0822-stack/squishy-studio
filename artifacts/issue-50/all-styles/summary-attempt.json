@@ -1,0 +1,168 @@
+{
+  "command": "node --test --test-concurrency=1 tests/polish-styles-browser.test.cjs",
+  "exitCode": 1,
+  "desktopPassed": 17,
+  "desktopFailed": 1,
+  "mobileEmulatedPassed": 6,
+  "hardwarePhoneTested": false,
+  "rows": [
+    {
+      "style": "cloud",
+      "core": "clay",
+      "deepDepth": 0.2984898675795924,
+      "exposedPixels": 815,
+      "minGap": 0.0026711026847247646,
+      "maxGap": 0.0035000229401022536,
+      "samples": 99876
+    },
+    {
+      "style": "cloud",
+      "core": "marshmallow",
+      "deepDepth": 0.3620505196611108,
+      "exposedPixels": 868,
+      "minGap": 0.0023540847991724134,
+      "maxGap": 0.0035000229401022536,
+      "samples": 99876
+    },
+    {
+      "style": "cloud",
+      "core": "butter",
+      "deepDepth": 0.322950110498924,
+      "exposedPixels": 743,
+      "minGap": 0.0033423176869511904,
+      "maxGap": 0.0035000229401022536,
+      "samples": 99876
+    },
+    {
+      "style": "cylinder",
+      "core": "clay",
+      "deepDepth": 0.2885017815544427,
+      "exposedPixels": 1930,
+      "minGap": 0.002933681153296672,
+      "maxGap": 0.003500020601832525,
+      "samples": 89908
+    },
+    {
+      "style": "cylinder",
+      "core": "marshmallow",
+      "deepDepth": 0.38697705718174624,
+      "exposedPixels": 2580,
+      "minGap": 0.001311448545269499,
+      "maxGap": 0.003500020601832525,
+      "samples": 89908
+    },
+    {
+      "style": "cylinder",
+      "core": "butter",
+      "deepDepth": 0.45840507959446836,
+      "exposedPixels": 2728,
+      "minGap": 0.0031807938251923727,
+      "maxGap": 0.003500020601832525,
+      "samples": 89908
+    },
+    {
+      "style": "donut",
+      "core": "clay",
+      "deepDepth": 0.21610963489094456,
+      "exposedPixels": 455,
+      "minGap": 0.003186683349377159,
+      "maxGap": 0.0034999957561970673,
+      "samples": 86016
+    },
+    {
+      "style": "donut",
+      "core": "marshmallow",
+      "deepDepth": 0.2586447910226531,
+      "exposedPixels": 405,
+      "minGap": 0.0020106656850746797,
+      "maxGap": 0.0034999766763452937,
+      "samples": 86016
+    },
+    {
+      "style": "donut",
+      "core": "butter",
+      "deepDepth": 0.1669754354183577,
+      "exposedPixels": 323,
+      "minGap": 0.003395931018196767,
+      "maxGap": 0.0035000014160734487,
+      "samples": 86016
+    },
+    {
+      "style": "pyramid",
+      "core": "clay",
+      "deepDepth": 0.26526069729725904,
+      "exposedPixels": 1106,
+      "minGap": 0.00280880303003166,
+      "maxGap": 0.003500030003625679,
+      "samples": 57372
+    },
+    {
+      "style": "pyramid",
+      "core": "marshmallow",
+      "deepDepth": 0.3579276844764369,
+      "exposedPixels": 1252,
+      "minGap": 0.0020573839482401707,
+      "maxGap": 0.00350002608787141,
+      "samples": 57372
+    },
+    {
+      "style": "pyramid",
+      "core": "butter",
+      "deepDepth": 0.351759469287299,
+      "exposedPixels": 1102,
+      "minGap": 0.0030472742202555924,
+      "maxGap": 0.00350002608787141,
+      "samples": 57372
+    },
+    {
+      "style": "flower",
+      "core": "clay",
+      "deepDepth": 0.2828444653525804,
+      "exposedPixels": 1833,
+      "minGap": 0.0027844779984442097,
+      "maxGap": 0.0035000356607185956,
+      "samples": 121128
+    },
+    {
+      "style": "flower",
+      "core": "marshmallow",
+      "deepDepth": 0.359589601463887,
+      "exposedPixels": 2849,
+      "minGap": 0.0017372292142442658,
+      "maxGap": 0.0035000356607185956,
+      "samples": 121128
+    },
+    {
+      "style": "flower",
+      "core": "butter",
+      "deepDepth": 0.24299044440217415,
+      "exposedPixels": 1362,
+      "minGap": 0.0033283033452501934,
+      "maxGap": 0.0035000356607185956,
+      "samples": 121128
+    },
+    {
+      "style": "star",
+      "core": "clay",
+      "deepDepth": 0.26283793712264086,
+      "exposedPixels": 877,
+      "minGap": 0.0025669153903786473,
+      "maxGap": 0.003500012892874689,
+      "samples": 97188
+    },
+    {
+      "style": "star",
+      "core": "marshmallow",
+      "failed": true
+    },
+    {
+      "style": "star",
+      "core": "butter",
+      "deepDepth": 0.2452046865732478,
+      "exposedPixels": 775,
+      "minGap": 0.003245843153167702,
+      "maxGap": 0.003500012892874689,
+      "samples": 97188
+    }
+  ]
+}
