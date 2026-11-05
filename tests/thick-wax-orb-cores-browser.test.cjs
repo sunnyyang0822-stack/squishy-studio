@@ -40,7 +40,18 @@ for (const core of ['marshmallow', 'butter']) test(`orb ${core} thick wax keeps 
       const observe = () => { const s = el.thinWaxDiagnostics({ measure: false }).thinWax; if (!s.active) return; if (s.dwell <= .5) window.thickCoreClock.before = s; else if (!window.thickCoreClock.onset) window.thickCoreClock.onset = s; };
       window.waxStyleObservers.add(observe); window.stopThickCoreClock = () => window.waxStyleObservers.delete(observe);
     });
-    await press(); await page.waitForTimeout(1800); await page.mouse.up();
+    await press();
+    // Software WebGL runners can advance fewer deformation frames in 1.8s.
+    // Require the actual deep deformation and fracture before testing release.
+    await page.waitForFunction(() => {
+      const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false });
+      if (!d.thinWax.active || d.thinWax.detached === 0) return false;
+      for (let i = 0; i < d.corePositions.length; i += 3) {
+        if (Math.hypot(...[0, 1, 2].map(k => d.corePositions[i + k] - d.coreRestPositions[i + k])) > .22) return true;
+      }
+      return false;
+    }, null, { timeout: 20000 });
+    await page.mouse.up();
     const released = await diagnostics(page, false, true), clock = await page.evaluate(() => { window.stopThickCoreClock(); return window.thickCoreClock; });
     assert.ok(clock.trusted && clock.before && clock.onset); assert.equal(clock.before.detached, 0); assert.ok(clock.onset.dwell > .5 && clock.onset.detached > 0);
     assert.ok(released.coreMaximumDisplacement > .2); assert.ok(released.thinWax.detached > 0);
