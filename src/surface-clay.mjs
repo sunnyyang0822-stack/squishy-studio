@@ -25,7 +25,7 @@ class Heap {
 // independent per-vertex box, this keeps the correlated, broad clay footprint.
 // The rest face's projected signed area along a straight offset segment is a
 // quadratic polynomial. Its first zero bounds every intermediate position.
-export function createOffsetSafety(rest, directions, indices, { vectorOffsets = false } = {}) {
+export function createOffsetSafety(rest, directions, indices, { vectorOffsets = false, cacheSafety = false } = {}) {
   const count = rest.length / 3, faces = new Float64Array(indices.length / 3 * 4);
   const previous = new Float64Array(rest.length), delta = new Float64Array(rest.length);
   const slots = vectorOffsets ? rest.length : count;
@@ -33,6 +33,25 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
   const incident = Array.from({ length: count }, () => []);
   const triangleCount = indices.length / 3;
   const queue = new Int32Array(triangleCount), queued = new Uint8Array(triangleCount), visits = new Uint8Array(triangleCount);
+  // Each certificate belongs to one exact from/to triangle and one margin.
+  // Reuse only a previously proved full [0,1] safe segment, never an unsafe
+  // fraction. Any changed coordinate forces the original polynomial again.
+  const snapshots=cacheSafety?[new Uint32Array(triangleCount*6),new Uint32Array(triangleCount*6)]:null, valid=cacheSafety?[new Uint8Array(triangleCount),new Uint8Array(triangleCount)]:null;
+  const fromVersion=cacheSafety?new Uint32Array(count):null,toVersion=cacheSafety?new Uint32Array(count):null,lastFrom=cacheSafety?new Float64Array(slots).fill(NaN):null,lastTo=cacheSafety?new Float64Array(slots).fill(NaN):null;
+  function increment(versions, i) {
+    if (++versions[i] === 0) { valid[0].fill(0); valid[1].fill(0); }
+  }
+  function certificate(t, from, to, margin, save = false) {
+    const m = margin === .08 ? 1 : 0, cache = snapshots[m], offset = t * 6;
+    let same = valid[m][t] === 1;
+    for (let k = 0; k < 3; k++) {
+      const vertex = indices[t * 3 + k], a = m ? 0 : fromVersion[vertex], b = toVersion[vertex];
+      if (cache[offset + k * 2] !== a || cache[offset + k * 2 + 1] !== b) same = false;
+      if (save) { cache[offset + k * 2] = a; cache[offset + k * 2 + 1] = b; }
+    }
+    if (save) valid[m][t] = 1;
+    return same;
+  }
   for (let t = 0; t < indices.length; t += 3) {
     const a = indices[t] * 3, b = indices[t + 1] * 3, c = indices[t + 2] * 3;
     const ux = rest[b] - rest[a], uy = rest[b + 1] - rest[a + 1], uz = rest[b + 2] - rest[a + 2];
@@ -48,11 +67,11 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
       previous[j] = rest[j] - (vectorOffsets ? from[j] : directions[j] * from[i]);
       delta[j] = vectorOffsets ? from[j] - to[j] : -directions[j] * (to[i] - from[i]);
     } }
-    if (triangle >= 0) for (let k = 0; k < 3; k++) prepare(indices[triangle * 3 + k]);
-    else for (let i = 0; i < count; i++) prepare(i);
+    if(!cacheSafety){if(triangle>=0)for(let k=0;k<3;k++)prepare(indices[triangle*3+k]);else for(let i=0;i<count;i++)prepare(i);}
     let limit = 1;
     const start = triangle < 0 ? 0 : triangle * 3, end = triangle < 0 ? indices.length : start + 3;
     for (let t = start; t < end; t += 3) {
+      if(cacheSafety){if(certificate(t/3,from,to,margin))continue;for(let k=0;k<3;k++)prepare(indices[t+k]);}
       const a = indices[t] * 3, b = indices[t + 1] * 3, c = indices[t + 2] * 3, f = t / 3 * 4;
       const ux = previous[b] - previous[a], uy = previous[b + 1] - previous[a + 1], uz = previous[b + 2] - previous[a + 2];
       const vx = previous[c] - previous[a], vy = previous[c + 1] - previous[a + 1], vz = previous[c + 2] - previous[a + 2];
@@ -69,7 +88,7 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
       const q0 = Math.max(0, rawQ0);
       const minimumAt = q2 > 0 ? Math.max(0, Math.min(limit, -q1 / (2 * q2))) : limit;
       const value = q0 + minimumAt * (q1 + minimumAt * q2);
-      if (value >= 0 || minimumAt === 0) continue;
+      if (value >= 0 || minimumAt === 0) { if(cacheSafety&&limit===1)certificate(t/3,from,to,margin,true);continue; }
       // This interval ends at the first minimum, so it contains exactly the
       // first crossing even when the proposed endpoint is safe again.
       let low = 0, high = minimumAt;
@@ -82,6 +101,11 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
     return limit;
   }
   return function constrainOffsets(from, candidate) {
+    if (cacheSafety) for (let i = 0; i < slots; i++) {
+      const v = vectorOffsets ? Math.floor(i / 3) : i;
+      if (lastFrom[i] !== from[i]) { lastFrom[i] = from[i]; increment(fromVersion, v); }
+      if (lastTo[i] !== candidate[i]) { lastTo[i] = candidate[i]; increment(toVersion, v); }
+    }
     let proposed = 0;
     for (let i = 0; i < slots; i++) proposed = Math.max(proposed, Math.abs(candidate[i] - from[i]));
     if (proposed === 0) return 1;
@@ -97,7 +121,14 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
       const vertices = [indices[t * 3], indices[t * 3 + 1], indices[t * 3 + 2]];
       const ids = vectorOffsets ? vertices.flatMap(i => [i * 3, i * 3 + 1, i * 3 + 2]) : vertices;
       const before = ids.map(i => candidate[i]);
-      const assign = value => { for (let k = 0; k < ids.length; k++) { const i = ids[k]; candidate[i] = from[i] + (before[k] - from[i]) * value; } };
+      const assign = value => {
+        for (let k = 0; k < ids.length; k++) {
+          const i = ids[k]; candidate[i] = from[i] + (before[k] - from[i]) * value;
+          if (cacheSafety && lastTo[i] !== candidate[i]) {
+            lastTo[i] = candidate[i]; increment(toVersion, vectorOffsets ? Math.floor(i / 3) : i);
+          }
+        }
+      };
       let fraction = alpha;
       assign(fraction);
       // Each accepted face must also have a safe route to its own rest shape.
@@ -126,7 +157,7 @@ export function createOffsetSafety(rest, directions, indices, { vectorOffsets = 
   };
 }
 
-export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis, continuousFootprint = false, scalarThickness = true } = {}) {
+export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxis, continuousFootprint = false, scalarThickness = true, cacheSafety = false } = {}) {
   const rest = source.slice(), count = rest.length / 3;
   if (!indices?.length || sourceNormals.length !== rest.length) throw new TypeError('Surface clay requires indexed positions and normals');
   const directions = sourceNormals.slice(), radii = new Float32Array(count);
@@ -352,8 +383,12 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
     }
     return { found, previous, distances, seed, offset };
   }
+  // Build this immutable rest-mesh index while the scene is being prepared,
+  // rather than in the first pointerdown. Query arithmetic and tree order stay
+  // identical; the opt-in does not affect orb, paw or other feel factories.
+  if(cacheSafety)thicknessTree ??= build(triangles.map((_,i)=>i));
   return {
-    createContactSafety: () => createOffsetSafety(rest, null, indices, { vectorOffsets: true }),
+    createContactSafety: () => createOffsetSafety(rest, null, indices, { vectorOffsets: true, cacheSafety }),
     // Half the real shell chord along this input ray. Back-facing vertices are
     // outside this contact even if a surface neighborhood wraps over a rim.
     contactRadius(i, outward) {
@@ -362,7 +397,7 @@ export function createSurfaceGeometry(source, sourceNormals, indices, { depthAxi
       return Number.isFinite(chord) ? chord / 2 : 0;
     },
     directions, radii, parameterization: starConvex ? 'star-convex' : 'normal-thickness',
-    ...(depthAxis !== undefined && !starConvex ? { constrainOffsets: createOffsetSafety(rest, directions, indices) } : {}),
+    ...(depthAxis !== undefined && !starConvex ? { constrainOffsets: createOffsetSafety(rest, directions, indices, { cacheSafety }) } : {}),
     neighborhood(p, radius) { return waveFaces ? waveNeighborhood(p, radius) : search(p, radius).found; },
     path(from, to, spacing) {
       const straight = distance(from, to); if (straight < spacing) return [to];

@@ -1,0 +1,10 @@
+✔ medium mapping supports every registered clay preview and preserves legacy final scope (18.9079ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 177.0224
+EXIT_CODE=0

@@ -122,7 +122,12 @@ for (const style of styles) test(`${style} marshmallow preview damage survives n
     await page.waitForFunction(() => { const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }); return d.enabled && d.thinWax.cracked === 0 && !document.querySelector('.thin-wax-restart').disabled; });
     const recolored = await diagnostic(page); assert.equal(recolored.coreColor, original.coreColor); assert.notEqual(recolored.shellColor, original.shellColor);
     assert.equal(recolored.thinWax.detached, 0); assert.equal(recolored.thinWax.expired, 0);
-    await page.locator('[name=waxThickness][value=medium]').check(); await enabled(page, false);
+    await page.locator('[name=waxThickness][value=medium]').check(); await enabled(page, style !== 'paw');
+    if (style !== 'paw') {
+      const medium = await diagnostic(page, { measure: true, exhaustive: true });
+      assert.equal(medium.presetId, 'medium-wax'); assert.equal(medium.geometry.thickness, .028);
+      assert.equal(medium.thinWax.detached, 0); geometryOK(medium);
+    }
     await page.locator('[name=waxThickness][value=thin]').check(); await enabled(page);
     const configured = await diagnostic(page); assert.equal(configured.thinWax.cracked, 0); assert.equal(configured.thinWax.detached, 0); geometryOK(await diagnostic(page, { measure: true, exhaustive: true }));
     t.diagnostic(JSON.stringify({ style, original: original.thinWax, legacyPlay: play.enabled, returned: returned.thinWax, restarted: restarted.thinWax, recolored: recolored.thinWax, configured: configured.thinWax }));

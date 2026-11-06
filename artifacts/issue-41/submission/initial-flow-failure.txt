@@ -1,0 +1,92 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (13.0743ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (5.3792ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (14.9476ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (3.9111ms)
+✔ 尚未实现外壳的制作结束保留原有自动恢复 (3.0808ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (19.0931ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (1.9404ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (4.0968ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (1.5752ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (1.3822ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (2.746ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (2.1515ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (1.3816ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (17.4298ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (1.668ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (1.3042ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.7109ms)
+✔ medium sphere mapping only adds marshmallow and butter preview; defaults and unsupported combinations remain bounded (3.0913ms)
+✔ both new sphere previews preserve navigation damage, explicit restart and hidden legacy final contract (7.1059ms)
+✔ late core or thickness preparation is disposed and cannot overwrite last committed recipe (2.2772ms)
+✔ polish maps all non-paw styles and their three cores to the same independent shell; wax thickness has no effect (3.4002ms)
+✔ same orb/clay polish recipe preserves damage through every step; explicit restart is separate (8.8578ms)
+✔ same orb/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.7712ms)
+✔ same orb/butter polish recipe preserves damage through every step; explicit restart is separate (1.4715ms)
+✔ same cloud/clay polish recipe preserves damage through every step; explicit restart is separate (2.0413ms)
+✔ same cloud/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.2119ms)
+✔ same cloud/butter polish recipe preserves damage through every step; explicit restart is separate (1.4406ms)
+✔ same cylinder/clay polish recipe preserves damage through every step; explicit restart is separate (1.7206ms)
+✔ same cylinder/marshmallow polish recipe preserves damage through every step; explicit restart is separate (2.1252ms)
+✔ same cylinder/butter polish recipe preserves damage through every step; explicit restart is separate (1.4635ms)
+✔ same donut/clay polish recipe preserves damage through every step; explicit restart is separate (1.0614ms)
+✔ same donut/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.0029ms)
+✔ same donut/butter polish recipe preserves damage through every step; explicit restart is separate (1.2511ms)
+✔ same pyramid/clay polish recipe preserves damage through every step; explicit restart is separate (1.0443ms)
+✔ same pyramid/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.0958ms)
+✔ same pyramid/butter polish recipe preserves damage through every step; explicit restart is separate (1.0288ms)
+✔ same flower/clay polish recipe preserves damage through every step; explicit restart is separate (1.7679ms)
+✔ same flower/marshmallow polish recipe preserves damage through every step; explicit restart is separate (1.2007ms)
+✔ same flower/butter polish recipe preserves damage through every step; explicit restart is separate (2.0076ms)
+✔ same star/clay polish recipe preserves damage through every step; explicit restart is separate (1.0727ms)
+✔ same star/marshmallow polish recipe preserves damage through every step; explicit restart is separate (0.8143ms)
+✔ same star/butter polish recipe preserves damage through every step; explicit restart is separate (0.7544ms)
+✔ unsupported polish selections remain explicit bare-core previews and clear the notice when supported again (1.0104ms)
+✔ rapid shell and colour requests commit only the latest polish recipe and dispose stale handles (0.7266ms)
+✖ thick wax is restricted to three orb cores with legacy final scope; thin predicates, default and other recipes remain independent (4.6446ms)
+✔ clay orb thick-wax navigation preserves damage and colors through final play; explicit restart restores once (15.7607ms)
+✔ rapid thin/thick/thin selection commits the latest recipe and disposes stale or late handles (2.4843ms)
+✔ marshmallow and slow-rebound thick orb previews preserve damage into hidden final play and restore each original core (11.4517ms)
+✖ thin-wax registry is immutable, rejects unknown ids and reuses verified parameters (107.5197ms)
+✔ preset defaults to falling cleanup with permanent holes; collection requires explicit opt-in (844.1427ms)
+✔ preset instances isolate geometry, color, clock, damage, reset and disposal (406.5789ms)
+✔ preset accepts initial world matrix without moving caller-owned rest data (296.8276ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 50
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2890.6657
+
+✖ failing tests:
+
+test at tests\thick-wax-flow.test.cjs:7:1
+✖ thick wax is restricted to three orb cores with legacy final scope; thin predicates, default and other recipes remain independent (4.6446ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\thick-wax-flow.test.cjs:22:20)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\wax-presets.test.cjs:17:1
+✖ thin-wax registry is immutable, rejects unknown ids and reuses verified parameters (107.5197ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception (RangeError).
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\wax-presets.test.cjs:27:87)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

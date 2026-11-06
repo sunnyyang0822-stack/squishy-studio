@@ -16,6 +16,12 @@
 - 已确认的 **慢回弹** 预设稳定标识为 `slow-rebound`，与黏土并列登记在 `src/orb-feels.mjs`。复用时使用 `getOrbFeel('slow-rebound')` 或场景选项 `{ feelId: 'slow-rebound' }`，不要复制算法或重新调参。渐进按入、长按加深、浅滑痕及完整慢恢复的参数与验证见 `docs/issue-25-responsive-pressure.md`；未经用户要求，不修改此预设的参数/行为。外观独立选择 `appearanceId: 'full-matte'`，制作流程内芯 `butter` 已映射至该组合。
 
 
+## 中蜡脆皮预设复用
+
+- 已确认预设名称为 **中蜡·双倍薄蜡厚度**，稳定 ID `medium-wax`，使用 `src/wax-presets.mjs` 的 `getWaxPreset('medium-wax')`；先读 `docs/medium-wax-preset.md`。
+- 制作配方使用 `shellMaterial: 'wax', waxThickness: 'medium'`；圆球、云朵、圆柱、甜甜圈、三角锥、花朵、五角星 × 黏土、棉花糖、慢回弹，共21个组合。猫爪不启用，最终试捏沿用文档中既有范围。
+- 保留已确认实体厚度0.028（薄蜡两倍）、实际分区和复杂样式性能配置；复用原输入、碎裂、碰撞与生命周期，不复制场景、不重调内芯手感。
+
 ## 指甲油脆皮预设复用
 
 - 2026-11-05用户确认当前指甲油脆皮为可复用预设，稳定ID `polish-shell`，入口 `src/polish-shell.mjs` 的 `getPolishPreset('polish-shell')`。接入先读 `docs/polish-shell-preset.md`。

@@ -1,0 +1,242 @@
+[
+  {
+    "id": "orb",
+    "theme": "day",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 198,
+    "medianFrameMs": 5.599999999999909,
+    "p95FrameMs": 11.200000000000273,
+    "maxFrameMs": 11.400000000000091,
+    "detached": 12,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "orb",
+    "theme": "night",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 208,
+    "medianFrameMs": 5.600000000000364,
+    "p95FrameMs": 11.199999999999818,
+    "maxFrameMs": 11.300000000000182,
+    "detached": 12,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "cloud",
+    "theme": "day",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 106,
+    "medianFrameMs": 11.200000000000045,
+    "p95FrameMs": 22.300000000000182,
+    "maxFrameMs": 27.800000000000182,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "cloud",
+    "theme": "night",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 120,
+    "medianFrameMs": 11.100000000000364,
+    "p95FrameMs": 22.300000000000182,
+    "maxFrameMs": 27.800000000000182,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "paw",
+    "theme": "day",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 9,
+    "medianFrameMs": 183.4000000000001,
+    "p95FrameMs": 438.9000000000001,
+    "maxFrameMs": 438.9000000000001,
+    "detached": 8,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "paw",
+    "theme": "night",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 12,
+    "medianFrameMs": 161,
+    "p95FrameMs": 250,
+    "maxFrameMs": 250,
+    "detached": 9,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "cylinder",
+    "theme": "day",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 87,
+    "medianFrameMs": 11.200000000000273,
+    "p95FrameMs": 33.399999999999636,
+    "maxFrameMs": 38.90000000000009,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "cylinder",
+    "theme": "night",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 58,
+    "medianFrameMs": 27.799999999999272,
+    "p95FrameMs": 39,
+    "maxFrameMs": 55.5,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "donut",
+    "theme": "day",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 35,
+    "medianFrameMs": 44.30000000000018,
+    "p95FrameMs": 77.70000000000027,
+    "maxFrameMs": 94,
+    "detached": 9,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "donut",
+    "theme": "night",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 37,
+    "medianFrameMs": 38.899999999999636,
+    "p95FrameMs": 72.19999999999891,
+    "maxFrameMs": 100,
+    "detached": 9,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "pyramid",
+    "theme": "day",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 75,
+    "medianFrameMs": 16.90000000000009,
+    "p95FrameMs": 27.899999999999864,
+    "maxFrameMs": 50,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "pyramid",
+    "theme": "night",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 80,
+    "medianFrameMs": 16.899999999999636,
+    "p95FrameMs": 27.899999999999636,
+    "maxFrameMs": 33.30000000000018,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "flower",
+    "theme": "day",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 89,
+    "medianFrameMs": 16.59999999999991,
+    "p95FrameMs": 38.80000000000018,
+    "maxFrameMs": 39,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "flower",
+    "theme": "night",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 83,
+    "medianFrameMs": 16.600000000000364,
+    "p95FrameMs": 39.099999999999454,
+    "maxFrameMs": 50,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "star",
+    "theme": "day",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 68,
+    "medianFrameMs": 22.200000000000045,
+    "p95FrameMs": 33.40000000000009,
+    "maxFrameMs": 44.40000000000009,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  },
+  {
+    "id": "star",
+    "theme": "night",
+    "physicalPhone": false,
+    "input": "CDP touch pressure / mouse rotation",
+    "frames": 77,
+    "medianFrameMs": 16.900000000000546,
+    "p95FrameMs": 33.399999999999636,
+    "maxFrameMs": 38.80000000000018,
+    "detached": 11,
+    "geometry": {
+      "attached": 0,
+      "detached": 0
+    }
+  }
+]

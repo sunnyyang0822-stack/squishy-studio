@@ -1,0 +1,10 @@
+✔ 重新开始在受支持蜡预设步骤显示，圆球黏土中蜡沿用入口并保持配方与步骤 (10238.1714ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12911.0701
+EXIT_CODE=0

@@ -1,0 +1,152 @@
+{
+  "baseline": "0406a4ac8e92c078b3da5ccd4299d6acdf9817f2",
+  "bundleSha256": "894643bce37c1aecf66150132bbeef8b246c25b62baf3e856ea87c7b83af340a",
+  "physicalPhone": false,
+  "sampling": "Real time, sustained pressure 1.1 seconds, all frame intervals retained",
+  "cases": [
+    {
+      "name": "desktop-day-thin",
+      "browser": "156.0.4314.42",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "frames": 63,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 22.299999999999272,
+      "maximumFrameMs": 27.800000000000182,
+      "gapsOver250Ms": 0,
+      "thickness": 0.014,
+      "panels": 180,
+      "detached": 20,
+      "attachedViolations": 0,
+      "detachedViolations": 0
+    },
+    {
+      "name": "desktop-day-medium",
+      "browser": "156.0.4314.42",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "frames": 64,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 27.599999999999454,
+      "maximumFrameMs": 27.900000000000546,
+      "gapsOver250Ms": 0,
+      "thickness": 0.028,
+      "panels": 96,
+      "detached": 13,
+      "attachedViolations": 0,
+      "detachedViolations": 0
+    },
+    {
+      "name": "desktop-night-thin",
+      "browser": "156.0.4314.42",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "frames": 45,
+      "medianFrameMs": 22.299999999999272,
+      "p95FrameMs": 33.400000000000546,
+      "maximumFrameMs": 50,
+      "gapsOver250Ms": 0,
+      "thickness": 0.014,
+      "panels": 180,
+      "detached": 19,
+      "attachedViolations": 0,
+      "detachedViolations": 0
+    },
+    {
+      "name": "desktop-night-medium",
+      "browser": "156.0.4314.42",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "frames": 52,
+      "medianFrameMs": 22.199999999999818,
+      "p95FrameMs": 27.899999999999636,
+      "maximumFrameMs": 38.899999999999636,
+      "gapsOver250Ms": 0,
+      "thickness": 0.028,
+      "panels": 96,
+      "detached": 13,
+      "attachedViolations": 0,
+      "detachedViolations": 0
+    },
+    {
+      "name": "mobile-day-thin",
+      "browser": "156.0.4314.42",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "frames": 64,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 22.300000000000182,
+      "maximumFrameMs": 27.799999999999727,
+      "gapsOver250Ms": 0,
+      "thickness": 0.014,
+      "panels": 180,
+      "detached": 18,
+      "attachedViolations": 0,
+      "detachedViolations": 0
+    },
+    {
+      "name": "mobile-day-medium",
+      "browser": "156.0.4314.42",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "frames": 79,
+      "medianFrameMs": 11.100000000000364,
+      "p95FrameMs": 27.700000000000273,
+      "maximumFrameMs": 27.800000000000182,
+      "gapsOver250Ms": 0,
+      "thickness": 0.028,
+      "panels": 96,
+      "detached": 13,
+      "attachedViolations": 0,
+      "detachedViolations": 0
+    },
+    {
+      "name": "mobile-night-thin",
+      "browser": "156.0.4314.42",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "frames": 70,
+      "medianFrameMs": 16.600000000000364,
+      "p95FrameMs": 22.199999999999818,
+      "maximumFrameMs": 22.300000000000182,
+      "gapsOver250Ms": 0,
+      "thickness": 0.014,
+      "panels": 180,
+      "detached": 18,
+      "attachedViolations": 0,
+      "detachedViolations": 0
+    },
+    {
+      "name": "mobile-night-medium",
+      "browser": "156.0.4314.42",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "frames": 72,
+      "medianFrameMs": 11.100000000000364,
+      "p95FrameMs": 33.400000000000546,
+      "maximumFrameMs": 39,
+      "gapsOver250Ms": 0,
+      "thickness": 0.028,
+      "panels": 96,
+      "detached": 13,
+      "attachedViolations": 0,
+      "detachedViolations": 0
+    }
+  ]
+}

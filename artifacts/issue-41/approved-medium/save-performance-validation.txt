@@ -1,0 +1,33 @@
+✔ cloud/marshmallow preset optimizations preserve exhaustive unoptimized shell and fragment geometry (12320.3179ms)
+ℹ {"styleId":"cloud","feelId":"marshmallow","frames":80,"maximumError":0,"fastQueries":149755,"referenceQueries":173230,"queryRatio":0.8644865208104832,"fastCpuMs":2158,"referenceCpuMs":3156,"detached":10}
+✔ cloud/slow-rebound preset optimizations preserve exhaustive unoptimized shell and fragment geometry (15662.6328ms)
+ℹ {"styleId":"cloud","feelId":"slow-rebound","frames":80,"maximumError":0,"fastQueries":294548,"referenceQueries":405121,"queryRatio":0.7270617914154043,"fastCpuMs":3327,"referenceCpuMs":4752,"detached":10}
+✔ cylinder/marshmallow preset optimizations preserve exhaustive unoptimized shell and fragment geometry (12205.5426ms)
+ℹ {"styleId":"cylinder","feelId":"marshmallow","frames":80,"maximumError":0,"fastQueries":154030,"referenceQueries":193113,"queryRatio":0.7976159036419092,"fastCpuMs":2246,"referenceCpuMs":3131,"detached":11}
+✔ cylinder/slow-rebound preset optimizations preserve exhaustive unoptimized shell and fragment geometry (14896.8999ms)
+ℹ {"styleId":"cylinder","feelId":"slow-rebound","frames":80,"maximumError":0,"fastQueries":280004,"referenceQueries":348893,"queryRatio":0.8025497788720324,"fastCpuMs":3794,"referenceCpuMs":4553,"detached":15}
+✔ donut/marshmallow preset optimizations preserve exhaustive unoptimized shell and fragment geometry (17956.3777ms)
+ℹ {"styleId":"donut","feelId":"marshmallow","frames":80,"maximumError":0,"fastQueries":242963,"referenceQueries":372570,"queryRatio":0.6521271170518292,"fastCpuMs":4780,"referenceCpuMs":5857,"detached":15}
+✔ donut/slow-rebound preset optimizations preserve exhaustive unoptimized shell and fragment geometry (17783.8551ms)
+ℹ {"styleId":"donut","feelId":"slow-rebound","frames":80,"maximumError":0,"fastQueries":328118,"referenceQueries":630357,"queryRatio":0.5205272567767154,"fastCpuMs":4753,"referenceCpuMs":6950,"detached":7}
+✔ pyramid/marshmallow preset optimizations preserve exhaustive unoptimized shell and fragment geometry (9753.7119ms)
+ℹ {"styleId":"pyramid","feelId":"marshmallow","frames":80,"maximumError":0,"fastQueries":123615,"referenceQueries":162623,"queryRatio":0.760132330605142,"fastCpuMs":1594,"referenceCpuMs":2502,"detached":14}
+✔ pyramid/slow-rebound preset optimizations preserve exhaustive unoptimized shell and fragment geometry (10546.4332ms)
+ℹ {"styleId":"pyramid","feelId":"slow-rebound","frames":80,"maximumError":0,"fastQueries":280195,"referenceQueries":402835,"queryRatio":0.695557734556332,"fastCpuMs":2435,"referenceCpuMs":3234,"detached":8}
+✔ flower/marshmallow preset optimizations preserve exhaustive unoptimized shell and fragment geometry (14027.1039ms)
+ℹ {"styleId":"flower","feelId":"marshmallow","frames":80,"maximumError":0,"fastQueries":159421,"referenceQueries":190052,"queryRatio":0.8388283206701324,"fastCpuMs":2273,"referenceCpuMs":3122,"detached":11}
+✔ flower/slow-rebound preset optimizations preserve exhaustive unoptimized shell and fragment geometry (17027.931ms)
+ℹ {"styleId":"flower","feelId":"slow-rebound","frames":80,"maximumError":0,"fastQueries":449750,"referenceQueries":599475,"queryRatio":0.7502397931523417,"fastCpuMs":4718,"referenceCpuMs":5483,"detached":7}
+✔ star/marshmallow preset optimizations preserve exhaustive unoptimized shell and fragment geometry (13747.4921ms)
+ℹ {"styleId":"star","feelId":"marshmallow","frames":80,"maximumError":0,"fastQueries":175520,"referenceQueries":234110,"queryRatio":0.7497330314809277,"fastCpuMs":3038,"referenceCpuMs":3263,"detached":14}
+✔ star/slow-rebound preset optimizations preserve exhaustive unoptimized shell and fragment geometry (17685.6066ms)
+ℹ {"styleId":"star","feelId":"slow-rebound","frames":80,"maximumError":0,"fastQueries":380926,"referenceQueries":554013,"queryRatio":0.6875759233086588,"fastCpuMs":3856,"referenceCpuMs":5910,"detached":9}
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 173862.8502
+EXIT_CODE=0
