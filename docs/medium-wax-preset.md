@@ -2,7 +2,7 @@
 
 预设名称：**中蜡·双倍薄蜡厚度**。代码名称保存在 `getWaxPreset('medium-wax').name`；稳定调用 ID 为 `medium-wax`，后续查找、复用均使用该 ID。名称只作识别，不改变参数或支持范围。
 
-用户已授权提交并合并七种非猫爪样式×三种内芯的21个中蜡组合及本预设。原薄蜡交付基线为0406a4ac8e92c078b3da5ccd4299d6acdf9817f2；本次已集成origin/main的257d546，保留后续薄蜡、厚蜡、指甲油与圆球几何交付。仅操作本任务PR，不关闭#38或#22。仓库保持Public。
+用户已授权提交并合并七种非猫爪样式×三种内芯的21个中蜡组合及本预设。原薄蜡交付基线为0406a4ac8e92c078b3da5ccd4299d6acdf9817f2；本次已集成origin/main的b65038c（含257d546后发布的薄蜡21组合），保留后续薄蜡、厚蜡、指甲油与圆球几何交付。仅操作本任务PR，不关闭#38或#22。仓库保持Public。
 
 ## 调用与范围
 
@@ -52,7 +52,7 @@ parameters、parametersForStyle(styleId)、geometryOptionsForStyle(styleId)和�
 
 点击裂缝、驻留时序、持续应变触发、松手停止新增损伤、损伤保留、重开、掉落速度、清理和预算沿用原薄蜡／中蜡契约。真实内外面、边中点、断面及扫掠检查保留；没有用透明度、renderOrder或关闭深度测试掩盖穿模。
 
-performanceOptimizations默认false，仅中蜡非圆球非猫爪只读几何配置启用：
+performanceOptimizations默认false，仅中蜡非圆球非猫爪只读几何配置启用；中蜡明确关闭新主线cacheAttachedPanels，保留自身已验证的复用策略。薄蜡compactPanels的表面采样与中蜡partitionSpace的采样分别按配置进入同一裁切器，互不替换：
 
 - 只重登记实际跨查询格的变化面，格内仍用当前真实坐标；超界或容量不足回退完整BVH。
 - 逐顶点标记变化以减少重复读取；复用候选数组、向量、变化包围盒和未变化三角面的特征角度。

@@ -1,5 +1,16 @@
 # 中蜡21组合集成验证 — 2026-11-05
 
+## 2026-11-06最新薄蜡主线集成
+
+等待CI期间主线发布PR57；本分支已通过`893cbc7`集成`b65038c`。保留薄蜡的21组合、compactPanels采样、附着片缓存、懒法线、精确平局查询与厚度标量计算。中蜡参数、源面分区和自身性能开关保持；显式关闭中蜡的新cacheAttachedPanels以隔离两套已确认缓存配置。无工厂或场景复制。
+
+- `node --test --test-concurrency=1 tests/medium-wax-core-flow.test.cjs tests/medium-wax-regions.test.cjs tests/wax-cloud-reuse.test.cjs tests/wax-compact-panels.test.cjs tests/wax-compact-support.test.cjs tests/surface-thickness-scalar.test.cjs tests/wax-feature-normals.test.cjs tests/wax-collision-cache.test.cjs tests/detail-state.test.cjs tests/thin-wax-approved-scope.test.cjs`：40/40，exit 0，`latest-thin-integration.txt`。
+- `node --test --test-concurrency=1 tests/medium-wax-performance.test.cjs tests/medium-wax-query-refit.test.cjs tests/thick-wax.test.cjs tests/wax-compact-fall.test.cjs`：21/21，exit 0，`latest-medium-reference.txt`，中蜡优化开关的实际几何误差0，完整采样无违规；薄蜡紧凑片的下落轨迹与厚蜡回归通过。
+- `npm run build:orb`：exit 0，`latest-build.txt`。
+- `MEDIUM_WAX_TEST_DPR=0.125 STYLES_REVIEW_CASE=cloud,donut node --test tests/medium-wax-core-browser.test.cjs`（PowerShell环境变量逐项设置）：1/1聚合测试、exit 0，覆盖云朵/甜甜圈×棉花糖/慢回弹×桌面白天/手机模拟夜间8组，以及三种猫爪排除，`latest-browser-integration.txt`。完整矩阵仍由最终CI重新执行。
+
+下面350项首轮CPU与30项浏览器记录属于集成PR57前的正式版本；最新集成以本节输出及最终PR检查为准，不冒称旧输出对应最新构建。
+
 预设：**中蜡·双倍薄蜡厚度**，`getWaxPreset('medium-wax')`。
 明确基线：`origin/main` = `257d546fab954854e885363335dd64a7baf99d20`；集成提交 `375d834` 保留原分支及最新main历史，不覆盖厚蜡、指甲油、圆球模型或灯光。
 
