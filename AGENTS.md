@@ -13,7 +13,8 @@
 - 当前已确认的内陷质感叫 **黏土**，稳定标识 `clay`。新外观复用它时，直接使用 `src/orb-feels.mjs` 的 `getOrbFeel('clay')`，或场景选项 `{ feelId: 'clay' }`。
 - 接入前先读 `docs/orb-feels.md`，复用现有输入、形变、恢复与换色生命周期，不复制整套场景或重新开发黏土手感。
 - 新质感另设工厂并登记，沿用相同接口；未经用户要求，不修改已确认黏土的参数/行为。保留 `tests/orb-deformation.test.cjs` 的黏土回归约束。
-- 已确认的 **慢回弹** 预设稳定标识为 `slow-rebound`，与黏土并列登记在 `src/orb-feels.mjs`。复用时使用 `getOrbFeel('slow-rebound')` 或场景选项 `{ feelId: 'slow-rebound' }`，不要复制算法或重新调参。渐进按入、长按加深、浅滑痕及完整慢恢复的参数与验证见 `docs/issue-25-responsive-pressure.md`；未经用户要求，不修改此预设的参数/行为。外观独立选择 `appearanceId: 'full-matte'`，制作流程内芯 `butter` 已映射至该组合。
+- 已确认的 **慢回弹** 预设稳定标识为 `slow-rebound`，与黏土并列登记在 `src/orb-feels.mjs`。复用时使用 `getOrbFeel('slow-rebound')` 或场景选项 `{ feelId: 'slow-rebound' }`，不要复制算法或重新调参。渐进按入、长按加深、浅滑痕及完整慢恢复的当前参数与验证见 `docs/slow-rebound-approved-preset.md`；未经用户要求，不修改此预设的参数/行为。外观独立选择 `appearanceId: 'full-matte'`，制作流程内芯 `butter` 已映射至该组合。
+- 2026-11-05用户确认新版慢回弹并要求主线所有慢回弹统一调用：唯一默认为半径.48、按入速度1.05/s、最大深度1.80、圆缓坑底；圆球贴边渐变，复杂样式保留各自几何安全限深。当前合同见 `docs/slow-rebound-approved-preset.md`，取代旧.45速度/.46限深记录。`getOrbPreset('slow-rebound')` 与上述feel入口使用同一工厂，不再在场景另存圆球参数；灯光、黏土、棉花糖及外壳预设不调参。
 
 
 ## 指甲油脆皮预设复用

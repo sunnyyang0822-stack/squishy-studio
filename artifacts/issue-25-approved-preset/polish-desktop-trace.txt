@@ -1,0 +1,365 @@
+2026-11-06T02:12:21.459Z pw:api => browserType.launch started
+2026-11-06T02:12:22.727Z pw:api <= browserType.launch succeeded
+2026-11-06T02:12:22.732Z pw:api => browser.newContext started
+2026-11-06T02:12:22.783Z pw:api <= browser.newContext succeeded
+2026-11-06T02:12:22.784Z pw:api => browserContext.newPage started
+2026-11-06T02:12:23.229Z pw:api <= browserContext.newPage succeeded
+2026-11-06T02:12:23.230Z pw:api => page.route started
+2026-11-06T02:12:23.294Z pw:api <= page.route succeeded
+2026-11-06T02:12:23.296Z pw:api => page.addInitScript started
+2026-11-06T02:12:23.302Z pw:api <= page.addInitScript succeeded
+2026-11-06T02:12:23.303Z pw:api => page.goto started
+2026-11-06T02:12:23.305Z pw:api navigating to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint&shellColor=rose&step=shell", waiting until "load"
+2026-11-06T02:12:23.373Z pw:api   "commit" event fired
+2026-11-06T02:12:23.373Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint&shellColor=rose&step=shell"
+2026-11-06T02:12:23.547Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint&step=shell"
+2026-11-06T02:12:23.551Z pw:api   "domcontentloaded" event fired
+2026-11-06T02:12:23.551Z pw:api   "load" event fired
+2026-11-06T02:12:23.554Z pw:api <= page.goto succeeded
+2026-11-06T02:12:23.556Z pw:api => page.waitForSelector started
+2026-11-06T02:12:23.580Z pw:api waiting for locator('.toy-stage[data-state="ready"] .toy-mount canvas') to be visible
+2026-11-06T02:12:24.164Z pw:api   "networkidle" event fired
+2026-11-06T02:12:25.131Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint&step=shell"
+2026-11-06T02:12:26.304Z pw:api   locator resolved to visible <canvas role="img" width="790" height="808" data-engine="three.js r186" aria-label="薄荷绿圆球，缓慢按下，松开后缓慢完整回弹"></canvas>
+2026-11-06T02:12:26.341Z pw:api <= page.waitForSelector succeeded
+2026-11-06T02:12:26.347Z pw:api => page.waitForFunction started
+2026-11-06T02:12:26.434Z pw:api <= page.waitForFunction succeeded
+2026-11-06T02:12:26.435Z pw:api => page.evaluate started
+2026-11-06T02:12:26.461Z pw:api <= page.evaluate succeeded
+2026-11-06T02:12:26.462Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:26.621Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:26.622Z pw:api => locator.evaluate started
+2026-11-06T02:12:26.628Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:26.644Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="3" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:28.797Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:28.797Z pw:api => page.evaluate started
+2026-11-06T02:12:28.803Z pw:api <= page.evaluate succeeded
+2026-11-06T02:12:28.804Z pw:api => page.setViewportSize started
+2026-11-06T02:12:28.832Z pw:api <= page.setViewportSize succeeded
+2026-11-06T02:12:28.833Z pw:api => page.waitForFunction started
+2026-11-06T02:12:28.954Z pw:api <= page.waitForFunction succeeded
+2026-11-06T02:12:28.955Z pw:api => page.evaluate started
+2026-11-06T02:12:28.967Z pw:api <= page.evaluate succeeded
+2026-11-06T02:12:28.967Z pw:api => page.setViewportSize started
+2026-11-06T02:12:28.996Z pw:api <= page.setViewportSize succeeded
+2026-11-06T02:12:28.997Z pw:api => locator.getAttribute started
+2026-11-06T02:12:28.998Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:29.024Z pw:api   locator resolved to <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="5" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:29.024Z pw:api <= locator.getAttribute succeeded
+2026-11-06T02:12:29.026Z pw:api => locator.boundingBox started
+2026-11-06T02:12:29.027Z pw:api waiting for locator('.orb-input')
+2026-11-06T02:12:29.043Z pw:api   locator resolved to visible <button type="button" class="orb-input" aria-pressed="false" aria-label="按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车"></button>
+2026-11-06T02:12:29.064Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:12:29.065Z pw:api => mouse.move started
+2026-11-06T02:12:29.078Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:29.079Z pw:api => mouse.down started
+2026-11-06T02:12:29.105Z pw:api <= mouse.down succeeded
+2026-11-06T02:12:29.105Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:29.290Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:29.290Z pw:api => locator.evaluate started
+2026-11-06T02:12:29.297Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:29.332Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="12" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:31.180Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:31.180Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:32.395Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:32.396Z pw:api => locator.evaluate started
+2026-11-06T02:12:32.396Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:32.416Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="331" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:33.995Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:33.998Z pw:api => page.evaluate started
+2026-11-06T02:12:34.004Z pw:api <= page.evaluate succeeded
+2026-11-06T02:12:34.005Z pw:api => page.setViewportSize started
+2026-11-06T02:12:34.050Z pw:api <= page.setViewportSize succeeded
+2026-11-06T02:12:34.050Z pw:api => page.waitForFunction started
+2026-11-06T02:12:34.062Z pw:api <= page.waitForFunction succeeded
+2026-11-06T02:12:34.063Z pw:api => page.evaluate started
+2026-11-06T02:12:34.089Z pw:api <= page.evaluate succeeded
+2026-11-06T02:12:34.089Z pw:api => page.setViewportSize started
+2026-11-06T02:12:34.115Z pw:api <= page.setViewportSize succeeded
+2026-11-06T02:12:34.117Z pw:api => mouse.up started
+2026-11-06T02:12:34.128Z pw:api <= mouse.up succeeded
+2026-11-06T02:12:34.129Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:34.324Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:34.325Z pw:api => locator.evaluate started
+2026-11-06T02:12:34.327Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:34.335Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="545" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:35.150Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:35.150Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:35.752Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:35.753Z pw:api => locator.evaluate started
+2026-11-06T02:12:35.758Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:35.774Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="689" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:36.965Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:36.970Z pw:api => locator.boundingBox started
+2026-11-06T02:12:36.972Z pw:api waiting for locator('.orb-input')
+2026-11-06T02:12:36.983Z pw:api   locator resolved to visible <button type="button" class="orb-input" aria-pressed="false" aria-label="按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车"></button>
+2026-11-06T02:12:36.999Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:12:36.999Z pw:api => mouse.move started
+2026-11-06T02:12:37.006Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:37.007Z pw:api => mouse.down started
+2026-11-06T02:12:37.016Z pw:api <= mouse.down succeeded
+2026-11-06T02:12:37.017Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:37.528Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:37.529Z pw:api => mouse.up started
+2026-11-06T02:12:37.547Z pw:api <= mouse.up succeeded
+2026-11-06T02:12:37.547Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:37.715Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:37.716Z pw:api => locator.boundingBox started
+2026-11-06T02:12:37.718Z pw:api waiting for locator('.orb-input')
+2026-11-06T02:12:37.742Z pw:api   locator resolved to visible <button type="button" class="orb-input" aria-pressed="false" aria-label="按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车"></button>
+2026-11-06T02:12:37.774Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:12:37.775Z pw:api => mouse.move started
+2026-11-06T02:12:37.780Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:37.780Z pw:api => mouse.down started
+2026-11-06T02:12:37.788Z pw:api <= mouse.down succeeded
+2026-11-06T02:12:37.788Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:38.305Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:38.306Z pw:api => mouse.up started
+2026-11-06T02:12:38.324Z pw:api <= mouse.up succeeded
+2026-11-06T02:12:38.324Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:38.494Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:38.497Z pw:api => locator.evaluate started
+2026-11-06T02:12:38.498Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:38.519Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="1022" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:39.902Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:39.903Z pw:api => locator.boundingBox started
+2026-11-06T02:12:39.904Z pw:api waiting for locator('.orb-input')
+2026-11-06T02:12:39.924Z pw:api   locator resolved to visible <button type="button" class="orb-input" aria-pressed="false" aria-label="按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车"></button>
+2026-11-06T02:12:39.943Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:12:39.944Z pw:api => mouse.move started
+2026-11-06T02:12:39.957Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:39.958Z pw:api => mouse.down started
+2026-11-06T02:12:39.966Z pw:api <= mouse.down succeeded
+2026-11-06T02:12:39.967Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:40.434Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:40.435Z pw:api => mouse.up started
+2026-11-06T02:12:40.449Z pw:api <= mouse.up succeeded
+2026-11-06T02:12:40.449Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:40.663Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:40.666Z pw:api => locator.boundingBox started
+2026-11-06T02:12:40.667Z pw:api waiting for locator('.orb-input')
+2026-11-06T02:12:40.682Z pw:api   locator resolved to visible <button type="button" class="orb-input" aria-pressed="false" aria-label="按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车"></button>
+2026-11-06T02:12:40.712Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:12:40.713Z pw:api => mouse.move started
+2026-11-06T02:12:40.728Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:40.729Z pw:api => mouse.down started
+2026-11-06T02:12:40.740Z pw:api <= mouse.down succeeded
+2026-11-06T02:12:40.740Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:42.044Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:42.044Z pw:api => locator.boundingBox started
+2026-11-06T02:12:42.045Z pw:api waiting for locator('.orb-input')
+2026-11-06T02:12:42.061Z pw:api   locator resolved to visible <button type="button" class="orb-input" aria-pressed="true" aria-label="按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车"></button>
+2026-11-06T02:12:42.089Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:12:42.089Z pw:api => mouse.move started
+2026-11-06T02:12:43.121Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:43.121Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:43.383Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:43.384Z pw:api => mouse.up started
+2026-11-06T02:12:43.395Z pw:api <= mouse.up succeeded
+2026-11-06T02:12:43.396Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:43.661Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:43.661Z pw:api => locator.evaluate started
+2026-11-06T02:12:43.662Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:43.674Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="1593" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:44.725Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:44.725Z pw:api => locator.boundingBox started
+2026-11-06T02:12:44.728Z pw:api waiting for locator('.toy-stage')
+2026-11-06T02:12:44.748Z pw:api   locator resolved to visible <div role="region" id="toy-stage" class="toy-stage" aria-busy="false" data-state="ready" aria-label="奶油圆球展示区">…</div>
+2026-11-06T02:12:44.796Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:12:44.796Z pw:api => mouse.move started
+2026-11-06T02:12:44.805Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:44.806Z pw:api => mouse.down started
+2026-11-06T02:12:44.817Z pw:api <= mouse.down succeeded
+2026-11-06T02:12:44.818Z pw:api => mouse.move started
+2026-11-06T02:12:45.440Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:45.440Z pw:api => mouse.up started
+2026-11-06T02:12:45.450Z pw:api <= mouse.up succeeded
+2026-11-06T02:12:45.451Z pw:api => locator.evaluate started
+2026-11-06T02:12:45.452Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:45.468Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="1785" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:46.587Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:46.587Z pw:api => mouse.move started
+2026-11-06T02:12:46.614Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:46.615Z pw:api => mouse.down started
+2026-11-06T02:12:46.624Z pw:api <= mouse.down succeeded
+2026-11-06T02:12:46.625Z pw:api => mouse.move started
+2026-11-06T02:12:47.368Z pw:api <= mouse.move succeeded
+2026-11-06T02:12:47.368Z pw:api => mouse.up started
+2026-11-06T02:12:47.378Z pw:api <= mouse.up succeeded
+2026-11-06T02:12:47.379Z pw:api => locator.click started
+2026-11-06T02:12:47.380Z pw:api waiting for locator('.step-back')
+2026-11-06T02:12:47.397Z pw:api   locator resolved to <button type="button" class="step-back">上一步</button>
+2026-11-06T02:12:47.405Z pw:api attempting click action
+2026-11-06T02:12:47.410Z pw:api   waiting for element to be visible, enabled and stable
+2026-11-06T02:12:47.431Z pw:api   element is visible, enabled and stable
+2026-11-06T02:12:47.431Z pw:api   scrolling into view if needed
+2026-11-06T02:12:47.440Z pw:api   done scrolling
+2026-11-06T02:12:47.466Z pw:api   performing click action
+2026-11-06T02:12:47.508Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint"
+2026-11-06T02:12:47.540Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint&step=shell"
+2026-11-06T02:12:47.556Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint"
+2026-11-06T02:12:47.580Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint"
+2026-11-06T02:12:47.581Z pw:api   click action done
+2026-11-06T02:12:47.581Z pw:api   waiting for scheduled navigations to finish
+2026-11-06T02:12:47.601Z pw:api   navigations have finished
+2026-11-06T02:12:47.602Z pw:api <= locator.click succeeded
+2026-11-06T02:12:47.603Z pw:api => page.waitForFunction started
+2026-11-06T02:12:47.658Z pw:api <= page.waitForFunction succeeded
+2026-11-06T02:12:47.659Z pw:api => locator.click started
+2026-11-06T02:12:47.667Z pw:api waiting for locator('.step-next')
+2026-11-06T02:12:47.707Z pw:api   locator resolved to <button type="button" class="step-next">下一步</button>
+2026-11-06T02:12:47.715Z pw:api attempting click action
+2026-11-06T02:12:47.716Z pw:api   waiting for element to be visible, enabled and stable
+2026-11-06T02:12:47.735Z pw:api   element is visible, enabled and stable
+2026-11-06T02:12:47.735Z pw:api   scrolling into view if needed
+2026-11-06T02:12:47.745Z pw:api   done scrolling
+2026-11-06T02:12:47.761Z pw:api   performing click action
+2026-11-06T02:12:47.798Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint&step=shell"
+2026-11-06T02:12:47.811Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint"
+2026-11-06T02:12:47.836Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint&step=shell"
+2026-11-06T02:12:47.848Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=butter&shellMaterial=polish&coreColor=mint&step=shell"
+2026-11-06T02:12:47.853Z pw:api   click action done
+2026-11-06T02:12:47.854Z pw:api   waiting for scheduled navigations to finish
+2026-11-06T02:12:47.864Z pw:api   navigations have finished
+2026-11-06T02:12:47.864Z pw:api <= locator.click succeeded
+2026-11-06T02:12:47.865Z pw:api => page.waitForFunction started
+2026-11-06T02:12:47.912Z pw:api <= page.waitForFunction succeeded
+2026-11-06T02:12:47.913Z pw:api => locator.evaluate started
+2026-11-06T02:12:47.917Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:47.934Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="2023" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:49.346Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:49.347Z pw:api => page.evaluate started
+2026-11-06T02:12:49.351Z pw:api <= page.evaluate succeeded
+2026-11-06T02:12:49.352Z pw:api => page.setViewportSize started
+2026-11-06T02:12:49.411Z pw:api <= page.setViewportSize succeeded
+2026-11-06T02:12:49.412Z pw:api => page.waitForFunction started
+2026-11-06T02:12:49.449Z pw:api <= page.waitForFunction succeeded
+2026-11-06T02:12:49.449Z pw:api => page.evaluate started
+2026-11-06T02:12:49.457Z pw:api <= page.evaluate succeeded
+2026-11-06T02:12:49.458Z pw:api => page.setViewportSize started
+2026-11-06T02:12:49.484Z pw:api <= page.setViewportSize succeeded
+2026-11-06T02:12:49.486Z pw:api => page.waitForFunction started
+2026-11-06T02:12:57.215Z pw:api <= page.waitForFunction succeeded
+2026-11-06T02:12:57.215Z pw:api => locator.evaluate started
+2026-11-06T02:12:57.216Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:57.225Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="3021" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:58.241Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:12:58.252Z pw:api => locator.getAttribute started
+2026-11-06T02:12:58.253Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:58.262Z pw:api   locator resolved to <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="3021" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:58.263Z pw:api <= locator.getAttribute succeeded
+2026-11-06T02:12:58.263Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:58.569Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:58.569Z pw:api => locator.getAttribute started
+2026-11-06T02:12:58.570Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:58.577Z pw:api   locator resolved to <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="3021" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:12:58.577Z pw:api <= locator.getAttribute succeeded
+2026-11-06T02:12:58.578Z pw:api => locator.click started
+2026-11-06T02:12:58.582Z pw:api waiting for getByRole('button', { name: '重新开始', exact: true })
+2026-11-06T02:12:58.601Z pw:api   locator resolved to <button type="button" class="thin-wax-restart">重新开始</button>
+2026-11-06T02:12:58.607Z pw:api attempting click action
+2026-11-06T02:12:58.608Z pw:api   waiting for element to be visible, enabled and stable
+2026-11-06T02:12:58.618Z pw:api   element is visible, enabled and stable
+2026-11-06T02:12:58.618Z pw:api   scrolling into view if needed
+2026-11-06T02:12:58.621Z pw:api   done scrolling
+2026-11-06T02:12:58.629Z pw:api   performing click action
+2026-11-06T02:12:58.651Z pw:api   click action done
+2026-11-06T02:12:58.651Z pw:api   waiting for scheduled navigations to finish
+2026-11-06T02:12:58.656Z pw:api   navigations have finished
+2026-11-06T02:12:58.657Z pw:api <= locator.click succeeded
+2026-11-06T02:12:58.658Z pw:api => page.waitForTimeout started
+2026-11-06T02:12:59.668Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:12:59.669Z pw:api => locator.evaluate started
+2026-11-06T02:12:59.669Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:12:59.680Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="3107" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:13:00.508Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:13:00.509Z pw:api => locator.boundingBox started
+2026-11-06T02:13:00.510Z pw:api waiting for locator('.orb-input')
+2026-11-06T02:13:00.516Z pw:api   locator resolved to visible <button type="button" class="orb-input" aria-pressed="false" aria-label="按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车"></button>
+2026-11-06T02:13:00.524Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:13:00.525Z pw:api => mouse.move started
+2026-11-06T02:13:00.527Z pw:api <= mouse.move succeeded
+2026-11-06T02:13:00.528Z pw:api => mouse.down started
+2026-11-06T02:13:00.537Z pw:api <= mouse.down succeeded
+2026-11-06T02:13:00.538Z pw:api => page.waitForTimeout started
+2026-11-06T02:13:01.199Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:13:01.199Z pw:api => mouse.up started
+2026-11-06T02:13:01.213Z pw:api <= mouse.up succeeded
+2026-11-06T02:13:01.214Z pw:api => locator.click started
+2026-11-06T02:13:01.216Z pw:api waiting for getByRole('button', { name: '重新开始', exact: true })
+2026-11-06T02:13:01.231Z pw:api   locator resolved to <button type="button" class="thin-wax-restart">重新开始</button>
+2026-11-06T02:13:01.238Z pw:api attempting click action
+2026-11-06T02:13:01.238Z pw:api   waiting for element to be visible, enabled and stable
+2026-11-06T02:13:01.259Z pw:api   element is visible, enabled and stable
+2026-11-06T02:13:01.259Z pw:api   scrolling into view if needed
+2026-11-06T02:13:01.265Z pw:api   done scrolling
+2026-11-06T02:13:01.281Z pw:api   performing click action
+2026-11-06T02:13:01.315Z pw:api   click action done
+2026-11-06T02:13:01.316Z pw:api   waiting for scheduled navigations to finish
+2026-11-06T02:13:01.324Z pw:api   navigations have finished
+2026-11-06T02:13:01.325Z pw:api <= locator.click succeeded
+2026-11-06T02:13:01.326Z pw:api => page.waitForTimeout started
+2026-11-06T02:13:01.419Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:13:01.420Z pw:api => locator.boundingBox started
+2026-11-06T02:13:01.423Z pw:api waiting for locator('.orb-input')
+2026-11-06T02:13:01.437Z pw:api   locator resolved to visible <button type="button" class="orb-input" aria-pressed="false" aria-label="按住并拖动圆球，缓慢下陷，松开完整回弹；也可按住空格或回车"></button>
+2026-11-06T02:13:01.473Z pw:api <= locator.boundingBox succeeded
+2026-11-06T02:13:01.473Z pw:api => mouse.move started
+2026-11-06T02:13:01.487Z pw:api <= mouse.move succeeded
+2026-11-06T02:13:01.488Z pw:api => mouse.down started
+2026-11-06T02:13:01.498Z pw:api <= mouse.down succeeded
+2026-11-06T02:13:01.499Z pw:api => page.waitForTimeout started
+2026-11-06T02:13:01.807Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:13:01.808Z pw:api => locator.evaluate started
+2026-11-06T02:13:01.811Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:13:01.823Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="3268" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:13:03.450Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:13:03.454Z pw:api => mouse.up started
+2026-11-06T02:13:03.460Z pw:api <= mouse.up succeeded
+2026-11-06T02:13:03.461Z pw:api => locator.click started
+2026-11-06T02:13:03.461Z pw:api waiting for getByRole('button', { name: '重新开始', exact: true })
+2026-11-06T02:13:03.478Z pw:api   locator resolved to <button type="button" class="thin-wax-restart">重新开始</button>
+2026-11-06T02:13:03.481Z pw:api attempting click action
+2026-11-06T02:13:03.481Z pw:api   waiting for element to be visible, enabled and stable
+2026-11-06T02:13:03.500Z pw:api   element is visible, enabled and stable
+2026-11-06T02:13:03.500Z pw:api   scrolling into view if needed
+2026-11-06T02:13:03.505Z pw:api   done scrolling
+2026-11-06T02:13:03.514Z pw:api   performing click action
+2026-11-06T02:13:03.527Z pw:api   click action done
+2026-11-06T02:13:03.527Z pw:api   waiting for scheduled navigations to finish
+2026-11-06T02:13:03.533Z pw:api   navigations have finished
+2026-11-06T02:13:03.534Z pw:api <= locator.click succeeded
+2026-11-06T02:13:03.534Z pw:api => page.waitForTimeout started
+2026-11-06T02:13:04.548Z pw:api <= page.waitForTimeout succeeded
+2026-11-06T02:13:04.548Z pw:api => page.evaluate started
+2026-11-06T02:13:04.577Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=marshmallow&shellMaterial=polish&coreColor=mint&step=shell"
+2026-11-06T02:13:04.591Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&coreMaterial=marshmallow&shellMaterial=polish&coreColor=mint&step=shell&shellColor=sky"
+2026-11-06T02:13:04.602Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&shellMaterial=polish&coreColor=mint&step=shell&shellColor=sky"
+2026-11-06T02:13:04.616Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&shellMaterial=polish&coreColor=mint&step=shell&shellColor=cream"
+2026-11-06T02:13:04.632Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&shellMaterial=polish&coreColor=mint&step=shell&shellColor=cream&coreMaterial=butter"
+2026-11-06T02:13:04.645Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&shellMaterial=polish&coreColor=mint&step=shell&coreMaterial=butter"
+2026-11-06T02:13:04.657Z pw:api   navigated to "http://127.0.0.1:4252/squishy/cloud/?style=orb&shellMaterial=polish&coreColor=mint&step=shell&coreMaterial=butter"
+2026-11-06T02:13:04.658Z pw:api <= page.evaluate succeeded
+2026-11-06T02:13:04.659Z pw:api => page.waitForFunction started
+2026-11-06T02:13:04.685Z pw:api <= page.waitForFunction succeeded
+2026-11-06T02:13:04.686Z pw:api => locator.count started
+2026-11-06T02:13:04.701Z pw:api <= locator.count succeeded
+2026-11-06T02:13:04.702Z pw:api => locator.evaluate started
+2026-11-06T02:13:04.702Z pw:api waiting for locator('.toy-mount')
+2026-11-06T02:13:04.720Z pw:api   locator resolved to visible <div data-style="orb" class="toy-mount" data-color="rose" data-render-count="3560" data-feel-id="slow-rebound" data-appearance-id="full-matte">…</div>
+2026-11-06T02:13:05.725Z pw:api <= locator.evaluate succeeded
+2026-11-06T02:13:05.745Z pw:api => browserContext.close started
+2026-11-06T02:13:05.815Z pw:api <= browserContext.close succeeded
+2026-11-06T02:13:05.822Z pw:api => browser.close started
+✔ butter polish actual GPU exposure and original core lifecycle, normal-speed desktop (44630.6688ms)
+2026-11-06T02:15:13.345Z pw:api <= browser.close succeeded
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 174390.603
+
+EXIT_CODE: 0

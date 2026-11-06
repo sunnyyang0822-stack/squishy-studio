@@ -1,0 +1,65 @@
+✔ 慢回弹原圆球边缘沿按入方向凹陷，旋转后不向球心拉扯且完整恢复 (3204.1546ms)
+✔ 正常鼠标滑动时实际GPU左右路径均可见，终点驻留达到限深且全路径自然回弹 (15537.9755ms)
+ℹ {"slidingLeftRight":[0.15748838934377118,0.193355129321447],"slidingMaximum":0.19990170307140812,"dwellMaximum":0.4446570651730316}
+✔ 慢回弹真实鼠标渐进下陷、自然完整恢复停帧；默认黏土仍留痕且切页实例隔离 (32464.359ms)
+ℹ {"firstGpuFrame":{"time":479.9,"maximum":0.0012152621981709993,"pressed":true},"release":{"before":{"time":624.3,"maximum":0.1061199698927206,"pressed":true},"after":{"time":635.5,"maximum":0.10517337627866166,"pressed":false}},"expectedReleaseDepth":0.10517338200899161}
+✔ 新质感沿用换色时钟与姿态恢复；颜色恢复中输入接管后全网格自然归零 (14647.642ms)
+ℹ {"interruptedGpuDepth":0.1197269113760427,"inputAccepted":"true","immediatePositionError":0}
+✔ pointercancel、失焦、后台结束施力；后台暂停且前台连续恢复，离页释放 (19292.7272ms)
+✔ 手机CDP原生触摸驻留滑动与昼夜外观；减少动态后恢复加速，色卡和页面可用 (7237.8041ms)
+✔ 连续切换质感最后选择生效；保留独立棉花糖且所有旧上下文释放 (1633.5938ms)
+✔ 三质感共用圆球真实GPU比例；慢回弹十色在昼夜统一小幅加深，黏土与棉花糖保持原外观 (17958.5287ms)
+✔ 三种内芯圆球的实际GPU模型尺寸和屏幕范围一致：1440px (3742.5212ms)
+ℹ [{"core":"clay","input":{"x":214.46875,"y":188.234375,"width":565.03125,"height":564.765625}},{"core":"marshmallow","input":{"x":214.46875,"y":188.234375,"width":565.03125,"height":564.765625}},{"core":"butter","input":{"x":214.46875,"y":188.234375,"width":565.03125,"height":564.765625}}]
+✔ 三种内芯圆球的实际GPU模型尺寸和屏幕范围一致：390px (1605.91ms)
+ℹ [{"core":"clay","input":{"x":51.796875,"y":200.640625,"width":286.390625,"height":286.265625}},{"core":"marshmallow","input":{"x":51.796875,"y":200.640625,"width":286.390625,"height":286.265625}},{"core":"butter","input":{"x":51.796875,"y":200.640625,"width":286.390625,"height":286.265625}}]
+✔ 实际鼠标中心按压达到1.70以上，松手自然完整恢复且停帧 (17883.0255ms)
+ℹ {"pressed":1.7102043890884397,"restored":0}
+✔ 四侧可见轮廓内均接受真实按压并明显压深，球体之外不误判 (17318.299ms)
+ℹ [{"side":"left","depth":1.3543103141284756},{"side":"right","depth":1.355934582580712},{"side":"top","depth":1.3551581466338825},{"side":"bottom","depth":1.3467045136717797}]
+cloud: real surface mounted
+cloud: press, drag and natural recovery passed
+cloud: cancellation and color restore passed
+✔ cloud×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (4905.6487ms)
+paw: real surface mounted
+paw: press, drag and natural recovery passed
+paw: cancellation and color restore passed
+✔ paw×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (4685.206ms)
+cylinder: real surface mounted
+cylinder: press, drag and natural recovery passed
+cylinder: cancellation and color restore passed
+✔ cylinder×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (2871.0719ms)
+donut: real surface mounted
+donut: press, drag and natural recovery passed
+donut: cancellation and color restore passed
+✔ donut×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (3936.9943ms)
+pyramid: real surface mounted
+{"model":"pyramid","pose":"initial","edgeDisplacementInView":[3.76782232081041e-8,-1.5530065566871087e-8,-0.823237003448309]}
+pyramid: press, drag and natural recovery passed
+pyramid: cancellation and color restore passed
+{"model":"pyramid","pose":"rotated","edgeDisplacementInView":[1.3737185611262248e-8,4.033921940926888e-8,-1.0019012396165337]}
+✔ pyramid×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (3377.0072ms)
+flower: real surface mounted
+{"model":"flower","pose":"initial","edgeDisplacementInView":[0,-5.376024958536618e-9,-0.4229115921346547]}
+flower: press, drag and natural recovery passed
+flower: cancellation and color restore passed
+{"model":"flower","pose":"rotated","edgeDisplacementInView":[-2.9598900219696134e-8,-1.3828289624484569e-9,-0.23213656213112355]}
+✔ flower×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (4168.8931ms)
+star: real surface mounted
+{"model":"star","pose":"initial","edgeDisplacementInView":[0,5.2029882624538004e-9,-0.32757031578205265]}
+star: press, drag and natural recovery passed
+star: cancellation and color restore passed
+{"model":"star","pose":"rotated","edgeDisplacementInView":[1.7528150653145502e-8,-3.5808498388689713e-9,-0.16962583805406917]}
+✔ star×slow-rebound GPU: staged press, drag, slow complete recovery, cancel, color, centered rotation and lifecycle (3960.5963ms)
+✔ phone native touch: donut and paw preserve slow recovery, touch cancellation and full-matte preset (7037.5846ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 113493.0431
+
+COMMAND: node --test tests/slow-orb-depth-browser.test.cjs tests/orb-slow-rebound-browser.test.cjs tests/squishy-slow-rebound-browser.test.cjs
+EXIT_CODE: 0

@@ -13,7 +13,10 @@ for(const id of ['paw','donut'])for(const yaw of [0,110])test(`${id}: compact ch
   for(let i=0;i<meta.panelIds.length;i++)if(meta.detached[i]&&meta.layers[i]===1){const key=meta.panelIds[i];if(!groups.has(key))groups.set(key,[]);groups.get(key).push(i);}
   const point=new THREE.Vector3();function yAt(positions,ids){let sum=0,nonzero=false;for(const i of ids){point.fromArray(positions,i*3);nonzero ||= point.lengthSq()>0;sum+=point.applyMatrix4(matrix).y;}return nonzero?sum/ids.length:null;}
   const trajectories=[...groups].map(([panel,ids])=>({panel,ids,startY:yAt(meta.positions,ids),samples:[]})),measurements=[check()];core.release();wax.end();
-  for(let i=0;i<90;i++){frame();if(i%3===0){const s=wax.getSurfaceSnapshot({renderOnly:true});for(const item of trajectories){const y=yAt(s.positions,item.ids);if(y!==null)item.samples.push({time:now,y});}}if(i===12||i===30)measurements.push(check());}
+  // Deeper live-core recovery may support a plate longer before gravity wins.
+  // Observe 2.5s instead of 1.5s, retaining the same .4 world-unit fall and all
+  // live-core collision/rigidity checks; disappearing geometry cannot pass.
+  for(let i=0;i<150;i++){frame();if(i%3===0){const s=wax.getSurfaceSnapshot({renderOnly:true});for(const item of trajectories){const y=yAt(s.positions,item.ids);if(y!==null)item.samples.push({time:now,y});}}if(i===12||i===30||i===120)measurements.push(check());}
   for(const item of trajectories)assert.ok(item.samples.some(sample=>sample.y<item.startY-.4),`Shard ${item.panel} must actually fall at least .4 world units before cleanup: ${JSON.stringify(item)}`);
   assert.equal(wax.getState().detached,3,'Release never strips the remaining shell');t.diagnostic(JSON.stringify({id,yaw,measurements,trajectories:trajectories.map(({ids,...record})=>record)}));
  }finally{wax.dispose();g.dispose();}

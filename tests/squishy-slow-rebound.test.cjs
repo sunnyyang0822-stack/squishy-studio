@@ -39,12 +39,12 @@ for (const id of ids) test(`${id}×slow-rebound: local progressive pressure, sha
   const samples = id === 'donut' ? [[.72, 0], [1, .15], [.4, .2]] : [[0, -.2], [.55, .12], [-.4, .35]];
   for (const [x, y] of samples) {
     d.reset(); const h = hit(x, y); d.begin(h.point); advance(d, 6);
-    const early = maximum(rest, positions); assert.ok(early > .0001 && early < .035);
+    const early = maximum(rest, positions); assert.ok(early > .0001 && early < .044);
     advance(d, 12); const middle = maximum(rest, positions); assert.ok(middle > early);
     advance(d, 102); const held = maximum(rest, positions);
     const contactDepth = Math.hypot(...h.point.map((v, k) => positions[h.vertex + k] - v));
-    assert.ok(held > middle && held <= .460001 && contactDepth > .025, `${id}: real contact ${contactDepth}, max ${held}`);
-    const footprint = new Set(surface.neighborhood(h.point, .60).map(([i]) => i));
+    assert.ok(held > middle && held <= 1.800001 && contactDepth > .025, `${id}: real contact ${contactDepth}, max ${held}`);
+    const footprint = new Set(surface.neighborhood(h.point, .48).map(([i]) => i));
     for (let i = 0; i < rest.length / 3; i++) if (!footprint.has(i)) for (let k = 0; k < 3; k++) assert.equal(positions[i * 3 + k], rest[i * 3 + k]);
     d.release(); advance(d, 30); const recovering = maximum(rest, positions);
     assert.ok(recovering > 0 && recovering < held, 'Release recovers gradually, not instant reset or frozen retention');
@@ -59,7 +59,7 @@ for (const id of ids) test(`${id}×slow-rebound: local progressive pressure, sha
   const endpointBeforeDwell = Math.hypot(...b.point.map((v, k) => positions[b.vertex + k] - v));
   advance(d, 120);
   const endpointAfterDwell = Math.hypot(...b.point.map((v, k) => positions[b.vertex + k] - v));
-  const geometricLimit = Math.min(.46, surface.radii[b.vertex / 3] * .5);
+  const geometricLimit = Math.min(1.80, surface.radii[b.vertex / 3] * .92);
   if (endpointBeforeDwell >= geometricLimit - 1e-5) {
     // A thin ring may reach its physical limit even during a .4s swipe. It
     // must keep that boundary, then still deepen after a fresh shallow swipe.
@@ -119,7 +119,7 @@ for (const id of [...ids, 'orb']) test(`${id} slow-rebound presses follow the in
     assert.equal(positions[i], rest[i], 'A frontal press cannot pull vertices sideways');
     assert.equal(positions[i + 1], rest[i + 1], 'A frontal press cannot pull vertices toward the model center');
     if (rest[i + 2] !== positions[i + 2]) {
-      const shellLimit = contactGeometry.contactRadius(i / 3, ray) * .50;
+      const shellLimit = contactGeometry.contactRadius(i / 3, ray) * 1.85;
       assert.ok(rest[i + 2] - positions[i + 2] <= shellLimit + 1e-6, `${id}: cannot pass through the opposite shell at vertex ${i / 3}`);
     }
   }
