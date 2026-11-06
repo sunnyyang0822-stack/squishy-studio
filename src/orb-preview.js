@@ -257,9 +257,12 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       }
       Object.assign(surface.style, { left: `${(left + 1) * width / 2}px`, top: `${(1 - top) * height / 2}px`, width: `${(right - left) * width / 2}px`, height: `${(top - bottom) * height / 2}px` });
     }
-    function draw(time) {
+    function draw(time, flushCore = false) {
       current.frame = 0;
       if (disposed || broken || view !== current || document.hidden) { current.lastTime = null; return; }
+      // Let a queued discrete release/cancel run before another costly medium
+      // frame. Continuous pointer moves are excluded by isInputPending's default.
+      if (!flushCore && mediumInputPending()) { invalidate(); return; }
       const { width, height } = mount.getBoundingClientRect();
       if (width < 1 || height < 1) return;
       if (width !== current.width || height !== current.height) resize(width, height);
@@ -337,9 +340,19 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (wax && shellVisible) {
         pivot.updateMatrixWorld(true);
         wax.setWorldMatrix(mesh.matrixWorld);
-        const shellStep = wax.step(dt);
-        if (step.changed && !shellStep.changed) wax.sync();
-        needsFrame ||= shellStep.needsFrame;
+        // Medium wax uses this frame's captured input time. A synchronous
+        // marshmallow release flush may spend time updating the core; that
+        // computation must not turn an already released short tap into dwell.
+        if (mediumInputPending()) {
+          // Input can arrive during core work. Keep the attached geometry in
+          // sync, then yield without inventing another held-fracture step.
+          if (step.changed) wax.sync();
+          needsFrame = true;
+        } else {
+          const shellStep = wax.step(dt, activeConfig.waxThickness === 'medium' ? time / 1000 : undefined);
+          if (step.changed && !shellStep.changed) wax.sync();
+          needsFrame ||= shellStep.needsFrame;
+        }
       }
       current.lastTime = needsFrame ? time : null;
       try {
@@ -352,6 +365,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     }
     function invalidate() {
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
+    }
+    function mediumInputPending() {
+      return wax && activeConfig.waxThickness === 'medium' && current.input?.isActive() && navigator.scheduling?.isInputPending?.();
     }
     current.input = bindOrbInput({ surface, hitTest: (x, y, actual) => hitTest(x, y, actual || shellVisible), deformation, invalidate, onBegin: interruptRestore,
       onContact(point, phase) { if (shellVisible) { wax?.[phase === 'begin' ? 'begin' : 'move'](point); polish?.[phase === 'begin' ? 'begin' : 'move'](point); } },
@@ -367,11 +383,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         return null;
       } : undefined,
       beforeRelease() {
+        // A medium release ends shell force before the marshmallow-only core
+        // flush below; that flush still commits its final input segment.
+        if (activeConfig.waxThickness === 'medium') wax?.end();
         // Commit pending marshmallow path input while still pressed. A quick
         // swipe ending between rAF callbacks must not drop its final segment.
         if (feelId === 'marshmallow' && current.frame) {
           cancelAnimationFrame(current.frame); current.frame = 0;
-          draw(performance.now());
+          draw(performance.now(), true);
         }
       },
     });

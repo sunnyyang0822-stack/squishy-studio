@@ -1,0 +1,21 @@
+✖ queued medium release cannot add fractures; final marshmallow core input still flushes and a fresh hold can fracture (37131.5233ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38963.9313
+
+✖ failing tests:
+
+test at tests\medium-wax-release-browser.test.cjs:16:1
+✖ queued medium release cannot add fractures; final marshmallow core input still flushes and a fresh hold can fracture (37131.5233ms)
+  page.waitForFunction: Timeout 30000ms exceeded.
+      at ready (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\helpers\squishy-browser.cjs:90:14)
+      at async TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\medium-wax-release-browser.test.cjs:24:5) {
+    name: 'TimeoutError',
+    log: []
+  }
+EXIT_CODE=1

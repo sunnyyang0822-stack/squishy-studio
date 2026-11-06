@@ -2,6 +2,14 @@
 
 ## 2026-11-06最新薄蜡主线集成
 
+## 2026-11-06中蜡排队释放修正
+
+强制SwiftShader复现出实际宿主问题：棉花糖松手补算时仍保持壳体active，补算耗时进入驻留；手机释放排队期间还可能继续施力。修正仅中蜡：当前帧时间传给wax.step，检测离散输入待处理时让出新的施力帧，松手前先结束壳体再完整补算内芯路径。没有改变阈值、手感、几何、碎块或掉落参数。
+
+修正前强制软件渲染的云朵短按误掉3片（`software-input-before.txt`）；仅修时钟仍有手机失败（`software-clock-only.txt`），中间一次服务中断也保留（`software-clock-interrupted.txt`）。完整释放修正后，`MEDIUM_WAX_TEST_DPR=0.125 THIN_WAX_SOFTWARE_GL=1 STYLES_REVIEW_CASE=cloud node --test tests/medium-wax-core-browser.test.cjs`：1/1、exit 0，云朵×棉花糖/慢回弹×桌面/手机模拟4组全部零短按掉片、完整几何无违规、长按仍掉落（`software-release-final.txt`，原调用通过临时preload注入相同SwiftShader启动参数，随后加入正式环境开关）。其中手机pointerup处理延迟超过1秒仍不误碎；不是性能流畅性验收。
+
+`node --test tests/medium-wax-release-browser.test.cjs`：1/1、exit 0，`release-deterministic.txt`。固定模拟离散释放在队列中，仍用真实键盘事件驱动共享输入，验证排队期间零新增碎片、松手完整提交内芯最终形变且冻结、再次真正长按仍碎裂。首轮测试漏装探针导致的准备超时保留在`release-deterministic-initial.txt`，修正为直接等待场景和诊断就绪；不放宽行为断言。原中蜡时序专项1/1、exit 0（`medium-clock-unit.txt`），构建exit 0（`release-build.txt`）。最终CI仍须对新head重新通过。
+
 等待CI期间主线发布PR57；本分支已通过`893cbc7`集成`b65038c`。保留薄蜡的21组合、compactPanels采样、附着片缓存、懒法线、精确平局查询与厚度标量计算。中蜡参数、源面分区和自身性能开关保持；显式关闭中蜡的新cacheAttachedPanels以隔离两套已确认缓存配置。无工厂或场景复制。
 
 - `node --test --test-concurrency=1 tests/medium-wax-core-flow.test.cjs tests/medium-wax-regions.test.cjs tests/wax-cloud-reuse.test.cjs tests/wax-compact-panels.test.cjs tests/wax-compact-support.test.cjs tests/surface-thickness-scalar.test.cjs tests/wax-feature-normals.test.cjs tests/wax-collision-cache.test.cjs tests/detail-state.test.cjs tests/thin-wax-approved-scope.test.cjs`：40/40，exit 0，`latest-thin-integration.txt`。

@@ -1,0 +1,30 @@
+{"shortInput":"cloud-marshmallow-desktop-day","elapsed":11171,"events":[{"type":"pointerdown","time":17158.600000000093,"timestamp":17155.90000000014,"trusted":true},{"type":"pointerup","time":17555.200000000186,"timestamp":17320.40000000014,"trusted":true}],"detached":3}
+✖ medium wax non-paw marshmallow and slow rebound native input and full geometry (132484.1823ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 151182.3931
+
+✖ failing tests:
+
+test at tests\medium-wax-core-browser.test.cjs:8:1
+✖ medium wax non-paw marshmallow and slow rebound native input and full geometry (132484.1823ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  3 !== 0
+
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\medium-wax-core-browser.test.cjs:28:250)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+EXIT_CODE=1
