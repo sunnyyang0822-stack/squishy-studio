@@ -4,22 +4,22 @@ const state = import('../detail/state.mjs');
 const settle = () => new Promise(resolve => setImmediate(resolve));
 const audio = () => ({ ready: false, setVolume() {}, dispose() {} });
 
-test('thick wax is restricted to three orb cores with legacy final scope; thin predicates, default and other recipes remain independent', async () => {
+test('thick wax supports registered non-paw styles and three cores with legacy final scope; thin predicates, default and other recipes remain independent', async () => {
   const { defaultRecipe, styleNames, isThickWaxRecipe, isThinWaxRecipe, canRestartThinWax, canRestartWax } = await state;
   assert.equal(defaultRecipe.waxThickness, 'medium');
   for (const styleId of [...Object.keys(styleNames), 'unknown']) {
-    for (const coreMaterial of ['clay', 'marshmallow', 'butter']) {
+    for (const coreMaterial of ['clay', 'marshmallow', 'butter', 'unknown']) {
       for (const shellMaterial of ['wax', 'polish', 'sugar']) {
         for (const waxThickness of ['thin', 'medium', 'thick']) {
           const recipe = { ...defaultRecipe, styleId, coreMaterial, shellMaterial, waxThickness };
-          const thick = styleId === 'orb' && ['clay', 'marshmallow', 'butter'].includes(coreMaterial) && shellMaterial === 'wax' && waxThickness === 'thick';
+          const thick = Object.hasOwn(styleNames, styleId) && styleId !== 'paw' && ['clay', 'marshmallow', 'butter'].includes(coreMaterial) && shellMaterial === 'wax' && waxThickness === 'thick';
           assert.equal(isThickWaxRecipe(recipe), thick, JSON.stringify(recipe));
           if (waxThickness === 'thick') {
             assert.equal(isThinWaxRecipe(recipe), false);
             assert.equal(canRestartThinWax('shell', recipe), false);
           }
           for (const step of ['core', 'shell', 'decoration', 'making', 'play', 'unknown']) {
-            assert.equal(canRestartWax(step, recipe), canRestartThinWax(step, recipe) || thick && (['shell', 'decoration'].includes(step) || step === 'play' && coreMaterial === 'clay'));
+            assert.equal(canRestartWax(step, recipe), canRestartThinWax(step, recipe) || thick && (['shell', 'decoration'].includes(step) || step === 'play' && styleId === 'orb' && coreMaterial === 'clay'));
           }
         }
       }
@@ -115,6 +115,31 @@ test('marshmallow and slow-rebound thick orb previews preserve damage into hidde
       assert.equal(prepared.at(-1).coreColor, 'mint'); assert.notEqual(prepared.at(-1).recipeKey, shell.recipeKey);
       await controller.select('waxThickness', 'thin'); await controller.select('waxThickness', 'thick');
       assert.equal(prepared.at(-1).feelId, shell.feelId); assert.ok(disposed.length > 0);
+    } finally { controller.dispose(); }
+  }
+});
+
+
+test('all non-orb thick previews preserve damage around bare final play and rebuild only for recipe changes', async () => {
+  const { createDetailController } = await state;
+  for (const styleId of ['cloud', 'cylinder', 'donut', 'pyramid', 'flower', 'star']) for (const coreMaterial of ['clay', 'marshmallow', 'butter']) {
+    const prepared = [], restored = [], disposed = [];
+    const controller = createDetailController({ audio: audio(), step: 'shell', recipe: { styleId, coreMaterial, shellMaterial: 'wax', waxThickness: 'thick', coreColor: 'mint', shellColor: 'rose' }, renderer: {
+      async prepare(config) { prepared.push(config); return { commit() {}, dispose() { disposed.push(config); } }; },
+      restore(options) { restored.push(options); }, stopInput() {}, dispose() {},
+    } });
+    try {
+      await controller.load(); const shell = prepared.at(-1);
+      assert.equal(shell.styleId, styleId); assert.equal(shell.feelId, coreMaterial === 'butter' ? 'slow-rebound' : coreMaterial);
+      assert.equal(shell.waxCollection, false);
+      controller.setStep('decoration'); controller.setStep('shell'); await settle(); assert.equal(prepared.length, 1);
+      controller.setStep('making'); controller.setStep('play'); await settle();
+      assert.deepEqual(restored, [{ preserveShell: true }], `${styleId}/${coreMaterial} legacy bare final must restore its core and retain preview damage`);
+      controller.restart(); assert.equal(restored.length, 1);
+      controller.setStep('shell'); await settle(); assert.equal(prepared.at(-1).recipeKey, shell.recipeKey);
+      controller.restart(); assert.deepEqual(restored, [{ preserveShell: true }, undefined]);
+      await controller.select('shellColor', 'sky'); assert.equal(prepared.at(-1).coreColor, 'mint');
+      assert.notEqual(prepared.at(-1).recipeKey, shell.recipeKey); assert.ok(disposed.length > 0);
     } finally { controller.dispose(); }
   }
 });

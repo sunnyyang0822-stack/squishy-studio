@@ -1,0 +1,34 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (5.4478ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.4907ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (6.0317ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (2.0297ms)
+✔ 尚未实现外壳的制作结束保留原有自动恢复 (1.3675ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (6.5561ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (0.9735ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (1.4204ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (0.5651ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.4521ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (1.2471ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (0.5734ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.4717ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (7.5566ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (0.8307ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.6312ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.3288ms)
+✔ thick wax supports registered non-paw styles and three cores with legacy final scope; thin predicates, default and other recipes remain independent (3.6985ms)
+✔ clay orb thick-wax navigation preserves damage and colors through final play; explicit restart restores once (5.739ms)
+✔ rapid thin/thick/thin selection commits the latest recipe and disposes stale or late handles (0.8406ms)
+✔ marshmallow and slow-rebound thick orb previews preserve damage into hidden final play and restore each original core (2.4034ms)
+✔ all non-orb thick previews preserve damage around bare final play and rebuild only for recipe changes (5.4253ms)
+✔ thin-wax registry is immutable, rejects unknown ids and reuses verified parameters (62.9849ms)
+✔ preset defaults to falling cleanup with permanent holes; collection requires explicit opt-in (565.9427ms)
+✔ preset instances isolate geometry, color, clock, damage, reset and disposal (240.1425ms)
+✔ preset accepts initial world matrix without moving caller-owned rest data (379.9525ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1430.2096
