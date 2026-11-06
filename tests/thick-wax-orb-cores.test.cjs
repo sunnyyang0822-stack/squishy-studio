@@ -41,7 +41,7 @@ for (const feelId of cores) for (const reducedMotion of [false, true]) test(`${f
     inspect('two-second-deep-press');
     f.release(); thin.release(); const held = f.geometry.attributes.position.array.slice(), damage = f.wax.getState().detached, cracked = f.wax.getState().cracked;
     let previous = f.core.getState().depth;
-    for (let i = 0; i < (feelId === 'slow-rebound' ? 900 : 90); i++) {
+    for (let i = 0; i < (feelId === 'slow-rebound' ? 960 : 90); i++) {
       f.frame(); thin.frame();
       assert.deepEqual(f.geometry.attributes.position.array, thin.geometry.attributes.position.array);
       assert.equal(f.wax.getState().detached, damage); assert.equal(f.wax.getState().cracked, cracked);

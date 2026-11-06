@@ -62,7 +62,7 @@ test('最新正圆球深坑底部是圆缓盆底，消除尖锥收口且不扩�
   t.diagnostic(JSON.stringify(samples));
 });
 
-test('仅慢回弹圆球减小按入阻力，轻柔起步且1–2秒明显深压；恢复速率保持', async t => {
+test('统一慢回弹预设减小按入阻力，轻柔起步且1–2秒明显深压；恢复速率保持', async t => {
   const { createSlowReboundDeformation, slowReboundParameters, slowReboundOrbDepthLimits } = await import('../src/orb-slow-rebound.mjs');
   const { createSurfaceGeometry } = await import('../src/surface-clay.mjs');
   const mesh = readMesh('assets/models/squishy-orb.glb');
@@ -74,10 +74,10 @@ test('仅慢回弹圆球减小按入阻力，轻柔起步且1–2秒明显深压
   }
   const hit = Array.from(rest.slice(contact, contact + 3)), results = [];
   const depth = p => Math.hypot(...[0, 1, 2].map(k => p[contact + k] - rest[contact + k]));
-  for (const depthLimits of [undefined, slowReboundOrbDepthLimits]) {
+  for (const depthLimits of [{ maximumDepth: .46, radialLimit: .5, pressSpeed: .45, rimRadius: .6, concentration: 0, rayDepthRatio: .5 }, undefined]) {
     const positions = rest.slice(), geometry = createSurfaceGeometry(rest, normals, mesh.indices);
     const d = createSlowReboundDeformation(positions, normals, { depthLimits,
-      getPressDirection: () => [0, 0, 1], constrainPress: geometry.createContactSafety({ uniform: Boolean(depthLimits), adaptiveChart: Boolean(depthLimits) }),
+      getPressDirection: () => [0, 0, 1], constrainPress: geometry.createContactSafety({ uniform: !depthLimits, adaptiveChart: !depthLimits }),
       getPressRadius: (i, direction) => geometry.contactRadius(i, direction) });
     d.begin(hit); d.step(1 / 60); const first = depth(positions);
     advance(d, .3 - 1 / 60); const early = depth(positions);
@@ -107,8 +107,8 @@ test('仅慢回弹圆球减小按入阻力，轻柔起步且1–2秒明显深压
     results.push({ first, early, at1s, at2s, long });
   }
   assert.ok(Object.isFrozen(slowReboundOrbDepthLimits));
-  assert.equal(slowReboundParameters.maximumDepth, .46);
-  assert.equal(slowReboundParameters.radialLimit, .5);
+  assert.equal(slowReboundParameters.maximumDepth, 1.80);
+  assert.equal(slowReboundParameters.radialLimit, .92);
   assert.equal(slowReboundParameters.dragDepth, .20);
   assert.ok(results[1].long > 1.20 && results[1].long > .85 * 1.4, 'Actual depth grows at least 40% beyond the previous .85 review');
   assert.ok(results[1].first > 0 && results[1].first < .0015, 'No instant collapse on first frame');

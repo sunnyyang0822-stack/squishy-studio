@@ -3,7 +3,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { getOrbPreset } from './orb-presets.mjs';
 import { getOrbFeel } from './orb-feels.mjs';
-import { slowReboundOrbDepthLimits } from './orb-slow-rebound.mjs';
 import { getSquishyStyle } from './squishy-styles.mjs';
 import { createSurfaceGeometry } from './surface-clay.mjs';
 import { getOrbAppearance, getModelPresentationScale } from './orb-appearance.mjs';
@@ -97,7 +96,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         }
         return direction.toArray();
       },
-      ...(!isSurface ? { depthLimits: slowReboundOrbDepthLimits, getPressDepthScale: () => orbContactDepthScale, constrainPress: orbPressGeometry.createContactSafety({ uniform: true, adaptiveChart: true }), getPressRadius: (i, direction) => orbPressGeometry.contactRadius(i, direction) } : {}),
+      ...(!isSurface ? { getPressDepthScale: () => orbContactDepthScale, constrainPress: orbPressGeometry.createContactSafety({ uniform: true, adaptiveChart: true }), getPressRadius: (i, direction) => orbPressGeometry.contactRadius(i, direction) } : {}),
     } : {};
     let deformation;
     try {
