@@ -1,0 +1,78 @@
+✔ 慢回弹独立登记且默认仍为clay；首帧/100ms渐进下陷，与黏土可量测区分 (647.2215ms)
+ℹ {"firstFrame":0.001215279102325442,"at100ms":0.04374998807907114,"at300ms":0.251999974250794,"at3s":0.9200000166893025,"slowAfter2s":0.1857447624206547,"clayAfter2s":0.3136377334594734}
+✔ 厚实哑光外观独立于手感：仅full-matte增厚和加深，默认外观完全保留 (3.2158ms)
+✔ 反馈修订不改变用户确认的回弹曲线、减少动态恢复或最终收敛 (401.9349ms)
+✔ 按压有平滑起步，120ms后匀速深入，没有先猛陷再缓慢逼近的尾段 (619.8939ms)
+ℹ {"timesMs":[120,170,220],"values":[0.06300002336502089,0.11549997329711939,0.16799998283386267],"increments":[0.0524999499320985,0.052500009536743275]}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=false (979.2108ms)
+ℹ {"reduced":false,"stoppedAt":14.3,"maxFinalStep":0.000009238719940185547,"finalError":0}
+✔ 松开初期保持凹陷；每个顶点单调恢复、精确归零且停帧；reduce=true (938.7251ms)
+ℹ {"reduced":true,"stoppedAt":2.3,"maxFinalStep":0.00000959634780883789,"finalError":0}
+✔ 驻留起点→滑动→驻留终点：中段浅、松手不造坑，整条路径恢复 (1159.8275ms)
+ℹ {"angles":[-1,0,1],"depths":[0.18804709960398233,0.03924494981765756,0.919999767602148]}
+✔ 长按后移到新位置，只接收当前帧接触量，不继承旧压深 (486.4233ms)
+✔ 连续滑动0.12s无驻留：无均匀深沟、路径连通且完全恢复 (635.8229ms)
+✔ 连续滑动0.8s无驻留：无均匀深沟、路径连通且完全恢复 (549.7461ms)
+✔ 连续滑动4s无驻留：无均匀深沟、路径连通且完全恢复 (763.6654ms)
+✔ 折返、交叉、重复揉压有界；旧痕和新痕最终共同消失 (2250.8548ms)
+✔ 深按、长按及多轮多方向按压无残差、不外翻、不越界 (6139.6928ms)
+✔ 稀疏跨越、同帧重复move不加深；不同刷新与事件密度处于有限误差内 (2899.1346ms)
+ℹ {"configurations":[{"dt":0.03333333333333333,"hz":30},{"dt":0.016666666666666666,"hz":60},{"dt":0.008333333333333333,"hz":120},{"dt":0.016666666666666666,"hz":10}],"maxCoordinateErrors":[0.010185867547988892,0,0.00006183981895446777,0.0049100518226623535]}
+✔ 显式换色恢复独占时钟；快速重启、取消与输入中断连续接管 (666.2464ms)
+✔ 取消缓慢恢复；reset清空计时和旧路径；减少动态切换、实例和资产隔离 (1209.3548ms)
+✔ 贴边深度缩放仅影响当前接触；移回中央连续接管，松手全网格恢复 (2458.3153ms)
+ℹ {"edgeDepth":1.403999924659729,"centerDepth":1.7999999523162842,"finalError":0}
+✔ 最新正圆球深坑底部是圆缓盆底，消除尖锥收口且不扩大外侧范围 (2708.7864ms)
+ℹ [{"bottomSoftness":0.15,"centerDepth":1.7999999523162842,"averageFloorDepthRatio":0.9852757317563091,"averageJunctionDepthRatio":0.5196544202077236,"footprint":0.47578414005440817},{"bottomSoftness":0.3,"centerDepth":1.7999999523162842,"averageFloorDepthRatio":0.9978438571076179,"averageJunctionDepthRatio":0.6908385953198166,"footprint":0.47578414005440817}]
+✔ 统一慢回弹预设减小按入阻力，轻柔起步且1–2秒明显深压；恢复速率保持 (2773.7926ms)
+ℹ {"original":{"first":0.0005208253860473633,"early":0.10799998044967651,"at1s":0.4229997396469116,"at2s":0.46000003814697266,"long":0.46000003814697266},"review":{"first":0.0012152791023254395,"early":0.25199997425079346,"at1s":0.9869997501373291,"at2s":1.7999999523162842,"long":1.7999999523162842}}
+✔ 深压集中在原局部范围，恢复扩大前的宽度，中心深度和连续推进保留 (3579.3133ms)
+ℹ [{"rimRadius":0.6,"affectedVertices":241,"footprintExtent":0.5960729632004129,"depth":1.7999999523162842},{"rimRadius":0.48,"affectedVertices":151,"footprintExtent":0.47578414005440817,"depth":1.7999999523162842}]
+✔ 真实倾斜视线的深坑保持面积安全裕量、射线投影及背壁厚度，恢复路径全程安全 (2514.4868ms)
+ℹ {"maximumDepth":1.7999997842350195,"minimumAreaRatio":0.877502886005615,"finalError":0}
+✔ 斜按触发安全限制时整体保留圆滑轮廓，禁止逐三角形生成折面 (395.1123ms)
+ℹ {"acceptedFraction":0.741897110175304}
+✔ slow-rebound feel and saved preset share the approved defaults, with no orb-only parameter override (105.4279ms)
+✔ orb: unified preset is deeper than explicit old tuning; local footprint and exact recovery (3990.0266ms)
+ℹ {"style":"orb","oldDepth":0.46000003814697266,"approvedDepth":1.7999999523162842,"finalError":0}
+✔ cloud: unified preset is deeper than explicit old tuning; local footprint and exact recovery (5891.6889ms)
+ℹ {"style":"cloud","oldDepth":0.3328113853931427,"approvedDepth":1.2314021587371826,"finalError":0}
+✔ paw: unified preset is deeper than explicit old tuning; local footprint and exact recovery (21295.0244ms)
+ℹ {"style":"paw","oldDepth":0.28427761793136597,"approvedDepth":0.3467097580432892,"finalError":0}
+✔ cylinder: unified preset is deeper than explicit old tuning; local footprint and exact recovery (6362.0161ms)
+ℹ {"style":"cylinder","oldDepth":0.46000003814697266,"approvedDepth":1.7999999523162842,"finalError":0}
+✔ donut: unified preset is deeper than explicit old tuning; local footprint and exact recovery (9858.8574ms)
+ℹ {"style":"donut","oldDepth":0.14359498023986816,"approvedDepth":0.5313014984130859,"finalError":0}
+✔ pyramid: unified preset is deeper than explicit old tuning; local footprint and exact recovery (2177.1786ms)
+ℹ {"style":"pyramid","oldDepth":0.2768421471118927,"approvedDepth":0.7820466160774231,"finalError":0}
+✔ flower: unified preset is deeper than explicit old tuning; local footprint and exact recovery (4534.192ms)
+ℹ {"style":"flower","oldDepth":0.255344957113266,"approvedDepth":0.6640339493751526,"finalError":0}
+✔ star: unified preset is deeper than explicit old tuning; local footprint and exact recovery (4489.3373ms)
+ℹ {"style":"star","oldDepth":0.27228865027427673,"approvedDepth":1.0074679851531982,"finalError":0}
+✔ sculpted models retain identical dimensions across all feels while the original orb keeps its approved scale (268.1108ms)
+✔ cloud×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (4468.5002ms)
+✔ paw×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (57269.2468ms)
+✔ cylinder×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (3509.6434ms)
+✔ donut×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (4657.3718ms)
+✔ pyramid×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (1674.2037ms)
+✔ flower×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (3046.9911ms)
+✔ star×slow-rebound: local progressive pressure, shallow sliding and exact model recovery (2503.771ms)
+✔ cloud slow-rebound presses follow the input ray without centerward pinching (2036.7734ms)
+✔ paw slow-rebound presses follow the input ray without centerward pinching (4649.5886ms)
+✔ cylinder slow-rebound presses follow the input ray without centerward pinching (1679.1025ms)
+✔ donut slow-rebound presses follow the input ray without centerward pinching (2842.1422ms)
+✔ pyramid slow-rebound presses follow the input ray without centerward pinching (956.5026ms)
+✔ flower slow-rebound presses follow the input ray without centerward pinching (2025.0973ms)
+✔ star slow-rebound presses follow the input ray without centerward pinching (1991.6517ms)
+✔ orb slow-rebound presses follow the input ray without centerward pinching (746.8055ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 95975.006
+
+COMMAND: node --test tests/slow-rebound-preset.test.cjs tests/slow-orb-depth.test.cjs tests/orb-slow-rebound.test.cjs tests/squishy-slow-rebound.test.cjs
+EXIT_CODE: 0

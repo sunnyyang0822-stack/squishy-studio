@@ -1,0 +1,4 @@
+{"recordings":2,"errors":[],"exitCode":0}
+
+COMMAND: node scripts/capture-slow-approved.cjs
+EXIT_CODE: 0
