@@ -16,12 +16,16 @@ const thinWax = Object.freeze({
 
 // Model units, not optical material thickness. Gap and all behavior stay thin-wax.
 export const thickWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 3, seedCount: 36, maxInwardDeformation: .004 });
+export const thickWaxSurfaceParameters = Object.freeze({ ...thickWaxParameters, surfaceContact: true });
+// The torus needs surface-distance cells and a larger bounded collision solve.
+// Neither changes the physical thickness or the shared fracture timing.
+export const thickWaxDonutParameters = Object.freeze({ ...thickWaxSurfaceParameters, detachedCollisionIterations: 40, multiContactCollision: true });
 const thickWax = Object.freeze({
   id: 'thick-wax', material: 'wax', thickness: 'thick',
   parameters: thickWaxParameters,
   create(options = {}) {
     const { worldMatrix, ...shellOptions } = options;
-    const wax = createWaxShell({ ...shellOptions, collectionEnabled: options.collectionEnabled ?? false }, thickWaxParameters);
+    const wax = createWaxShell({ ...shellOptions, compactPanels: options.styleId === 'donut' ? true : options.compactPanels, collectionEnabled: options.collectionEnabled ?? false }, options.styleId === 'donut' ? thickWaxDonutParameters : options.styleId && options.styleId !== 'orb' ? thickWaxSurfaceParameters : thickWaxParameters);
     if (worldMatrix) wax.setWorldMatrix(worldMatrix);
     return wax;
   },

@@ -89,10 +89,10 @@ for (const core of ['marshmallow', 'butter']) test(`orb ${core} thick wax keeps 
   } finally { await page.close(); }
 });
 
-test('new orb core thick wax does not enable other models, materials or final-play shells', { timeout: 120000 }, async () => {
+test('thick wax excludes paw, unrelated materials and preview-only final-play shells', { timeout: 120000 }, async () => {
   const page = await browser.newPage();
   try {
-    for (const core of ['marshmallow', 'butter']) for (const extra of ['style=cloud&step=shell', 'style=orb&step=play', 'style=orb&step=shell&shellMaterial=sugar', 'style=orb&step=shell&shellMaterial=polish']) {
+    for (const core of ['marshmallow', 'butter']) for (const extra of ['style=paw&step=shell', 'style=cloud&step=play', 'style=orb&step=play', 'style=orb&step=shell&shellMaterial=sugar', 'style=orb&step=shell&shellMaterial=polish']) {
       await page.goto(`${base}/squishy/cloud/?coreMaterial=${core}&waxThickness=thick&${extra}`); await page.waitForSelector('.toy-stage[data-state=ready] .toy-mount canvas');
       await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics);
       assert.equal((await diagnostics(page)).enabled, false, `${core}/${extra}`);

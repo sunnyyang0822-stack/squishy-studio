@@ -173,7 +173,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     panel.end = records.length;
   }
-  if (fullSurfaceSupport) {
+  if (fullSurfaceSupport || config.surfaceContact) {
     // Samples describe the actual two-sided volume using base vertex + layer
     // IDs. Shared surface/wall edges reuse the same query; no distinct sample
     // position is omitted. Hints remain owned by a stable sample across frames.
@@ -248,7 +248,19 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     const triangle = new THREE.Triangle(...points), normal = triangle.getNormal(vec()), oldNormal = new THREE.Triangle(...original).getNormal(vec()), nearest = triangle.closestPointToPoint(position, vec());
     return { face, ids, points: points.map(p => p.toArray()), normal: normal.toArray(), originalNormal: oldNormal.toArray(), normalDotOriginal: normal.dot(oldNormal), pointSignedPlaneDistance: position.clone().sub(points[0]).dot(normal), nearestDistance: position.distanceTo(nearest), mappedNormalDots: vertices.map(vertex => vertex.n.dot(normal)) };
   }
-  function localPanels(radius = .47) { return panels.filter(p => !p.detached && p.center.distanceTo(contact) < radius).sort((a, b) => a.center.distanceToSquared(contact) - b.center.distanceToSquared(contact)); }
+  function localPanels(radius = .47) {
+    if (!config.surfaceContact) return panels.filter(p => !p.detached && p.center.distanceTo(contact) < radius).sort((a, b) => a.center.distanceToSquared(contact) - b.center.distanceToSquared(contact));
+    const triangle = new THREE.Triangle(), nearest = vec(), found = [], limit = radius * radius;
+    for (const panel of panels) if (!panel.detached) {
+      let distance = Infinity;
+      for (const ids of panel.triangles) {
+        map(panel.vertices[ids[0]], source, triangle.a); map(panel.vertices[ids[1]], source, triangle.b); map(panel.vertices[ids[2]], source, triangle.c);
+        distance = Math.min(distance, triangle.closestPointToPoint(contact, nearest).distanceToSquared(contact));
+      }
+      if (distance < limit) found.push({ panel, distance });
+    }
+    return found.sort((a, b) => a.distance - b.distance || a.panel.id - b.panel.id).map(entry => entry.panel);
+  }
   function crack() {
     // A tiny local starter crack; the connected brittle wave happens later.
     if (!stroke.starter) stroke.starter = localPanels(.32)[0];
@@ -357,8 +369,9 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       // Vertex, outer face, triangle center and edge samples stay rigid together.
       const certificates = detachedClearanceCertificates && config.maxInwardDeformation !== undefined ? (panel.detachedClearance ||= []) : null;
       const coreMotion = certificates ? collisions.getMotionBound() : undefined;
-      for (let attempt = 0; attempt < 10; attempt++) {
+      for (let attempt = 0; attempt < (config.detachedCollisionIterations ?? 10); attempt++) {
         let site = 0;
+        const contacts = config.multiContactCollision ? [] : null;
         let minimum = .003; const pushNormal = vec(), sample = point => {
           const id = site++, prior = certificates?.[id];
           // Signed clearance is 1-Lipschitz. Bound both this exact sample's
@@ -373,16 +386,44 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
             const saved = certificates[id] ||= { point: vec() };
             saved.point.copy(point); saved.distance = distance; saved.motion = coreMotion;
           }
+          if (contacts && distance < .003) contacts.push({ normal: normal.clone(), depth: .003 - distance });
           if (distance < minimum) { minimum = distance; pushNormal.copy(normal); }
         };
-        for (const vertex of mapped) { sample(vertex.rendered); sample(vertex.rendered.clone().addScaledVector(vertex.renderedNormal, config.thickness)); }
-        for (const triangle of panel.triangles) {
-          const points = triangle.map(i => mapped[i].rendered);
-          sample(points[0].clone().add(points[1]).add(points[2]).multiplyScalar(1 / 3));
-          for (let k = 0; k < 3; k++) sample(points[k].clone().add(points[(k + 1) % 3]).multiplyScalar(.5));
+        if (config.surfaceContact) {
+          // Thick surface plates carry their full two-sided volume. Include
+          // outer face interiors and fracture-wall edges, not only corners.
+          const position = panel.detachedSamplePoint ||= vec();
+          for (const entry of panel.fullSupportSamples) {
+            position.set(0, 0, 0);
+            for (const node of entry.nodes) {
+              const vertex = mapped[node >> 1];
+              position.add(vertex.rendered);
+              if (node & 1) position.addScaledVector(vertex.renderedNormal, config.thickness);
+            }
+            sample(position.multiplyScalar(1 / entry.nodes.length));
+          }
+        } else {
+          for (const vertex of mapped) { sample(vertex.rendered); sample(vertex.rendered.clone().addScaledVector(vertex.renderedNormal, config.thickness)); }
+          for (const triangle of panel.triangles) {
+            const points = triangle.map(i => mapped[i].rendered);
+            sample(points[0].clone().add(points[1]).add(points[2]).multiplyScalar(1 / 3));
+            for (let k = 0; k < 3; k++) sample(points[k].clone().add(points[(k + 1) % 3]).multiplyScalar(.5));
+          }
         }
         if (minimum >= .00299) break;
         const correction = pushNormal.multiplyScalar((.003 - minimum) * 1.15);
+        if (contacts) {
+          // A curved plate may touch opposing sides of a concavity. Solve the
+          // current contact half-spaces together rather than oscillating from
+          // the single deepest vertex to another. Re-query the whole volume
+          // after this rigid translation; these linear constraints are only a
+          // candidate correction, never a replacement for exact clearance.
+          correction.set(0, 0, 0);
+          for (let pass = 0; pass < 8; pass++) for (const contact of contacts) {
+            const remaining = contact.depth - correction.dot(contact.normal);
+            if (remaining > 0) correction.addScaledVector(contact.normal, remaining * 1.05);
+          }
+        }
         for (const vertex of mapped) vertex.rendered.add(correction);
         const worldCorrection = correction.clone().applyMatrix3(worldLinear); body.position.add(worldCorrection);
         const direction = worldCorrection.clone().normalize(); body.velocity.addScaledVector(direction, -Math.min(0, body.velocity.dot(direction)));

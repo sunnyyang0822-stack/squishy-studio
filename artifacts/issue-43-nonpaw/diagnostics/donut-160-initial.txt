@@ -1,0 +1,29 @@
+✖ donut/slow-rebound: real thick pieces, local triple thickness, independent core and complete live clearance (138783.0183ms)
+ℹ {"style":"donut","feel":"slow-rebound","phases":[{"label":"intact","frames":0,"depth":0,"detached":0,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003990200100417923,"samples":296128},{"label":"first-separation","frames":32,"depth":0.16129310429096222,"detached":3,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003932264476373391,"samples":296128}],"partitions":{"thin":{"count":260,"total":12.49469953453338,"mean":0.04805653667128223,"min":0.030783601114424394,"p10":0.03793190288706756,"median":0.04614079960606352,"p90":0.060536824411716664,"max":0.08038537554760831},"thick":{"count":36,"total":12.494699534175504,"mean":0.34707498706043066,"min":0.2085809318775935,"p10":0.25924267765934167,"median":0.3311318020284968,"p90":0.43230270298557294,"max":0.5539406832696705},"meanAreaRatio":7.222222222015362},"innerRing":{"thin":{"count":103,"total":5.126403174324929,"mean":0.0497709046050964,"min":0.03332566982610046,"p10":0.038733636707588934,"median":0.04842096152409036,"p90":0.06216361875895591,"max":0.08038537554760831},"thick":{"count":22,"total":7.654998583619684,"mean":0.347954481073622,"min":0.2085809318775935,"p10":0.24716151534321515,"median":0.3562312056077851,"p90":0.43168221770073806,"max":0.4328750046731226}}}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 140206.5914
+
+✖ failing tests:
+
+test at tests\thick-wax-nonpaw-geometry.test.cjs:5:51
+✖ donut/slow-rebound: real thick pieces, local triple thickness, independent core and complete live clearance (138783.0183ms)
+  AssertionError [ERR_ASSERTION]: donut: complete-volume penetration -0.00042143715704220165; triangle 11313, panel 10, layer 0, detached 1 vertex
+      at check (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\helpers\thick-nonpaw-geometry.cjs:100:12)
+      at completeClearance (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\helpers\thick-nonpaw-geometry.cjs:106:26)
+      at inspect (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\thick-wax-nonpaw-geometry.test.cjs:7:112)
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\thick-wax-nonpaw-geometry.test.cjs:13:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

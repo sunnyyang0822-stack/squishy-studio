@@ -1,0 +1,50 @@
+✔ donut/clay: real thick pieces, local triple thickness, independent core and complete live clearance (19517.5265ms)
+ℹ {"style":"donut","feel":"clay","phases":[{"label":"intact","frames":0,"depth":0,"detached":0,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003990200100417923,"samples":296128},{"label":"first-separation","frames":32,"depth":0.0622541718184948,"detached":3,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003954703033154944,"samples":296128},{"label":"deep-press","frames":120,"depth":0.2228025645017624,"detached":9,"pairs":16310,"walls":4468,"maximumError":2.2457541463960506e-7,"minimumSignedDistance":0.0030083145496514847,"samples":245924},{"label":"drag","frames":132,"depth":0.2376820594072342,"detached":10,"pairs":14972,"walls":4468,"maximumError":2.0935642915109742e-7,"minimumSignedDistance":0.003067817133916391,"samples":225260},{"label":"released","frames":162,"depth":0.20226997137069702,"detached":10,"pairs":14516,"walls":4468,"maximumError":2.1638296598958107e-7,"minimumSignedDistance":0.0030723674973100645,"samples":218624},{"label":"rotated-falling","frames":180,"depth":0.202029749751091,"detached":10,"pairs":14153,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003005517156719656,"samples":213416},{"label":"broken-rim-repeat","frames":250,"depth":0.26415979862213135,"detached":11,"pairs":14153,"walls":4468,"maximumError":1.150181461601063e-7,"minimumSignedDistance":0.0030444939468247953,"samples":213416},{"label":"restore-0","frames":251,"depth":0.26415979862213135,"detached":11,"pairs":14153,"walls":4468,"maximumError":1.4278404218692753e-7,"minimumSignedDistance":0.0032322083286200603,"samples":213416},{"label":"restore-6","frames":257,"depth":0.03301997482776642,"detached":11,"pairs":14153,"walls":4468,"maximumError":1.3917539927466027e-7,"minimumSignedDistance":0.003067768524462606,"samples":213416},{"label":"restore-12","frames":263,"depth":0,"detached":11,"pairs":14153,"walls":4468,"maximumError":2.208691358279724e-7,"minimumSignedDistance":0.003122123358991218,"samples":213416},{"label":"reset","frames":263,"depth":0,"detached":0,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003990200100417923,"samples":296128}],"partitions":{"thin":{"count":271,"total":12.49469953330942,"mean":0.04610590233693513,"min":0.001245016252764593,"p10":0.0038213339237795534,"median":0.04451461211016749,"p90":0.10646054753692769,"max":0.22523334071833886},"thick":{"count":36,"total":12.494699534175504,"mean":0.34707498706043066,"min":0.2085809318775935,"p10":0.25924267765934167,"median":0.3311318020284968,"p90":0.43230270298557294,"max":0.5539406832696705},"meanAreaRatio":7.527777778299574},"innerRing":{"thin":{"count":180,"total":5.903897388773038,"mean":0.032799429937627994,"min":0.001245016252764593,"p10":0.003577818220369436,"median":0.008542141364562226,"p90":0.10118743743081304,"max":0.22523334071833886},"thick":{"count":22,"total":7.654998583619684,"mean":0.347954481073622,"min":0.2085809318775935,"p10":0.24716151534321515,"median":0.3562312056077851,"p90":0.43168221770073806,"max":0.4328750046731226}},"frames":263}
+✖ donut/marshmallow: real thick pieces, local triple thickness, independent core and complete live clearance (15515.3658ms)
+ℹ {"style":"donut","feel":"marshmallow","phases":[{"label":"intact","frames":0,"depth":0,"detached":0,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003990200100417923,"samples":296128},{"label":"first-separation","frames":32,"depth":0.11768993735313416,"detached":3,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003866475158386076,"samples":296128},{"label":"deep-press","frames":120,"depth":0.26032742857933044,"detached":5,"pairs":17645,"walls":4468,"maximumError":4.4164530230150767e-7,"minimumSignedDistance":0.0029714034725063523,"samples":266280},{"label":"drag","frames":132,"depth":0.26463013887405396,"detached":5,"pairs":16809,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.0029717149234663866,"samples":253148},{"label":"released","frames":162,"depth":0.26463013887405396,"detached":5,"pairs":16809,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.0029717149234663866,"samples":253148}],"partitions":{"thin":{"count":271,"total":12.49469953330942,"mean":0.04610590233693513,"min":0.001245016252764593,"p10":0.0038213339237795534,"median":0.04451461211016749,"p90":0.10646054753692769,"max":0.22523334071833886},"thick":{"count":36,"total":12.494699534175504,"mean":0.34707498706043066,"min":0.2085809318775935,"p10":0.25924267765934167,"median":0.3311318020284968,"p90":0.43230270298557294,"max":0.5539406832696705},"meanAreaRatio":7.527777778299574},"innerRing":{"thin":{"count":180,"total":5.903897388773038,"mean":0.032799429937627994,"min":0.001245016252764593,"p10":0.003577818220369436,"median":0.008542141364562226,"p90":0.10118743743081304,"max":0.22523334071833886},"thick":{"count":22,"total":7.654998583619684,"mean":0.347954481073622,"min":0.2085809318775935,"p10":0.24716151534321515,"median":0.3562312056077851,"p90":0.43168221770073806,"max":0.4328750046731226}}}
+✖ donut/slow-rebound: real thick pieces, local triple thickness, independent core and complete live clearance (16041.8063ms)
+ℹ {"style":"donut","feel":"slow-rebound","phases":[{"label":"intact","frames":0,"depth":0,"detached":0,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003990200100417923,"samples":296128},{"label":"first-separation","frames":32,"depth":0.16129310429096222,"detached":3,"pairs":19548,"walls":4468,"maximumError":1.0530941528530402e-7,"minimumSignedDistance":0.003932264476373391,"samples":296128}],"partitions":{"thin":{"count":260,"total":12.49469953453338,"mean":0.04805653667128223,"min":0.030783601114424394,"p10":0.03793190288706756,"median":0.04614079960606352,"p90":0.060536824411716664,"max":0.08038537554760831},"thick":{"count":36,"total":12.494699534175504,"mean":0.34707498706043066,"min":0.2085809318775935,"p10":0.25924267765934167,"median":0.3311318020284968,"p90":0.43230270298557294,"max":0.5539406832696705},"meanAreaRatio":7.222222222015362},"innerRing":{"thin":{"count":103,"total":5.126403174324929,"mean":0.0497709046050964,"min":0.03332566982610046,"p10":0.038733636707588934,"median":0.04842096152409036,"p90":0.06216361875895591,"max":0.08038537554760831},"thick":{"count":22,"total":7.654998583619684,"mean":0.347954481073622,"min":0.2085809318775935,"p10":0.24716151534321515,"median":0.3562312056077851,"p90":0.43168221770073806,"max":0.4328750046731226}}}
+ℹ tests 3
+ℹ suites 0
+ℹ pass 1
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51260.2741
+
+✖ failing tests:
+
+test at tests\thick-wax-nonpaw-geometry.test.cjs:5:51
+✖ donut/marshmallow: real thick pieces, local triple thickness, independent core and complete live clearance (15515.3658ms)
+  AssertionError [ERR_ASSERTION]: donut: complete-volume penetration -0.00422539706014963; triangle 11147, panel 10, layer 0, detached 1 vertex
+      at check (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\helpers\thick-nonpaw-geometry.cjs:99:12)
+      at completeClearance (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\helpers\thick-nonpaw-geometry.cjs:105:26)
+      at inspect (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\thick-wax-nonpaw-geometry.test.cjs:7:112)
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\thick-wax-nonpaw-geometry.test.cjs:14:108)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests\thick-wax-nonpaw-geometry.test.cjs:5:51
+✖ donut/slow-rebound: real thick pieces, local triple thickness, independent core and complete live clearance (16041.8063ms)
+  AssertionError [ERR_ASSERTION]: donut: complete-volume penetration -0.0006125641828155304; triangle 11263, panel 10, layer 0, detached 1 edge
+      at check (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\helpers\thick-nonpaw-geometry.cjs:99:12)
+      at completeClearance (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\helpers\thick-nonpaw-geometry.cjs:106:33)
+      at inspect (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\thick-wax-nonpaw-geometry.test.cjs:7:112)
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\thick-wax-nonpaw-geometry.test.cjs:13:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
