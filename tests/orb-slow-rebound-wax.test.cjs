@@ -24,7 +24,7 @@ for (const reducedMotion of [false, true]) test(`local slow-rebound orb + thin w
     const p=contact();act('begin',p);wax.begin(p);for(let i=0;i<29;i++)frame();assert.equal(wax.getState().detached,0);
     for(let i=0;i<91;i++)frame();assert.ok(wax.getState().detached>0);assert.ok(core.getState().depth>.4);inspect('deep press');
     act('release');wax.end();const broken=wax.getState();let previous=core.getState().depth;
-    for(let i=0;i<900;i++){frame();assert.ok(core.getState().depth<=previous+1e-6);previous=core.getState().depth;assert.equal(wax.getState().detached,broken.detached);assert.equal(wax.getState().cracked,broken.cracked);if([1,30,120,400,800].includes(i))inspect(`natural recovery ${i}`);if(core.getState().depth===0)break;}
+    for(let i=0;i<960;i++){frame();assert.ok(core.getState().depth<=previous+1e-6);previous=core.getState().depth;assert.equal(wax.getState().detached,broken.detached);assert.equal(wax.getState().cracked,broken.cracked);if([1,30,120,400,800].includes(i))inspect(`natural recovery ${i}`);if(core.getState().depth===0)break;}
     assert.deepEqual(positions,rest,'Natural slow recovery must reach exact original positions without resetting the shell');inspect('fully rebounded with permanent holes');
     const left=contact(-.45);act('begin',left);wax.begin(left);
     for(let i=0;i<12;i++){const point=contact(-.45+.9*i/11);act('move',point,.04);wax.move(point);frame();}

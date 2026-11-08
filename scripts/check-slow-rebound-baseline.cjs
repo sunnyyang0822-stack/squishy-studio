@@ -6,13 +6,15 @@ const baseline = 'aaaed2f19a5a2f3a34f4b9200d3189e2a9bed116';
   const source = execFileSync('git', ['show', `${baseline}:src/orb-slow-rebound.mjs`], { encoding: 'utf8' });
   const original = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
   const current = await import('../src/orb-slow-rebound.mjs');
-  assert.deepEqual(current.slowReboundParameters, original.slowReboundParameters, 'Confirmed material parameters remain exact');
+  // The default preset was intentionally replaced after the November review.
+  // Keep the old algorithm contract reproducible only with explicit old options.
+  const legacy = { ...original.slowReboundParameters, rimRadius: .60, concentration: 0, rayDepthRatio: .50 };
   assert.equal(Object.isFrozen(current.slowReboundParameters), true);
   let operations = 0;
   for (const reducedMotion of [false, true]) {
     const rest = modelAttribute('POSITION'), normals = modelAttribute('NORMAL'), a = rest.slice(), b = rest.slice();
     const old = original.createSlowReboundDeformation(a, normals, { reducedMotion });
-    const next = current.createSlowReboundDeformation(b, normals, { reducedMotion });
+    const next = current.createSlowReboundDeformation(b, normals, { reducedMotion, depthLimits: legacy });
     function run(method, ...args) {
       assert.deepEqual(next[method](...args), old[method](...args), method + ' return');
       assert.deepEqual(b, a, method + ' positions'); assert.deepEqual(next.getState(), old.getState(), method + ' state'); operations++;
@@ -32,5 +34,5 @@ const baseline = 'aaaed2f19a5a2f3a34f4b9200d3189e2a9bed116';
       run('release'); frames(30, dt); run('setReducedMotion', reducedMotion); run('reset'); frames(1, dt);
     }
   }
-  console.log(`PASS: origin/main baseline ${baseline}; ${operations} operations, normal/reduced motion at 30/60/120 Hz; parameters and every return, vertex and state strictly equal.`);
+  console.log(`PASS: explicit legacy options reproduce ${baseline}; ${operations} operations, normal/reduced motion at 30/60/120 Hz; every return, vertex and state strictly equal. Default preset is intentionally newer.`);
 })().catch(error => { console.error(error); process.exitCode = 1; });

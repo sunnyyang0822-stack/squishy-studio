@@ -40,7 +40,7 @@ async function finishRecovery(page) {
   await renderTime(page, 1000);
   const partial = await stats(page);
   assert.ok(partial.maximum > 0 && partial.maximum < before.maximum, 'Actual GPU recovery remains gradual throughout its first second');
-  await page.clock.fastForward(13000); await exactRest(page);
+  await page.clock.fastForward(16000); await exactRest(page);
 }
 async function assertRingIsolation(page, id) {
   if (id === 'donut') assert.equal(await page.evaluate(() => { const p = window.styleProbe; return p.positions.every((v, i) => p.rest[i - i % 3] >= -.35 || v === p.rest[i]); }), true, 'Ring pressure never crosses the empty hole');
@@ -75,7 +75,7 @@ for (const id of ['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'sta
     await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.clock.runFor(80);
     const early = await stats(page); assert.ok(early.maximum > .00001 && early.maximum < .04, JSON.stringify(early));
     await page.clock.runFor(600); const held = await stats(page);
-    assert.ok(held.maximum > early.maximum * 2 && held.maximum > .03 && held.maximum <= .460001, JSON.stringify(held));
+    assert.ok(held.maximum > early.maximum * 2 && held.maximum > .03 && held.maximum <= 1.800001, JSON.stringify(held));
     assert.ok(held.uploads - uploads >= 25, 'Controlled time executes actual position uploads and GPU draws');
     assert.ok(held.finite && held.changed > 10 && held.changed < held.vertices * .6);
     await assertRingIsolation(page, id);
