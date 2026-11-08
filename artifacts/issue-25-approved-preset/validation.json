@@ -1,0 +1,313 @@
+{
+  "baseline": "b65038c",
+  "integrationBaseline": "cd1480d",
+  "speed": "normal wall time",
+  "physicalPhone": false,
+  "recordings": [
+    {
+      "name": "desktop-mouse",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "mouse",
+      "measurements": [
+        {
+          "stage": "300ms-press",
+          "time": 1555.5,
+          "maximum": 0.2928099775419763,
+          "changed": 152,
+          "center": [
+            0.01622762252457981,
+            0.30539728065953303,
+            0.9248254614843606
+          ],
+          "uploads": 39,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 16295.299999998882,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 2225,
+          "contexts": 1
+        },
+        {
+          "stage": "2200ms-press",
+          "time": 18524,
+          "maximum": 1.7999998729179267,
+          "changed": 152,
+          "center": [
+            0.01611061933279544,
+            0.30550090470035673,
+            0.9252216748186988
+          ],
+          "uploads": 2553,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 34498.90000000037,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 4965,
+          "contexts": 1
+        },
+        {
+          "stage": "sliding",
+          "time": 36595.59999999963,
+          "maximum": 0.7128571487379011,
+          "changed": 289,
+          "center": [
+            -0.15750318902609015,
+            0.2884838666138901,
+            0.870333192837
+          ],
+          "uploads": 5250,
+          "contexts": 1
+        },
+        {
+          "stage": "endpoint-dwell",
+          "time": 37795.79999999888,
+          "maximum": 1.3602629059842015,
+          "changed": 291,
+          "center": [
+            0.2440567303221114,
+            0.2916174045985494,
+            0.8667810470167016
+          ],
+          "uploads": 5453,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 53117.79999999888,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 7756,
+          "contexts": 1
+        },
+        {
+          "stage": "night-deep",
+          "time": 55697.40000000037,
+          "maximum": 1.799999796255897,
+          "changed": 152,
+          "center": [
+            0.016110620497447856,
+            0.3055009050456463,
+            0.9252216747200822
+          ],
+          "uploads": 8016,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 72873.69999999925,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 10181,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 90911.29999999888,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 12480,
+          "contexts": 1
+        }
+      ]
+    },
+    {
+      "name": "mobile-touch",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "CDP touch emulation",
+      "measurements": [
+        {
+          "stage": "300ms-press",
+          "time": 883.0999999996275,
+          "maximum": 0.2811549386980174,
+          "changed": 152,
+          "center": [
+            0.016228023080028766,
+            0.305385520640046,
+            0.9248292939542148
+          ],
+          "uploads": 46,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 14930,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 2370,
+          "contexts": 1
+        },
+        {
+          "stage": "2200ms-press",
+          "time": 17163.900000000373,
+          "maximum": 1.7999997994312456,
+          "changed": 152,
+          "center": [
+            0.01611101311732439,
+            0.30548938131294756,
+            0.9252254293734203
+          ],
+          "uploads": 2732,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 32986.29999999888,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 5316,
+          "contexts": 1
+        },
+        {
+          "stage": "sliding",
+          "time": 35056.199999999255,
+          "maximum": 0.7332564314718051,
+          "changed": 287,
+          "center": [
+            -0.17338948374493868,
+            0.288762253360324,
+            0.8711947246693746
+          ],
+          "uploads": 5677,
+          "contexts": 1
+        },
+        {
+          "stage": "endpoint-dwell",
+          "time": 36039,
+          "maximum": 1.1093090349607135,
+          "changed": 291,
+          "center": [
+            0.2050451004461475,
+            0.2913335186836946,
+            0.8673823510471742
+          ],
+          "uploads": 5847,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 51115.79999999888,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 8394,
+          "contexts": 1
+        },
+        {
+          "stage": "night-deep",
+          "time": 53376.59999999963,
+          "maximum": 1.7999998912896014,
+          "changed": 152,
+          "center": [
+            0.01611101258384235,
+            0.3054893812602,
+            0.9252254293669128
+          ],
+          "uploads": 8790,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 69950.5,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 11336,
+          "contexts": 1
+        },
+        {
+          "stage": "exact-rest",
+          "time": 87800,
+          "maximum": 0,
+          "changed": 0,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "uploads": 14365,
+          "contexts": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.4314.58",
+  "parameters": {
+    "radius": 0.48,
+    "maximumDepth": 1.8,
+    "radialLimit": 0.92,
+    "pressSpeed": 1.05,
+    "rayDepthRatio": 1.85,
+    "concentration": 100,
+    "bottomSoftness": 0.3,
+    "shoulderFraction": 0.1,
+    "dragSpeed": 1.1,
+    "dragThreshold": 0.04,
+    "dragDepth": 0.2,
+    "dragGraceSeconds": 0.12,
+    "pressOnsetSeconds": 0.12,
+    "initialResponse": 1,
+    "contactRampSeconds": 0.1,
+    "contactMemoryDecay": 4,
+    "recoveryRate": 0.8,
+    "reducedRecoveryRate": 5,
+    "convergence": 0.00001,
+    "pathSpacing": 0.035,
+    "maximumContactStep": 0.1
+  }
+}

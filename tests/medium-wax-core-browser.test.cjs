@@ -5,9 +5,11 @@ const {projectedMeshContact,geometryOK}=require('./helpers/wax-style-probe.cjs')
 const output='.tmp/issue-41/medium-wax-core-browser',runtime=path.resolve('.tmp/issue-41/runtime');fs.mkdirSync(runtime,{recursive:true});fs.mkdirSync(output,{recursive:true});process.env.TEMP=process.env.TMP=runtime;
 const diag=(page,measure=false)=>page.locator('.toy-mount').evaluate((el,measure)=>el.thinWaxDiagnostics({measure,exhaustive:measure}),measure);
 let server;before(async()=>{server=spawn(process.execPath,['server.mjs'],{env:{...process.env,PORT:'4254'}});for(let i=0;i<100;i++){try{if((await fetch('http://127.0.0.1:4254')).ok)return;}catch{}await new Promise(r=>setTimeout(r,100));}throw Error('Preview server did not start');});after(()=>server?.kill());
-test('medium wax non-paw marshmallow and slow rebound native input and full geometry',{timeout:600000},async()=>{
+const reviewStyles=process.env.STYLES_REVIEW_CASE?process.env.STYLES_REVIEW_CASE.split(','):['orb','cloud','cylinder','donut','pyramid','flower','star'];
+const allResults=[];
+for(const style of reviewStyles)test(`medium wax ${style}: marshmallow and slow rebound native input and full geometry`,{timeout:180000},async()=>{
  const {getSquishyStyle}=await import('../src/squishy-styles.mjs'),browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_BROWSER_PATH || (fs.existsSync('C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe')?'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe':undefined),args:process.env.THIN_WAX_SOFTWARE_GL==='1'?['--use-angle=swiftshader','--enable-unsafe-swiftshader']:[]}),results=[];
- try{for(const style of process.env.STYLES_REVIEW_CASE?process.env.STYLES_REVIEW_CASE.split(','):['orb','cloud','cylinder','donut','pyramid','flower','star'])for(const core of process.env.STYLES_REVIEW_CORE?[process.env.STYLES_REVIEW_CORE]:['marshmallow','butter'])for(const mobile of process.env.STYLES_REVIEW_MOBILE==='1'?[true]:process.env.STYLES_REVIEW_MOBILE==='0'?[false]:[false,true]){
+ try{for(const core of process.env.STYLES_REVIEW_CORE?[process.env.STYLES_REVIEW_CORE]:['marshmallow','butter'])for(const mobile of process.env.STYLES_REVIEW_MOBILE==='1'?[true]:process.env.STYLES_REVIEW_MOBILE==='0'?[false]:[false,true]){
   const theme=mobile?'night':'day',name=`${style}-${core}-${mobile?'mobile':'desktop'}-${theme}`,viewport=mobile?{width:390,height:844}:{width:1280,height:900};
   // Use the workflow's existing raster scale, preserving CSS coordinates,
   // real input timestamps, geometry sampling and the 160ms short press.
@@ -32,7 +34,7 @@ test('medium wax non-paw marshmallow and slow rebound native input and full geom
    const r={style,core,mobile,theme,physicalPhone:false,thickness:.028,partitions:96,firstDetached:first.thinWax.detached,attachedViolations:0,detachedViolations:0,restart:true};results.push(r);console.log(JSON.stringify(r));
   }finally{await context.close();if(video)await video.saveAs(path.join(output,name+'.webm'));}
  }
- const page=await browser.newPage();try{for(const core of ['clay','marshmallow','butter']){await page.goto(`http://127.0.0.1:4254/squishy/cloud/?style=paw&coreMaterial=${core}&waxThickness=medium&step=shell`);await page.waitForFunction(()=>typeof document.querySelector('.toy-mount')?.thinWaxDiagnostics==='function');assert.equal((await diag(page)).enabled,false);console.log(JSON.stringify({core,pawExcluded:true}));}}finally{await page.close();}
- fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify(results,null,2));
+ if(style===reviewStyles[0]){const page=await browser.newPage();try{for(const core of ['clay','marshmallow','butter']){await page.goto(`http://127.0.0.1:4254/squishy/cloud/?style=paw&coreMaterial=${core}&waxThickness=medium&step=shell`);await page.waitForFunction(()=>typeof document.querySelector('.toy-mount')?.thinWaxDiagnostics==='function');assert.equal((await diag(page)).enabled,false);console.log(JSON.stringify({core,pawExcluded:true}));}}finally{await page.close();}}
+ allResults.push(...results);fs.writeFileSync(path.join(output,`summary-${style}.json`),JSON.stringify(results,null,2));fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify(allResults,null,2));
  }finally{await browser.close();}
 });

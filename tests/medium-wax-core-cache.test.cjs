@@ -1,4 +1,15 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),{readMesh}=require('./helpers/squishy-mesh.cjs');
+test('uniform adaptive orb charts retain the exact main correction when safety caching is requested', async () => {
+ const {createOffsetSafety}=await import('../src/surface-clay.mjs');
+ const mesh=readMesh('./assets/models/squishy-orb.glb'),rest=Float32Array.from(mesh.positions),from=new Float32Array(rest.length);
+ const cached=createOffsetSafety(rest,null,mesh.indices,{vectorOffsets:true,uniform:true,adaptiveChart:true,cacheSafety:true});
+ const reference=createOffsetSafety(rest,null,mesh.indices,{vectorOffsets:true,uniform:true,adaptiveChart:true,cacheSafety:false});
+ for(let frame=0;frame<40;frame++){
+  const proposed=new Float32Array(rest.length),depth=.3*Math.sin(Math.PI*frame/39);
+  for(let i=0;i<rest.length;i+=3)if(rest[i+2]>0)proposed[i+2]=depth*Math.exp(-12*(rest[i]**2+rest[i+1]**2));
+  const original=proposed.slice();assert.equal(cached(from,proposed),reference(from,original));assert.deepEqual(proposed,original);from.set(proposed);
+ }
+});
 for(const style of ['cloud','cylinder','donut','pyramid','flower','star'])for(const feelId of ['clay','marshmallow','slow-rebound'])test(`${style}/${feelId} exact core safety cache`,async t=>{
  const {getOrbFeel}=await import('../src/orb-feels.mjs'),{createSurfaceGeometry:original}=await import('../src/surface-clay.mjs'),{createSurfaceGeometry:optimized}=await import('../src/surface-clay.mjs');
  const mesh=readMesh(`./assets/models/squishy-${style}.glb`),rest=Float32Array.from(mesh.positions),normals=Float32Array.from(mesh.normals),a=rest.slice(),b=rest.slice();

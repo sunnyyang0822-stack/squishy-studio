@@ -157,8 +157,12 @@ diffuseColor.rgb*=1.-rim*polishRimEnabled;
   // Project only the coating's offset into every live incident face's outside
   // half-space; never modify the core or enlarge the coating separation.
   const supportIndex = geometry.index.array;
-  const incidentFaces = surfaceGeometry ? Array.from({ length: count }, () => []) : null;
-  const faceNormals = surfaceGeometry ? new Float64Array(supportIndex.length) : null;
+  // The confirmed deep slow-rebound orb can now turn incident faces just as
+  // far as a sculpted surface. Reuse the existing film-only support projection;
+  // crack widths, gap, damage and the core geometry remain preset-owned.
+  const needsFaceSupport = Boolean(surfaceGeometry) || retainFilmStrain;
+  const incidentFaces = needsFaceSupport ? Array.from({ length: count }, () => []) : null;
+  const faceNormals = needsFaceSupport ? new Float64Array(supportIndex.length) : null;
   if (incidentFaces) for (let f=0; f<supportIndex.length; f+=3) for(let k=0;k<3;k++) incidentFaces[supportIndex[f+k]].push(f);
   function constrainFilmOffsets(positions, target) {
     if (!incidentFaces) return false;
