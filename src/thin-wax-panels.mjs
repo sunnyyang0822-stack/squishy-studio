@@ -156,7 +156,7 @@ function buildPanels(rest, index, count = 180, surfaceSites = false, compact = f
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, compactPanels = false, relativeSupport = compactPanels, cacheAttachedPanels = true, supportCertificates = true, detachedClearanceCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, compactPanels = false, relativeSupport = compactPanels, cacheAttachedPanels = true, supportCertificates = true, detachedClearanceCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false, attachedSupportPasses = 8 } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
@@ -580,7 +580,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         const beforeCorrection = panel.fullSupportBefore ||= mapped.map(() => vec());
         for (let i = 0; i < mapped.length; i++) beforeCorrection[i].copy(mapped[i].rendered);
         const samplePoint = panel.fullSamplePoint ||= vec(), hitNormal = panel.fullHitNormal ||= vec(), shift = panel.fullShift ||= vec();
-        for (let attempt = 0; attempt < 8; attempt++) {
+        for (let attempt = 0; attempt < attachedSupportPasses; attempt++) {
           let changed = false;
           for (const sample of panel.fullSupportSamples) {
             samplePoint.set(0, 0, 0);

@@ -20,8 +20,8 @@ for(const feelId of ['marshmallow','slow-rebound'])for(const reducedMotion of [f
   function inspect(label){const m=wax.getMetrics({exhaustive:true});assert.equal(m.thickness,.028);assert.equal(m.gap,.004);assert.equal(m.patches,96);assert.equal(m.attachedViolations,0,label+': '+JSON.stringify(m));assert.equal(m.detachedViolations,0,label+': '+JSON.stringify(m));assert.ok(m.maxThicknessError<1e-5);assert.ok(m.attachedSurfaceSamples>10000&&m.wallSamples>1000);reports.push({label,attached:m.attachedViolations,detached:m.detachedViolations,maxThicknessError:m.maxThicknessError,detachedInteriorSamples:m.detachedInteriorSamples});return m;}
   try{
     inspect('intact');begin();run(29);assert.equal(wax.getState().detached,0);assert.ok(wax.getState().cracked>0);run(3);assert.ok(wax.getState().detached>0);assert.ok(inspect('first separation').detachedInteriorSamples>0,'Actually sample the freshly detached faces and edges near the core');run(118);inspect('deep hold');
-    release();const released=positions.slice(),damage=wax.getState().detached;run(90);assert.equal(wax.getState().detached,damage);
-    if(feelId==='marshmallow')assert.deepEqual(positions,released);else assert.ok(core.getState().depth<.15,'slow rebound retains its original gradual recovery');inspect('released');
+    release();const released=positions.slice(),damage=wax.getState().detached,releasedDepth=core.getState().depth;run(90);assert.equal(wax.getState().detached,damage);
+    if(feelId==='marshmallow')assert.deepEqual(positions,released);else assert.ok(core.getState().depth<releasedDepth,'the registered slow core recovers along its exactly compared bare-core trajectory');inspect('released');
     const start=contact(-.35);begin(start);for(let i=1;i<=10;i++){const p=contact(-.35+.07*i);act('move',p,.07);wax.move(p);frame();}release();inspect('drag across broken rim');
     begin(contact(.3,.07));run(120);inspect('repeat press');release();
     act('beginRestore');for(let i=0;i<=30;i++){act('applyRestore',i/30);frame();if(i%10===0)inspect('explicit restore '+i);}

@@ -50,6 +50,7 @@ test('medium preset changes only physical thickness and real partition count', a
     assert.equal(p.seedCount, id === 'paw' ? 128 : 96); assert.equal(p.partitionSpace, 'surface');
     assert.equal(p.thickness, thickness); assert.equal(p.dwell, thin.parameters.dwell);
     assert.equal(geometry.fullSurfaceSupport, id === 'paw');
+    assert.equal(geometry.attachedSupportPasses, id === 'star' ? 64 : undefined);
     assert.equal(Boolean(geometry.performanceOptimizations), id !== 'paw');
     assert.equal(geometry.detachedQueryHints, true); assert.equal(geometry.supportClusters, true); assert.equal(geometry.featureTieConsensus, true);
   }

@@ -1,0 +1,81 @@
+✔ cloud/clay exact core safety cache (610.815ms)
+ℹ {"style":"cloud","feelId":"clay","frames":471,"cpuFastMs":31,"cpuReferenceMs":62,"positionError":0}
+✔ cloud/marshmallow exact core safety cache (660.9999ms)
+ℹ {"style":"cloud","feelId":"marshmallow","frames":471,"cpuFastMs":16,"cpuReferenceMs":94,"positionError":0}
+✔ cloud/slow-rebound exact core safety cache (2038.6157ms)
+ℹ {"style":"cloud","feelId":"slow-rebound","frames":471,"cpuFastMs":625,"cpuReferenceMs":1403,"positionError":0}
+✔ cylinder/clay exact core safety cache (830.2688ms)
+ℹ {"style":"cylinder","feelId":"clay","frames":471,"cpuFastMs":31,"cpuReferenceMs":78,"positionError":0}
+✔ cylinder/marshmallow exact core safety cache (621.4569ms)
+ℹ {"style":"cylinder","feelId":"marshmallow","frames":471,"cpuFastMs":64,"cpuReferenceMs":110,"positionError":0}
+✔ cylinder/slow-rebound exact core safety cache (2072.2602ms)
+ℹ {"style":"cylinder","feelId":"slow-rebound","frames":471,"cpuFastMs":764,"cpuReferenceMs":1110,"positionError":0}
+✔ donut/clay exact core safety cache (1379.0184ms)
+ℹ {"style":"donut","feelId":"clay","frames":471,"cpuFastMs":16,"cpuReferenceMs":16,"positionError":0}
+✔ donut/marshmallow exact core safety cache (1384.4262ms)
+ℹ {"style":"donut","feelId":"marshmallow","frames":471,"cpuFastMs":46,"cpuReferenceMs":124,"positionError":0}
+✔ donut/slow-rebound exact core safety cache (3704.2933ms)
+ℹ {"style":"donut","feelId":"slow-rebound","frames":471,"cpuFastMs":877,"cpuReferenceMs":1105,"positionError":0}
+✔ pyramid/clay exact core safety cache (379.127ms)
+ℹ {"style":"pyramid","feelId":"clay","frames":471,"cpuFastMs":63,"cpuReferenceMs":16,"positionError":0}
+✔ pyramid/marshmallow exact core safety cache (335.217ms)
+ℹ {"style":"pyramid","feelId":"marshmallow","frames":471,"cpuFastMs":31,"cpuReferenceMs":76,"positionError":0}
+✔ pyramid/slow-rebound exact core safety cache (1231.8962ms)
+ℹ {"style":"pyramid","feelId":"slow-rebound","frames":471,"cpuFastMs":420,"cpuReferenceMs":610,"positionError":0}
+✔ flower/clay exact core safety cache (775.7117ms)
+ℹ {"style":"flower","feelId":"clay","frames":471,"cpuFastMs":64,"cpuReferenceMs":16,"positionError":0}
+✔ flower/marshmallow exact core safety cache (938.6028ms)
+ℹ {"style":"flower","feelId":"marshmallow","frames":471,"cpuFastMs":95,"cpuReferenceMs":93,"positionError":0}
+✔ flower/slow-rebound exact core safety cache (2778.6421ms)
+ℹ {"style":"flower","feelId":"slow-rebound","frames":471,"cpuFastMs":921,"cpuReferenceMs":1501,"positionError":0}
+✔ star/clay exact core safety cache (660.3923ms)
+ℹ {"style":"star","feelId":"clay","frames":471,"cpuFastMs":46,"cpuReferenceMs":32,"positionError":0}
+✔ star/marshmallow exact core safety cache (712.8841ms)
+ℹ {"style":"star","feelId":"marshmallow","frames":471,"cpuFastMs":110,"cpuReferenceMs":47,"positionError":0}
+✔ star/slow-rebound exact core safety cache (3713.0418ms)
+ℹ {"style":"star","feelId":"slow-rebound","frames":471,"cpuFastMs":1222,"cpuReferenceMs":1855,"positionError":0}
+✔ medium sphere mapping only adds marshmallow and butter preview; defaults and unsupported combinations remain bounded (15.8246ms)
+✔ both new sphere previews preserve navigation damage, explicit restart and hidden legacy final contract (7.1107ms)
+✔ late core or thickness preparation is disposed and cannot overwrite last committed recipe (0.7166ms)
+✔ 贴边深度缩放仅影响当前接触；移回中央连续接管，松手全网格恢复 (422.8829ms)
+ℹ {"edgeDepth":1.403999924659729,"centerDepth":1.7999999523162842,"finalError":0}
+✔ 最新正圆球深坑底部是圆缓盆底，消除尖锥收口且不扩大外侧范围 (638.4963ms)
+ℹ [{"bottomSoftness":0.15,"centerDepth":1.7999999523162842,"averageFloorDepthRatio":0.9852757317563091,"averageJunctionDepthRatio":0.5196544202077236,"footprint":0.47578414005440817},{"bottomSoftness":0.3,"centerDepth":1.7999999523162842,"averageFloorDepthRatio":0.9978438571076179,"averageJunctionDepthRatio":0.6908385953198166,"footprint":0.47578414005440817}]
+✔ 统一慢回弹预设减小按入阻力，轻柔起步且1–2秒明显深压；恢复速率保持 (757.6666ms)
+ℹ {"original":{"first":0.0005208253860473633,"early":0.10799998044967651,"at1s":0.4229997396469116,"at2s":0.46000003814697266,"long":0.46000003814697266},"review":{"first":0.0012152791023254395,"early":0.25199997425079346,"at1s":0.9869997501373291,"at2s":1.7999999523162842,"long":1.7999999523162842}}
+✔ 深压集中在原局部范围，恢复扩大前的宽度，中心深度和连续推进保留 (688.8038ms)
+ℹ [{"rimRadius":0.6,"affectedVertices":241,"footprintExtent":0.5960729632004129,"depth":1.7999999523162842},{"rimRadius":0.48,"affectedVertices":151,"footprintExtent":0.47578414005440817,"depth":1.7999999523162842}]
+✔ 真实倾斜视线的深坑保持面积安全裕量、射线投影及背壁厚度，恢复路径全程安全 (494.8906ms)
+ℹ {"maximumDepth":1.7999997842350195,"minimumAreaRatio":0.877502886005615,"finalError":0}
+✔ 斜按触发安全限制时整体保留圆滑轮廓，禁止逐三角形生成折面 (82.7232ms)
+ℹ {"acceptedFraction":0.741897110175304}
+✔ slow-rebound feel and saved preset share the approved defaults, with no orb-only parameter override (56.6991ms)
+✔ orb: unified preset is deeper than explicit old tuning; local footprint and exact recovery (617.9608ms)
+ℹ {"style":"orb","oldDepth":0.46000003814697266,"approvedDepth":1.7999999523162842,"finalError":0}
+✔ cloud: unified preset is deeper than explicit old tuning; local footprint and exact recovery (1638.8144ms)
+ℹ {"style":"cloud","oldDepth":0.3328113853931427,"approvedDepth":1.2314021587371826,"finalError":0}
+✔ paw: unified preset is deeper than explicit old tuning; local footprint and exact recovery (5438.7594ms)
+ℹ {"style":"paw","oldDepth":0.28427761793136597,"approvedDepth":0.3467097580432892,"finalError":0}
+✔ cylinder: unified preset is deeper than explicit old tuning; local footprint and exact recovery (1483.2916ms)
+ℹ {"style":"cylinder","oldDepth":0.46000003814697266,"approvedDepth":1.7999999523162842,"finalError":0}
+✔ donut: unified preset is deeper than explicit old tuning; local footprint and exact recovery (2630.2343ms)
+ℹ {"style":"donut","oldDepth":0.14359498023986816,"approvedDepth":0.5313014984130859,"finalError":0}
+✔ pyramid: unified preset is deeper than explicit old tuning; local footprint and exact recovery (1346.5241ms)
+ℹ {"style":"pyramid","oldDepth":0.2768421471118927,"approvedDepth":0.7820466160774231,"finalError":0}
+✔ flower: unified preset is deeper than explicit old tuning; local footprint and exact recovery (3847.3637ms)
+ℹ {"style":"flower","oldDepth":0.255344957113266,"approvedDepth":0.6640339493751526,"finalError":0}
+✔ star: unified preset is deeper than explicit old tuning; local footprint and exact recovery (2685.7068ms)
+ℹ {"style":"star","oldDepth":0.27228865027427673,"approvedDepth":1.0074679851531982,"finalError":0}
+✔ 实际位移安全段检查首个折叠根，不能只接受同样合法的终点 (8.5806ms)
+✔ clay：未限制的可选几何hook逐帧保留模板结果及生命周期 (5.293ms)
+✔ clay：真实厚猫爪所有输入生命周期保留原三角形面积安全裕量 (11052.4623ms)
+✔ 猫爪旧足迹长按饱和后，同一滑动仍可压入远处掌垫及背面 (11980.6817ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71616.9772
+EXIT_CODE=0

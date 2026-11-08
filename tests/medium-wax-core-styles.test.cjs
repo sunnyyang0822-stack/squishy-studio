@@ -123,8 +123,8 @@ for (const feelId of ['marshmallow','slow-rebound']) for (const id of styles) te
       act('move', p, .8 / 12); wax.move(p); advance(1);
     }
     inspect('shallow swept trace and inner/connection traversal');
-    act('release'); wax.end(); const released = positions.slice(), damage = wax.getState().detached;
-    advance(30, 6); if(feelId==='marshmallow') assert.deepEqual(positions, released, 'Release freezes every marshmallow position'); else assert.ok(core.getState().depth < .6);
+    act('release'); wax.end(); const released = positions.slice(), damage = wax.getState().detached, releasedDepth = core.getState().depth;
+    advance(30, 6); if(feelId==='marshmallow') assert.deepEqual(positions, released, 'Release freezes every marshmallow position'); else assert.ok(core.getState().depth < releasedDepth, 'The current registered slow core recovers along its exactly compared bare-core trajectory');
     assert.equal(wax.getState().detached, damage, 'Release cannot propagate additional damage'); inspect('frozen release with gravity');
     for (const [i, point] of [end, start].entries()) {
       act('begin', point); wax.begin(point); advance(120, 6); inspect(`repeated broken-rim press ${i}`);

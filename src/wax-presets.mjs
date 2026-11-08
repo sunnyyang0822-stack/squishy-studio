@@ -24,8 +24,9 @@ const surfacePanelStyles = new Set(['cloud', 'paw', 'cylinder', 'donut', 'pyrami
 const mediumParametersForStyle = styleId => styleId === 'paw' ? pawMediumWaxParameters : surfacePanelStyles.has(styleId) ? surfaceMediumWaxParameters : mediumWaxParameters;
 const mediumGeometryOptions = Object.freeze({ freezeRenderedFragments: true, detachedQueryHints: true, supportClusters: true, featureTieConsensus: true, fullSurfaceSupport: false, cacheAttachedPanels: false });
 const optimizedMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, performanceOptimizations: true });
+const starMediumGeometryOptions = Object.freeze({ ...optimizedMediumGeometryOptions, attachedSupportPasses: 64 });
 const pawMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, fullSurfaceSupport: true });
-const mediumGeometryForStyle = styleId => styleId === 'paw' ? pawMediumGeometryOptions : surfacePanelStyles.has(styleId) ? optimizedMediumGeometryOptions : mediumGeometryOptions;
+const mediumGeometryForStyle = styleId => styleId === 'paw' ? pawMediumGeometryOptions : styleId === 'star' ? starMediumGeometryOptions : surfacePanelStyles.has(styleId) ? optimizedMediumGeometryOptions : mediumGeometryOptions;
 const mediumWax = Object.freeze({
   id: 'medium-wax', material: 'wax', thickness: 'medium',
   name: '中蜡·双倍薄蜡厚度',

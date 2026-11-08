@@ -1,5 +1,23 @@
 # 中蜡21组合集成验证 — 2026-11-05
 
+## 2026-11-08最终慢回弹主线与深压支撑
+
+最新基线`fa68f6c2e84ec97e03ece2d35b2ac126df2de162`（PR59统一慢回弹预设），通过`1aea854`集成。保留主线的内芯参数、圆球局部方向/深度安全模式及指甲油适配；没有中蜡专属内芯调参。uniform/adaptiveChart模式不启用安全缓存，新增40帧缓存请求/无缓存对照相同。最终bundle SHA256：`3d6ecda299ac467b12d2fa67acd8c93e44267a2828ccd086450f32e4534db8c6`。
+
+上一最终CI运行42150162665有34项通过，仅分片5及汇总失败：28组合中的最后一组到达总600秒时未结束，其后的日志记录该组通过。真实摘录在`ci-final-timeout-excerpt.txt`。现按七种样式拆成独立180秒测试，每款仍跑原四组，操作时长、短按、阈值和全部几何断言不变；不跳过组合，逐样式保存摘要。不是延长一次操作或删减采样。
+
+- `node --test --test-concurrency=1 tests/medium-wax-core-cache.test.cjs tests/slow-rebound-preset.test.cjs tests/slow-orb-depth.test.cjs tests/medium-wax-core-flow.test.cjs tests/surface-offset-safety.test.cjs`：40/40、exit 0，`latest-slow-integration.txt`。
+- `node --test --test-name-pattern="uniform adaptive" tests/medium-wax-core-cache.test.cjs`：1/1、exit 0，`latest-adaptive-cache.txt`。
+- `STYLES_REVIEW_CASE=orb,cloud,donut node --test --test-concurrency=1 tests/medium-wax-core-browser.test.cjs tests/medium-wax-release-browser.test.cjs`：4/4、exit 0，含12个实际浏览器组合和排队释放，`latest-slow-medium-browser.txt`。
+- `node --test --test-concurrency=1 --test-name-pattern="slow-rebound|slow rebound|medium preset changes" tests/medium-wax-core-styles.test.cjs tests/medium-wax-orb-cores.test.cjs tests/medium-wax-performance.test.cjs tests/medium-wax.test.cjs`：15/15、exit 0，`latest-slow-medium-geometry-final.txt`。逐帧真实内芯/裸芯位置、状态和返回一致；六种优化开关对照的最大几何误差0。
+- `node --test --test-name-pattern="star slow-rebound" tests/medium-wax-core-styles.test.cjs`：最终64支撑预算1/1、exit 0，`star-deep-support-64-final.txt`。
+- `STYLES_REVIEW_CASE=star node --test tests/medium-wax-core-browser.test.cjs`：1/1、exit 0，四组合完整几何、短按、掉落和重开，`star-browser-64-final.txt`。
+- `node --test --test-name-pattern="medium preset changes" tests/medium-wax.test.cjs`：1/1、exit 0，`latest-preset-final.txt`；最终`npm run build:orb`退出0。
+
+首次新主线深压对照14项中10通过4失败（`latest-slow-medium-geometry-initial.txt`）：3条为旧浅深度绝对恢复上限，现检查相对松手时下降，保留每帧与当前注册裸芯的精确比较和完整恢复断言。另一条是真实五角星附着壳深压2个采样违规，最小signedDistance -0.002441946；16次仍1个违规、32次固定步通过但浏览器另一轨迹仍有 -0.000074406。旧失败全部保留。最终中蜡五角星只读配置将原有支撑循环最大次数设64；其余中蜡和共享默认8不变，循环收敛即提前结束。未放宽1e-5几何容差、未改变采样或壳体厚度/分区；最终固定深压、拖动、恢复和四浏览器组合均零违规。
+
+`final-native-browser-before-pr59.txt`为PR59之前最终本地1x回归7/7、exit0（28新内芯组合、薄中对照、排队释放）；它不是当前统一慢回弹版本的完整矩阵结论。当前完整矩阵以最终GitHub检查为准。
+
 ## 2026-11-06最新薄蜡主线集成
 
 ## 2026-11-06中蜡排队释放修正
