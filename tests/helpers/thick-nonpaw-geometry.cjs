@@ -88,7 +88,7 @@ async function createFixture(styleId, presetId = 'thick-wax', feelId = 'clay', r
   const deformation = feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, options());
   const baseline = feel.createDeformation(bareGeometry.attributes.position.array, bareGeometry.attributes.normal.array, options());
   const wax = getWaxPreset(presetId).create({ styleId, geometry, restPositions: rest, restNormals, clock: () => now, reducedMotion, fullSurfaceSupport: feelId !== 'clay', compactPanels: presetId === 'thin-wax' && feelId === 'slow-rebound' && styleId === 'donut' });
-  const tree = createWaxCollisionTree(geometry);
+  const tree = createWaxCollisionTree(geometry, { featureNormals: true, queryCache: false, nearestGrid: false, restPositions: rest });
   function same() { assert.deepEqual(geometry.attributes.position.array, bareGeometry.attributes.position.array); assert.deepEqual(geometry.attributes.normal.array, bareGeometry.attributes.normal.array); assert.deepEqual(deformation.getState(), baseline.getState()); }
   function act(method, ...args) { deformation[method](...args); baseline[method](...args); same(); }
   wax.setWorldMatrix(worldMatrix);
