@@ -6,7 +6,7 @@ export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwe
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.
-export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, motionTracking = false, queryCache = true, featureNormals = false, lazyFeatureNormals = true, exactGridTies = true, trackChanges = false, trackRelativeMotion = false, restPositions } = {}) {
+export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, motionTracking = false, queryCache = true, featureNormals = false, lazyFeatureNormals = true, exactGridTies = true, trackChanges = false, trackRelativeMotion = false, restPositions, featureTieConsensus = false, performanceOptimizations = false } = {}) {
   let countQueries = false;
   const p = geometry.attributes.position, index = geometry.index.array;
   const a = new THREE.Vector3(), b = a.clone(), c = a.clone(), hit = a.clone();
@@ -14,7 +14,8 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
   // every triangle visited by every fragment sample during this frame.
   const faces = Array.from({ length: index.length / 3 }, (_, face) => {
     const i = face * 3, triangle = new THREE.Triangle(new THREE.Vector3().fromBufferAttribute(p, index[i]), new THREE.Vector3().fromBufferAttribute(p, index[i + 1]), new THREE.Vector3().fromBufferAttribute(p, index[i + 2]));
-    return { triangle, ab: new THREE.Vector3().subVectors(triangle.b, triangle.a), ac: new THREE.Vector3().subVectors(triangle.c, triangle.a), normal: triangle.getNormal(new THREE.Vector3()), ...(trackRelativeMotion ? { delta: new Float64Array(9), changed: false } : {}) };
+    const {a,b,c}=triangle;
+    return { triangle, ab: new THREE.Vector3().subVectors(triangle.b, triangle.a), ac: new THREE.Vector3().subVectors(triangle.c, triangle.a), normal: triangle.getNormal(new THREE.Vector3()), minX:Math.min(a.x,b.x,c.x),maxX:Math.max(a.x,b.x,c.x),minY:Math.min(a.y,b.y,c.y),maxY:Math.max(a.y,b.y,c.y),minZ:Math.min(a.z,b.z,c.z),maxZ:Math.max(a.z,b.z,c.z), ...(trackRelativeMotion ? { delta: new Float64Array(9), changed: false } : {}) };
   });
   const triangleBox = i => { const t = faces[i / 3].triangle; return new THREE.Box3().setFromPoints([t.a, t.b, t.c]); };
   function build(ids) {
@@ -83,8 +84,14 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
   }
   const initialLinks = gridHeads ? Math.min(1000000, Math.max(16, faces.length * 8)) : 0;
   let gridValid = false, linkCount = 0, gridLinks = new Int32Array(initialLinks), gridFaces = new Int32Array(initialLinks);
+  let gridPrevious = new Int32Array(initialLinks), faceNext = new Int32Array(initialLinks), linkCells = new Int32Array(initialLinks), freeLink = -1;
+  const faceFirst = new Int32Array(faces.length).fill(-1), changedFaces = [];
   const querySeen = new Uint32Array(faces.length); let queryStamp = 0;
-  function rebuildGrid() {
+  // Queries are synchronous. Reuse scratch storage instead of allocating one
+  // tuple per tied face and two Vector3s per edge/vertex query.
+  const tieIds = new Int32Array(faces.length), tieDistances = new Float64Array(faces.length);
+  const selectedPoint = new THREE.Vector3(), selectedNormal = new THREE.Vector3();
+  function rebuildGridLegacy() {
     if (!gridHeads) return;
     gridHeads.fill(-1); linkCount = 0; gridValid = true;
     for (let faceIndex = 0; faceIndex < faces.length; faceIndex++) {
@@ -103,22 +110,64 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       }
     }
   }
+  function rebuildGrid() {
+    if(!performanceOptimizations)return rebuildGridLegacy();
+    if (!gridHeads) return;
+    const complete = !gridValid;
+    if (complete) { gridHeads.fill(-1); faceFirst.fill(-1); linkCount = 0; freeLink = -1; }
+    gridValid = true;
+    const count = complete ? faces.length : changedFaces.length;
+    for (let item = 0; item < count; item++) {
+      const faceIndex = complete ? item : changedFaces[item], face = faces[faceIndex];
+      const { a, b, c } = face.triangle;
+      const x0 = Math.floor((Math.min(a.x, b.x, c.x) - gridOrigin.x - 1e-10) / cellSize), x1 = Math.floor((Math.max(a.x, b.x, c.x) - gridOrigin.x + 1e-10) / cellSize);
+      const y0 = Math.floor((Math.min(a.y, b.y, c.y) - gridOrigin.y - 1e-10) / cellSize), y1 = Math.floor((Math.max(a.y, b.y, c.y) - gridOrigin.y + 1e-10) / cellSize);
+      const z0 = Math.floor((Math.min(a.z, b.z, c.z) - gridOrigin.z - 1e-10) / cellSize), z1 = Math.floor((Math.max(a.z, b.z, c.z) - gridOrigin.z + 1e-10) / cellSize);
+      if (x0 < 0 || y0 < 0 || z0 < 0 || x1 >= gridSize.x || y1 >= gridSize.y || z1 >= gridSize.z) { gridValid = false; return; }
+      if (!complete && face.gx0===x0 && face.gx1===x1 && face.gy0===y0 && face.gy1===y1 && face.gz0===z0 && face.gz1===z1) continue;
+      for(let link=faceFirst[faceIndex];link!==-1;){const next=faceNext[link],previous=gridPrevious[link],following=gridLinks[link];if(previous===-1)gridHeads[linkCells[link]]=following;else gridLinks[previous]=following;if(following!==-1)gridPrevious[following]=previous;faceNext[link]=freeLink;freeLink=link;link=next;}
+      faceFirst[faceIndex]=-1;
+      face.gx0=x0;face.gx1=x1;face.gy0=y0;face.gy1=y1;face.gz0=z0;face.gz1=z1;
+      for (let z = z0; z <= z1; z++) for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+        if (freeLink===-1 && linkCount===1000000) { gridValid=false;return; }
+        if (freeLink===-1 && linkCount === gridLinks.length) {
+          const capacity = Math.min(1000000, gridLinks.length * 2), links = new Int32Array(capacity), ids = new Int32Array(capacity);
+          links.set(gridLinks); ids.set(gridFaces); gridLinks = links; gridFaces = ids;
+          const previous=new Int32Array(capacity),next=new Int32Array(capacity),cells=new Int32Array(capacity);previous.set(gridPrevious);next.set(faceNext);cells.set(linkCells);gridPrevious=previous;faceNext=next;linkCells=cells;
+        }
+        const cell = (z * gridSize.y + y) * gridSize.x + x, link=freeLink===-1?linkCount++:freeLink;
+        if(freeLink!==-1)freeLink=faceNext[link];
+        const head=gridHeads[cell];gridFaces[link]=faceIndex;gridLinks[link]=head;gridPrevious[link]=-1;linkCells[link]=cell;if(head!==-1)gridPrevious[head]=link;gridHeads[cell]=link;faceNext[link]=faceFirst[faceIndex];faceFirst[faceIndex]=link;
+      }
+    }
+  }
   rebuildGrid();
   const counters = { sweepCalls: 0, sweepNodes: 0, sweepTriangles: 0, nearestCalls: 0, nearestNodes: 0, nearestTriangles: 0, gridQueries: 0, gridSweeps: 0, cachedQueries: 0 };
   let surfaceRevision = 0;
-  const changedBounds = trackChanges ? new THREE.Box3() : null;
+  const previousPositions = p.array.slice(), changedVertices = new Uint8Array(p.count);
+  const changedBounds = new THREE.Box3();
+  const changedLeafBounds = [];
   function refit(node = root) {
     if (trackRelativeMotion) node.sweptBox.copy(node.box);
     if (node === root) {
+      changedBounds.makeEmpty();
+      changedLeafBounds.length = 0;
+      changedFaces.length = 0;
       for (const key of Object.keys(counters)) counters[key] = 0;
       frameMotionSquared = 0;
-      changedBounds?.makeEmpty();
+      const live = p.array;
+      for (let v = 0; v < p.count; v++) {
+        const i = v * 3, dx = previousPositions[i] - live[i], dy = previousPositions[i + 1] - live[i + 1], dz = previousPositions[i + 2] - live[i + 2];
+        changedVertices[v] = dx !== 0 || dy !== 0 || dz !== 0 ? 1 : 0;
+        frameMotionSquared = Math.max(frameMotionSquared, dx * dx + dy * dy + dz * dz);
+      }
+      previousPositions.set(live);
       if (++refitFrame === 0xffffffff) { refitFrame = 1; markedFrame?.fill(0); cacheEpoch++; }
     }
     let changed = false;
     if (node.ids) for (const i of node.ids) {
       const face = faces[i / 3], t = face.triangle;
-      const faceChanged = t.a.x !== p.getX(index[i]) || t.a.y !== p.getY(index[i]) || t.a.z !== p.getZ(index[i]) || t.b.x !== p.getX(index[i + 1]) || t.b.y !== p.getY(index[i + 1]) || t.b.z !== p.getZ(index[i + 1]) || t.c.x !== p.getX(index[i + 2]) || t.c.y !== p.getY(index[i + 2]) || t.c.z !== p.getZ(index[i + 2]);
+      const faceChanged = changedVertices[index[i]] || changedVertices[index[i + 1]] || changedVertices[index[i + 2]];
       if (trackRelativeMotion) {
         face.changed = faceChanged;
         const delta = face.delta ||= new Float64Array(9);
@@ -127,6 +176,8 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
         delta[6] = p.getX(index[i + 2]) - t.c.x; delta[7] = p.getY(index[i + 2]) - t.c.y; delta[8] = p.getZ(index[i + 2]) - t.c.z;
       }
       if (!faceChanged) continue;
+      changedFaces.push(i/3);
+      if (!changed) { changedBounds.union(node.box); node.oldBox ||= new THREE.Box3(); node.oldBox.copy(node.box); changedLeafBounds.push(node.oldBox); }
       changed = true;
       if (changedBounds) changedBounds.expandByPoint(t.a).expandByPoint(t.b).expandByPoint(t.c);
       if (gridHeads || motionTracking) frameMotionSquared = Math.max(frameMotionSquared, movementSquared(t.a, index[i]), movementSquared(t.b, index[i + 1]), movementSquared(t.c, index[i + 2]));
@@ -135,6 +186,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       if (changedBounds) changedBounds.expandByPoint(t.a).expandByPoint(t.b).expandByPoint(t.c);
       if (gridHeads) markChangedTriangle(t);
       face.ab.subVectors(t.b, t.a); face.ac.subVectors(t.c, t.a);
+      face.minX=Math.min(t.a.x,t.b.x,t.c.x);face.maxX=Math.max(t.a.x,t.b.x,t.c.x);face.minY=Math.min(t.a.y,t.b.y,t.c.y);face.maxY=Math.max(t.a.y,t.b.y,t.c.y);face.minZ=Math.min(t.a.z,t.b.z,t.c.z);face.maxZ=Math.max(t.a.z,t.b.z,t.c.z);
     }
     else {
       const leftChanged = refit(node.left), rightChanged = refit(node.right);
@@ -144,6 +196,8 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (changed && node.ids) {
       node.box.makeEmpty();
       for (const i of node.ids) { const t = faces[i / 3].triangle; node.box.expandByPoint(t.a).expandByPoint(t.b).expandByPoint(t.c); }
+      changedBounds.union(node.box);
+      changedLeafBounds.push(node.box);
     }
     if (trackRelativeMotion) { node.changed = changed; node.sweptBox.union(node.box); }
     if (node === root && changed) {
@@ -239,6 +293,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     return nearest;
   }
   const closest = new THREE.Vector3();
+  function faceBound(face,p){const x=p.x<face.minX?face.minX-p.x:p.x>face.maxX?p.x-face.maxX:0,y=p.y<face.minY?face.minY-p.y:p.y>face.maxY?p.y-face.maxY:0,z=p.z<face.minZ?face.minZ-p.z:p.z>face.maxZ?p.z-face.maxZ:0;return x*x+y*y+z*z;}
   function closestOnFace(face, point) {
     // Ericson's triangle Voronoi regions, with live edge vectors cached during
     // refit. Keep the same region tests and arithmetic order as THREE.Triangle.
@@ -291,13 +346,35 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     // nearest/runner-up distance gap certifies a small neighborhood in which
     // the same face remains nearest (both distances are 1-Lipschitz).
     const outsideBound = Math.min(point.x - gridOrigin.x - x0 * cellSize, gridOrigin.x + (x1 + 1) * cellSize - point.x, point.y - gridOrigin.y - y0 * cellSize, gridOrigin.y + (y1 + 1) * cellSize - point.y, point.z - gridOrigin.z - z0 * cellSize, gridOrigin.z + (z1 + 1) * cellSize - point.z);
+    saved.positiveRadius = Math.max(0, Math.min(distance, outsideBound) - 1e-10);
     saved.movementRadius = Math.max(0, (Math.min(Math.sqrt(secondSquared), outsideBound) - Math.abs(distance)) * .5 - 1e-10);
     siteHint.queryResult = saved;
   }
-  function signedDistance(point, outwardNormal, sourceFace = lastNearestFace) {
+  function signedDistance(point, outwardNormal, sourceFace = lastNearestFace, clearanceThreshold = Infinity) {
+    if (performanceOptimizations && Number.isFinite(clearanceThreshold)) {
+      const bound = boxDistanceSquared(root.box, point);
+      if (bound > (clearanceThreshold + 1e-10) ** 2) return Math.sqrt(bound) - 1e-10;
+    }
     if (countQueries) counters.nearestCalls++;
     const siteHint = typeof sourceFace === 'object' && sourceFace !== null ? sourceFace : null;
     const previous = siteHint?.queryResult;
+    // For clearance-only callers, a positive ball in an unchanged COMPLETE
+    // cell region remains safe even when the nearest feature has tied faces.
+    // A moving face entering that region invalidates its cell revisions.
+    if (performanceOptimizations && features && Number.isFinite(clearanceThreshold) && queryCache && gridValid && previous?.owner === cacheOwner && previous.epoch === cacheEpoch) {
+      const allowance = previous.positiveRadius - clearanceThreshold - 1e-10;
+      const dx = point.x - previous.x, dy = point.y - previous.y, dz = point.z - previous.z;
+      const deltaSquared = dx * dx + dy * dy + dz * dz;
+      if (allowance > 0 && deltaSquared < allowance * allowance) {
+        let unchanged = true;
+        for (let i = 0; i < previous.cells.length; i++) if (cellRevision[previous.cells[i]] !== previous.revisions[i]) { unchanged = false; break; }
+        if (unchanged) {
+          if (countQueries) counters.cachedQueries++;
+          lastNearestFace = previous.faceIndex; siteHint.faceIndex = previous.faceIndex;
+          return previous.positiveRadius - Math.sqrt(deltaSquared);
+        }
+      }
+    }
     if (features && queryCache && gridValid && previous?.owner === cacheOwner && previous.epoch === cacheEpoch && previous.x === point.x && previous.y === point.y && previous.z === point.z) {
       let unchanged = true;
       for (let i = 0; i < previous.cells.length; i++) if (cellRevision[previous.cells[i]] !== previous.revisions[i]) { unchanged = false; break; }
@@ -342,15 +419,21 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
       const z0 = Math.floor((point.z - radius - gridOrigin.z) / cellSize), z1 = Math.floor((point.z + radius - gridOrigin.z) / cellSize);
       if (x0 >= 0 && y0 >= 0 && z0 >= 0 && x1 < gridSize.x && y1 < gridSize.y && z1 < gridSize.z) {
         if (++queryStamp === 0xffffffff) { querySeen.fill(0); queryStamp = 1; }
-        let secondSquared = Infinity, nearestFace = -1;
+        let secondSquared = performanceOptimizations ? initialBound : Infinity, nearestFace = -1;
+        const ties = featureTieConsensus && features; let tieCount = 0;
         for (let z = z0; z <= z1; z++) for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
           for (let link = gridHeads[(z * gridSize.y + y) * gridSize.x + x]; link !== -1; link = gridLinks[link]) {
             const id = gridFaces[link]; if (querySeen[id] === queryStamp) continue; querySeen[id] = queryStamp;
-            const face = faces[id];
+            const face = faces[id]; if(performanceOptimizations && faceBound(face,point)>Math.min(secondSquared,initialBound))continue;
             if (countQueries) counters.nearestTriangles++;
             closestOnFace(face, point); const d = closest.distanceToSquared(point);
+            const tieTolerance = 64 * Number.EPSILON * Math.max(1, d);
+            if (ties && d <= distanceSquared + tieTolerance) {
+              if (d < distanceSquared - tieTolerance) tieCount = 0;
+              tieIds[tieCount] = id; tieDistances[tieCount++] = d;
+            }
             if (d < distanceSquared) {
-              secondSquared = distanceSquared; distanceSquared = d; nearestFace = id; outwardNormal?.copy(face.normal);
+              secondSquared = performanceOptimizations ? Math.min(secondSquared, distanceSquared) : distanceSquared; distanceSquared = d; nearestFace = id; outwardNormal?.copy(face.normal);
               sign = (point.x - closest.x) * face.normal.x + (point.y - closest.y) * face.normal.y + (point.z - closest.z) * face.normal.z < 0 ? -1 : 1;
             } else {
               secondSquared = Math.min(secondSquared, d);
@@ -364,6 +447,33 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
           const distance = features ? featureResult(point, outwardNormal, nearestFace) : sign * Math.sqrt(distanceSquared);
           rememberQuery(siteHint, point, x0, x1, y0, y1, z0, z1, nearestFace, distance, secondSquared);
           return distance;
+        }
+        // Incident faces can identify the same closest edge/vertex. Accept a
+        // grid tie only when every tied face agrees on point, feature normal,
+        // sign and distance; ambiguous folds still take the original full BVH.
+        if (ties && Number.isFinite(distanceSquared)) {
+          const distance = featureResult(point, outwardNormal, nearestFace); selectedPoint.copy(closest); selectedNormal.copy(featureNormal);
+          let agrees = true, safelyPositive = distance > clearanceThreshold + 1e-10;
+          for (let tie = 0; tie < tieCount; tie++) if (tieDistances[tie] - distanceSquared <= 64 * Number.EPSILON * Math.max(1, distanceSquared)) {
+            const id = tieIds[tie];
+            const alternative = featureResult(point, undefined, id);
+            if (alternative <= clearanceThreshold + 1e-10) safelyPositive = false;
+            if (Math.abs(alternative - distance) > 1e-12 || selectedPoint.distanceToSquared(closest) > 1e-24 || selectedNormal.distanceToSquared(featureNormal) > 1e-24) agrees = false;
+          }
+          if (!agrees && safelyPositive) {
+            const safeDistance = Math.sqrt(distanceSquared) - 1e-10;
+            lastNearestFace = nearestFace; if (siteHint) siteHint.faceIndex = nearestFace;
+            featureNormal.copy(selectedNormal); outwardNormal?.copy(selectedNormal);
+            rememberQuery(siteHint, point, x0, x1, y0, y1, z0, z1, nearestFace, safeDistance, distanceSquared);
+            return safeDistance;
+          }
+          if (agrees) {
+            if (countQueries) counters.gridQueries++;
+            lastNearestFace = nearestFace; if (siteHint) siteHint.faceIndex = nearestFace;
+            featureNormal.copy(selectedNormal); outwardNormal?.copy(selectedNormal);
+            rememberQuery(siteHint, point, x0, x1, y0, y1, z0, z1, nearestFace, distance, distanceSquared);
+            return distance;
+          }
         }
         // Keep BVH's exact tie selection. Closed-surface feature results may
         // still reuse that *exact point* while the complete region is unchanged;
@@ -402,10 +512,9 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (featureTieRegion) rememberQuery(siteHint, point, ...featureTieRegion, lastNearestFace, distance, distanceSquared);
     return distance;
   }
-  return { refit, sweep, signedDistance, relativeMotionInRegion, getRefitFrame: () => refitFrame, getMotionBound: () => gridHeads || motionTracking ? accumulatedMotion : undefined, intersectsChanges: box => !changedBounds || changedBounds.intersectsBox(box), getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
+  return { refit, sweep, signedDistance, relativeMotionInRegion, getRefitFrame: () => refitFrame, intersectsChanges: box => !trackChanges || changedBounds.intersectsBox(box), clearanceDistance: performanceOptimizations ? (point, normal, hint, threshold) => signedDistance(point, normal, hint, threshold) : undefined, changedNearBox: performanceOptimizations ? box => changedBounds.intersectsBox(box) && changedLeafBounds.some(changed => changed.intersectsBox(box)) : undefined, getMotionBound: () => gridHeads || motionTracking ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
 export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
-// Shared shell factory; presets supply their own frozen geometry configuration.
 export function createWaxShell(options, parameters) { return createVoronoiWax(options, parameters, createWaxCollisionTree); }
-export function createThinWax(options = {}) { return createWaxShell(options, options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters); }
+export function createThinWax(options = {}, parameters = options.fragmentSize === 'small' ? smallThinWaxParameters : thinWaxParameters) { return createWaxShell(options, parameters); }

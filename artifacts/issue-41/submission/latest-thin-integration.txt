@@ -1,0 +1,67 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (3.5493ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.5102ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (5.1127ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (0.9844ms)
+✔ 尚未实现外壳的制作结束保留原有自动恢复 (0.9187ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (5.8601ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (0.8911ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (1.3041ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (0.6559ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.4901ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (1.181ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (0.5957ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.3789ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (6.1741ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (0.6181ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.5486ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.3226ms)
+✔ medium sphere mapping only adds marshmallow and butter preview; defaults and unsupported combinations remain bounded (1.9933ms)
+✔ both new sphere previews preserve navigation damage, explicit restart and hidden legacy final contract (4.8703ms)
+✔ late core or thickness preparation is disposed and cannot overwrite last committed recipe (0.6709ms)
+✔ donut: medium cavity cells avoid tiny slivers without oversized first releases (1953.1085ms)
+ℹ {"id":"donut","region":"inner ring","point":[0.37092456221580505,2.022249212529914e-8,0.2678550183773041],"previous":{"cells":87,"weightedArea":0.17032982363788948,"median":0.02623597251269631,"firstDetachedMean":0.011385991562165928},"oversized":{"weightedArea":0.31951682193526887,"firstDetachedMean":0.2424779749940336},"current":{"cells":49,"weightedArea":0.14387283907166845,"median":0.11983248190454487,"firstDetachedMean":0.08292256522627811}}
+✔ paw: medium cavity cells avoid tiny slivers without oversized first releases (6466.0212ms)
+ℹ {"id":"paw","region":"palm-to-toe recess","point":[0.017365409061312675,0.15843325853347778,0.16800402104854584],"previous":{"cells":21,"weightedArea":0.1949815925535681,"median":0.032656919349389,"firstDetachedMean":0.008508969993503817},"oversized":{"weightedArea":0.502066762126684,"firstDetachedMean":0.4146988736032624},"current":{"cells":11,"weightedArea":0.09147566560294645,"median":0.07769238039389209,"firstDetachedMean":0.058125995314896234}}
+ℹ {"id":"paw","region":"left recessed connection","point":[-0.3272308111190796,0.40883398056030273,0.2793562412261963],"previous":{"cells":5,"weightedArea":0.24210422472762017,"median":0.2453392337325501,"firstDetachedMean":0.013735202906831931},"oversized":{"weightedArea":0.368680689520806,"firstDetachedMean":0.30085939281996243},"current":{"cells":8,"weightedArea":0.06581729747742392,"median":0.0607300112917158,"firstDetachedMean":0.0506201256712035}}
+✔ cloud: scalar real-triangle thickness preserves original radii, directions and every slow-core step (1457.9207ms)
+ℹ {"id":"cloud","rays":303,"frames":186}
+✔ paw: scalar real-triangle thickness preserves original radii, directions and every slow-core step (4104.4649ms)
+ℹ {"id":"paw","rays":303,"frames":186}
+✔ donut: scalar real-triangle thickness preserves original radii, directions and every slow-core step (2569.2396ms)
+ℹ {"id":"donut","rays":303,"frames":186}
+✔ approved thin wax has 21 non-paw recipes; pending slow paw and other shell presets stay excluded (6.2721ms)
+✔ changed-triangle bounds invalidate even a face sweeping completely across an unchanged shell region (50.2238ms)
+✔ cloud slow-rebound: reused shell and lazy feature normals equal fully recomputed actual Float32 geometry (20629.1512ms)
+ℹ {"feelId":"slow-rebound","frames":146,"reused":20265,"thickness":0.014,"minGap":0.003999938887722484,"minActualSigned":0.003929020310222741}
+✔ cloud marshmallow: reused shell and lazy feature normals equal fully recomputed actual Float32 geometry (14347.315ms)
+ℹ {"feelId":"marshmallow","frames":146,"reused":22723,"thickness":0.014,"minGap":0.003999938887722484,"minActualSigned":0.003929020310222741}
+✔ lazy feature normals match full feature normals after local motion, seam changes and restoration (616.4182ms)
+ℹ {"compared":1158}
+✔ grid ties preserve exact BVH closest face, sign and feature normal on all seven real meshes (8577.8467ms)
+ℹ {"compared":85065}
+✔ identical local queries reuse only unchanged live triangles and stay equal to a cache-disabled full BVH (3350.9836ms)
+ℹ {"id":"paw","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":3124,"nearestTriangles":2342,"gridQueries":82,"gridSweeps":0,"cachedQueries":244}}
+ℹ {"id":"donut","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":4347,"nearestTriangles":2879,"gridQueries":67,"gridSweeps":0,"cachedQueries":242}}
+✔ a different triangle entering or leaving a cached search region invalidates the result; caches cannot cross tree instances (2.2855ms)
+✔ paw: compact cells bound shard length while covering every original source face (20050.3259ms)
+ℹ {"id":"paw","count":260,"oldMax":0.8565757389289205,"max":0.39564604025710837,"aabbMax":0.49958471567973173,"p95":0.34389149858132145,"thickness":0.014,"minGap":0.003999939968060502}
+✔ donut: compact cells bound shard length while covering every original source face (27018.52ms)
+ℹ {"id":"donut","count":260,"oldMax":0.8303475997552731,"max":0.4034128047716304,"aabbMax":0.48675753383561154,"p95":0.3561390298204606,"thickness":0.014,"minGap":0.00399993757581546}
+✔ relative motion bounds include a triangle sweeping entirely through a region, and cancel a shared rigid translation (32.1455ms)
+✔ paw: moving-frame support equals exact uncached compact shell through press, drag and restoration (115657.3202ms)
+ℹ {"styleId":"paw","frames":146,"reused":26328,"relative":7706892,"thickness":0.014,"minGap":0.003999939968060502,"minActualSigned":0.0034836100253445414}
+✔ donut: moving-frame support equals exact uncached compact shell through press, drag and restoration (29936.7014ms)
+ℹ {"styleId":"donut","frames":146,"reused":30628,"relative":3433074,"thickness":0.014,"minGap":0.00399993757581546,"minActualSigned":0.003990200100417978}
+✔ real folded paw distinguishes a false face-normal penetration from a true penetration using independent ray parity (1909.8305ms)
+ℹ {"expectedInside":false,"independentUniqueRayHits":[0,2,0],"robustSignedDistance":0.03808787054371515,"legacySignedDistance":-0.03808787054371515}
+ℹ {"expectedInside":true,"independentUniqueRayHits":[3,3,3],"robustSignedDistance":-0.0002773505469502473,"legacySignedDistance":-0.0002773505469502473}
+✔ closed concave solid with duplicated seam vertices has analytic inside/outside signs after dynamic refit (29.8967ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 265092.4947
+EXIT_CODE=0

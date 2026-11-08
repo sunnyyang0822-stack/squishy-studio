@@ -1,0 +1,122 @@
+{
+  "cloud:thin-wax": {
+    "thickness": 0.014,
+    "partitions": 180,
+    "areaUnit": "model units squared",
+    "mean": 0.07132337994592297,
+    "min": 0.016686000376621348,
+    "median": 0.06232205495590611,
+    "max": 0.2924790995190447,
+    "coefficientOfVariation": 0.6130597626281374
+  },
+  "cloud:medium-wax": {
+    "thickness": 0.028,
+    "partitions": 96,
+    "areaUnit": "model units squared",
+    "mean": 0.1337313373836369,
+    "min": 0.046854017360834416,
+    "median": 0.12540836787489318,
+    "max": 0.2842512616337688,
+    "coefficientOfVariation": 0.4045841725389122
+  },
+  "cylinder:thin-wax": {
+    "thickness": 0.014,
+    "partitions": 180,
+    "areaUnit": "model units squared",
+    "mean": 0.07545578282242983,
+    "min": 0.020480281973595124,
+    "median": 0.06738097903663794,
+    "max": 0.19369544907574332,
+    "coefficientOfVariation": 0.4552043449021303
+  },
+  "cylinder:medium-wax": {
+    "thickness": 0.028,
+    "partitions": 96,
+    "areaUnit": "model units squared",
+    "mean": 0.14147959279858943,
+    "min": 0.0422485582013183,
+    "median": 0.12952210063470537,
+    "max": 0.28704339147373564,
+    "coefficientOfVariation": 0.38600110529167714
+  },
+  "donut:thin-wax": {
+    "thickness": 0.014,
+    "partitions": 271,
+    "areaUnit": "model units squared",
+    "mean": 0.04610590233693513,
+    "min": 0.001245016252764593,
+    "median": 0.04451461211016749,
+    "max": 0.2252333407183388,
+    "coefficientOfVariation": 0.9208731644353912
+  },
+  "donut:medium-wax": {
+    "thickness": 0.028,
+    "partitions": 96,
+    "areaUnit": "model units squared",
+    "mean": 0.13015312016331002,
+    "min": 0.04998657598117685,
+    "median": 0.12220967301026812,
+    "max": 0.3639078440093483,
+    "coefficientOfVariation": 0.42486802212017816
+  },
+  "pyramid:thin-wax": {
+    "thickness": 0.014,
+    "partitions": 180,
+    "areaUnit": "model units squared",
+    "mean": 0.04560431799313837,
+    "min": 0.0035295186590984943,
+    "median": 0.031150196115784377,
+    "max": 0.19249465115844383,
+    "coefficientOfVariation": 0.9202141204732491
+  },
+  "pyramid:medium-wax": {
+    "thickness": 0.028,
+    "partitions": 96,
+    "areaUnit": "model units squared",
+    "mean": 0.08550809624557487,
+    "min": 0.023344671987258668,
+    "median": 0.0828183173275991,
+    "max": 0.15734812577783958,
+    "coefficientOfVariation": 0.36074718152020646
+  },
+  "flower:thin-wax": {
+    "thickness": 0.014,
+    "partitions": 180,
+    "areaUnit": "model units squared",
+    "mean": 0.07222229510090607,
+    "min": 0.009030185498939497,
+    "median": 0.06983125714168294,
+    "max": 0.17999642745325933,
+    "coefficientOfVariation": 0.5663402291136506
+  },
+  "flower:medium-wax": {
+    "thickness": 0.028,
+    "partitions": 96,
+    "areaUnit": "model units squared",
+    "mean": 0.13541680330157005,
+    "min": 0.05273834199292099,
+    "median": 0.12183747936279256,
+    "max": 0.3214399704084028,
+    "coefficientOfVariation": 0.40362097689236354
+  },
+  "star:thin-wax": {
+    "thickness": 0.014,
+    "partitions": 180,
+    "areaUnit": "model units squared",
+    "mean": 0.052102434424526264,
+    "min": 0.010699146965684355,
+    "median": 0.04394366790792009,
+    "max": 0.1499148436132395,
+    "coefficientOfVariation": 0.6045358139958932
+  },
+  "star:medium-wax": {
+    "thickness": 0.028,
+    "partitions": 96,
+    "areaUnit": "model units squared",
+    "mean": 0.09769206453366724,
+    "min": 0.02834030377573337,
+    "median": 0.09052930485646371,
+    "max": 0.2365028655461576,
+    "coefficientOfVariation": 0.42203157598457375
+  }
+}

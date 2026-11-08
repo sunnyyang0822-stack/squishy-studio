@@ -1,0 +1,11 @@
+✔ non-orb damaged preview survives legacy final navigation, rotation, keyboard, misses and rapid configuration (16017.784ms)
+ℹ {"before":{"active":false,"cracked":77,"attachedCracked":68,"attachedPartialBranches":63,"visibleLongCrackEdges":137,"detached":9,"living":0,"settled":0,"expired":9,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":0,"minY":null,"maxRadius":0,"pileTop":-1.35,"gridCells":0},"firstBurst":3,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":271,"visibleCrackRadius":0.53,"localDamaged":9,"localDetached":9,"chainWaveCount":1,"lastDamageTime":5.686299999999814,"heldStrain":0,"maxDetachedPerContact":280,"localRetainedFraction":0},"legacyEnabled":false,"preserved":{"active":false,"cracked":77,"attachedCracked":68,"attachedPartialBranches":63,"visibleLongCrackEdges":137,"detached":9,"living":0,"settled":0,"expired":9,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":0,"minY":null,"maxRadius":0,"pileTop":-1.35,"gridCells":0},"firstBurst":3,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":271,"visibleCrackRadius":0.53,"localDamaged":9,"localDetached":9,"chainWaveCount":1,"lastDamageTime":5.686299999999814,"heldStrain":0,"maxDetachedPerContact":280,"localRetainedFraction":0},"configured":{"active":false,"cracked":0,"attachedCracked":0,"attachedPartialBranches":0,"visibleLongCrackEdges":0,"detached":0,"living":0,"settled":0,"expired":0,"collectionEnabled":false,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":0,"minY":null,"maxRadius":0,"pileTop":-1.35,"gridCells":0},"firstBurst":0,"burstDuration":0.07,"burstInitialOutwardSpeed":0,"maxOutwardOffset":0,"dwell":0,"disposed":false,"topology":"random-spaced-clipped-voronoi","panels":271,"visibleCrackRadius":0.53,"localDamaged":0,"localDetached":0,"chainWaveCount":0,"lastDamageTime":null,"heldStrain":0,"maxDetachedPerContact":280,"localRetainedFraction":1}}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17035.5204
+EXIT_CODE=0

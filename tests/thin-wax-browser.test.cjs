@@ -508,7 +508,8 @@ test('same recipe survives full workflow; restart, color and configuration reset
     await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().shellColor === 'sky');
     const recolored = await diagnostics(page); assert.equal(recolored.thinWax.detached, 0); assert.equal(recolored.coreColor, 'mint'); assert.equal(recolored.thinWax.living, 0);
     await page.locator('[name=waxThickness][value=medium]').check();
-    await page.waitForFunction(() => !document.querySelector('.toy-mount').thinWaxDiagnostics().enabled);
+    await page.waitForFunction(() => { const d = document.querySelector('.toy-mount').thinWaxDiagnostics(); return d.enabled && d.presetId === 'medium-wax'; });
+    assert.equal((await diagnostics(page)).thinWax.detached, 0); geometryOK(await diagnostics(page, { measure: true }));
     await page.locator('[name=waxThickness][value=thin]').check();
     await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics().enabled);
     assert.equal((await diagnostics(page)).thinWax.detached, 0); geometryOK(await diagnostics(page, { measure: true }));

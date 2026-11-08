@@ -34,6 +34,9 @@ jobs:
           THIN_WAX_TEST_DPR: "0.5"
           # Free-flight needs two real frames inside a ~0.2s airborne window.
           THIN_WAX_FLIGHT_DPR: "0.125"
+          # Dense medium shells need the same software-raster budget for
+          # native short-input delivery; CSS size and full geometry stay fixed.
+          MEDIUM_WAX_TEST_DPR: "0.125"
         # Match local Chrome/Edge's new headless mode instead of headless shell.
         run: |
           export PLAYWRIGHT_BROWSER_PATH="$(node -p "require('playwright').chromium.executablePath()")"

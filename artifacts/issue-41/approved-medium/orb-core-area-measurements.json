@@ -1,0 +1,22 @@
+{
+  "thin-wax": {
+    "thickness": 0.014,
+    "partitions": 180,
+    "areaUnit": "model units squared",
+    "mean": 0.06671903459358954,
+    "min": 0.019977573879851555,
+    "median": 0.06158710779428882,
+    "max": 0.15430674822263776,
+    "coefficientOfVariation": 0.3982934787793016
+  },
+  "medium-wax": {
+    "thickness": 0.028,
+    "partitions": 96,
+    "areaUnit": "model units squared",
+    "mean": 0.12509818987592147,
+    "min": 0.030582047517825204,
+    "median": 0.12248226432145545,
+    "max": 0.2565181290144023,
+    "coefficientOfVariation": 0.4119423080138412
+  }
+}

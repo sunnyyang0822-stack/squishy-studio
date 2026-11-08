@@ -135,7 +135,7 @@ test('重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改�
 
 test('尚未实现外壳的制作结束保留原有自动恢复', async () => {
   const { createDetailController } = await stateModule;
-  for (const [group, value] of [['waxThickness', 'medium'], ['coreMaterial', 'butter'], ['shellMaterial', 'sugar']]) {
+  for (const [group, value] of [['coreMaterial', 'butter'], ['shellMaterial', 'sugar']]) {
     const h = harness(createDetailController), c = h.controller;
     await c.load(); await c.select('waxThickness', 'thin'); await c.select(group, value);
     c.setStep('making'); c.setStep('play');

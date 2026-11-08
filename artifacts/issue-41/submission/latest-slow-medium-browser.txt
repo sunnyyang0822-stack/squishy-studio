@@ -1,0 +1,40 @@
+{"shortInput":"orb-marshmallow-desktop-day","elapsed":308,"events":[{"type":"pointerdown","time":2913.4000000000233,"timestamp":2912.5999999999767,"trusted":true},{"type":"pointerup","time":3088.7999999999884,"timestamp":3085.9000000000233,"trusted":true}],"detached":0}
+{"style":"orb","core":"marshmallow","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":8,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"orb-marshmallow-mobile-night","elapsed":251,"events":[{"type":"pointerdown","time":1310.2000000000116,"timestamp":1300.2000000000116,"trusted":true},{"type":"touchstart","time":1313.5,"timestamp":1300.2000000000116,"trusted":true},{"type":"pointerup","time":1484.4000000000233,"timestamp":1469.4000000000233,"trusted":true},{"type":"touchend","time":1488.2999999999884,"timestamp":1469.4000000000233,"trusted":true}],"detached":0}
+{"style":"orb","core":"marshmallow","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":8,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"orb-butter-desktop-day","elapsed":272,"events":[{"type":"pointerdown","time":1530,"timestamp":1529.2999999999884,"trusted":true},{"type":"pointerup","time":1695.2000000000116,"timestamp":1690.5999999999767,"trusted":true}],"detached":0}
+{"style":"orb","core":"butter","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":9,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"orb-butter-mobile-night","elapsed":302,"events":[{"type":"pointerdown","time":1419,"timestamp":1405.7000000000116,"trusted":true},{"type":"touchstart","time":1422.0999999999767,"timestamp":1405.7000000000116,"trusted":true},{"type":"pointerup","time":1585.5,"timestamp":1569.899999999965,"trusted":true},{"type":"touchend","time":1585.5999999999767,"timestamp":1569.899999999965,"trusted":true}],"detached":0}
+{"style":"orb","core":"butter","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":9,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"core":"clay","pawExcluded":true}
+{"core":"marshmallow","pawExcluded":true}
+{"core":"butter","pawExcluded":true}
+✔ medium wax orb: marshmallow and slow rebound native input and full geometry (33603.2805ms)
+{"shortInput":"cloud-marshmallow-desktop-day","elapsed":488,"events":[{"type":"pointerdown","time":3991.7999999999884,"timestamp":3991.100000000035,"trusted":true},{"type":"pointerup","time":4197.200000000012,"timestamp":4152.700000000012,"trusted":true}],"detached":0}
+{"style":"cloud","core":"marshmallow","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":7,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"cloud-marshmallow-mobile-night","elapsed":443,"events":[{"type":"pointerdown","time":2072.9000000000233,"timestamp":2070.8000000000466,"trusted":true},{"type":"touchstart","time":2078.3000000000466,"timestamp":2070.8000000000466,"trusted":true},{"type":"pointerup","time":2290.100000000035,"timestamp":2244.3000000000466,"trusted":true},{"type":"touchend","time":2304.5,"timestamp":2244.3000000000466,"trusted":true}],"detached":0}
+{"style":"cloud","core":"marshmallow","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":7,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"cloud-butter-desktop-day","elapsed":505,"events":[{"type":"pointerdown","time":2383.9000000000233,"timestamp":2383.4000000000233,"trusted":true},{"type":"pointerup","time":2582.100000000035,"timestamp":2557.9000000000233,"trusted":true}],"detached":0}
+{"style":"cloud","core":"butter","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":10,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"cloud-butter-mobile-night","elapsed":653,"events":[{"type":"pointerdown","time":2228.9000000000233,"timestamp":2227.4000000000233,"trusted":true},{"type":"touchstart","time":2233.9000000000233,"timestamp":2227.4000000000233,"trusted":true},{"type":"pointerup","time":2511.4000000000233,"timestamp":2388.600000000035,"trusted":true},{"type":"touchend","time":2511.600000000035,"timestamp":2388.600000000035,"trusted":true}],"detached":0}
+{"style":"cloud","core":"butter","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":10,"attachedViolations":0,"detachedViolations":0,"restart":true}
+✔ medium wax cloud: marshmallow and slow rebound native input and full geometry (45868.8777ms)
+{"shortInput":"donut-marshmallow-desktop-day","elapsed":552,"events":[{"type":"pointerdown","time":4199.800000000047,"timestamp":4199.100000000093,"trusted":true},{"type":"pointerup","time":4462.600000000093,"timestamp":4365.800000000047,"trusted":true}],"detached":0}
+{"style":"donut","core":"marshmallow","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":6,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"donut-marshmallow-mobile-night","elapsed":430,"events":[{"type":"pointerdown","time":2397,"timestamp":2387.1999999999534,"trusted":true},{"type":"touchstart","time":2404,"timestamp":2387.1999999999534,"trusted":true},{"type":"pointerup","time":2616.5,"timestamp":2551.3000000000466,"trusted":true},{"type":"touchend","time":2640.4000000000233,"timestamp":2551.3000000000466,"trusted":true}],"detached":0}
+{"style":"donut","core":"marshmallow","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":6,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"donut-butter-desktop-day","elapsed":689,"events":[{"type":"pointerdown","time":2839.3000000000466,"timestamp":2830.3000000000466,"trusted":true},{"type":"pointerup","time":3000.20000000007,"timestamp":2994.5,"trusted":true}],"detached":0}
+{"style":"donut","core":"butter","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":4,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"donut-butter-mobile-night","elapsed":802,"events":[{"type":"pointerdown","time":2499.6999999999534,"timestamp":2498.399999999907,"trusted":true},{"type":"touchstart","time":2503.5999999999767,"timestamp":2498.399999999907,"trusted":true},{"type":"pointerup","time":2798.899999999907,"timestamp":2673.5,"trusted":true},{"type":"touchend","time":2799,"timestamp":2673.5,"trusted":true}],"detached":0}
+{"style":"donut","core":"butter","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":4,"attachedViolations":0,"detachedViolations":0,"restart":true}
+✔ medium wax donut: marshmallow and slow rebound native input and full geometry (52966.4848ms)
+✔ queued medium release cannot add fractures; final marshmallow core input still flushes and a fresh hold can fracture (5524.8032ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139644.914
+EXIT_CODE=0

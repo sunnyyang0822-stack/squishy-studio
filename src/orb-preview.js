@@ -101,7 +101,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     let deformation;
     try {
       deformation = isSurface
-        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, { ...style.geometryOptions, continuousFootprint: feelId === 'slow-rebound' }), reducedMotion: motionPreference.matches,
+        ? getOrbPreset(feelId).createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { surfaceGeometry: createSurfaceGeometry(geometry.attributes.position.array, geometry.attributes.normal.array, geometry.index.array, { ...style.geometryOptions, cacheSafety: feelId === 'slow-rebound' && style.id !== 'paw', continuousFootprint: feelId === 'slow-rebound' }), reducedMotion: motionPreference.matches,
           ...pressOptions })
         : feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, { reducedMotion: motionPreference.matches, ...pressOptions });
     } catch (error) { releaseObject(root); throw error; }
@@ -273,9 +273,12 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       }
       Object.assign(surface.style, { left: `${(left + 1) * width / 2}px`, top: `${(1 - top) * height / 2}px`, width: `${(right - left) * width / 2}px`, height: `${(top - bottom) * height / 2}px` });
     }
-    function draw(time) {
+    function draw(time, flushCore = false) {
       current.frame = 0;
       if (disposed || broken || view !== current || document.hidden) { current.lastTime = null; return; }
+      // Let a queued discrete release/cancel run before another costly medium
+      // frame. Continuous pointer moves are excluded by isInputPending's default.
+      if (!flushCore && mediumInputPending()) { invalidate(); return; }
       const { width, height } = mount.getBoundingClientRect();
       if (width < 1 || height < 1) return;
       if (width !== current.width || height !== current.height) resize(width, height);
@@ -353,9 +356,19 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (wax && shellVisible) {
         pivot.updateMatrixWorld(true);
         wax.setWorldMatrix(mesh.matrixWorld);
-        const shellStep = wax.step(dt);
-        if (step.changed && !shellStep.changed) wax.sync();
-        needsFrame ||= shellStep.needsFrame;
+        // Medium wax uses this frame's captured input time. A synchronous
+        // marshmallow release flush may spend time updating the core; that
+        // computation must not turn an already released short tap into dwell.
+        if (mediumInputPending()) {
+          // Input can arrive during core work. Keep the attached geometry in
+          // sync, then yield without inventing another held-fracture step.
+          if (step.changed) wax.sync();
+          needsFrame = true;
+        } else {
+          const shellStep = wax.step(dt, activeConfig.waxThickness === 'medium' ? time / 1000 : undefined);
+          if (step.changed && !shellStep.changed) wax.sync();
+          needsFrame ||= shellStep.needsFrame;
+        }
       }
       current.lastTime = needsFrame ? time : null;
       try {
@@ -368,6 +381,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     }
     function invalidate() {
       if (!current.frame && !disposed && !broken && view === current && !document.hidden) current.frame = requestAnimationFrame(draw);
+    }
+    function mediumInputPending() {
+      return wax && activeConfig.waxThickness === 'medium' && current.input?.isActive() && navigator.scheduling?.isInputPending?.();
     }
     current.input = bindOrbInput({ surface, hitTest: (x, y, actual) => hitTest(x, y, actual || shellVisible), deformation, invalidate, onBegin: interruptRestore,
       onContact(point, phase) { if (shellVisible) { wax?.[phase === 'begin' ? 'begin' : 'move'](point); polish?.[phase === 'begin' ? 'begin' : 'move'](point); } },
@@ -383,11 +399,14 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         return null;
       } : undefined,
       beforeRelease() {
+        // A medium release ends shell force before the marshmallow-only core
+        // flush below; that flush still commits its final input segment.
+        if (activeConfig.waxThickness === 'medium') wax?.end();
         // Commit pending marshmallow path input while still pressed. A quick
         // swipe ending between rAF callbacks must not drop its final segment.
         if (feelId === 'marshmallow' && current.frame) {
           cancelAnimationFrame(current.frame); current.frame = 0;
-          draw(performance.now());
+          draw(performance.now(), true);
         }
       },
     });
@@ -437,8 +456,10 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
       const supportedThinCore = supportedWaxCore || config.waxCollection === false && feelId === 'slow-rebound' && style.id !== 'paw';
       const thinRecipe = supportedThinCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
+      const mediumCore = style.id !== 'paw' && (feelId === 'clay' || ['marshmallow', 'slow-rebound'].includes(feelId) && config.waxCollection === false);
+      const mediumRecipe = mediumCore && config.shellMaterial === 'wax' && config.waxThickness === 'medium' && (style.id === 'orb' || config.waxCollection === false);
       const thickRecipe = supportedWaxCore && style.id === 'orb' && config.shellMaterial === 'wax' && config.waxThickness === 'thick';
-      const waxRecipe = thinRecipe || thickRecipe;
+      const waxRecipe = thinRecipe || mediumRecipe || thickRecipe;
       const polishRecipe = ['clay', 'marshmallow', 'slow-rebound'].includes(feelId) && style.id !== 'paw' && config.shellMaterial === 'polish';
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
       if (wax || polish || waxRecipe || polishRecipe) current.input.cancel({ preserveShape: changed });
@@ -457,7 +478,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (polish) { polish.group.visible = shellVisible && polishRecipe; polish.sync(); }
       if (waxRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset(thickRecipe ? 'thick-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: thinRecipe && feelId === 'slow-rebound' && style.id === 'donut', cacheAttachedPanels: style.id !== 'paw', fullSurfaceSupport: (feelId === 'marshmallow' || thinRecipe && feelId === 'slow-rebound') && isSurface });
+        wax = getWaxPreset(thickRecipe ? 'thick-wax' : mediumRecipe ? 'medium-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: thinRecipe && feelId === 'slow-rebound' && style.id === 'donut', cacheAttachedPanels: !mediumRecipe && style.id !== 'paw', fullSurfaceSupport: (feelId === 'marshmallow' || (thinRecipe || mediumRecipe) && feelId === 'slow-rebound') && isSurface });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }
@@ -481,7 +502,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       current.diagnostics = ({ exhaustive = false, surface = false, measure = true, counters = false } = {}) => {
         if (counters) return wax?.getQueryCounters(true);
         return ({
-        enabled: Boolean(wax && shellVisible), configKey: recipeKey,
+        enabled: Boolean(wax && shellVisible), configKey: recipeKey, presetId: waxRecipe ? (thickRecipe ? 'thick-wax' : mediumRecipe ? 'medium-wax' : 'thin-wax') : null,
         coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor,
         corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions),
         coreState: deformation.getState(), thinWax: wax?.getState(), geometry: measure ? wax?.getMetrics({ exhaustive }) : undefined,

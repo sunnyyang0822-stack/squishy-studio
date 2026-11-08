@@ -1,0 +1,15 @@
+✔ thick registry shares only verified behavior, frozen parameters and separate instance state (1142.8947ms)
+✔ every local thick cross-section is triple thin; actual source partitions exceed twice linear size and cover identical holes (1004.0336ms)
+ℹ {"releasedMeanAreas":[0.05313731396635321,0.4438341363519362],"releasedAreaRatio":8.352588853719139,"thin":{"patches":180,"meanArea":0.06972898967824348},"thick":{"patches":36,"meanArea":0.3486449484046869,"range":[0.0967422878315793,0.6235398348813849],"cv":0.3537891735777878},"areaRatio":5.000000000193169,"equivalentDiameterRatio":2.2360679775429837}
+✔ unchanged dwell and no timed emptying; detached large plates keep original hole topology and rigid size (357.7967ms)
+✔ deep press, drag, repeated press, rotation and recovery preserve clay and complete thick fragment clearance (11551.0822ms)
+ℹ {"frames":248,"samples":3525256,"minimumSignedDistance":0.003495491091895101,"detached":6}
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14264.7495
+EXIT_CODE=0

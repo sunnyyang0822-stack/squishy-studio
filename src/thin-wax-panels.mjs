@@ -14,12 +14,22 @@ export function createWaxSweepSchedule(triangles) {
 // Voronoi boundaries cut the original triangles in model space. Each generated
 // point retains a barycentric source mapping, so shell contact and deformation
 // use the same original surface even when the shell is built over an old dent.
-function buildPanels(rest, index, count = 180, compact = false) {
+function buildPanels(rest, index, count = 180, surfaceSites = false, compact = false) {
   // Random spacing produces deliberately unequal shards: no Fibonacci rows,
   // equal hexagons, or a repeated scale pattern. The seed is deterministic.
   let randomState = 0x38c1a7;
   const random = () => { randomState ^= randomState << 13; randomState ^= randomState >>> 17; randomState ^= randomState << 5; return (randomState >>> 0) / 4294967296; };
   const seeds = [];
+  // Optional sites on the actual mesh keep cavity/inner-ring cells from
+  // shrinking toward the model origin. They use the same Voronoi clipper,
+  // barycentric mapping, connected-island split and fracture lifecycle.
+  const faces = []; let surfaceArea = 0;
+  if (surfaceSites) for (let i = 0; i < index.length; i += 3) {
+    const a = new THREE.Vector3().fromArray(rest, index[i] * 3), b = new THREE.Vector3().fromArray(rest, index[i + 1] * 3), c = new THREE.Vector3().fromArray(rest, index[i + 2] * 3);
+    surfaceArea += b.clone().sub(a).cross(c.clone().sub(a)).length() * .5;
+    faces.push({ a, b, c, cumulative: surfaceArea });
+  }
+  let proposals = 0;
   if (compact) {
     // Sample the real surface, not directions from the origin. Radial cones
     // produce long strips around a torus tube and across thin paw connections.
@@ -39,17 +49,28 @@ function buildPanels(rest, index, count = 180, compact = false) {
     }
   }
   while (seeds.length < count) {
-    const y = random() * 2 - 1, angle = random() * Math.PI * 2;
-    const candidate = new THREE.Vector3(Math.sqrt(1 - y * y) * Math.cos(angle), y, Math.sqrt(1 - y * y) * Math.sin(angle));
-    if (seeds.every(seed => seed.distanceToSquared(candidate) > .007)) seeds.push(candidate);
+    let candidate;
+    if (surfaceSites) {
+      const target = random() * surfaceArea; let lo = 0, hi = faces.length - 1;
+      while (lo < hi) { const mid = (lo + hi) >> 1; if (faces[mid].cumulative < target) lo = mid + 1; else hi = mid; }
+      const face = faces[lo], u = Math.sqrt(random()), v = random();
+      candidate = face.a.clone().multiplyScalar(1 - u).addScaledVector(face.b, u * (1 - v)).addScaledVector(face.c, u * v);
+    } else {
+      const y = random() * 2 - 1, angle = random() * Math.PI * 2;
+      candidate = new THREE.Vector3(Math.sqrt(1 - y * y) * Math.cos(angle), y, Math.sqrt(1 - y * y) * Math.sin(angle));
+    }
+    const minimumSquared = surfaceSites ? surfaceArea / count * .16 : .007;
+    if (seeds.every(seed => seed.distanceToSquared(candidate) > minimumSquared)) seeds.push(candidate);
+    if (++proposals > count * 10000) throw new RangeError('Wax surface sites cannot satisfy minimum spacing');
   }
   const nearby = seeds.map(s => seeds.map((t, j) => [j, s.distanceToSquared(t)]).sort((a, b) => a[1] - b[1]).map(x => x[0]));
-  const planes = seeds.map(seed => seeds.map(other => Object.assign(other.clone().sub(seed), { constant: compact ? (other.lengthSq() - seed.lengthSq()) * .5 : 0 })));
-  const panels = seeds.map((seed, id) => ({ id, seed: compact ? seed.clone().normalize() : seed, vertices: [], triangles: [], sourceFaces: [], map: new Map(), cracked: false, detached: false, dead: false, lift: 0, born: 0, burst: false, offset: new THREE.Vector3(), outward: compact ? seed.clone().normalize() : seed.clone() }));
-  function clip(poly, plane) {
+  const planes = seeds.map(seed => seeds.map(other => other.clone().sub(seed)));
+  const offsets = seeds.map(seed => seeds.map(other => (surfaceSites || compact) ? (other.lengthSq() - seed.lengthSq()) * .5 : 0));
+  const panels = seeds.map((site, id) => { const seed = surfaceSites || compact ? site.clone().normalize() : site; return { id, seed, vertices: [], triangles: [], sourceFaces: [], map: new Map(), cracked: false, detached: false, dead: false, lift: 0, born: 0, burst: false, offset: new THREE.Vector3(), outward: seed.clone() }; });
+  function clip(poly, plane, offset = 0) {
     const output = [];
     for (let i = 0; i < poly.length; i++) {
-      const a = poly[i], b = poly[(i + 1) % poly.length], da = a.p.dot(plane) - plane.constant, db = b.p.dot(plane) - plane.constant, ina = da <= 1e-10, inb = db <= 1e-10;
+      const a = poly[i], b = poly[(i + 1) % poly.length], da = a.p.dot(plane) - offset, db = b.p.dot(plane) - offset, ina = da <= 1e-10, inb = db <= 1e-10;
       if (ina) output.push(a);
       if (ina !== inb) { const t = da / (da - db); output.push({ p: a.p.clone().lerp(b.p, t), weights: a.weights.map((w, k) => w + (b.weights[k] - w) * t), ids: a.ids, sourceFace: a.sourceFace }); }
     }
@@ -57,19 +78,19 @@ function buildPanels(rest, index, count = 180, compact = false) {
   }
   for (let f = 0; f < index.length; f += 3) {
     const ids = Array.from(index.slice(f, f + 3)), points = ids.map(i => new THREE.Vector3().fromArray(rest, i * 3));
-    const center = points[0].clone().add(points[1]).add(points[2]); if (compact) center.multiplyScalar(1 / 3); else center.normalize();
-    let nearest = 0; for (let s = 1; s < seeds.length; s++) if (compact ? center.distanceToSquared(seeds[s]) < center.distanceToSquared(seeds[nearest]) : center.dot(seeds[s]) > center.dot(seeds[nearest])) nearest = s;
+    const center = points[0].clone().add(points[1]).add(points[2]); if (surfaceSites || compact) center.multiplyScalar(1 / 3); else center.normalize();
+    let nearest = 0; for (let s = 1; s < seeds.length; s++) if ((surfaceSites || compact) ? center.distanceToSquared(seeds[s]) < center.distanceToSquared(seeds[nearest]) : center.dot(seeds[s]) > center.dot(seeds[nearest])) nearest = s;
     const initial = points.map((p, k) => ({ p, ids, sourceFace: f / 3, weights: [+(k === 0), +(k === 1), +(k === 2)] }));
     // Random spacing invalidates fixed-neighbor guesses. This quick rejection
     // is conservative over the *whole source triangle*: a linear half-space
     // excluding all three corners excludes every point inside that triangle.
     // Every surviving cell is then clipped against every other seed.
     for (let s = 0; s < seeds.length; s++) {
-      if (s !== nearest && points.every(p => p.dot(planes[s][nearest]) - planes[s][nearest].constant > 1e-10)) continue;
+      if (s !== nearest && points.every(p => p.dot(planes[s][nearest]) - offsets[s][nearest] > 1e-10)) continue;
       let polygon = initial;
       for (const other of nearby[s]) {
         if (polygon.length < 3) break;
-        if (other !== s) polygon = clip(polygon, planes[s][other]);
+        if (other !== s) polygon = clip(polygon, planes[s][other], offsets[s][other]);
       }
       if (polygon.length < 3) continue;
       const panel = panels[s], local = polygon.map(vertex => {
@@ -116,7 +137,7 @@ function buildPanels(rest, index, count = 180, compact = false) {
     for (const edge of panel.boundary) {
       const midpoint = panel.vertices[edge[0]].p.clone().add(panel.vertices[edge[1]].p).multiplyScalar(.5);
       let neighbor = -1, nearest = Infinity;
-      for (let j = 0; j < seeds.length; j++) if (j !== panel.cellId) { const distance = Math.abs(midpoint.dot(planes[panel.cellId][j]) - planes[panel.cellId][j].constant) / planes[panel.cellId][j].length(); if (distance < nearest) { nearest = distance; neighbor = j; } }
+      for (let j = 0; j < seeds.length; j++) if (j !== panel.cellId) { const distance = Math.abs(midpoint.dot(planes[panel.cellId][j]) - offsets[panel.cellId][j]) / planes[panel.cellId][j].length(); if (distance < nearest) { nearest = distance; neighbor = j; } }
       if (splitSurface) neighbor = edgeOwners.get(edgeKey(panel, edge))?.find(id => id !== panel.id) ?? -1;
       const key = splitSurface ? neighbor < 0 ? `boundary:${panel.id}:${edgeKey(panel, edge)}` : panel.id < neighbor ? `${panel.id}:${neighbor}` : `${neighbor}:${panel.id}` : panel.cellId < neighbor ? `${panel.cellId}:${neighbor}` : `${neighbor}:${panel.cellId}`;
       if (!groups.has(key)) groups.set(key, { key, neighbor, edges: [], center: new THREE.Vector3(), samples: 0 });
@@ -135,7 +156,7 @@ function buildPanels(rest, index, count = 180, compact = false) {
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, compactPanels = false, relativeSupport = compactPanels, supportCertificates = true, detachedClearanceCertificates = true, cacheAttachedPanels = true, captureCorrectionGeometry = false } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, compactPanels = false, relativeSupport = compactPanels, cacheAttachedPanels = true, supportCertificates = true, detachedClearanceCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false, attachedSupportPasses = 8 } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
@@ -145,10 +166,10 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const previousAffected = reuseAttached ? normalAffected.slice() : null, sourceRevisions = reuseAttached ? new Float64Array(source.length / 3) : null;
   let syncRevision = 0, crackRevision = 0, reusedAttachedPanels = 0, relativeSupportSamples = 0;
   if (rest.length !== source.length || referenceNormals.length !== normals.length) throw new RangeError('Thin wax original surface snapshot mismatch');
-  let seedCount = config.seedCount ?? 180, panels = buildPanels(rest, geometry.index.array, seedCount, compactPanels);
+  let seedCount = config.seedCount ?? 180, panels = buildPanels(rest, geometry.index.array, seedCount, config.partitionSpace === 'surface', compactPanels);
   for (let attempt = 0; panels.length > config.maxFragments && attempt < 5; attempt++) {
     seedCount = Math.max(48, Math.floor(seedCount * config.maxFragments / panels.length * .95));
-    panels = buildPanels(rest, geometry.index.array, seedCount, compactPanels);
+    panels = buildPanels(rest, geometry.index.array, seedCount, config.partitionSpace === 'surface', compactPanels);
   }
   if (panels.length > config.maxFragments) throw new RangeError('Wax surface cannot be split into connected plates within the fragment budget');
   if (reuseAttached) for (const panel of panels) panel.sourceIds = Int32Array.from(new Set(panel.vertices.flatMap(vertex => vertex.ids)));
@@ -199,6 +220,18 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         face([a * 2, b * 2, b * 2 + 1], context); face([a * 2, b * 2 + 1, a * 2 + 1], { ...context, renderTriangleId: context.renderTriangleId + 1 });
       }
       panel.fullSupportSamples = [...samples.values()];
+      if (supportClusters) {
+        const groups = new Map();
+        for (const sample of panel.fullSupportSamples) if ((sample.nodes.every(node => node & 1) || performanceOptimizations && sample.nodes.every(node => !(node & 1))) && Number.isInteger(sample.context.sourceFace)) {
+          const id = sample.context.sourceFace + ':' + (sample.nodes[0] & 1);
+          if (!groups.has(id)) groups.set(id, { samples: [], hint: { faceIndex: sample.context.sourceFace }, point: new THREE.Vector3() });
+          groups.get(id).samples.push(sample);
+        }
+        for (const group of groups.values()) if (group.samples.length >= 3) {
+          group.nodes = [...new Set(group.samples.flatMap(sample => Array.from(sample.nodes)))];
+          for (const sample of group.samples) sample.cluster = group;
+        }
+      }
       triangleBase += panel.triangles.length * 2 + panel.boundary.length * 2;
     }
   }
@@ -211,7 +244,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const material = new THREE.MeshStandardMaterial({ color, roughness: .64, metalness: 0, vertexColors: true });
   const mesh = new THREE.Mesh(shell, material); mesh.frustumCulled = false;
   const group = new THREE.Group(); group.name = 'Thin_Wax_Voronoi'; group.add(mesh);
-  const collisions = makeCollisionTree(geometry, { motionTracking: config.maxInwardDeformation !== undefined, nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, trackChanges: reuseAttached || relativeSupport, trackRelativeMotion: relativeSupport, restPositions: rest });
+  const collisions = makeCollisionTree(geometry, { motionTracking: config.maxInwardDeformation !== undefined, nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, lazyFeatureNormals: !featureTieConsensus, exactGridTies: !featureTieConsensus, trackChanges: reuseAttached || relativeSupport, trackRelativeMotion: relativeSupport, restPositions: rest, featureTieConsensus, performanceOptimizations });
   const visibleCrackEdges = new Set();
   const debris = createWaxDebris({ thickness: config.thickness, reducedMotion, collectionEnabled });
   const worldMatrix = new THREE.Matrix4(), worldInverse = new THREE.Matrix4(), worldLinear = new THREE.Matrix3();
@@ -236,7 +269,8 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       // has not moved; the approved core renderer itself remains unchanged.
       // Full support also invalidates that shortcut when an incident source
       // face deforms: a stationary crease vertex then needs its live normal.
-      const values = array === normals && (!normalAffected || !normalAffected[vertex.ids[k]]) && source[i] === rest[i] && source[i + 1] === rest[i + 1] && source[i + 2] === rest[i + 2] ? referenceNormals : array;
+      const unchanged = performanceOptimizations && normalAffected ? !normalAffected[vertex.ids[k]] : source[i] === rest[i] && source[i + 1] === rest[i + 1] && source[i + 2] === rest[i + 2];
+      const values = array === normals && (!normalAffected || !normalAffected[vertex.ids[k]]) && unchanged ? referenceNormals : array;
       out.x += values[i] * w; out.y += values[i + 1] * w; out.z += values[i + 2] * w;
     }
     return out;
@@ -294,7 +328,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       if (panel.detached) continue;
       if (fullSurfaceSupport && panel.strainEdges >= 2) continue;
       let displacement = 0;
-      for (const vertex of panel.vertices) displacement = Math.max(displacement, map(vertex, source, current).distanceTo(vertex.p));
+      for (const vertex of panel.vertices) { displacement = Math.max(displacement, map(vertex, source, current).distanceTo(vertex.p)); if (displacement > .025) break; }
       if (displacement < config.visibleDeformation) continue;
       // Use the actual mapped core, including the dent rim and dragged trail.
       // A deformed cell opens only one or two stressed long edges, not its ring.
@@ -340,8 +374,11 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     // only while the transform is unchanged AND the live core cannot reach it.
     if (body?.settled && panel.renderedSettled && panel.renderWorldRevision === worldRevision && panel.renderBounds && !collisions.intersectsBox(panel.renderBounds)) return;
     if (!body) {
-      const points = mapped.map(v => v.p.clone().addScaledVector(v.n, config.gap + .006).applyMatrix4(worldMatrix));
-      const normals = mapped.map(v => v.n.clone().transformDirection(worldMatrix));
+      // Bigger plates keep the last displayed attached boundary at separation.
+      // Opt-in preserves the approved thin preset's original clearance path.
+      const freeze = freezeRenderedFragments && mapped.every(v => v.rendered && v.renderedNormal);
+      const points = mapped.map(v => (freeze ? v.rendered.clone() : v.p.clone().addScaledVector(v.n, config.gap + .006)).applyMatrix4(worldMatrix));
+      const normals = mapped.map(v => (freeze ? v.renderedNormal : v.n).clone().transformDirection(worldMatrix));
       body = debris.add(panel.id, points, normals, panel.triangles, now);
     }
     const worldPoints = debris.points(body, body.world), bounds = new THREE.Box3(), normal = vec();
@@ -353,33 +390,46 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     bounds.expandByScalar(config.thickness + .005);
     if (collisions.intersectsBox(bounds)) {
+      const hints = detachedQueryHints ? (panel.detachedHints ||= []) : null;
       // Translate the entire world-space chip out of the *current* live core.
       // Vertex, outer face, triangle center and edge samples stay rigid together.
       const certificates = detachedClearanceCertificates && config.maxInwardDeformation !== undefined ? (panel.detachedClearance ||= []) : null;
       const coreMotion = certificates ? collisions.getMotionBound() : undefined;
       for (let attempt = 0; attempt < 10; attempt++) {
-        let site = 0;
-        let minimum = .003; const pushNormal = vec(), sample = point => {
+        let queryIndex = 0, site = 0;
+        let minimum = .003; const pushNormal = vec(), sample = (point, ball) => {
           const id = site++, prior = certificates?.[id];
-          // Signed clearance is 1-Lipschitz. Bound both this exact sample's
-          // motion and the live core's accumulated maximum vertex motion.
-          // Every site is revisited; only proven-safe distances skip the BVH.
           if (prior && Number.isFinite(coreMotion)) {
             const allowance = prior.distance - (coreMotion - prior.motion) - .003 - 1e-9;
             if (allowance > 0 && point.distanceToSquared(prior.point) < allowance * allowance) return;
           }
-          detachedNearestSamples++; const distance = collisions.signedDistance(point, normal);
+          const hint = hints ? (hints[queryIndex++] ||= { faceIndex: panel.vertices[0].sourceFace }) : undefined;
+          if (ball && ball.distance > .003 && point.distanceToSquared(ball.point) < (ball.distance - .003 - 1e-10) ** 2) return;
+          const motion = hint ? collisions.getMotionBound?.() : undefined, certificate = hint?.clearance;
+          if (certificate && Number.isFinite(motion)) {
+            const allowance = certificate.distance - (motion - certificate.motion) - .003 - 1e-10;
+            const dx = point.x - certificate.x, dy = point.y - certificate.y, dz = point.z - certificate.z;
+            if (allowance > 0 && dx * dx + dy * dy + dz * dz < allowance * allowance) return;
+          }
+          detachedNearestSamples++; const distance = hint ? collisions.signedDistance(point, normal, hint) : collisions.signedDistance(point, normal);
           if (certificates && Number.isFinite(coreMotion)) {
             const saved = certificates[id] ||= { point: vec() };
             saved.point.copy(point); saved.distance = distance; saved.motion = coreMotion;
           }
+          if (hint && Number.isFinite(motion)) {
+            const saved = hint.clearance ||= {}; saved.x = point.x; saved.y = point.y; saved.z = point.z; saved.distance = distance; saved.motion = motion;
+          }
           if (distance < minimum) { minimum = distance; pushNormal.copy(normal); }
+          return distance;
         };
-        for (const vertex of mapped) { sample(vertex.rendered); sample(vertex.rendered.clone().addScaledVector(vertex.renderedNormal, config.thickness)); }
+        const scratch = detachedQueryHints ? (panel.detachedScratch ||= { outer: vec(), centroid: vec(), edge: vec(), ball: {} }) : null;
+        for (const vertex of mapped) { sample(vertex.rendered); sample((scratch ? scratch.outer.copy(vertex.rendered) : vertex.rendered.clone()).addScaledVector(vertex.renderedNormal, config.thickness)); }
         for (const triangle of panel.triangles) {
           const points = triangle.map(i => mapped[i].rendered);
-          sample(points[0].clone().add(points[1]).add(points[2]).multiplyScalar(1 / 3));
-          for (let k = 0; k < 3; k++) sample(points[k].clone().add(points[(k + 1) % 3]).multiplyScalar(.5));
+          const centroid = (scratch ? scratch.centroid.copy(points[0]) : points[0].clone()).add(points[1]).add(points[2]).multiplyScalar(1 / 3);
+          const distance = sample(centroid);
+          const ball = scratch ? scratch.ball : undefined; if (ball) { ball.point = centroid; ball.distance = distance; }
+          for (let k = 0; k < 3; k++) sample((scratch ? scratch.edge.copy(points[k]) : points[k].clone()).add(points[(k + 1) % 3]).multiplyScalar(.5), ball);
         }
         if (minimum >= .00299) break;
         const correction = pushNormal.multiplyScalar((.003 - minimum) * 1.15);
@@ -393,8 +443,12 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     panel.renderBounds.expandByScalar(config.thickness + .005); panel.renderWorldRevision = worldRevision; panel.renderedSettled = body.settled;
     writePanel(panel, mapped);
   }
+  let supportRevision = 0;
+  const mediumPreviousSource=performanceOptimizations&&fullSurfaceSupport?source.slice():null,mediumPreviousNormals=performanceOptimizations&&fullSurfaceSupport?normals.slice():null,mediumPreviousAffected=performanceOptimizations&&fullSurfaceSupport?new Uint8Array(source.length/3):null,attributeChanged=performanceOptimizations&&fullSurfaceSupport?new Uint8Array(source.length/3):null;
+  if(performanceOptimizations&&fullSurfaceSupport)for(const panel of panels)panel.sourceIds=Int32Array.from(new Set(panel.vertices.flatMap(v=>Array.from(v.ids))));
   function sync() {
     if (disposed) return;
+    supportRevision++;
     if (normalAffected) {
       normalAffected.fill(0);
       const index = geometry.index.array;
@@ -404,6 +458,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         if (changed) for (let k = 0; k < 3; k++) normalAffected[index[t + k]] = 1;
       }
     }
+    if(performanceOptimizations&&fullSurfaceSupport){for(let id=0;id<attributeChanged.length;id++){const i=id*3;attributeChanged[id]=mediumPreviousAffected[id]!==normalAffected[id]||source[i]!==mediumPreviousSource[i]||source[i+1]!==mediumPreviousSource[i+1]||source[i+2]!==mediumPreviousSource[i+2]||normals[i]!==mediumPreviousNormals[i]||normals[i+1]!==mediumPreviousNormals[i+1]||normals[i+2]!==mediumPreviousNormals[i+2]?1:0;}mediumPreviousSource.set(source);mediumPreviousNormals.set(normals);mediumPreviousAffected.set(normalAffected);}
     if (reuseAttached) {
       syncRevision++;
       for (let id = 0; id < sourceRevisions.length; id++) {
@@ -419,6 +474,8 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       if (panel.dead) { for (let r = panel.start; r < panel.end; r++) output.fill(0, r * 3, r * 3 + 3); continue; }
       const mapped = panel.mapped ||= panel.vertices.map(() => ({ p: vec(), n: vec(), target: vec(), targetNormal: vec(), support: vec() }));
       if (panel.detached && debris.get(panel.id)) { renderDetached(panel, mapped); continue; }
+      const sameCrackMask = panel.cachedCrackCount === visibleCrackEdges.size || panel.cachedCrackMask && panel.openVertexMask.every((value, i) => value === panel.cachedCrackMask[i]);
+      if (performanceOptimizations && fullSurfaceSupport && !panel.detached && panel.attachedCacheBounds && !panel.sourceIds.some(id=>attributeChanged[id]) && sameCrackMask && panel.cachedCracked === panel.cracked && panel.cachedLoose === panel.loose && panel.cachedLift === panel.lift && panel.cachedFractureAt === panel.fractureAt && panel.cachedStrainCracked === panel.strainCracked && collisions.changedNearBox && !collisions.changedNearBox(panel.attachedCacheBounds)) { panel.cachedCrackCount = visibleCrackEdges.size; continue; }
       const cached = panel.attachedCache;
       if (reuseAttached && !panel.detached && cached && cached.crackRevision === panel.crackRevision && cached.lift === panel.lift && cached.loose === panel.loose && cached.cracked === panel.cracked && cached.strainCracked === panel.strainCracked && cached.fractureAt === panel.fractureAt && !panel.sourceIds.some(id => sourceRevisions[id] > cached.inputRevision) && collisions.intersectsChanges?.(cached.bounds) === false) {
         // Every mapped input and damage field is identical, and the swept
@@ -523,7 +580,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         const beforeCorrection = panel.fullSupportBefore ||= mapped.map(() => vec());
         for (let i = 0; i < mapped.length; i++) beforeCorrection[i].copy(mapped[i].rendered);
         const samplePoint = panel.fullSamplePoint ||= vec(), hitNormal = panel.fullHitNormal ||= vec(), shift = panel.fullShift ||= vec();
-        for (let attempt = 0; attempt < 8; attempt++) {
+        for (let attempt = 0; attempt < attachedSupportPasses; attempt++) {
           let changed = false;
           for (const sample of panel.fullSupportSamples) {
             samplePoint.set(0, 0, 0);
@@ -532,6 +589,21 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
               samplePoint.add(vertex.rendered); if (node & 1) samplePoint.addScaledVector(vertex.renderedNormal, config.thickness);
             }
             samplePoint.multiplyScalar(1 / sample.nodes.length);
+            // A positive signed-distance ball certifies every point inside it.
+            // Still test each current sample against that ball: corrections in
+            // earlier samples cannot make a cached cluster silently unsafe.
+            const cluster = supportCertificates && sample.cluster;
+            if (cluster) {
+              if (cluster.revision !== supportRevision) {
+                cluster.point.set(0, 0, 0);
+                for (const node of cluster.nodes) { const v = mapped[node >> 1]; cluster.point.add(v.rendered); if (node & 1) cluster.point.addScaledVector(v.renderedNormal, config.thickness); }
+                cluster.point.multiplyScalar(1 / cluster.nodes.length);
+                attachedNearestSamples++; cluster.distance = collisions.signedDistance(cluster.point, hitNormal, cluster.hint);
+                cluster.revision = supportRevision;
+              }
+              const allowance = cluster.distance - .0005 - 1e-10;
+              if (allowance > 0 && samplePoint.distanceToSquared(cluster.point) < allowance * allowance) continue;
+            }
             // Signed clearance is 1-Lipschitz. A sample remains outside when
             // its previous positive distance exceeds its motion plus the sum
             // of maximum live-core vertex motions. This checks every actual
@@ -553,7 +625,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
               const dx = samplePoint.x - certificate.x, dy = samplePoint.y - certificate.y, dz = samplePoint.z - certificate.z;
               if (allowance > 0 && dx * dx + dy * dy + dz * dz < allowance * allowance) continue;
             }
-            attachedNearestSamples++; const distance = collisions.signedDistance(samplePoint, hitNormal, sample.hint);
+            attachedNearestSamples++; const distance = collisions.clearanceDistance ? collisions.clearanceDistance(samplePoint, hitNormal, sample.hint, .0005) : collisions.signedDistance(samplePoint, hitNormal, sample.hint);
             if (Number.isFinite(motion)) {
               const saved = sample.clearance ||= {};
               saved.x = samplePoint.x; saved.y = samplePoint.y; saved.z = samplePoint.z; saved.distance = distance; saved.motion = motion; saved.frame = frame;
@@ -635,6 +707,13 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         for (let i = 0; i < mapped.length; i++) attachedCorrectionTotalMax = Math.max(attachedCorrectionTotalMax, mapped[i].rendered.distanceTo(beforeCorrection[i]));
       }
       writePanel(panel, mapped);
+      if (performanceOptimizations && fullSurfaceSupport) {
+        const bounds = panel.attachedCacheBounds ||= new THREE.Box3(); bounds.makeEmpty();
+        for (const v of mapped) { bounds.expandByPoint(v.p); bounds.expandByPoint(v.rendered); }
+        bounds.expandByScalar(config.thickness + .005);
+        panel.cachedCrackCount = visibleCrackEdges.size; panel.cachedCracked = panel.cracked; panel.cachedLoose = panel.loose; panel.cachedLift = panel.lift; panel.cachedFractureAt = panel.fractureAt; panel.cachedStrainCracked = panel.strainCracked;
+        panel.cachedCrackMask ||= new Uint8Array(panel.openVertexMask.length); panel.cachedCrackMask.set(panel.openVertexMask);
+      }
       if (reuseAttached && !panel.detached) {
         const saved = panel.attachedCache ||= { bounds: new THREE.Box3() };
         saved.bounds.makeEmpty();
@@ -704,7 +783,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
 
     const changed = dirty; if (changed) sync(); return { changed, needsFrame: active || living };
   }
-  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.attachedCache = null; p.detachedClearance = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
+  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.attachedCacheBounds = null; p.attachedCache = null; p.detachedClearance = null; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
   function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead && !debris.get(p.id)?.settled).length, settled: debris.state().settled, expired: panels.filter(p => p.dead).length, collectionEnabled: debris.isCollectionEnabled(), debris: debris.state(), firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: 0, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: config.maxLocalFragments, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, minSigned = Infinity, maxThicknessError = 0, attachedSamples = 0, attachedSurfaceSamples = 0, attachedViolations = 0, detachedSamples = 0, detachedInteriorSamples = 0, detachedMin = Infinity, detachedViolations = 0, wallSamples = 0;

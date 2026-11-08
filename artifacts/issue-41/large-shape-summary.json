@@ -1,0 +1,634 @@
+[
+  {
+    "id": "orb",
+    "panels": 96,
+    "thinAreas": {
+      "count": 180,
+      "total": 12.009426226846116,
+      "mean": 0.06671903459358954,
+      "median": 0.061356077647639236
+    },
+    "mediumAreas": {
+      "count": 96,
+      "total": 12.009426228088461,
+      "mean": 0.12509818987592147,
+      "median": 0.12140881415956403
+    },
+    "maxAreaError": 2.569458967642546e-9,
+    "disconnected": 0,
+    "maxLiving": 6,
+    "detached": 96,
+    "cleaned": 96,
+    "phases": [
+      {
+        "label": "intact",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0157447742284442e-7
+      },
+      {
+        "label": "deep-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1346550504720554e-7
+      },
+      {
+        "label": "drag-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.1564015608571685e-7
+      },
+      {
+        "label": "release-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0586844121154848e-7
+      },
+      {
+        "label": "deep-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0157447742284442e-7
+      },
+      {
+        "label": "drag-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.334036146404983e-7
+      },
+      {
+        "label": "release-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0157447742284442e-7
+      },
+      {
+        "label": "restore",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0157447742284442e-7
+      }
+    ]
+  },
+  {
+    "id": "cloud",
+    "panels": 48,
+    "thinAreas": {
+      "count": 180,
+      "total": 12.838208390266136,
+      "mean": 0.07132337994592297,
+      "median": 0.062290638633325124
+    },
+    "mediumAreas": {
+      "count": 48,
+      "total": 12.838208391195005,
+      "mean": 0.2674626748165626,
+      "median": 0.24369499513406326
+    },
+    "maxAreaError": 2.3298901733696115e-9,
+    "disconnected": 0,
+    "maxLiving": 6,
+    "detached": 48,
+    "cleaned": 48,
+    "phases": [
+      {
+        "label": "intact",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1289074119263942e-7
+      },
+      {
+        "label": "deep-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.996950548810439e-7
+      },
+      {
+        "label": "drag-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1289074119263942e-7
+      },
+      {
+        "label": "release-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1289074119263942e-7
+      },
+      {
+        "label": "deep-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1289074119263942e-7
+      },
+      {
+        "label": "drag-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1289074119263942e-7
+      },
+      {
+        "label": "release-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1289074119263942e-7
+      },
+      {
+        "label": "restore",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1289074119263942e-7
+      }
+    ]
+  },
+  {
+    "id": "paw",
+    "panels": 32,
+    "thinAreas": {
+      "count": 278,
+      "total": 11.73792874341978,
+      "mean": 0.042222765264099925,
+      "median": 0.03887377621825037
+    },
+    "mediumAreas": {
+      "count": 32,
+      "total": 11.737928744656593,
+      "mean": 0.3668102732705185,
+      "median": 0.3504013727548437
+    },
+    "maxAreaError": 1.211417359221062e-9,
+    "disconnected": 0,
+    "maxLiving": 4,
+    "detached": 32,
+    "cleaned": 32,
+    "phases": [
+      {
+        "label": "intact",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0978007687276192e-7
+      },
+      {
+        "label": "deep-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1071978920154657e-7
+      },
+      {
+        "label": "drag-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.0205606102510765e-7
+      },
+      {
+        "label": "release-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 3.8963263638072676e-7
+      },
+      {
+        "label": "deep-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0978007687276192e-7
+      },
+      {
+        "label": "drag-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0978007687276192e-7
+      },
+      {
+        "label": "release-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0978007687276192e-7
+      },
+      {
+        "label": "restore",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0978007687276192e-7
+      }
+    ]
+  },
+  {
+    "id": "cylinder",
+    "panels": 48,
+    "thinAreas": {
+      "count": 180,
+      "total": 13.582040908037369,
+      "mean": 0.07545578282242983,
+      "median": 0.0672447722719668
+    },
+    "mediumAreas": {
+      "count": 48,
+      "total": 13.582040907757795,
+      "mean": 0.2829591855782874,
+      "median": 0.26209062394717486
+    },
+    "maxAreaError": 1.8086929519205153e-9,
+    "disconnected": 0,
+    "maxLiving": 5,
+    "detached": 48,
+    "cleaned": 48,
+    "phases": [
+      {
+        "label": "intact",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 8.825647633894929e-8
+      },
+      {
+        "label": "deep-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.4404281250348103e-7
+      },
+      {
+        "label": "drag-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 4.1958274682452057e-7
+      },
+      {
+        "label": "release-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.2538158338594738e-7
+      },
+      {
+        "label": "deep-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.0351165591972475e-7
+      },
+      {
+        "label": "drag-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 8.825647633894929e-8
+      },
+      {
+        "label": "release-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 8.825647633894929e-8
+      },
+      {
+        "label": "restore",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 8.825647633894929e-8
+      }
+    ]
+  },
+  {
+    "id": "donut",
+    "panels": 48,
+    "thinAreas": {
+      "count": 271,
+      "total": 12.49469953330942,
+      "mean": 0.04610590233693513,
+      "median": 0.04451461211016749
+    },
+    "mediumAreas": {
+      "count": 48,
+      "total": 12.494699533767939,
+      "mean": 0.2603062402868321,
+      "median": 0.2371806035034072
+    },
+    "maxAreaError": 2.5217258114561963e-9,
+    "disconnected": 0,
+    "maxLiving": 9,
+    "detached": 48,
+    "cleaned": 48,
+    "phases": [
+      {
+        "label": "intact",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0827538178548313e-7
+      },
+      {
+        "label": "deep-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.0619128775906104e-7
+      },
+      {
+        "label": "drag-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.4807797361210406e-7
+      },
+      {
+        "label": "release-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.0971838335381854e-7
+      },
+      {
+        "label": "deep-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0827538178548313e-7
+      },
+      {
+        "label": "drag-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0827538178548313e-7
+      },
+      {
+        "label": "release-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0827538178548313e-7
+      },
+      {
+        "label": "restore",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0827538178548313e-7
+      }
+    ]
+  },
+  {
+    "id": "pyramid",
+    "panels": 48,
+    "thinAreas": {
+      "count": 180,
+      "total": 8.208777238764906,
+      "mean": 0.04560431799313837,
+      "median": 0.0309716829518829
+    },
+    "mediumAreas": {
+      "count": 48,
+      "total": 8.208777241172598,
+      "mean": 0.17101619252442912,
+      "median": 0.1626192140429624
+    },
+    "maxAreaError": 2.032285563143346e-9,
+    "disconnected": 0,
+    "maxLiving": 6,
+    "detached": 48,
+    "cleaned": 48,
+    "phases": [
+      {
+        "label": "intact",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 7.148234972692569e-8
+      },
+      {
+        "label": "deep-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1662292846367772e-7
+      },
+      {
+        "label": "drag-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.001612728584623e-7
+      },
+      {
+        "label": "release-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0808017606583897e-7
+      },
+      {
+        "label": "deep-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.9892631860848886e-7
+      },
+      {
+        "label": "drag-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.029939383113577e-7
+      },
+      {
+        "label": "release-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.0638524897420574e-7
+      },
+      {
+        "label": "restore",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.1460388275468256e-7
+      }
+    ]
+  },
+  {
+    "id": "flower",
+    "panels": 48,
+    "thinAreas": {
+      "count": 180,
+      "total": 13.000013118163093,
+      "mean": 0.07222229510090607,
+      "median": 0.06826318853175212
+    },
+    "mediumAreas": {
+      "count": 48,
+      "total": 13.000013118938561,
+      "mean": 0.27083360664455336,
+      "median": 0.23309021019694107
+    },
+    "maxAreaError": 1.9882343117814255e-9,
+    "disconnected": 0,
+    "maxLiving": 7,
+    "detached": 48,
+    "cleaned": 48,
+    "phases": [
+      {
+        "label": "intact",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0481598249068025e-7
+      },
+      {
+        "label": "deep-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.283927705362676e-7
+      },
+      {
+        "label": "drag-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0481598249068025e-7
+      },
+      {
+        "label": "release-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.3868728007275797e-7
+      },
+      {
+        "label": "deep-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0481598249068025e-7
+      },
+      {
+        "label": "drag-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0481598249068025e-7
+      },
+      {
+        "label": "release-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0481598249068025e-7
+      },
+      {
+        "label": "restore",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.0481598249068025e-7
+      }
+    ]
+  },
+  {
+    "id": "star",
+    "panels": 48,
+    "thinAreas": {
+      "count": 180,
+      "total": 9.378438196414727,
+      "mean": 0.052102434424526264,
+      "median": 0.04378530180469932
+    },
+    "mediumAreas": {
+      "count": 48,
+      "total": 9.378438195353326,
+      "mean": 0.19538412906986094,
+      "median": 0.18518834630714281
+    },
+    "maxAreaError": 1.5648614160122115e-9,
+    "disconnected": 0,
+    "maxLiving": 6,
+    "detached": 48,
+    "cleaned": 48,
+    "phases": [
+      {
+        "label": "intact",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1064181729483757e-7
+      },
+      {
+        "label": "deep-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.1703729840422126e-7
+      },
+      {
+        "label": "drag-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 4.06334609008574e-7
+      },
+      {
+        "label": "release-0",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 2.335889743645958e-7
+      },
+      {
+        "label": "deep-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1064181729483757e-7
+      },
+      {
+        "label": "drag-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1064181729483757e-7
+      },
+      {
+        "label": "release-1",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1064181729483757e-7
+      },
+      {
+        "label": "restore",
+        "thickness": 0.028,
+        "attached": 0,
+        "detached": 0,
+        "maxThicknessError": 1.1064181729483757e-7
+      }
+    ]
+  }
+]

@@ -1,0 +1,79 @@
+✔ 五步、默认配方；黏土、棉花糖和慢回弹独立映射，制作步骤结束输入 (4.6051ms)
+✔ 薄蜡预览保留独立芯壳颜色与配置身份，默认中蜡不改动 (0.5543ms)
+✔ 同配方前后导航不修复损伤，壳设置或隐藏内芯色变化仍提交新配置 (6.5281ms)
+✔ 重新开始仅作用于已就绪的受支持样式黏土薄蜡，不改变配方或步骤 (1.3201ms)
+✔ 已实现蜡预设范围之外的制作结束保留原有自动恢复 (1.3443ms)
+✔ 八种已支持样式从裸芯下一步传递独立薄蜡配方，黏土与棉花糖预览启用且导航保留损伤 (6.6399ms)
+✔ 填充物与装饰单选，内外颜色独立，往返和最终体验保留配方 (1.3679ms)
+✔ 共享十色与蜡厚度偏好；非蜡配方不应用厚度，切回恢复 (1.5001ms)
+✔ 快速换色只提交最后请求；过期失败不覆盖，离页释放 (0.7383ms)
+✔ 已应用颜色遇到未完成换色后选回原色，取消旧请求并保持原色 (0.7492ms)
+✔ 最终体验向渲染器传入当前完整有效配方，非蜡厚度无效 (3.0902ms)
+✔ 模型失败仍可编辑和前进，重试保留选择；中断拒绝晚到资源 (0.8405ms)
+✔ 音量初始静音、上次音量恢复、边界与清理 (0.7072ms)
+✔ 八种样式的三种预设均保留五步配方，慢回弹沿用full-matte外观 (8.9758ms)
+✔ 样式加载竞态只提交末次模型，失败保留已显示实例且可重试，离页释放 (0.8483ms)
+✔ 直达配方合法化保留各样式慢回弹，非法枚举回到默认值 (0.653ms)
+✔ 浏览器历史原子恢复样式配方与步骤，取消旧资源并在制作页停止输入 (0.3609ms)
+✔ medium sphere mapping only adds marshmallow and butter preview; defaults and unsupported combinations remain bounded (2.478ms)
+✔ both new sphere previews preserve navigation damage, explicit restart and hidden legacy final contract (5.6085ms)
+✔ late core or thickness preparation is disposed and cannot overwrite last committed recipe (0.8493ms)
+✔ incremental collision memberships survive repeated cell crossings and exact restoration (7049.0419ms)
+ℹ {"checks":6480}
+✔ donut: medium cavity cells avoid tiny slivers without oversized first releases (2286.6751ms)
+ℹ {"id":"donut","region":"inner ring","point":[0.37092456221580505,2.022249212529914e-8,0.2678550183773041],"previous":{"cells":87,"weightedArea":0.17032982363788948,"median":0.02623597251269631,"firstDetachedMean":0.011385991562165928},"oversized":{"weightedArea":0.31951682193526887,"firstDetachedMean":0.2424779749940336},"current":{"cells":49,"weightedArea":0.14387283907166845,"median":0.11983248190454487,"firstDetachedMean":0.08292256522627811}}
+✔ paw: medium cavity cells avoid tiny slivers without oversized first releases (8462.3503ms)
+ℹ {"id":"paw","region":"palm-to-toe recess","point":[0.017365409061312675,0.15843325853347778,0.16800402104854584],"previous":{"cells":21,"weightedArea":0.1949815925535681,"median":0.032656919349389,"firstDetachedMean":0.008508969993503817},"oversized":{"weightedArea":0.502066762126684,"firstDetachedMean":0.4146988736032624},"current":{"cells":11,"weightedArea":0.09147566560294645,"median":0.07769238039389209,"firstDetachedMean":0.058125995314896234}}
+ℹ {"id":"paw","region":"left recessed connection","point":[-0.3272308111190796,0.40883398056030273,0.2793562412261963],"previous":{"cells":5,"weightedArea":0.24210422472762017,"median":0.2453392337325501,"firstDetachedMean":0.013735202906831931},"oversized":{"weightedArea":0.368680689520806,"firstDetachedMean":0.30085939281996243},"current":{"cells":8,"weightedArea":0.06581729747742392,"median":0.0607300112917158,"firstDetachedMean":0.0506201256712035}}
+{"orbGeometryComparison":[{"thickness":0.014,"count":180,"total":12.009426226846116,"mean":0.06671903459358954,"median":0.061356077647639236,"min":0.019977573879851558,"max":0.15430674822263776,"cv":0.3982934777331896,"thicknessError":1.0527582675577685e-7},{"thickness":0.028,"count":96,"total":12.009426228088461,"mean":0.12509818987592147,"median":0.12140881415956403,"min":0.030582047517825204,"max":0.25651812901440235,"cv":0.4119423077061946,"thicknessError":1.0157447742284442e-7}],"thicknessRatio":2,"meanAreaRatio":1.875000000193964,"medianAreaRatio":1.978757750076539}
+✔ medium preset changes only physical thickness and real partition count (65.0997ms)
+✖ medium mapping supports every registered clay preview and preserves legacy final scope (7.931ms)
+✔ actual orb triangles have larger irregular regions and modestly thicker solid walls (1387.2437ms)
+✔ medium timing, rigid detached shape, persistent damage and cleanup reuse thin contract (766.4998ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 0,0,0 (7786.1969ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 0,0,1.5707963267948966 (7733.1401ms)
+✔ medium full fragment edges and walls stay outside deformed clay: 1.5707963267948966,0.55,-0.4 (7152.7211ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false (61.4569ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true (38.6014ms)
+✔ 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染 (29.9278ms)
+✔ 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变 (28.5803ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=false (56.5994ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=true (57.2972ms)
+✔ 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留 (35.8508ms)
+✔ 单次stroke采用最大包络；重复采样与采样密度不会无界叠加 (80.0515ms)
+✔ 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳 (1670.2608ms)
+✔ 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心 (1100.5676ms)
+✔ 下一stroke从永久base继续，异处按压不擦除旧路径 (82.272ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false (40.5017ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true (31.0715ms)
+✔ 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零 (26.5363ms)
+✔ 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效 (29.9713ms)
+✔ 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压 (27.0525ms)
+✔ immutable ready-to-use presets compose separate material and deformation instances (94.2182ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 46
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47608.9551
+
+✖ failing tests:
+
+test at tests\medium-wax.test.cjs:57:1
+✖ medium mapping supports every registered clay preview and preserves legacy final scope (7.931ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\medium-wax.test.cjs:61:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

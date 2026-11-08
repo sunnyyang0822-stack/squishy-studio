@@ -1,0 +1,32 @@
+{"shortInput":"cloud-marshmallow-desktop-day","elapsed":2165,"events":[{"type":"pointerdown","time":12122.199999999953,"timestamp":12120.5,"trusted":true},{"type":"pointerup","time":12543.899999999907,"timestamp":12284.399999999907,"trusted":true}],"detached":0}
+{"style":"cloud","core":"marshmallow","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":6,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"cloud-marshmallow-mobile-night","elapsed":4567,"events":[{"type":"pointerdown","time":11437.800000000047,"timestamp":11422.5,"trusted":true},{"type":"touchstart","time":11499,"timestamp":11422.5,"trusted":true},{"type":"pointerup","time":12996.5,"timestamp":11593.300000000047,"trusted":true},{"type":"touchend","time":13230.5,"timestamp":11593.300000000047,"trusted":true}],"detached":3}
+✖ medium wax non-paw marshmallow and slow rebound native input and full geometry (125734.779ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 126621.7723
+
+✖ failing tests:
+
+test at tests\medium-wax-core-browser.test.cjs:8:1
+✖ medium wax non-paw marshmallow and slow rebound native input and full geometry (125734.779ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  3 !== 0
+
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\medium-wax-core-browser.test.cjs:28:250)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+EXIT_CODE=1

@@ -2,13 +2,20 @@ const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
+const fs = require('node:fs');
+const path = require('node:path');
 const { chromium } = require('playwright');
 const { installStyleProbe, ready, rotate } = require('./helpers/squishy-browser.cjs');
 const { regions, installWaxStyleProbe, projectedMeshContact, geometryOK } = require('./helpers/wax-style-probe.cjs');
 const { armWaxUploadEnd, readWaxUploadEnd } = require('./helpers/wax-upload-observer.cjs');
 const port = process.env.WAX_STYLE_TEST_PORT || '4240', base = `http://127.0.0.1:${port}`;
 const styles = Object.keys(regions); let server, browser;
+const waxPreset = process.env.WAX_STYLE_PRESET || 'thin-wax';
+const thickness = waxPreset === 'medium-wax' ? 'medium' : 'thin';
+const capture = process.env.WAX_STYLE_CAPTURE === '1';
+const captureFolder = path.resolve('.tmp/issue-41/styles');
 before(async () => {
+  if (capture) fs.mkdirSync(captureFolder, { recursive: true });
   server = spawn(process.execPath, ['server.mjs'], { env: { ...process.env, PORT: port } });
   for (let i = 0; i < 100; i++) { try { if ((await fetch(base)).ok) break; } catch {} await new Promise(r => setTimeout(r, 100)); }
   const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
@@ -16,14 +23,14 @@ before(async () => {
 });
 after(async () => { await browser?.close(); server?.kill(); });
 async function open(id, material = 'clay', step = 'core', { failFirstModel = false } = {}) {
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: Number(process.env.THIN_WAX_TEST_DPR || 1) });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: Number(process.env.THIN_WAX_TEST_DPR || 1), ...(capture ? { recordVideo: { dir: captureFolder, size: { width: 1280, height: 900 } } } : {}) });
   const { getSquishyStyle } = await import('../src/squishy-styles.mjs'), mesh = await installStyleProbe(page, getSquishyStyle(id));
   await installWaxStyleProbe(page);
   if (failFirstModel) {
     let requests = 0;
     await page.route(`**/squishy-${id}.glb`, route => ++requests === 1 ? route.abort() : route.continue());
   }
-  await page.goto(`${base}/squishy/cloud/?style=${id}&coreMaterial=${material}&coreColor=mint&shellColor=rose&waxThickness=thin&step=${step}`);
+  await page.goto(`${base}/squishy/cloud/?style=${id}&coreMaterial=${material}&coreColor=mint&shellColor=rose&waxThickness=${thickness}&step=${step}`);
   if (failFirstModel) await page.waitForSelector('.toy-stage[data-state=error]');
   else await ready(page);
   return { page, mesh };
@@ -33,7 +40,7 @@ function maxChange(a, b) { return Math.max(...a.map((v, i) => Math.abs(v - b[i])
 async function pressAt(page, contact) { await page.mouse.move(contact.x, contact.y); await page.mouse.down(); }
 function compareBounds(a, b) { for (const key of ['x', 'y', 'width', 'height']) assert.ok(Math.abs(a[key] - b[key]) < 1, `${key}: ${a[key]} vs ${b[key]}`); }
 
-for (const id of styles) test(`${id} clay thin-wax making preview: real mesh input, structural region, geometry and cleanup`, { timeout: 180000 }, async t => {
+for (const id of styles) test(`${id} clay ${waxPreset} making preview: real mesh input, structural region, geometry and cleanup`, { timeout: 180000 }, async t => {
   const { page, mesh } = await open(id), errors = [];
   page.on('pageerror', e => errors.push(e.message));
   try {
@@ -54,6 +61,9 @@ for (const id of styles) test(`${id} clay thin-wax making preview: real mesh inp
     const shellBox = await page.locator('.orb-input').boundingBox(), shellCanvas = await page.locator('.toy-mount canvas').boundingBox();
     compareBounds(bareBox, shellBox); compareBounds(bareCanvas, shellCanvas);
     const initial = await diagnostic(page, { measure: true, exhaustive: true }); geometryOK(initial);
+    assert.equal(initial.presetId, waxPreset);
+    assert.equal(initial.geometry.thickness, thickness === 'medium' ? .028 : .014);
+    if (capture) await page.screenshot({ path: path.join(captureFolder, `${id}-${waxPreset}-intact.png`) });
     assert.equal(initial.debrisStage.visible, false); assert.equal(initial.thinWax.collectionEnabled, false);
     assert.notEqual(initial.coreColor, initial.shellColor);
     // End force after an actual changed core position upload, before costly
@@ -83,6 +93,7 @@ for (const id of styles) test(`${id} clay thin-wax making preview: real mesh inp
     assert.ok(onset.onset.state.detached > 0 && onset.onset.state.living <= 24);
     await page.waitForTimeout(800);
     const deep = await diagnostic(page, { measure: true, exhaustive: true }); geometryOK(deep);
+    if (capture) await page.screenshot({ path: path.join(captureFolder, `${id}-${waxPreset}-deep.png`) });
     const gpuCoreError = await page.locator('.toy-mount').evaluate(el => {
       const d = el.thinWaxDiagnostics({ measure: false });
       return Math.max(...d.corePositions.map((v, i) => Math.abs(v - window.styleProbe.positions[i])));
@@ -112,7 +123,7 @@ for (const id of styles) test(`${id} clay thin-wax making preview: real mesh inp
     const back = await diagnostic(page); assert.equal(back.thinWax.detached, cleared.state.detached); assert.equal(back.thinWax.expired, cleared.state.expired);
     assert.deepEqual(errors, []);
     t.diagnostic(JSON.stringify({ style: id, actualContact: contact, shortMs: short.elapsed, shortGPU: { depth: short.gpuDepth, changedSinceDown: short.changedSinceDown, error: short.gpuCoreError, captured: short.captured, trusted: short.trusted }, onset: onset.onset.state, bareBox, shellBox, gpuCoreError, geometry: recovered.geometry, cleanup: { holes: cleared.holes, state: cleared.state } }));
-  } finally { await page.close(); }
+  } finally { const video = page.video(); await page.close(); if (capture && video) await video.saveAs(path.join(captureFolder, `${id}-${waxPreset}.webm`)); }
 });
 
 test('style wax scope includes approved non-paw slow previews and preserves preview-only legacy play', { timeout: 180000 }, async t => {
@@ -169,7 +180,9 @@ test('non-orb damaged preview survives legacy final navigation, rotation, keyboa
     await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).enabled);
     assert.equal((await diagnostic(page)).thinWax.detached, missed.thinWax.detached, 'Cancelled intermediate choices do not repair an unchanged committed recipe');
     await page.locator('[name=waxThickness][value=medium]').check();
-    await page.waitForFunction(() => !document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).enabled);
+    await page.waitForFunction(() => { const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }); return d.enabled && d.presetId === 'medium-wax'; });
+    const medium = await diagnostic(page, { measure: true, exhaustive: true }); geometryOK(medium);
+    assert.equal(medium.thinWax.detached, 0); assert.equal(medium.geometry.thickness, .028);
     await page.evaluate(() => { for (const value of ['thin', 'thick', 'thin']) document.querySelector(`[name=waxThickness][value=${value}]`).click(); });
     await page.waitForFunction(() => !document.querySelector('.thin-wax-restart').disabled && document.querySelector('[name=waxThickness][value=thin]').checked);
     await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).enabled);

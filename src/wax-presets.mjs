@@ -14,6 +14,35 @@ const thinWax = Object.freeze({
   },
 });
 
+// Physical thickness and actual Voronoi partition size/placement differ.
+// Contact timing, gap, fragment budgets and falling dynamics stay inherited.
+// Surface seeds keep recessed regions moderate; 32/48 oversized cells were rejected.
+const mediumWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 2, seedCount: 96 });
+const surfaceMediumWaxParameters = Object.freeze({ ...mediumWaxParameters, seedCount: 96, partitionSpace: 'surface' });
+const pawMediumWaxParameters = Object.freeze({ ...surfaceMediumWaxParameters, seedCount: 128 });
+const surfacePanelStyles = new Set(['cloud', 'paw', 'cylinder', 'donut', 'pyramid', 'flower', 'star']);
+const mediumParametersForStyle = styleId => styleId === 'paw' ? pawMediumWaxParameters : surfacePanelStyles.has(styleId) ? surfaceMediumWaxParameters : mediumWaxParameters;
+const mediumGeometryOptions = Object.freeze({ freezeRenderedFragments: true, detachedQueryHints: true, supportClusters: true, featureTieConsensus: true, fullSurfaceSupport: false, cacheAttachedPanels: false });
+const optimizedMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, performanceOptimizations: true });
+const starMediumGeometryOptions = Object.freeze({ ...optimizedMediumGeometryOptions, attachedSupportPasses: 64 });
+const pawMediumGeometryOptions = Object.freeze({ ...mediumGeometryOptions, fullSurfaceSupport: true });
+const mediumGeometryForStyle = styleId => styleId === 'paw' ? pawMediumGeometryOptions : styleId === 'star' ? starMediumGeometryOptions : surfacePanelStyles.has(styleId) ? optimizedMediumGeometryOptions : mediumGeometryOptions;
+const mediumWax = Object.freeze({
+  id: 'medium-wax', material: 'wax', thickness: 'medium',
+  name: '中蜡·双倍薄蜡厚度',
+  parameters: mediumWaxParameters,
+  parametersForStyle: mediumParametersForStyle,
+  geometryOptions: mediumGeometryOptions,
+  geometryOptionsForStyle: mediumGeometryForStyle,
+  create(options = {}) {
+    const { worldMatrix, ...shellOptions } = options;
+    const profile = mediumGeometryForStyle(options.styleId);
+    const wax = createWaxShell({ ...shellOptions, ...profile, fullSurfaceSupport: options.fullSurfaceSupport || profile.fullSurfaceSupport, collectionEnabled: options.collectionEnabled ?? false }, mediumParametersForStyle(options.styleId));
+    if (worldMatrix) wax.setWorldMatrix(worldMatrix);
+    return wax;
+  },
+});
+
 // Model units, not optical material thickness. Gap and all behavior stay thin-wax.
 export const thickWaxParameters = Object.freeze({ ...thinWaxParameters, thickness: thinWaxParameters.thickness * 3, seedCount: 36, maxInwardDeformation: .004 });
 const thickWax = Object.freeze({
@@ -27,7 +56,7 @@ const thickWax = Object.freeze({
   },
 });
 
-export const waxPresets = Object.freeze({ 'thin-wax': thinWax, 'thick-wax': thickWax });
+export const waxPresets = Object.freeze({ 'thin-wax': thinWax, 'medium-wax': mediumWax, 'thick-wax': thickWax });
 
 export function getWaxPreset(id = 'thin-wax') {
   if (!Object.hasOwn(waxPresets, id)) throw new RangeError('Unknown wax preset: ' + id);

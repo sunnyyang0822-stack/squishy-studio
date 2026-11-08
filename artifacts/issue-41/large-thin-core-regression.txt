@@ -1,0 +1,62 @@
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=false (31.7498ms)
+✔ 黏土快速划过和长按后移到新位置均渐进内陷；减少动态=true (20.5014ms)
+✔ 黏土稳定命名、默认解析与未知质感拒绝，实例互不污染 (16.3441ms)
+✔ 轻触100ms阻力明显，长按3秒超过旧硬限；实际接触邻域之外不变 (16.3912ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=false (29.7642ms)
+✔ 释放只回弹15%，每顶点单调且无跳变；减少动态=true (29.828ms)
+✔ 高速稀疏move在球面插值，中段与起点终点同样留痕，弯折路径完整保留 (18.9511ms)
+✔ 单次stroke采用最大包络；重复采样与采样密度不会无界叠加 (37.242ms)
+✔ 30次深压逐渐超出旧0.30硬限；85%回弹和径向软极限稳定无硬跳 (798.8219ms)
+✔ 多方向30次深压及路径留痕后，每个真实三角形保持朝外且顶点不越中心 (613.3133ms)
+✔ 下一stroke从永久base继续，异处按压不擦除旧路径 (43.6908ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=false (21.4584ms)
+✔ 颜色时钟驱动复原：启动不跳、同步中间态非零、结束精确归零停帧；减少动态=true (16.8336ms)
+✔ 快速再次换色从当前恢复帧接续；恢复中cancel不会突然归零 (14.4556ms)
+✔ 恢复中重新按压直接接续当前形态，取消只回到接续基准且旧恢复时钟无效 (15.8081ms)
+✔ 显式interruptRestore保留当前形态，之后不再自动回弹且可继续按压 (13.778ms)
+✔ thin wax is a separate closed-volume shell with independently owned color and measured nonzero thickness (449.9104ms)
+✔ actual continuous dwell exceeds 0.5 seconds; one brittle local wave retains most plates and releases only a few small chips (416.2542ms)
+✔ released wax chips fall promptly under gravity instead of ejecting sideways (349.4072ms)
+✔ actual detached world vertices fall down after toy rotation, then remain fixed on the floor while the toy turns (1291.8717ms)
+ℹ {"rotation":[0,0,0],"uniqueVertices":42,"meanWorldYDrop":0.12298324848970446,"meanCornerLateral":0.06619204014601919}
+ℹ {"rotation":[0,0,1.5707963267948966],"uniqueVertices":42,"meanWorldYDrop":0.07350189309744608,"meanCornerLateral":0.10245171459415155}
+ℹ {"rotation":[1.5707963267948966,0.55,-0.4],"uniqueVertices":42,"meanWorldYDrop":0.13551533506030128,"meanCornerLateral":0.05890962007662631}
+✔ actual clay dent and dragged deformation all receive local crack geometry before any chip can fall (734.6265ms)
+✔ additional chip reacts 60ms after initial fracture to small real new indentation, never elapsed time alone (275.3472ms)
+✔ short taps, cancellation, hit loss and sliding cannot borrow previous dwell time (226.9235ms)
+✔ deep clay press and recovery keep original core behavior and measured shell clearance (2821.3215ms)
+✔ bounded moving budget, persistent settled chips, reduced motion and idempotent cleanup (245.3004ms)
+✔ broken rims remain outside the live clay after world rotation 0,0,0 (4977.6352ms)
+✔ broken rims remain outside the live clay after world rotation 0,0,1.5707963267948966 (6987.3851ms)
+✔ broken rims remain outside the live clay after world rotation 1.5707963267948966,0.55,-0.4 (6048.5064ms)
+✔ live chips stay capped at 24 while continued deep pressure can strip each local cohort (4371.9694ms)
+✔ preview fall-through removes actual fragment drawing, preserves holes and frees the moving budget (4630.9276ms)
+✔ switching an existing collection off keeps shell damage and lets the old pile fall away without revival (709.863ms)
+✔ repeated local presses can strip the complete real shell once without duplicate cells or regrowth (2682.3186ms)
+ℹ {"completeShellPanels":180,"debris":{"floorY":-1.35,"radius":1.35,"moving":0,"settled":180,"minY":-1.348,"maxRadius":1.2965012280695674,"pileTop":-0.7293940313041808,"gridCells":2219},"physicalMaxRadius":1.2997206990418424,"physicalSamples":44700,"coreBottom":-0.20499997138977055,"physicalPileTop":-0.7308940291404724,"pileCoreGap":0.5258940577507019}
+✔ one local press leaves remote real render positions, normals and colors exactly unchanged (1799.1188ms)
+✔ creating a shell over an old bare-core dent retains original contact coordinates (769.1763ms)
+✔ detached curved plates retain frozen edge lengths while the original core continues deforming (2591.0453ms)
+✔ irregular area distribution, rapid connected cracking and strain-limited saturation replace regular scales and timed emptying (526.5733ms)
+✔ random Voronoi cutting covers the complete real orb GLB surface with no intact-shell holes (539.0163ms)
+✔ retained shells open connected partial boundary chains while unbroken boundary bridges remain geometrically closed (665.3192ms)
+✔ paw core, cracks and actual shell uploads stay identical with certified nearest-query reuse disabled (38358.9369ms)
+✔ identical local queries reuse only unchanged live triangles and stay equal to a cache-disabled full BVH (715.5488ms)
+ℹ {"id":"paw","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":3124,"nearestTriangles":2342,"gridQueries":82,"gridSweeps":0,"cachedQueries":244}}
+ℹ {"id":"donut","counters":{"enabled":true,"sweepCalls":0,"sweepNodes":0,"sweepTriangles":0,"nearestCalls":362,"nearestNodes":4347,"nearestTriangles":2879,"gridQueries":67,"gridSweeps":0,"cachedQueries":242}}
+✔ a different triangle entering or leaving a cached search region invalidates the result; caches cannot cross tree instances (1.0986ms)
+✔ paw: both cores share smaller connected wax plates with unchanged thickness and active budget (3377.5391ms)
+ℹ {"id":"paw","oldCount":173,"count":278,"meanAreaRatio":0.6223038293224177,"p90AreaRatio":0.5850844201892739}
+✔ donut: both cores share smaller connected wax plates with unchanged thickness and active budget (2158.1099ms)
+ℹ {"id":"donut","oldCount":166,"count":271,"meanAreaRatio":0.6125462066492622,"p90AreaRatio":0.6161370845980977}
+✔ marshmallow paw clearance certificates preserve actual shell geometry through deep/drag/release/restore (22476.0255ms)
+ℹ {"samples":77,"thickness":0.014,"attachedMinSignedDistance":0.0027098422236632243,"detachedViolations":0}
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 113682.1703
+EXIT_CODE=0
