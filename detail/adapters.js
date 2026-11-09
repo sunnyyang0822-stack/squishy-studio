@@ -38,10 +38,9 @@ export function createModelPreview(mount, options) {
         return {
           commit() {
             if (disposed || context.signal.aborted || ownRevision !== revision) return;
-            const replacing = Boolean(renderer && candidate !== renderer && appliedConfig?.styleId === styleId);
+            const replacing = Boolean(renderer && candidate !== renderer);
             if (candidate !== renderer) { renderer?.dispose(); renderer = candidate; rendererKey = key; }
-            preparing.delete(candidate); committed = true; handle.commit(); mount.dataset.appearanceId = appearanceId;
-            if (replacing) renderer.revealConfiguration();
+            preparing.delete(candidate); committed = true; handle.commit({ drawImmediately: replacing }); mount.dataset.appearanceId = appearanceId;
             appliedConfig = config;
           },
           dispose() { handle.dispose(); if (owned && !committed) { preparing.delete(candidate); candidate.dispose(); } },

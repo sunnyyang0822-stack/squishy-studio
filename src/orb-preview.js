@@ -50,7 +50,6 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     view = undefined;
     old.events.abort();
     old.finishRecovery?.();
-    old.reveal?.cancel();
     old.input.dispose();
     old.rotation.dispose();
     old.disposeWax();
@@ -481,12 +480,6 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
         document.addEventListener('visibilitychange', finish, { once: true });
       });
     };
-    current.revealConfiguration = () => {
-      const canvas = renderer.domElement;
-      const opacity = current.reveal?.playState === 'running' ? Number(getComputedStyle(canvas).opacity) : .7;
-      current.reveal?.cancel();
-      if (!motionPreference.matches) current.reveal = canvas.animate([{ opacity }, { opacity: 1 }], { duration: 180, easing: 'cubic-bezier(.23,1,.32,1)' });
-    };
     const shellPaint = () => polish?.material || wax?.material;
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
@@ -544,7 +537,6 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       }
       // All changes share one restoration clock, including same-color shell edits.
       current.selectColor(waxRecipe || polishRecipe ? config.coreColor : config.color, { restore: Boolean(reset) });
-      if (shellStructureChanged) current.revealConfiguration();
       mount.polishDiagnostics = () => ({ enabled: Boolean(polish && shellVisible), supported: polishRecipe, feelId, state: polish?.getState(), metrics: polish?.getMetrics(), surface: polish?.getSurfaceSnapshot(), corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions), coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor, resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries } });
       current.diagnostics = ({ exhaustive = false, surface = false, measure = true, counters = false } = {}) => {
         if (counters) return wax?.getQueryCounters(true);
@@ -564,7 +556,6 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       mount.thinWaxDiagnostics = current.diagnostics;
     };
     motionPreference.addEventListener('change', event => {
-      if (event.matches) current.reveal?.cancel();
       deformation.setReducedMotion(event.matches); coating.setReducedMotion(event.matches); invalidate();
       wax?.setReducedMotion?.(event.matches);
       if (restorePose) beginRestore();
@@ -590,6 +581,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       onUnavailable();
     }, { signal: events.signal });
     current.invalidate = invalidate;
+    current.drawImmediately = () => draw(performance.now(), true);
     return current;
   }
 
@@ -606,7 +598,6 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       view.invalidate();
     },
     restoreBeforeChange(signal) { if (!signal.aborted) return view?.restoreBeforeChange(signal); },
-    revealConfiguration() { view?.revealConfiguration(); },
     async prepare(config, { signal }) {
       if (disposed || signal.aborted) throw abortError();
       if (broken) { destroyView(); broken = false; }
@@ -623,7 +614,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       }
       const prepared = view;
       return {
-        commit() {
+        commit({ drawImmediately = false } = {}) {
           if (disposed || prepared !== view) return;
           // Reattaching an unchanged button would lose active pointer capture.
           if (prepared.renderer.domElement.parentNode !== mount || prepared.surface.parentNode !== mount) {
@@ -633,7 +624,10 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
           mount.dataset.style = style.id;
           mount.dataset.feelId = feelId;
           prepared.configure(config);
-          prepared.invalidate();
+          // Paint a replacement in the same task as the DOM swap. Otherwise
+          // the browser can present the new canvas before its first RAF.
+          if (drawImmediately) prepared.drawImmediately();
+          else prepared.invalidate();
         },
         // Preference handles share the page scene; only the adapter owns GPU resources.
         dispose() {},

@@ -119,6 +119,39 @@ test('切换内芯材质前，原场景先复原并释放，下一次按压使�
   } finally { await page.close(); }
 });
 
+test('快速切换材质和蜡厚度时画布保持不透明，替换画布在提交时已有首帧', async () => {
+  const page = await open({ deviceScaleFactor: .5 }, { clock: true });
+  try {
+    const mount = page.locator('.toy-mount');
+    await mount.evaluate(el => {
+      window.firstReplacement = null;
+      const original = el.querySelector('canvas');
+      new MutationObserver((_, observer) => {
+        const canvas = el.querySelector('canvas');
+        if (!canvas || canvas === original) return;
+        window.firstReplacement = { draws: Number(el.dataset.renderCount || 0), opacity: getComputedStyle(canvas).opacity, animations: canvas.getAnimations().length };
+        observer.disconnect();
+      }).observe(el, { childList: true });
+    });
+    await page.locator('[name=coreMaterial][value=marshmallow]').evaluate(input => input.click());
+    await page.waitForFunction(() => window.firstReplacement);
+    assert.deepEqual(await page.evaluate(() => window.firstReplacement), { draws: 1, opacity: '1', animations: 0 });
+    await page.locator('.step-next').evaluate(button => button.click());
+    await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).enabled);
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+    const canvas = await mount.locator('canvas').elementHandle();
+    for (const [selector, expected] of [['[name=waxThickness][value=thin]', 'thin-wax'], ['[name=waxThickness][value=thick]', 'thick-wax'], ['[name=shellMaterial][value=polish]', null]]) {
+      await page.locator(selector).evaluate(input => input.click());
+      assert.deepEqual(await canvas.evaluate(el => ({
+        connected: el.isConnected, opacity: getComputedStyle(el).opacity, animations: el.getAnimations().length,
+        preset: el.parentElement.thinWaxDiagnostics({ measure: false }).presetId,
+      })), { connected: true, opacity: '1', animations: 0, preset: expected });
+      await page.clock.runFor(32);
+      if (expected === 'thick-wax') await evidence(page, '07-thick-wax-first-frames');
+    }
+  } finally { await page.close(); }
+});
+
 test('同色无外壳流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压', async () => {
   // Keep this legacy bare-core restoration test explicit now that the default
   // medium wax is supported and preserves damage across final navigation.
