@@ -1,0 +1,4 @@
+2026-11-05T06:24:24.9997483Z not ok 3 - thin/medium matched orb-clay: mobile-emulation day
+2026-11-05T06:24:25.0021204Z   error: |-
+2026-11-05T06:24:35.0287274Z not ok 4 - thin/medium matched orb-clay: mobile-emulation night
+2026-11-05T06:24:35.0359193Z   error: |-

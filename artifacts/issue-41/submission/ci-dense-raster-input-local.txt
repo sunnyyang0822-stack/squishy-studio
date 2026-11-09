@@ -1,0 +1,21 @@
+{"shortInput":"cloud-marshmallow-desktop-day","elapsed":585,"events":[{"type":"pointerdown","time":3609.5999999996275,"timestamp":3608.7000000001863,"trusted":true},{"type":"pointerup","time":3827,"timestamp":3774.0999999996275,"trusted":true}],"detached":0}
+{"style":"cloud","core":"marshmallow","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":7,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"cloud-marshmallow-mobile-night","elapsed":634,"events":[{"type":"pointerdown","time":2821.9000000003725,"timestamp":2819.600000000559,"trusted":true},{"type":"touchstart","time":2829.4000000003725,"timestamp":2819.600000000559,"trusted":true},{"type":"pointerup","time":3135.2000000001863,"timestamp":2984,"trusted":true},{"type":"touchend","time":3186,"timestamp":2984,"trusted":true}],"detached":0}
+{"style":"cloud","core":"marshmallow","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":7,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"cloud-butter-desktop-day","elapsed":814,"events":[{"type":"pointerdown","time":2922.7999999998137,"timestamp":2921.899999999441,"trusted":true},{"type":"pointerup","time":3135.0999999996275,"timestamp":3092.899999999441,"trusted":true}],"detached":0}
+{"style":"cloud","core":"butter","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":6,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"cloud-butter-mobile-night","elapsed":1079,"events":[{"type":"pointerdown","time":2828.7000000001863,"timestamp":2827.2000000001863,"trusted":true},{"type":"touchstart","time":2834.9000000003725,"timestamp":2827.2000000001863,"trusted":true},{"type":"pointerup","time":3198.100000000559,"timestamp":2993.9000000003725,"trusted":true},{"type":"touchend","time":3198.4000000003725,"timestamp":2993.9000000003725,"trusted":true}],"detached":0}
+{"style":"cloud","core":"butter","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":4,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"core":"clay","pawExcluded":true}
+{"core":"marshmallow","pawExcluded":true}
+{"core":"butter","pawExcluded":true}
+✔ medium wax non-paw marshmallow and slow rebound native input and full geometry (59203.867ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59669.6541
+EXIT_CODE=0

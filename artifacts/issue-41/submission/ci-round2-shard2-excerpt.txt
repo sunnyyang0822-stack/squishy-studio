@@ -1,0 +1,2 @@
+2026-11-05T06:31:11.5620726Z not ok 25 - 同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压
+2026-11-05T06:31:11.5626178Z   error: 'page.waitForFunction: Timeout 30000ms exceeded.'

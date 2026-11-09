@@ -5,7 +5,7 @@ const settle = () => new Promise(resolve => setImmediate(resolve));
 const audio = () => ({ ready: false, setVolume() {}, dispose() {} });
 
 test('thick wax supports registered non-paw styles and three cores with legacy final scope; thin predicates, default and other recipes remain independent', async () => {
-  const { defaultRecipe, styleNames, isThickWaxRecipe, isThinWaxRecipe, canRestartThinWax, canRestartWax } = await state;
+  const { defaultRecipe, styleNames, isThickWaxRecipe, isMediumWaxRecipe, isThinWaxRecipe, canRestartThinWax, canRestartWax } = await state;
   assert.equal(defaultRecipe.waxThickness, 'medium');
   for (const styleId of [...Object.keys(styleNames), 'unknown']) {
     for (const coreMaterial of ['clay', 'marshmallow', 'butter', 'unknown']) {
@@ -19,7 +19,8 @@ test('thick wax supports registered non-paw styles and three cores with legacy f
             assert.equal(canRestartThinWax('shell', recipe), false);
           }
           for (const step of ['core', 'shell', 'decoration', 'making', 'play', 'unknown']) {
-            assert.equal(canRestartWax(step, recipe), canRestartThinWax(step, recipe) || thick && (['shell', 'decoration'].includes(step) || step === 'play' && styleId === 'orb' && coreMaterial === 'clay'));
+            const medium = isMediumWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && styleId === 'orb' && coreMaterial === 'clay');
+            assert.equal(canRestartWax(step, recipe), canRestartThinWax(step, recipe) || medium || thick && (['shell', 'decoration'].includes(step) || step === 'play' && styleId === 'orb' && coreMaterial === 'clay'));
           }
         }
       }

@@ -1,0 +1,8 @@
+2026-11-06T02:41:55.1872554Z # {"style":"star","core":"marshmallow","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":6,"attachedViolations":0,"detachedViolations":0,"restart":true}
+2026-11-06T02:42:13.0771432Z # {"style":"star","core":"marshmallow","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":6,"attachedViolations":0,"detachedViolations":0,"restart":true}
+2026-11-06T02:42:41.8166263Z # {"style":"star","core":"butter","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":5,"attachedViolations":0,"detachedViolations":0,"restart":true}
+2026-11-06T02:42:50.5370585Z # {"shortInput":"star-butter-mobile-night","elapsed":2000,"events":[{"type":"pointerdown","time":6477.5,"timestamp":6476.099999999977,"trusted":true},{"type":"touchstart","time":6485.5,"timestamp":6476.099999999977,"trusted":true},{"type":"pointerup","time":7218.5,"timestamp":6636.79999999993,"trusted":true},{"type":"touchend","time":7219.5,"timestamp":6636.79999999993,"trusted":true}],"detached":0}
+2026-11-06T02:42:59.3248277Z not ok 1 - medium wax non-paw marshmallow and slow rebound native input and full geometry
+2026-11-06T02:42:59.3259091Z   duration_ms: 600118.757783
+2026-11-06T02:42:59.3262822Z   error: 'test timed out after 600000ms'
+2026-11-06T02:43:09.2076618Z # {"style":"star","core":"butter","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":4,"attachedViolations":0,"detachedViolations":0,"restart":true}

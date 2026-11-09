@@ -13,10 +13,10 @@ before(async () => {
   browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_BROWSER_PATH || (existsSync(edge) ? edge : undefined) });
 });
 after(async () => { await browser?.close(); server?.kill(); });
-async function open(options = {}, { clock = false } = {}) {
+async function open(options = {}, { clock = false, recipe = '' } = {}) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, ...options });
   if (clock) await page.clock.install();
-  await installOrbProbe(page, { pixels: true }); await page.goto(base + '/squishy/cloud/');
+  await installOrbProbe(page, { pixels: true }); await page.goto(base + '/squishy/cloud/' + (recipe ? '?' + recipe : ''));
   await page.waitForFunction(() => window.orbMeshProbe?.pixelFrames.length);
   if (await page.locator('[data-category=coreColor]').isVisible()) await page.locator('[data-category=coreColor]').click();
   return page;
@@ -25,8 +25,10 @@ const frame = page => page.evaluate(() => structuredClone(window.orbMeshProbe.pi
 const distance = (a, b) => Math.max(...a.slice(0, 3).map((value, index) => Math.abs(value - b[index])));
 const matrixDistance = (a, b) => Math.max(...a.map((value, index) => Math.abs(value - b[index])));
 
-test('同色完整流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压', async () => {
-  const page = await open({}, { clock: true });
+test('同色无外壳流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压', async () => {
+  // Keep this legacy bare-core restoration test explicit now that the default
+  // medium wax is supported and preserves damage across final navigation.
+  const page = await open({}, { clock: true, recipe: 'shellMaterial=sugar' });
   await idle(page);
   const matrix = await page.evaluate(() => window.orbMeshProbe.modelViewMatrix.slice());
   const canvas = await page.locator('.toy-mount canvas').elementHandle();

@@ -1,0 +1,16 @@
+2026-11-05T06:07:42.0590635Z   duration_ms: 57037.175112
+2026-11-05T06:08:36.3790322Z   duration_ms: 54323.51857
+2026-11-05T06:09:09.8476983Z   duration_ms: 33468.920268
+2026-11-05T06:09:43.6470672Z   duration_ms: 33799.262423
+2026-11-05T06:09:51.9429954Z not ok 5 - rapid thickness changes clear old damage/resources; last selection wins and unsupported recipes stay disabled
+2026-11-05T06:09:51.9431338Z   duration_ms: 8295.04641
+2026-11-05T06:09:51.9432546Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/medium-wax-browser.test.cjs:99:1'
+2026-11-05T06:09:51.9434307Z       assert.ok((await diag(page)).thinWax.detached > 0)
+2026-11-05T06:10:08.7730535Z   duration_ms: 3848.443084
+2026-11-05T06:10:08.7746636Z   duration_ms: 3954.231959
+2026-11-05T06:10:08.7758562Z   duration_ms: 4608.48618
+2026-11-05T06:10:08.7769916Z   duration_ms: 4309.422544
+2026-11-05T06:10:08.8646177Z   duration_ms: 36.593441
+2026-11-05T06:10:28.1016084Z   duration_ms: 7.972395
+2026-11-05T06:10:28.1018598Z   duration_ms: 1007.199384
+2026-11-05T06:10:28.1023127Z   duration_ms: 675.181751

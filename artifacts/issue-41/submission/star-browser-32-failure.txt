@@ -1,0 +1,35 @@
+{"shortInput":"star-marshmallow-desktop-day","elapsed":471,"events":[{"type":"pointerdown","time":3379.9000000000233,"timestamp":3379.100000000093,"trusted":true},{"type":"pointerup","time":3567.100000000093,"timestamp":3552.8000000000466,"trusted":true}],"detached":0}
+{"style":"star","core":"marshmallow","mobile":false,"theme":"day","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":7,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"star-marshmallow-mobile-night","elapsed":420,"events":[{"type":"pointerdown","time":2137,"timestamp":2134.5,"trusted":true},{"type":"touchstart","time":2142.5,"timestamp":2134.5,"trusted":true},{"type":"pointerup","time":2344.29999999993,"timestamp":2300.5,"trusted":true},{"type":"touchend","time":2360.5,"timestamp":2300.5,"trusted":true}],"detached":0}
+{"style":"star","core":"marshmallow","mobile":true,"theme":"night","physicalPhone":false,"thickness":0.028,"partitions":96,"firstDetached":8,"attachedViolations":0,"detachedViolations":0,"restart":true}
+{"shortInput":"star-butter-desktop-day","elapsed":554,"events":[{"type":"pointerdown","time":2538,"timestamp":2537.4000000000233,"trusted":true},{"type":"pointerup","time":2705.4000000000233,"timestamp":2699.1999999999534,"trusted":true}],"detached":0}
+✖ medium wax star: marshmallow and slow rebound native input and full geometry (27410.9643ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 27811.4477
+
+✖ failing tests:
+
+test at tests\medium-wax-core-browser.test.cjs:10:33
+✖ medium wax star: marshmallow and slow rebound native input and full geometry (27410.9643ms)
+  AssertionError [ERR_ASSERTION]: {"thickness":0.028,"gap":0.004,"tolerance":0.00001,"attachedMinGap":0.003999946607950001,"attachedMinSignedDistance":-0.00007440611605478333,"worstAttachedSample":{"panelId":23,"point":[0.40663808584213257,-0.05005092918872833,-0.2951282858848572],"distance":-0.00007440611605478333,"sampleKind":"inner-vertex","sourceFace":9258,"renderedVertex":14926,"cracked":true,"loose":false,"supportOnly":false,"complexSurface":false,"lift":0.0230227418816008},"attachedMaxSignedDistance":0.013427651573331393,"worstAttachedMaxSample":{"panelId":23,"point":[0.40764079988002777,-0.02195519977249205,-0.24063508957624435],"distance":0.013427651573331393,"sampleKind":"inner-edge-midpoint","sourceFace":9261,"renderTriangleId":14743,"panelTriangle":193,"edge":2},"attachedOuterMaxSignedDistance":0.034824137540065775,"attachedWallMaxSignedDistance":0.023706650684641943,"worstAttachedCorrection":{"panelId":23,"time":4.0702,"attempt":0,"point":[0.40605208578333724,-0.022502835297380546,-0.36346511466149695],"distance":-0.02604105033777883,"shift":[0.0027159981852335423,-0.025286009206303483,0.008583884639935497],"hitNormal":[0.1011882229292186,-0.9420648181831163,0.3198043493794899],"sampleKind":"outer-vertex","sourceFace":9258,"renderedVertex":14927,"nearestFace":{"face":9261,"ids":[4725,4714,4724],"points":[[0.4075932204723358,0.00979854166507721,-0.18737277388572693],[0.381569504737854,-0.04593893885612488,-0.3433275818824768],[0.42195236682891846,-0.049986064434051514,-0.36802682280540466]],"normal":[0.1011882229292186,-0.9420648181831163,0.3198043493794899],"originalNormal":[0.12399745954237766,0.22301055340146703,0.9668975763226465],"normalDotOriginal":0.1116747364482314,"pointSignedPlaneDistance":-0.02604105033777883,"nearestDistance":0.02604105033777883,"mappedNormalDots":[-0.8501498801151902]},"ownFaces":[{"face":9258,"ids":[4724,4714,4713],"points":[[0.42195236682891846,-0.049986064434051514,-0.36802682280540466],[0.381569504737854,-0.04593893885612488,-0.3433275818824768],[0.3823351263999939,-0.04962203651666641,-0.12936514616012573]],"normal":[0.10982149267599732,0.9938107836897918,0.0167142444728393],"originalNormal":[0.12465757406916445,0.17886316021904336,0.9759449057931742],"normalDotOriginal":0.20775840003561383,"pointSignedPlaneDistance":0.025643182393378514,"nearestDistance":0.026395232326672964,"mappedNormalDots":[0.8294916957574137]}],"vertices":[{"index":133,"sourceFace":9258,"sourcePoint":[0.42195236682891846,-0.049986064434051514,-0.36802682280540466],"sourceNormal":[-0.4589359151066956,0.883850869980065,0.09047356221936874],"rendered":[0.41890229140632473,-0.047250659656822375,-0.36599837440363925],"authoredNormal":[0.1455053834412056,0.20190747058710368,0.9685357797782927],"sourceNormalGap":0.004000999999999994}],"afterProjection":{"point":[0.3982956639977362,-0.0276203259865249,-0.3528167214297717],"actualNearestSignedDistance":-0.018599498469521848,"nearestFace":9261,"normal":[0.1011882229292186,-0.9420648181831163,0.3198043493794899]}},"attachedCorrectionMax":0.026841050337778827,"attachedCorrectionTotalMax":0.08193921464856407,"attachedCorrectedSamples":1704,"maxThicknessError":1.9319927629934952e-7,"attachedSamples":13948,"attachedSurfaceSamples":166466,"attachedViolations":1,"detachedSweepSamples":2157,"logicalSweepSamples":7105,"duplicateSweepSamples":2027,"zeroLengthSweepSamples":2921,"detachedMinSignedDistance":0.010044310841369667,"detachedSamples":1842,"detachedInteriorSamples":6090,"detachedViolations":0,"wallSamples":15236,"drawCalls":1,"shellVertices":59596,"shellTriangles":57864,"patches":96,"debris":{"floorY":-1.35,"radius":1.35,"moving":5,"settled":0,"minY":-1.7214020635387304,"maxRadius":1.330906453013605,"pileTop":-1.35,"gridCells":0},"panelAreaCV":0.4220315776142285,"panelAreaRange":[0.028340303158338676,0.2365028654681236],"method":"Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"}
+
+  1 !== 0
+
+      at geometryOK (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\helpers\wax-style-probe.cjs:44:10)
+      at TestContext.<anonymous> (D:\squishy-studio\.worktrees\issue-41-medium-wax\tests\medium-wax-core-browser.test.cjs:31:82)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+EXIT_CODE=1

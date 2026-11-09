@@ -17,6 +17,12 @@
 - 2026-11-05用户确认新版慢回弹并要求主线所有慢回弹统一调用：唯一默认为半径.48、按入速度1.05/s、最大深度1.80、圆缓坑底；圆球贴边渐变，复杂样式保留各自几何安全限深。当前合同见 `docs/slow-rebound-approved-preset.md`，取代旧.45速度/.46限深记录。`getOrbPreset('slow-rebound')` 与上述feel入口使用同一工厂，不再在场景另存圆球参数；灯光、黏土、棉花糖及外壳预设不调参。
 
 
+## 中蜡脆皮预设复用
+
+- 已确认预设名称为 **中蜡·双倍薄蜡厚度**，稳定 ID `medium-wax`，使用 `src/wax-presets.mjs` 的 `getWaxPreset('medium-wax')`；先读 `docs/medium-wax-preset.md`。
+- 制作配方使用 `shellMaterial: 'wax', waxThickness: 'medium'`；圆球、云朵、圆柱、甜甜圈、三角锥、花朵、五角星 × 黏土、棉花糖、慢回弹，共21个组合。猫爪不启用，最终试捏沿用文档中既有范围。
+- 保留已确认实体厚度0.028（薄蜡两倍）、实际分区和复杂样式性能配置；复用原输入、碎裂、碰撞与生命周期，不复制场景、不重调内芯手感。
+
 ## 指甲油脆皮预设复用
 
 - 2026-11-05用户确认当前指甲油脆皮为可复用预设，稳定ID `polish-shell`，入口 `src/polish-shell.mjs` 的 `getPolishPreset('polish-shell')`。接入先读 `docs/polish-shell-preset.md`。

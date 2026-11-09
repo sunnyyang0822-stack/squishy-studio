@@ -59,7 +59,11 @@ test('thick registry shares only verified behavior, frozen parameters and separa
   assert.equal(preset.parameters.seedCount, 36);
   for (const key of Object.keys(thinWaxParameters)) if (key !== 'thickness') assert.equal(preset.parameters[key], thinWaxParameters[key], key);
   assert.equal(thinWaxParameters.thickness, .014); assert.equal(thinWaxParameters.gap, .004);
-  assert.throws(() => getWaxPreset('medium-wax'), RangeError, 'Unshipped medium preset is not introduced or used');
+  const medium = getWaxPreset('medium-wax');
+  assert.notEqual(medium, preset);
+  assert.notEqual(medium.parameters, preset.parameters);
+  assert.equal(medium.parameters.thickness, thinWaxParameters.thickness * 2);
+  assert.equal(medium.parameters.seedCount, 96);
   const a = await fixture(), b = await fixture('thin-wax'), c = await fixture();
   try {
     const originalB = b.wax.getSurfaceSnapshot(), originalC = c.wax.getSurfaceSnapshot();

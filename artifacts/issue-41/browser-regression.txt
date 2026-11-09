@@ -1,0 +1,18 @@
+{"comparison":[{"name":"desktop-day-thin","frames":42,"medianFrameMs":27.699999999999818,"p95FrameMs":38.900000000000546,"thickness":0.014,"panels":180,"detached":19},{"name":"desktop-day-medium","frames":41,"medianFrameMs":27.699999999999818,"p95FrameMs":38.900000000000546,"thickness":0.02,"panels":96,"detached":13}]}
+✔ thin/medium matched orb-clay: desktop day (20234.5135ms)
+{"comparison":[{"name":"desktop-night-thin","frames":33,"medianFrameMs":33,"p95FrameMs":72.19999999999982,"thickness":0.014,"panels":180,"detached":18},{"name":"desktop-night-medium","frames":43,"medianFrameMs":27.600000000000364,"p95FrameMs":38.899999999999636,"thickness":0.02,"panels":96,"detached":13}]}
+✔ thin/medium matched orb-clay: desktop night (21314.7409ms)
+{"comparison":[{"name":"mobile-day-thin","frames":54,"medianFrameMs":22,"p95FrameMs":28,"thickness":0.014,"panels":180,"detached":19},{"name":"mobile-day-medium","frames":59,"medianFrameMs":16.800000000000182,"p95FrameMs":27.800000000000182,"thickness":0.02,"panels":96,"detached":13}]}
+✔ thin/medium matched orb-clay: mobile-emulation day (14040.8781ms)
+{"comparison":[{"name":"mobile-night-thin","frames":45,"medianFrameMs":22.300000000000182,"p95FrameMs":33.5,"thickness":0.014,"panels":180,"detached":18},{"name":"mobile-night-medium","frames":82,"medianFrameMs":11.200000000000273,"p95FrameMs":22.200000000000728,"thickness":0.02,"panels":96,"detached":13}]}
+✔ thin/medium matched orb-clay: mobile-emulation night (14970.6798ms)
+✔ rapid thickness changes clear old damage/resources; last selection wins and unsupported recipes stay disabled (9717.815ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82089.047
+EXIT_CODE=0

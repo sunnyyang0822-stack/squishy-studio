@@ -1,0 +1,10 @@
+✔ uniform adaptive orb charts retain the exact main correction when safety caching is requested (64.5151ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 136.2366
+EXIT_CODE=0

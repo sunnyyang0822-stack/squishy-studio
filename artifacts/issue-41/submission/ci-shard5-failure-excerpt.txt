@@ -1,0 +1,4 @@
+2026-11-05T06:08:09.6072506Z # {"shortInput":"orb-marshmallow-desktop-day","elapsed":2688,"events":[{"type":"pointerdown","time":5925.5,"timestamp":5925.1999999999825,"trusted":true},{"type":"pointerup","time":6454,"timestamp":6090.5,"trusted":true}],"detached":3}
+2026-11-05T06:08:09.7019371Z not ok 1 - medium wax non-paw marshmallow and slow rebound native input and full geometry
+2026-11-05T06:08:09.7021992Z   location: '/home/runner/work/squishy-studio/squishy-studio/tests/medium-wax-core-browser.test.cjs:8:1'
+2026-11-05T06:08:09.7024838Z     3 !== 0
