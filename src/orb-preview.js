@@ -49,6 +49,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     const old = view;
     view = undefined;
     old.events.abort();
+    old.finishRecovery?.();
     old.input.dispose();
     old.rotation.dispose();
     old.disposeWax();
@@ -224,6 +225,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
     }
     const current = { renderer, scene, environment, camera, events, restSurface, surface, disposeWax, frame: 0, count: 0, lastTime: null, width: 0, height: 0 };
     let restorePose;
+    let shellTint;
     let daylight = document.documentElement.dataset.theme !== 'night', colorLightingDirty = true;
     const initialOrientation = new THREE.Quaternion();
     if (style.id === 'pyramid') { initialOrientation.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -.30); pivot.quaternion.copy(initialOrientation); }
@@ -296,6 +298,12 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       }
       const dt = current.lastTime === null ? 1 / 60 : (time - current.lastTime) / 1000;
       const colorStep = coating.step(dt);
+      if (shellTint && colorStep.progress !== undefined) {
+        const { material, from, to } = shellTint;
+        const p = colorStep.progress;
+        material.color.lerpColors(from, to, p * p * (3 - 2 * p));
+        if (p === 1) shellTint = undefined;
+      }
       if (restorePose && colorStep.progress !== undefined) {
         const progress = colorStep.progress, blend = 1 - (1 - progress) ** 3;
         deformation.applyRestore(progress);
@@ -374,6 +382,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       try {
         renderer.render(scene, camera);
         mount.dataset.renderCount = String(++current.count);
+        if (colorStep.progress === 1) current.finishRecovery?.();
         if (needsFrame) invalidate();
       } catch {
         broken = true; destroyView(); onUnavailable();
@@ -452,6 +461,26 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       renderer.domElement.setAttribute('aria-label', `${next.name}${isSurface ? style.name : '圆球'}，${interactionLabel}`);
     };
     current.restore = ({ preserveShell = false } = {}) => { if (!preserveShell) { wax?.reset(); polish?.reset(); } current.selectColor(selectedColor.id, { restore: true }); };
+    current.restoreBeforeChange = signal => {
+      if (document.hidden || !mount.getClientRects().length) return;
+      const dented = geometry.attributes.position.array.some((value, i) => value !== restPositions[i]);
+      const turned = !pivot.quaternion.equals(initialOrientation) || floor.position.y !== restingFloor;
+      if (!dented && !turned && !current.input.isActive()) return;
+      current.restore({ preserveShell: true });
+      invalidate();
+      return new Promise(resolve => {
+        const finish = () => {
+          signal.removeEventListener('abort', finish);
+          document.removeEventListener('visibilitychange', finish);
+          if (current.finishRecovery === finish) current.finishRecovery = undefined;
+          resolve();
+        };
+        current.finishRecovery = finish;
+        signal.addEventListener('abort', finish, { once: true });
+        document.addEventListener('visibilitychange', finish, { once: true });
+      });
+    };
+    const shellPaint = () => polish?.material || wax?.material;
     current.configure = config => {
       const supportedWaxCore = feelId === 'clay' || config.waxCollection === false && (feelId === 'marshmallow' || feelId === 'slow-rebound' && style.id === 'orb');
       const supportedThinCore = supportedWaxCore || config.waxCollection === false && feelId === 'slow-rebound' && style.id !== 'paw';
@@ -462,8 +491,13 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       const waxRecipe = thinRecipe || mediumRecipe || thickRecipe;
       const polishRecipe = ['clay', 'marshmallow', 'slow-rebound'].includes(feelId) && style.id !== 'paw' && config.shellMaterial === 'polish';
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
-      if (wax || polish || waxRecipe || polishRecipe) current.input.cancel({ preserveShape: changed });
-      if (changed && (wax || polish || waxRecipe || polishRecipe)) { disposeWax(); current.selectColor(config.coreColor || config.color, { restore: true }); }
+      const shellEdit = activeConfig?.step === 'shell' && config.step === 'shell';
+      const shellStructureChanged = shellEdit && (activeConfig.shellMaterial !== config.shellMaterial || activeConfig.waxThickness !== config.waxThickness);
+      const shellColorChanged = shellEdit && activeConfig.shellColor !== config.shellColor;
+      const previousTint = shellVisible && shellColorChanged ? shellPaint()?.color.clone() : undefined;
+      const reset = changed && (wax || polish || waxRecipe || polishRecipe || shellStructureChanged || shellColorChanged);
+      if ((wax || polish || waxRecipe || polishRecipe) && !reset) current.input.cancel();
+      if (reset) { shellTint = undefined; disposeWax(); }
       recipeKey = config.recipeKey;
       activeConfig = { ...config };
       shellVisible = (waxRecipe || polishRecipe) && config.mode !== 'core' && config.mode !== 'hidden';
@@ -496,8 +530,13 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       mesh.receiveShadow = shellShadows;
       if (wax) wax.group.traverse(object => { if (object.isMesh) { object.castShadow = true; object.receiveShadow = true; } });
       if (shadowsChanged) mesh.material.needsUpdate = true;
-      // Navigating a fixed thin-wax recipe never recolors or repairs its core.
-      current.selectColor(waxRecipe || polishRecipe ? config.coreColor : config.color);
+      const material = shellVisible && shellPaint();
+      if (previousTint && material) {
+        shellTint = { material, from: previousTint, to: material.color.clone() };
+        material.color.copy(previousTint);
+      }
+      // All changes share one restoration clock, including same-color shell edits.
+      current.selectColor(waxRecipe || polishRecipe ? config.coreColor : config.color, { restore: Boolean(reset) });
       mount.polishDiagnostics = () => ({ enabled: Boolean(polish && shellVisible), supported: polishRecipe, feelId, state: polish?.getState(), metrics: polish?.getMetrics(), surface: polish?.getSurfaceSnapshot(), corePositions: Array.from(geometry.attributes.position.array), coreRestPositions: Array.from(restPositions), coreColor: activeConfig.coreColor, shellColor: activeConfig.shellColor, resources: { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries } });
       current.diagnostics = ({ exhaustive = false, surface = false, measure = true, counters = false } = {}) => {
         if (counters) return wax?.getQueryCounters(true);
@@ -542,6 +581,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       onUnavailable();
     }, { signal: events.signal });
     current.invalidate = invalidate;
+    current.drawImmediately = () => draw(performance.now(), true);
     return current;
   }
 
@@ -557,6 +597,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       view.restore(options);
       view.invalidate();
     },
+    restoreBeforeChange(signal) { if (!signal.aborted) return view?.restoreBeforeChange(signal); },
     async prepare(config, { signal }) {
       if (disposed || signal.aborted) throw abortError();
       if (broken) { destroyView(); broken = false; }
@@ -573,7 +614,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       }
       const prepared = view;
       return {
-        commit() {
+        commit({ drawImmediately = false } = {}) {
           if (disposed || prepared !== view) return;
           // Reattaching an unchanged button would lose active pointer capture.
           if (prepared.renderer.domElement.parentNode !== mount || prepared.surface.parentNode !== mount) {
@@ -583,7 +624,10 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
           mount.dataset.style = style.id;
           mount.dataset.feelId = feelId;
           prepared.configure(config);
-          prepared.invalidate();
+          // Paint a replacement in the same task as the DOM swap. Otherwise
+          // the browser can present the new canvas before its first RAF.
+          if (drawImmediately) prepared.drawImmediately();
+          else prepared.invalidate();
         },
         // Preference handles share the page scene; only the adapter owns GPU resources.
         dispose() {},

@@ -68,8 +68,9 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
   async function prepare(force = false) {
     if (disposed) return;
     if (state.step === 'making') { emit(); return; }
-    const target = { ...state.preview, recipe: structuredClone(state.effectiveRecipe) };
-    if (!force && !pending && !state.configError && applied && applied.mode === target.mode && applied.waxCollection === target.waxCollection && applied.recipeKey === target.recipeKey && state.resource === 'ready') { emit(); return; }
+    const target = { ...state.preview, step: state.step, recipe: structuredClone(state.effectiveRecipe) };
+    const crossesCore = applied && (applied.step === 'core') !== (target.step === 'core');
+    if (!force && !crossesCore && !pending && !state.configError && applied && applied.mode === target.mode && applied.waxCollection === target.waxCollection && applied.recipeKey === target.recipeKey && state.resource === 'ready') { emit(); return; }
     const ownRevision = ++revision;
     pending?.abort();
     const request = new AbortController(); pending = request;
