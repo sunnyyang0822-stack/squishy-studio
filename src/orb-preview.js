@@ -478,7 +478,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (polish) { polish.group.visible = shellVisible && polishRecipe; polish.sync(); }
       if (waxRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset(thickRecipe ? 'thick-wax' : mediumRecipe ? 'medium-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: thinRecipe && feelId === 'slow-rebound' && style.id === 'donut', cacheAttachedPanels: !mediumRecipe && style.id !== 'paw', fullSurfaceSupport: (feelId === 'marshmallow' || feelId === 'slow-rebound') && isSurface });
+        wax = getWaxPreset(thickRecipe ? 'thick-wax' : mediumRecipe ? 'medium-wax' : 'thin-wax').create({ styleId: style.id, feelId, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: thinRecipe && feelId === 'slow-rebound' && style.id === 'donut', cacheAttachedPanels: !mediumRecipe && style.id !== 'paw', fullSurfaceSupport: (feelId === 'marshmallow' || feelId === 'slow-rebound') && isSurface });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }

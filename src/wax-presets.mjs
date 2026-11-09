@@ -49,12 +49,16 @@ export const thickWaxSurfaceParameters = Object.freeze({ ...thickWaxParameters, 
 // The torus needs surface-distance cells and a larger bounded collision solve.
 // Neither changes the physical thickness or the shared fracture timing.
 export const thickWaxDonutParameters = Object.freeze({ ...thickWaxSurfaceParameters, detachedCollisionIterations: 40, multiContactCollision: true });
+const thickWaxMarshmallowDonutParameters = Object.freeze({ ...thickWaxDonutParameters, detachedCollisionIterations: 4, acceptVerifiedDebrisClearance: true });
 const thickWax = Object.freeze({
   id: 'thick-wax', material: 'wax', thickness: 'thick',
   parameters: thickWaxParameters,
   create(options = {}) {
     const { worldMatrix, ...shellOptions } = options;
-    const wax = createWaxShell({ ...shellOptions, compactPanels: options.styleId === 'donut' ? true : options.compactPanels, collectionEnabled: options.collectionEnabled ?? false }, options.styleId === 'donut' ? thickWaxDonutParameters : options.styleId && options.styleId !== 'orb' ? thickWaxSurfaceParameters : thickWaxParameters);
+    const isDonut = options.styleId === 'donut';
+    const donutParameters = options.feelId === 'marshmallow' ? thickWaxMarshmallowDonutParameters : thickWaxDonutParameters;
+    const parameters = isDonut ? donutParameters : options.styleId && options.styleId !== 'orb' ? thickWaxSurfaceParameters : thickWaxParameters;
+    const wax = createWaxShell({ ...shellOptions, compactPanels: isDonut || options.compactPanels, collectionEnabled: options.collectionEnabled ?? false }, parameters);
     if (worldMatrix) wax.setWorldMatrix(worldMatrix);
     return wax;
   },

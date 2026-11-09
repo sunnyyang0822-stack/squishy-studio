@@ -418,11 +418,30 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       }
       return true;
     }
+    const preferredClearance = .003, safeDebrisClearance = .0005;
+    const certificates = detachedClearanceCertificates && config.maxInwardDeformation !== undefined ? (panel.detachedClearance ||= []) : null;
+    const coreMotion = certificates ? collisions.getMotionBound() : undefined;
+    function hasSiteClearance(site, point, threshold) {
+      const prior = certificates?.[site];
+      if (!prior || !Number.isFinite(coreMotion)) return false;
+      const allowance = prior.distance - (coreMotion - prior.motion) - threshold - 1e-9;
+      return allowance > 0 && point.distanceToSquared(prior.point) < allowance * allowance;
+    }
+    function rememberSiteClearance(site, point, distance) {
+      if (!certificates || !Number.isFinite(coreMotion)) return;
+      const saved = certificates[site] ||= { point: vec() };
+      saved.point.copy(point); saved.distance = distance; saved.motion = coreMotion;
+    }
     function hasClearance() {
       if (!collisions.intersectsBox(bounds)) return true;
+      let site = 0;
       return visitVolume(point => {
+        const id = site++;
+        if (config.acceptVerifiedDebrisClearance && hasSiteClearance(id, point, safeDebrisClearance)) return true;
         detachedNearestSamples++;
-        return collisions.signedDistance(point) >= .0005;
+        const distance = collisions.signedDistance(point);
+        if (config.acceptVerifiedDebrisClearance) rememberSiteClearance(id, point, distance);
+        return distance >= safeDebrisClearance;
       });
     }
     mapBody();
@@ -430,18 +449,17 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       const hints = detachedQueryHints ? (panel.detachedHints ||= []) : null;
       // Translate the entire world-space chip out of the *current* live core.
       // Vertex, outer face, triangle center and edge samples stay rigid together.
-      const certificates = detachedClearanceCertificates && config.maxInwardDeformation !== undefined ? (panel.detachedClearance ||= []) : null;
-      const coreMotion = certificates ? collisions.getMotionBound() : undefined;
       let converged = false;
       for (let attempt = 0; attempt < (config.detachedCollisionIterations ?? 10); attempt++) {
         let queryIndex = 0, site = 0;
         const contacts = config.multiContactCollision ? [] : null;
-        let minimum = .003; const pushNormal = vec(), sample = (point, ball) => {
-          const id = site++, prior = certificates?.[id];
-          if (prior && Number.isFinite(coreMotion)) {
-            const allowance = prior.distance - (coreMotion - prior.motion) - .003 - 1e-9;
-            if (allowance > 0 && point.distanceToSquared(prior.point) < allowance * allowance) return;
-          }
+        // In the narrow torus ring, accept the same verified safety floor as
+        // the fallback after the first pass toward the preferred margin.
+        const acceptSafeClearance = config.acceptVerifiedDebrisClearance && attempt > 0;
+        const requiredClearance = acceptSafeClearance ? safeDebrisClearance : preferredClearance;
+        let minimum = preferredClearance; const pushNormal = vec(), sample = (point, ball) => {
+          const id = site++;
+          if (hasSiteClearance(id, point, requiredClearance)) return;
           const hint = hints ? (hints[queryIndex++] ||= { faceIndex: panel.vertices[0].sourceFace }) : undefined;
           if (ball && ball.distance > .003 && point.distanceToSquared(ball.point) < (ball.distance - .003 - 1e-10) ** 2) return;
           const motion = hint ? collisions.getMotionBound?.() : undefined, certificate = hint?.clearance;
@@ -451,14 +469,11 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
             if (allowance > 0 && dx * dx + dy * dy + dz * dz < allowance * allowance) return;
           }
           detachedNearestSamples++; const distance = hint ? collisions.signedDistance(point, normal, hint) : collisions.signedDistance(point, normal);
-          if (certificates && Number.isFinite(coreMotion)) {
-            const saved = certificates[id] ||= { point: vec() };
-            saved.point.copy(point); saved.distance = distance; saved.motion = coreMotion;
-          }
+          rememberSiteClearance(id, point, distance);
           if (hint && Number.isFinite(motion)) {
             const saved = hint.clearance ||= {}; saved.x = point.x; saved.y = point.y; saved.z = point.z; saved.distance = distance; saved.motion = motion;
           }
-          if (contacts && distance < .003) contacts.push({ normal: normal.clone(), depth: .003 - distance });
+          if (contacts && distance < requiredClearance) contacts.push({ normal: normal.clone(), depth: requiredClearance - distance });
           if (distance < minimum) { minimum = distance; pushNormal.copy(normal); }
           return distance;
         };
@@ -477,8 +492,8 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
             for (let k = 0; k < 3; k++) sample((scratch ? scratch.edge.copy(points[k]) : points[k].clone()).add(points[(k + 1) % 3]).multiplyScalar(.5), ball);
         }
         }
-        if (minimum >= .00299) { converged = true; break; }
-        const correction = pushNormal.multiplyScalar((.003 - minimum) * 1.15);
+        if (minimum >= (acceptSafeClearance ? safeDebrisClearance : .00299)) { converged = true; break; }
+        const correction = pushNormal.multiplyScalar((requiredClearance - minimum) * 1.15);
         if (contacts) {
           // A curved plate may touch opposing sides of a concavity. Solve the
           // current contact half-spaces together rather than oscillating from

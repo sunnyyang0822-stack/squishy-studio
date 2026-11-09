@@ -87,7 +87,7 @@ async function createFixture(styleId, presetId = 'thick-wax', feelId = 'clay', r
   const feel = getOrbFeel(feelId);
   const deformation = feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, options());
   const baseline = feel.createDeformation(bareGeometry.attributes.position.array, bareGeometry.attributes.normal.array, options());
-  const wax = getWaxPreset(presetId).create({ styleId, geometry, restPositions: rest, restNormals, clock: () => now, reducedMotion, fullSurfaceSupport: feelId !== 'clay', compactPanels: presetId === 'thin-wax' && feelId === 'slow-rebound' && styleId === 'donut', ...waxOptions });
+  const wax = getWaxPreset(presetId).create({ styleId, feelId, geometry, restPositions: rest, restNormals, clock: () => now, reducedMotion, fullSurfaceSupport: feelId !== 'clay', compactPanels: presetId === 'thin-wax' && feelId === 'slow-rebound' && styleId === 'donut', ...waxOptions });
   const tree = createWaxCollisionTree(geometry, { featureNormals: true, queryCache: false, nearestGrid: false, restPositions: rest });
   function same() { assert.deepEqual(geometry.attributes.position.array, bareGeometry.attributes.position.array); assert.deepEqual(geometry.attributes.normal.array, bareGeometry.attributes.normal.array); assert.deepEqual(deformation.getState(), baseline.getState()); }
   function act(method, ...args) { deformation[method](...args); baseline[method](...args); same(); }
@@ -110,7 +110,7 @@ function contactPoint(mesh, x, y, inner = false) {
   }
   assert.ok(point, 'Contact must lie on a real visible GLB face'); return point;
 }
-function completeClearance(f, snapshot) {
+function completeClearance(f, snapshot, { detachedOnly = false } = {}) {
   f.tree.refit(); const vector = new f.THREE.Vector3(); let minimum = Infinity, samples = 0, uniqueQueries = 0;
   // This cache lives for one immutable snapshot only. Every logical triangle
   // site is still asserted; repeated indexed vertices and edges share an exact
@@ -124,6 +124,7 @@ function completeClearance(f, snapshot) {
   }
   for (let i = 0; i < snapshot.indices.length; i += 3) {
     const ids = Array.from(snapshot.indices.slice(i, i + 3));
+    if (detachedOnly && !snapshot.detached[ids[0]]) continue;
     if (ids.every(r => [0, 1, 2].every(k => snapshot.positions[r * 3 + k] === 0))) continue;
     const context = `triangle ${i / 3}, panel ${snapshot.panelIds[ids[0]]}, layer ${snapshot.layers[ids[0]]}, detached ${snapshot.detached[ids[0]]}`;
     for (const r of ids) check(...snapshot.positions.slice(r * 3, r * 3 + 3), context + ' vertex', vertices, r);
