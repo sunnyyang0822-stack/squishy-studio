@@ -24,6 +24,100 @@ async function open(options = {}, { clock = false, recipe = '' } = {}) {
 const frame = page => page.evaluate(() => structuredClone(window.orbMeshProbe.pixelFrames.at(-1)));
 const distance = (a, b) => Math.max(...a.slice(0, 3).map((value, index) => Math.abs(value - b[index])));
 const matrixDistance = (a, b) => Math.max(...a.map((value, index) => Math.abs(value - b[index])));
+const evidence = async (page, name) => {
+  if (process.env.MAKING_RESET_CAPTURE_DIR) await page.screenshot({ path: `${process.env.MAKING_RESET_CAPTURE_DIR}/${name}.png` });
+};
+
+test('试捏后进入同色外壳，先在原场景播放内芯复原，再显示完整外壳', async () => {
+  const page = await open({ deviceScaleFactor: .5 }, { clock: true, recipe: 'waxThickness=thin' });
+  try {
+    const mount = page.locator('.toy-mount');
+    const shell = () => mount.evaluate(el => el.thinWaxDiagnostics({ measure: false }).enabled);
+    const canvas = await mount.locator('canvas').elementHandle();
+    await page.locator('.orb-input').focus();
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+    await page.keyboard.down('Space'); await page.clock.runFor(700);
+    await page.keyboard.up('Space'); await page.clock.runFor(300);
+    const dent = (await frame(page)).maxDepth;
+    assert.ok(dent > .03);
+    await evidence(page, '01-core-dent');
+    await page.locator('.step-next').evaluate(button => button.click());
+    await page.clock.runFor(100);
+    const middle = (await frame(page)).maxDepth;
+    assert.ok(middle > 0 && middle < dent, 'The old core visibly recovers before the shell appears');
+    assert.equal(await shell(), false);
+    await evidence(page, '02-core-recovering');
+    await page.clock.runFor(650);
+    assert.equal((await frame(page)).maxDepth, 0);
+    assert.equal(await shell(), true);
+    await evidence(page, '03-shell-after-recovery');
+    assert.ok(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')));
+  } finally { await page.close(); }
+});
+
+test('外壳换色、切换材质时从当前真实凹痕逐帧恢复', async () => {
+  const page = await open({ deviceScaleFactor: .5 }, { clock: true, recipe: 'step=shell&shellMaterial=polish' });
+  try {
+    const mount = page.locator('.toy-mount');
+    const canvas = await mount.locator('canvas').elementHandle();
+    const depth = () => mount.evaluate(el => {
+      const { corePositions, coreRestPositions } = el.polishDiagnostics();
+      return corePositions.reduce((max, value, i) => Math.max(max, Math.abs(value - coreRestPositions[i])), 0);
+    });
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+    for (const [selector, expected] of [['[name=shellColor][value=shell-mint]', 'mint'], ['[name=shellMaterial][value=sugar]', 'mint']]) {
+      const box = await page.locator('.orb-input').boundingBox();
+      await page.mouse.move(box.x + box.width * .5, box.y + box.height * .4);
+      await page.mouse.down(); await page.clock.runFor(1000);
+      await page.mouse.up(); await page.clock.runFor(250);
+      const dent = await depth();
+      assert.ok(dent > .03, `${selector}: ${dent}`);
+      if (selector.includes('shellColor')) await evidence(page, '04-polish-before-color');
+      await page.locator(selector).evaluate(input => input.click());
+      await page.clock.runFor(100);
+      const middle = await depth();
+      assert.ok(middle > 0 && middle < dent, selector);
+      if (selector.includes('shellColor')) await evidence(page, '05-polish-color-and-recovery');
+      await page.clock.runFor(650);
+      assert.equal(await depth(), 0);
+      assert.equal(await mount.getAttribute('data-color'), expected);
+      if (selector.includes('shellColor')) await evidence(page, '06-polish-after-color');
+    }
+    assert.ok(await canvas.evaluate(el => el === document.querySelector('.toy-mount canvas')));
+  } finally { await page.close(); }
+});
+
+test('切换内芯材质前，原场景先复原并释放，下一次按压使用新内芯', async () => {
+  const page = await open({ deviceScaleFactor: .5 }, { clock: true, recipe: 'shellMaterial=sugar' });
+  try {
+    const mount = page.locator('.toy-mount');
+    const canvas = await mount.locator('canvas').elementHandle();
+    await page.locator('.orb-input').focus();
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000));
+    await page.keyboard.down('Space'); await page.clock.runFor(700);
+    await page.keyboard.up('Space'); await page.clock.runFor(300);
+    const dent = (await frame(page)).maxDepth;
+    assert.ok(dent > .03);
+    await page.locator('[name=coreMaterial][value=marshmallow]').evaluate(input => input.click());
+    // Wait for the incoming GLB to prepare while the old scene clock is paused.
+    for (let i = 0; i < 200 && await page.evaluate(() => window.orbMeshProbe.contexts.length) < 2; i++) {
+      await new Promise(resolve => setTimeout(resolve, 25));
+    }
+    assert.equal(await page.evaluate(() => window.orbMeshProbe.contexts.length), 2);
+    await page.clock.runFor(100);
+    const intermediate = (await frame(page)).maxDepth;
+    assert.ok(intermediate > 0 && intermediate < dent);
+    assert.equal(await mount.getAttribute('data-feel-id'), 'clay');
+    await page.clock.runFor(650);
+    await page.clock.resume();
+    await page.waitForSelector('.toy-mount[data-feel-id=marshmallow]');
+    assert.equal(await canvas.evaluate(el => el.isConnected), false);
+    assert.equal(await page.evaluate(() => window.orbMeshProbe.contexts.filter(gl => !gl.isContextLost()).length), 1);
+    await page.locator('.orb-input').focus(); await page.keyboard.down('Space');
+    await page.waitForFunction(() => window.orbMeshProbe.pixelFrames.at(-1).maxDepth > .03);
+    await page.keyboard.up('Space');
+  } finally { await page.close(); }
+});
 
 test('同色无外壳流程在制作步骤结束输入，最终体验复用GPU同步恢复且可再次捏压', async () => {
   // Keep this legacy bare-core restoration test explicit now that the default

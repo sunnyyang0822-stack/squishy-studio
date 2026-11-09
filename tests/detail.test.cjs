@@ -163,6 +163,7 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   await ready(page);
   assert.equal(await current(page, 'play'), 'step');
   await progress(page,4);
+  await page.waitForSelector('.toy-mount[data-color="sky"][data-feel-id="marshmallow"]');
   assert.equal(await page.locator('.toy-mount').getAttribute('data-color'), 'sky');
   await page.locator('.orb-input').focus();
   await page.keyboard.down('Space');

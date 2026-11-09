@@ -3,6 +3,7 @@ export function createModelPreview(mount, options) {
   let renderer;
   let disposed = false;
   let rendererKey;
+  let appliedConfig;
   let attempt = 0;
   let revision = 0;
   const preparing = new Set();
@@ -28,12 +29,20 @@ export function createModelPreview(mount, options) {
       }
       try {
         const handle = await candidate.prepare(config, context);
+        // Keep the outgoing core visible until its existing recovery finishes.
+        // Use the committed step so a rapid edit cannot skip the handoff.
+        const enteringShell = appliedConfig?.step === 'core' && ['shell', 'decoration'].includes(config.step);
+        const replacingCore = candidate !== renderer && appliedConfig?.styleId === styleId && config.step !== 'play';
+        if (enteringShell || replacingCore) await renderer?.restoreBeforeChange(context.signal);
         if (disposed || context.signal.aborted || ownRevision !== revision) throw new DOMException('Aborted', 'AbortError');
         return {
           commit() {
             if (disposed || context.signal.aborted || ownRevision !== revision) return;
+            const replacing = Boolean(renderer && candidate !== renderer && appliedConfig?.styleId === styleId);
             if (candidate !== renderer) { renderer?.dispose(); renderer = candidate; rendererKey = key; }
             preparing.delete(candidate); committed = true; handle.commit(); mount.dataset.appearanceId = appearanceId;
+            if (replacing) renderer.revealConfiguration();
+            appliedConfig = config;
           },
           dispose() { handle.dispose(); if (owned && !committed) { preparing.delete(candidate); candidate.dispose(); } },
         };
