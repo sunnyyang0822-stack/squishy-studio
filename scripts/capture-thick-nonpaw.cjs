@@ -68,9 +68,12 @@ async function main() {
   const browserTemporary = path.resolve('.tmp/browser'); fs.mkdirSync(browserTemporary, { recursive: true });
   process.env.TEMP = process.env.TMP = process.env.TMPDIR = browserTemporary;
   const port = process.env.THICK_NONPAW_CAPTURE_PORT || '4381', base = `http://127.0.0.1:${port}`;
+  const coverage = process.env.THICK_NONPAW_COVERAGE || 'full';
+  assert.ok(['full', 'paired'].includes(coverage));
   const resume = process.argv.includes('--resume'), reportPath = `${output}/comparison-validation.json`;
   if (fs.existsSync(reportPath) && !resume) throw Error('Comparison report exists; use --resume with the same bundle or a new THICK_NONPAW_OUTPUT directory');
-  const report = resume && fs.existsSync(reportPath) ? JSON.parse(fs.readFileSync(reportPath, 'utf8')) : { createdAt: new Date().toISOString(), bundleSha256: digest('assets/orb-preview.js'), actualPhone: false, fixedColors: { coreColor: 'mint', shellColor: 'rose' }, operationTiming: 'Unmodified wall clock; deep hold reaches at least 2.1s continuous dwell; release snapshot is copied in the trusted pointerup task; slow rebound waits for exact natural rest', mobile: 'Chromium/CDP touch emulation 390x844; background rotations use existing mouse gesture', clocks: 'normal wall time', cases: [], errors: [], exitCode: 1 };
+  const report = resume && fs.existsSync(reportPath) ? JSON.parse(fs.readFileSync(reportPath, 'utf8')) : { createdAt: new Date().toISOString(), bundleSha256: digest('assets/orb-preview.js'), actualPhone: false, coverage, coverageDescription: coverage === 'paired' ? 'Every style/core: desktop day and mobile-emulated night, each with matched thin/thick operations; donut additionally desktop night and mobile-emulated day for all three cores' : 'Every selected style/core/device with thin/thick day/night', fixedColors: { coreColor: 'mint', shellColor: 'rose' }, operationTiming: 'Unmodified wall clock; deep hold reaches at least 2.1s continuous dwell; release snapshot is copied in the trusted pointerup task; slow rebound waits for exact natural rest', mobile: 'Chromium/CDP touch emulation 390x844; background rotations use existing mouse gesture', clocks: 'normal wall time', cases: [], errors: [], exitCode: 1 };
+  assert.equal(report.coverage, coverage, 'Resumed captures must preserve their declared condition matrix');
   assert.equal(report.bundleSha256, digest('assets/orb-preview.js'), 'Resumed captures must use exactly the same built script');
   report.selection = { styles: selectedStyles, cores: selectedCores, devices: selectedDevices };
   report.exitCode = 1; report.previousAttempts ||= [];
@@ -91,7 +94,9 @@ async function main() {
       const item = { name, style, core, mobile, viewport, deviceScaleFactor: 1, modelSha256: digest('.' + getSquishyStyle(style).modelUrl), stages: [] }; report.cases.push(item); page.on('pageerror', e => report.errors.push({ name, error: e.message }));
       try {
         const mesh = await installStyleProbe(page, getSquishyStyle(style)), send = await inputFor(page, context, mobile);
-        for (const thickness of ['thin', 'thick']) for (const theme of ['day', 'night']) {
+        const themes = coverage === 'paired' && style !== 'donut' ? [mobile ? 'night' : 'day'] : ['day', 'night'];
+        item.themes = themes;
+        for (const thickness of ['thin', 'thick']) for (const theme of themes) {
           const stage = `${thickness}-${theme}`; await load(page, base, style, core, thickness); await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
           await page.evaluate(text => { const label = document.createElement('div'); label.textContent = text; label.style.cssText = 'position:fixed;top:78px;left:8px;right:8px;padding:6px;background:#fffe;color:#322039;font:12px sans-serif;z-index:1000;pointer-events:none'; document.body.append(label); }, `${style} / ${core} / ${thickness} / ${theme} / ${mobile ? '模拟触摸' : '桌面鼠标'}`);
           const contact = await projectedMeshContact(page, mesh, style); if (style === 'donut') assert.ok(contact.radialDot < -.03);

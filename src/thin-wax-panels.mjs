@@ -356,19 +356,45 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       const normals = mapped.map(v => v.n.clone().transformDirection(worldMatrix));
       body = debris.add(panel.id, points, normals, panel.triangles, now);
     }
-    const worldPoints = debris.points(body, body.world), bounds = new THREE.Box3(), normal = vec();
-    for (let i = 0; i < mapped.length; i++) {
-      const vertex = mapped[i]; vertex.rendered ||= vec(); vertex.renderedNormal ||= vec();
-      vertex.rendered.copy(worldPoints[i]).applyMatrix4(worldInverse);
-      vertex.renderedNormal.copy(body.normals[i]).applyQuaternion(body.rotation).transformDirection(worldInverse);
-      bounds.expandByPoint(vertex.rendered);
+    const bounds = new THREE.Box3(), normal = vec();
+    function mapBody() {
+      const worldPoints = debris.points(body, body.world);
+      bounds.makeEmpty();
+      for (let i = 0; i < mapped.length; i++) {
+        const vertex = mapped[i]; vertex.rendered ||= vec(); vertex.renderedNormal ||= vec();
+        vertex.rendered.copy(worldPoints[i]).applyMatrix4(worldInverse);
+        vertex.renderedNormal.copy(body.normals[i]).applyQuaternion(body.rotation).transformDirection(worldInverse);
+        bounds.expandByPoint(vertex.rendered);
+      }
+      bounds.expandByScalar(config.thickness + .005);
     }
-    bounds.expandByScalar(config.thickness + .005);
+    function visitVolume(sample) {
+      const position = panel.detachedSamplePoint ||= vec();
+      for (const entry of panel.fullSupportSamples) {
+        position.set(0, 0, 0);
+        for (const node of entry.nodes) {
+          const vertex = mapped[node >> 1];
+          position.add(vertex.rendered);
+          if (node & 1) position.addScaledVector(vertex.renderedNormal, config.thickness);
+        }
+        if (sample(position.multiplyScalar(1 / entry.nodes.length)) === false) return false;
+      }
+      return true;
+    }
+    function hasClearance() {
+      if (!collisions.intersectsBox(bounds)) return true;
+      return visitVolume(point => {
+        detachedNearestSamples++;
+        return collisions.signedDistance(point) >= .0005;
+      });
+    }
+    mapBody();
     if (collisions.intersectsBox(bounds)) {
       // Translate the entire world-space chip out of the *current* live core.
       // Vertex, outer face, triangle center and edge samples stay rigid together.
       const certificates = detachedClearanceCertificates && config.maxInwardDeformation !== undefined ? (panel.detachedClearance ||= []) : null;
       const coreMotion = certificates ? collisions.getMotionBound() : undefined;
+      let converged = false;
       for (let attempt = 0; attempt < (config.detachedCollisionIterations ?? 10); attempt++) {
         let site = 0;
         const contacts = config.multiContactCollision ? [] : null;
@@ -392,16 +418,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         if (config.surfaceContact) {
           // Thick surface plates carry their full two-sided volume. Include
           // outer face interiors and fracture-wall edges, not only corners.
-          const position = panel.detachedSamplePoint ||= vec();
-          for (const entry of panel.fullSupportSamples) {
-            position.set(0, 0, 0);
-            for (const node of entry.nodes) {
-              const vertex = mapped[node >> 1];
-              position.add(vertex.rendered);
-              if (node & 1) position.addScaledVector(vertex.renderedNormal, config.thickness);
-            }
-            sample(position.multiplyScalar(1 / entry.nodes.length));
-          }
+          visitVolume(sample);
         } else {
           for (const vertex of mapped) { sample(vertex.rendered); sample(vertex.rendered.clone().addScaledVector(vertex.renderedNormal, config.thickness)); }
           for (const triangle of panel.triangles) {
@@ -410,7 +427,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
             for (let k = 0; k < 3; k++) sample(points[k].clone().add(points[(k + 1) % 3]).multiplyScalar(.5));
           }
         }
-        if (minimum >= .00299) break;
+        if (minimum >= .00299) { converged = true; break; }
         const correction = pushNormal.multiplyScalar((.003 - minimum) * 1.15);
         if (contacts) {
           // A curved plate may touch opposing sides of a concavity. Solve the
@@ -428,6 +445,44 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         const worldCorrection = correction.clone().applyMatrix3(worldLinear); body.position.add(worldCorrection);
         const direction = worldCorrection.clone().normalize(); body.velocity.addScaledVector(direction, -Math.min(0, body.velocity.dot(direction)));
       }
+      if (config.multiContactCollision && !converged) {
+        mapBody();
+        if (!hasClearance()) {
+          const previous = panel.lastClearDebrisPose;
+          if (previous) {
+            body.position.copy(previous.position);
+            body.rotation.copy(previous.rotation);
+            mapBody();
+          }
+          if (!previous || !hasClearance()) {
+            // A rotating core can invalidate the previous safe pose too.
+            // Find a nearby clear pose before publishing the rigid geometry.
+            const position = body.position.clone();
+            const direction = vec();
+            for (const vertex of mapped) direction.add(vertex.renderedNormal);
+            direction.transformDirection(worldMatrix);
+            const directions = [direction, new THREE.Vector3(0, -1, 0)];
+            let clear = false;
+            for (let distance = .004; distance < 8 && !clear; distance *= 2) {
+              for (const axis of directions) {
+                body.position.copy(position).addScaledVector(axis, distance);
+                mapBody();
+                if (hasClearance()) { clear = true; break; }
+              }
+            }
+            // The verified model bounds are well inside this distance. Keep
+            // growing the downward offset until the entire boxes separate.
+            for (let distance = 8; !clear; distance *= 2) {
+              body.position.copy(position).addScaledVector(directions[1], distance);
+              mapBody(); clear = !collisions.intersectsBox(bounds);
+            }
+          }
+        }
+      }
+    }
+    if (config.multiContactCollision) {
+      const pose = panel.lastClearDebrisPose ||= { position: vec(), rotation: new THREE.Quaternion() };
+      pose.position.copy(body.position); pose.rotation.copy(body.rotation);
     }
     panel.renderBounds ||= new THREE.Box3(); panel.renderBounds.makeEmpty();
     for (const vertex of mapped) panel.renderBounds.expandByPoint(vertex.rendered);
@@ -745,7 +800,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
 
     const changed = dirty; if (changed) sync(); return { changed, needsFrame: active || living };
   }
-  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.attachedCache = null; p.detachedClearance = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
+  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.attachedCache = null; p.detachedClearance = null; p.lastClearDebrisPose = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
   function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead && !debris.get(p.id)?.settled).length, settled: debris.state().settled, expired: panels.filter(p => p.dead).length, collectionEnabled: debris.isCollectionEnabled(), debris: debris.state(), firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: 0, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: config.maxLocalFragments, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, minSigned = Infinity, maxThicknessError = 0, attachedSamples = 0, attachedSurfaceSamples = 0, attachedViolations = 0, detachedSamples = 0, detachedInteriorSamples = 0, detachedMin = Infinity, detachedViolations = 0, wallSamples = 0;

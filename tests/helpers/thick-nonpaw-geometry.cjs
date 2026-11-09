@@ -57,7 +57,7 @@ function localThickness(snapshot, expected) {
   assert.ok(pairs > 1000 && walls > 100, 'Check actual shell pairs and all volumetric boundary walls');
   return { pairs, walls, maximumError };
 }
-async function createFixture(styleId, presetId = 'thick-wax', feelId = 'clay', reducedMotion = false) {
+async function createFixture(styleId, presetId = 'thick-wax', feelId = 'clay', reducedMotion = false, waxOptions = {}) {
   const THREE = await import('three');
   const { getWaxPreset } = await import('../../src/wax-presets.mjs');
   const { getSquishyStyle } = await import('../../src/squishy-styles.mjs');
@@ -87,7 +87,7 @@ async function createFixture(styleId, presetId = 'thick-wax', feelId = 'clay', r
   const feel = getOrbFeel(feelId);
   const deformation = feel.createDeformation(geometry.attributes.position.array, geometry.attributes.normal.array, options());
   const baseline = feel.createDeformation(bareGeometry.attributes.position.array, bareGeometry.attributes.normal.array, options());
-  const wax = getWaxPreset(presetId).create({ styleId, geometry, restPositions: rest, restNormals, clock: () => now, reducedMotion, fullSurfaceSupport: feelId !== 'clay', compactPanels: presetId === 'thin-wax' && feelId === 'slow-rebound' && styleId === 'donut' });
+  const wax = getWaxPreset(presetId).create({ styleId, geometry, restPositions: rest, restNormals, clock: () => now, reducedMotion, fullSurfaceSupport: feelId !== 'clay', compactPanels: presetId === 'thin-wax' && feelId === 'slow-rebound' && styleId === 'donut', ...waxOptions });
   const tree = createWaxCollisionTree(geometry, { featureNormals: true, queryCache: false, nearestGrid: false, restPositions: rest });
   function same() { assert.deepEqual(geometry.attributes.position.array, bareGeometry.attributes.position.array); assert.deepEqual(geometry.attributes.normal.array, bareGeometry.attributes.normal.array); assert.deepEqual(deformation.getState(), baseline.getState()); }
   function act(method, ...args) { deformation[method](...args); baseline[method](...args); same(); }
