@@ -1,0 +1,12 @@
+✔ thick donut marshmallow clearance proofs preserve full rigid output against exhaustive queries (8316.586ms)
+ℹ {"feel":"marshmallow","frames":48,"fastQueries":111089,"referenceQueries":421770,"savedFraction":0.7366123716717643}
+✔ thick donut slow-rebound clearance proofs preserve full rigid output against exhaustive queries (12625.3888ms)
+ℹ {"feel":"slow-rebound","frames":48,"fastQueries":76665,"referenceQueries":300012,"savedFraction":0.7444602215911363}
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21144.5188

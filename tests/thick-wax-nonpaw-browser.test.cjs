@@ -35,7 +35,11 @@ for (const style of selectedStyles) for (const core of selectedCores) test(`${st
     assert.ok(short.actualGPU && short.trustedDown && short.gpuCoreError <= 1e-6); assert.ok(short.state.cracked > 0); assert.equal(short.state.detached, 0);
     await restart(page);
     await page.locator('.toy-mount').evaluate(el => { window.nonpawTiming = {}; const observe = () => { const s = el.thinWaxDiagnostics({ measure: false }).thinWax; if (!s.active) return; if (s.dwell <= .5) window.nonpawTiming.before = s; else if (!window.nonpawTiming.onset) window.nonpawTiming.onset = s; }; window.waxStyleObservers.add(observe); window.stopNonpawTiming = () => window.waxStyleObservers.delete(observe); });
-    await armRelease(page); await press(); await waitLoaded(page); const loaded = await diagnostic(page, true); geometryOK(loaded); assert.ok(maximumDepth(loaded) > .03);
+    await armRelease(page); await press();
+    // The long inner-ring hold reproduces the late rigid-fragment contact
+    // that a quick pass across the dwell threshold does not reach.
+    await waitLoaded(page, .03, style === 'donut' && core === 'marshmallow' ? 2.1 : .7);
+    const loaded = await diagnostic(page, true); geometryOK(loaded); assert.ok(maximumDepth(loaded) > .03);
     await page.mouse.up(); const released = await page.evaluate(() => window.nonpawRelease); assert.ok(released.trusted); assert.ok(maximumDepth(released) > .03);
     const timing = await page.evaluate(() => { window.stopNonpawTiming(); return window.nonpawTiming; }); assert.ok(timing.before && timing.onset); assert.equal(timing.before.detached, 0); assert.ok(timing.onset.dwell > .5 && timing.onset.detached > 0);
     await page.waitForTimeout(600); const recovered = await diagnostic(page, true); geometryOK(recovered); assert.equal(recovered.thinWax.detached, released.thinWax.detached);

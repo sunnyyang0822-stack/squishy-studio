@@ -1,0 +1,11 @@
+✔ deep torus wax verifier distinguishes a concave-edge false sign from actual interior using independent ray parity (2687.639ms)
+ℹ {"point":[0.33528026938438416,-0.04973401129245758,0.2199999988079071],"inside":false,"rayCounts":[0,2,0],"robust":0.17768208827440288,"legacy":-0.17768208827440288}
+ℹ {"point":[-0.7,0,0],"inside":true,"rayCounts":[1,1,1],"robust":-0.41910071166011115,"legacy":-0.41910071166011115}
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2781.4725
