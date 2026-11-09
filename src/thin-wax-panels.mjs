@@ -156,7 +156,7 @@ function buildPanels(rest, index, count = 180, surfaceSites = false, compact = f
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, compactPanels = false, relativeSupport = compactPanels, cacheAttachedPanels = true, supportCertificates = true, detachedClearanceCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false, attachedSupportPasses = 8 } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, compactPanels = false, relativeSupport = compactPanels, cacheAttachedPanels = true, supportCertificates = true, detachedClearanceCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false, attachedSupportPasses = 8, sharedClearance = true } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
@@ -194,7 +194,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     }
     panel.end = records.length;
   }
-  if (fullSurfaceSupport) {
+  if (fullSurfaceSupport || config.surfaceContact) {
     // Samples describe the actual two-sided volume using base vertex + layer
     // IDs. Shared surface/wall edges reuse the same query; no distinct sample
     // position is omitted. Hints remain owned by a stable sample across frames.
@@ -244,7 +244,8 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const material = new THREE.MeshStandardMaterial({ color, roughness: .64, metalness: 0, vertexColors: true });
   const mesh = new THREE.Mesh(shell, material); mesh.frustumCulled = false;
   const group = new THREE.Group(); group.name = 'Thin_Wax_Voronoi'; group.add(mesh);
-  const collisions = makeCollisionTree(geometry, { motionTracking: config.maxInwardDeformation !== undefined, nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, lazyFeatureNormals: !featureTieConsensus, exactGridTies: !featureTieConsensus, trackChanges: reuseAttached || relativeSupport, trackRelativeMotion: relativeSupport, restPositions: rest, featureTieConsensus, performanceOptimizations });
+  const shareClearance = fullSurfaceSupport && config.shareClearance && sharedClearance;
+  const collisions = makeCollisionTree(geometry, { motionTracking: config.maxInwardDeformation !== undefined, nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, lazyFeatureNormals: !featureTieConsensus, exactGridTies: !featureTieConsensus, trackChanges: reuseAttached || relativeSupport, trackRelativeMotion: relativeSupport, restPositions: rest, featureTieConsensus, performanceOptimizations, shareClearance });
   const visibleCrackEdges = new Set();
   const debris = createWaxDebris({ thickness: config.thickness, reducedMotion, collectionEnabled });
   const worldMatrix = new THREE.Matrix4(), worldInverse = new THREE.Matrix4(), worldLinear = new THREE.Matrix3();
@@ -282,7 +283,19 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
     const triangle = new THREE.Triangle(...points), normal = triangle.getNormal(vec()), oldNormal = new THREE.Triangle(...original).getNormal(vec()), nearest = triangle.closestPointToPoint(position, vec());
     return { face, ids, points: points.map(p => p.toArray()), normal: normal.toArray(), originalNormal: oldNormal.toArray(), normalDotOriginal: normal.dot(oldNormal), pointSignedPlaneDistance: position.clone().sub(points[0]).dot(normal), nearestDistance: position.distanceTo(nearest), mappedNormalDots: vertices.map(vertex => vertex.n.dot(normal)) };
   }
-  function localPanels(radius = .47) { return panels.filter(p => !p.detached && p.center.distanceTo(contact) < radius).sort((a, b) => a.center.distanceToSquared(contact) - b.center.distanceToSquared(contact)); }
+  function localPanels(radius = .47) {
+    if (!config.surfaceContact) return panels.filter(p => !p.detached && p.center.distanceTo(contact) < radius).sort((a, b) => a.center.distanceToSquared(contact) - b.center.distanceToSquared(contact));
+    const triangle = new THREE.Triangle(), nearest = vec(), found = [], limit = radius * radius;
+    for (const panel of panels) if (!panel.detached) {
+      let distance = Infinity;
+      for (const ids of panel.triangles) {
+        map(panel.vertices[ids[0]], source, triangle.a); map(panel.vertices[ids[1]], source, triangle.b); map(panel.vertices[ids[2]], source, triangle.c);
+        distance = Math.min(distance, triangle.closestPointToPoint(contact, nearest).distanceToSquared(contact));
+      }
+      if (distance < limit) found.push({ panel, distance });
+    }
+    return found.sort((a, b) => a.distance - b.distance || a.panel.id - b.panel.id).map(entry => entry.panel);
+  }
   function crack() {
     // A tiny local starter crack; the connected brittle wave happens later.
     if (!stroke.starter) stroke.starter = localPanels(.32)[0];
@@ -381,28 +394,73 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
       const normals = mapped.map(v => (freeze ? v.renderedNormal : v.n).clone().transformDirection(worldMatrix));
       body = debris.add(panel.id, points, normals, panel.triangles, now);
     }
-    const worldPoints = debris.points(body, body.world), bounds = new THREE.Box3(), normal = vec();
-    for (let i = 0; i < mapped.length; i++) {
-      const vertex = mapped[i]; vertex.rendered ||= vec(); vertex.renderedNormal ||= vec();
-      vertex.rendered.copy(worldPoints[i]).applyMatrix4(worldInverse);
-      vertex.renderedNormal.copy(body.normals[i]).applyQuaternion(body.rotation).transformDirection(worldInverse);
-      bounds.expandByPoint(vertex.rendered);
+    const bounds = new THREE.Box3(), normal = vec();
+    function mapBody() {
+      const worldPoints = debris.points(body, body.world);
+      bounds.makeEmpty();
+      for (let i = 0; i < mapped.length; i++) {
+        const vertex = mapped[i]; vertex.rendered ||= vec(); vertex.renderedNormal ||= vec();
+        vertex.rendered.copy(worldPoints[i]).applyMatrix4(worldInverse);
+        vertex.renderedNormal.copy(body.normals[i]).applyQuaternion(body.rotation).transformDirection(worldInverse);
+        bounds.expandByPoint(vertex.rendered);
+      }
+      bounds.expandByScalar(config.thickness + .005);
     }
-    bounds.expandByScalar(config.thickness + .005);
+    function visitVolume(sample) {
+      const position = panel.detachedSamplePoint ||= vec();
+      for (const entry of panel.fullSupportSamples) {
+        position.set(0, 0, 0);
+        for (const node of entry.nodes) {
+          const vertex = mapped[node >> 1];
+          position.add(vertex.rendered);
+          if (node & 1) position.addScaledVector(vertex.renderedNormal, config.thickness);
+        }
+        if (sample(position.multiplyScalar(1 / entry.nodes.length)) === false) return false;
+      }
+      return true;
+    }
+    const preferredClearance = .003, safeDebrisClearance = .0005;
+    const certificates = detachedClearanceCertificates && config.maxInwardDeformation !== undefined ? (panel.detachedClearance ||= []) : null;
+    const coreMotion = certificates ? collisions.getMotionBound() : undefined;
+    function hasSiteClearance(site, point, threshold) {
+      const prior = certificates?.[site];
+      if (!prior || !Number.isFinite(coreMotion)) return false;
+      const allowance = prior.distance - (coreMotion - prior.motion) - threshold - 1e-9;
+      return allowance > 0 && point.distanceToSquared(prior.point) < allowance * allowance;
+    }
+    function rememberSiteClearance(site, point, distance) {
+      if (!certificates || !Number.isFinite(coreMotion)) return;
+      const saved = certificates[site] ||= { point: vec() };
+      saved.point.copy(point); saved.distance = distance; saved.motion = coreMotion;
+    }
+    function hasClearance() {
+      if (!collisions.intersectsBox(bounds)) return true;
+      let site = 0;
+      return visitVolume(point => {
+        const id = site++;
+        if (config.acceptVerifiedDebrisClearance && hasSiteClearance(id, point, safeDebrisClearance)) return true;
+        detachedNearestSamples++;
+        const distance = shareClearance ? collisions.clearanceDistance(point, undefined, undefined, safeDebrisClearance) : collisions.signedDistance(point);
+        if (config.acceptVerifiedDebrisClearance) rememberSiteClearance(id, point, distance);
+        return distance >= safeDebrisClearance;
+      });
+    }
+    mapBody();
     if (collisions.intersectsBox(bounds)) {
       const hints = detachedQueryHints ? (panel.detachedHints ||= []) : null;
       // Translate the entire world-space chip out of the *current* live core.
       // Vertex, outer face, triangle center and edge samples stay rigid together.
-      const certificates = detachedClearanceCertificates && config.maxInwardDeformation !== undefined ? (panel.detachedClearance ||= []) : null;
-      const coreMotion = certificates ? collisions.getMotionBound() : undefined;
-      for (let attempt = 0; attempt < 10; attempt++) {
+      let converged = false;
+      for (let attempt = 0; attempt < (config.detachedCollisionIterations ?? 10); attempt++) {
         let queryIndex = 0, site = 0;
-        let minimum = .003; const pushNormal = vec(), sample = (point, ball) => {
-          const id = site++, prior = certificates?.[id];
-          if (prior && Number.isFinite(coreMotion)) {
-            const allowance = prior.distance - (coreMotion - prior.motion) - .003 - 1e-9;
-            if (allowance > 0 && point.distanceToSquared(prior.point) < allowance * allowance) return;
-          }
+        const contacts = config.multiContactCollision ? [] : null;
+        // In the narrow torus ring, accept the same verified safety floor as
+        // the fallback after the first pass toward the preferred margin.
+        const acceptSafeClearance = config.acceptVerifiedDebrisClearance && attempt > 0;
+        const requiredClearance = acceptSafeClearance ? safeDebrisClearance : preferredClearance;
+        let minimum = preferredClearance; const pushNormal = vec(), sample = (point, ball) => {
+          const id = site++;
+          if (hasSiteClearance(id, point, requiredClearance)) return;
           const hint = hints ? (hints[queryIndex++] ||= { faceIndex: panel.vertices[0].sourceFace }) : undefined;
           if (ball && ball.distance > .003 && point.distanceToSquared(ball.point) < (ball.distance - .003 - 1e-10) ** 2) return;
           const motion = hint ? collisions.getMotionBound?.() : undefined, certificate = hint?.clearance;
@@ -411,32 +469,87 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
             const dx = point.x - certificate.x, dy = point.y - certificate.y, dz = point.z - certificate.z;
             if (allowance > 0 && dx * dx + dy * dy + dz * dz < allowance * allowance) return;
           }
-          detachedNearestSamples++; const distance = hint ? collisions.signedDistance(point, normal, hint) : collisions.signedDistance(point, normal);
-          if (certificates && Number.isFinite(coreMotion)) {
-            const saved = certificates[id] ||= { point: vec() };
-            saved.point.copy(point); saved.distance = distance; saved.motion = coreMotion;
-          }
+          detachedNearestSamples++;
+          const distance = shareClearance ? collisions.clearanceDistance(point, normal, hint, requiredClearance) : collisions.signedDistance(point, normal, hint);
+          rememberSiteClearance(id, point, distance);
           if (hint && Number.isFinite(motion)) {
             const saved = hint.clearance ||= {}; saved.x = point.x; saved.y = point.y; saved.z = point.z; saved.distance = distance; saved.motion = motion;
           }
+          if (contacts && distance < requiredClearance) contacts.push({ normal: normal.clone(), depth: requiredClearance - distance });
           if (distance < minimum) { minimum = distance; pushNormal.copy(normal); }
           return distance;
         };
-        const scratch = detachedQueryHints ? (panel.detachedScratch ||= { outer: vec(), centroid: vec(), edge: vec(), ball: {} }) : null;
-        for (const vertex of mapped) { sample(vertex.rendered); sample((scratch ? scratch.outer.copy(vertex.rendered) : vertex.rendered.clone()).addScaledVector(vertex.renderedNormal, config.thickness)); }
-        for (const triangle of panel.triangles) {
-          const points = triangle.map(i => mapped[i].rendered);
-          const centroid = (scratch ? scratch.centroid.copy(points[0]) : points[0].clone()).add(points[1]).add(points[2]).multiplyScalar(1 / 3);
-          const distance = sample(centroid);
-          const ball = scratch ? scratch.ball : undefined; if (ball) { ball.point = centroid; ball.distance = distance; }
-          for (let k = 0; k < 3; k++) sample((scratch ? scratch.edge.copy(points[k]) : points[k].clone()).add(points[(k + 1) % 3]).multiplyScalar(.5), ball);
+        if (config.surfaceContact) {
+          // Thick surface plates carry their full two-sided volume. Include
+          // outer face interiors and fracture-wall edges, not only corners.
+          visitVolume(sample);
+        } else {
+          const scratch = detachedQueryHints ? (panel.detachedScratch ||= { outer: vec(), centroid: vec(), edge: vec(), ball: {} }) : null;
+          for (const vertex of mapped) { sample(vertex.rendered); sample((scratch ? scratch.outer.copy(vertex.rendered) : vertex.rendered.clone()).addScaledVector(vertex.renderedNormal, config.thickness)); }
+          for (const triangle of panel.triangles) {
+            const points = triangle.map(i => mapped[i].rendered);
+            const centroid = (scratch ? scratch.centroid.copy(points[0]) : points[0].clone()).add(points[1]).add(points[2]).multiplyScalar(1 / 3);
+            const distance = sample(centroid);
+            const ball = scratch ? scratch.ball : undefined; if (ball) { ball.point = centroid; ball.distance = distance; }
+            for (let k = 0; k < 3; k++) sample((scratch ? scratch.edge.copy(points[k]) : points[k].clone()).add(points[(k + 1) % 3]).multiplyScalar(.5), ball);
         }
-        if (minimum >= .00299) break;
-        const correction = pushNormal.multiplyScalar((.003 - minimum) * 1.15);
+        }
+        if (minimum >= (acceptSafeClearance ? safeDebrisClearance : .00299)) { converged = true; break; }
+        const correction = pushNormal.multiplyScalar((requiredClearance - minimum) * 1.15);
+        if (contacts) {
+          // A curved plate may touch opposing sides of a concavity. Solve the
+          // current contact half-spaces together rather than oscillating from
+          // the single deepest vertex to another. Re-query the whole volume
+          // after this rigid translation; these linear constraints are only a
+          // candidate correction, never a replacement for exact clearance.
+          correction.set(0, 0, 0);
+          for (let pass = 0; pass < 8; pass++) for (const contact of contacts) {
+            const remaining = contact.depth - correction.dot(contact.normal);
+            if (remaining > 0) correction.addScaledVector(contact.normal, remaining * 1.05);
+          }
+        }
         for (const vertex of mapped) vertex.rendered.add(correction);
         const worldCorrection = correction.clone().applyMatrix3(worldLinear); body.position.add(worldCorrection);
         const direction = worldCorrection.clone().normalize(); body.velocity.addScaledVector(direction, -Math.min(0, body.velocity.dot(direction)));
       }
+      if (config.multiContactCollision && !converged) {
+        mapBody();
+        if (!hasClearance()) {
+          const previous = panel.lastClearDebrisPose;
+          if (previous) {
+            body.position.copy(previous.position);
+            body.rotation.copy(previous.rotation);
+            mapBody();
+          }
+          if (!previous || !hasClearance()) {
+            // A rotating core can invalidate the previous safe pose too.
+            // Find a nearby clear pose before publishing the rigid geometry.
+            const position = body.position.clone();
+            const direction = vec();
+            for (const vertex of mapped) direction.add(vertex.renderedNormal);
+            direction.transformDirection(worldMatrix);
+            const directions = [direction, new THREE.Vector3(0, -1, 0)];
+            let clear = false;
+            for (let distance = .004; distance < 8 && !clear; distance *= 2) {
+              for (const axis of directions) {
+                body.position.copy(position).addScaledVector(axis, distance);
+                mapBody();
+                if (hasClearance()) { clear = true; break; }
+              }
+            }
+            // The verified model bounds are well inside this distance. Keep
+            // growing the downward offset until the entire boxes separate.
+            for (let distance = 8; !clear; distance *= 2) {
+              body.position.copy(position).addScaledVector(directions[1], distance);
+              mapBody(); clear = !collisions.intersectsBox(bounds);
+            }
+          }
+        }
+      }
+    }
+    if (config.multiContactCollision) {
+      const pose = panel.lastClearDebrisPose ||= { position: vec(), rotation: new THREE.Quaternion() };
+      pose.position.copy(body.position); pose.rotation.copy(body.rotation);
     }
     panel.renderBounds ||= new THREE.Box3(); panel.renderBounds.makeEmpty();
     for (const vertex of mapped) panel.renderBounds.expandByPoint(vertex.rendered);
@@ -783,7 +896,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
 
     const changed = dirty; if (changed) sync(); return { changed, needsFrame: active || living };
   }
-  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.attachedCacheBounds = null; p.attachedCache = null; p.detachedClearance = null; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
+  function reset() { end(); debris.reset(); attachedCorrectionMax = 0; attachedCorrectionTotalMax = 0; attachedCorrectedSamples = 0; worstAttachedCorrection = null; correctionGeometrySnapshot = null; totalDetached = 0; chainWaves = 0; lastDamageTime = null; visibleCrackEdges.clear(); for (const p of panels) { p.cracked = p.detached = p.dead = p.retained = p.loose = p.mainRing = p.strainCracked = false; p.strainEdges = 0; p.attachedCacheBounds = null; p.attachedCache = null; p.detachedClearance = null; p.lastClearDebrisPose = null; p.openVertexMask.fill(0); p.fractureAt = undefined; p.lift = 0; p.frozen = null; p.offset.set(0, 0, 0); } dirty = true; sync(); }
   function getState() { return { active, cracked: panels.filter(p => p.cracked).length, attachedCracked: panels.filter(p => p.cracked && !p.detached).length, attachedPartialBranches: panels.filter(p => p.cracked && !p.detached && !p.loose && p.boundaryGroups.some(g => visibleCrackEdges.has(g.key)) && !p.boundaryGroups.every(g => visibleCrackEdges.has(g.key))).length, visibleLongCrackEdges: visibleCrackEdges.size, detached: totalDetached, living: panels.filter(p => p.detached && !p.dead && !debris.get(p.id)?.settled).length, settled: debris.state().settled, expired: panels.filter(p => p.dead).length, collectionEnabled: debris.isCollectionEnabled(), debris: debris.state(), firstBurst: panels.filter(p => p.detached && p.burst).length, burstDuration: .07, burstInitialOutwardSpeed: 0, maxOutwardOffset: Math.max(0, ...panels.filter(p => p.detached && !p.dead).map(p => p.offset.dot(p.outward))), dwell: active ? Math.max(0, now - since) : 0, disposed, topology: 'random-spaced-clipped-voronoi', panels: panels.length, visibleCrackRadius: .53, localDamaged: stroke?.cohort.length || 0, localDetached: stroke?.detachCount || 0, chainWaveCount: chainWaves, lastDamageTime, heldStrain: active && stroke?.fractured ? depth() - stroke.baselineDepth : 0, maxDetachedPerContact: config.maxLocalFragments, localRetainedFraction: stroke?.cohort.length ? stroke.cohort.filter(p => !p.detached).length / stroke.cohort.length : 1 }; }
   function getMetrics({ exhaustive = false } = {}) {
     let minGap = Infinity, minSigned = Infinity, maxThicknessError = 0, attachedSamples = 0, attachedSurfaceSamples = 0, attachedViolations = 0, detachedSamples = 0, detachedInteriorSamples = 0, detachedMin = Infinity, detachedViolations = 0, wallSamples = 0;

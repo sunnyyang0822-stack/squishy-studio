@@ -1,0 +1,19 @@
+{"core":"clay","thickness":"thin","repeat":0,"samples":169,"p95Ms":56.800000000046566}
+{"core":"clay","thickness":"thick","repeat":0,"samples":258,"p95Ms":39.800000000046566}
+{"core":"clay","thickness":"thick","repeat":1,"samples":227,"p95Ms":51.699999999953434}
+{"core":"clay","thickness":"thin","repeat":1,"samples":160,"p95Ms":48.5}
+{"core":"clay","thickness":"thin","repeat":2,"samples":183,"p95Ms":50.699999999953434}
+{"core":"clay","thickness":"thick","repeat":2,"samples":265,"p95Ms":33.39999999990687}
+{"core":"marshmallow","thickness":"thin","repeat":0,"samples":326,"p95Ms":33.29999999993015}
+{"core":"marshmallow","thickness":"thick","repeat":0,"samples":162,"p95Ms":59.79999999993015}
+{"core":"marshmallow","thickness":"thick","repeat":1,"samples":176,"p95Ms":65.69999999995343}
+{"core":"marshmallow","thickness":"thin","repeat":1,"samples":299,"p95Ms":42.699999999953434}
+{"core":"marshmallow","thickness":"thin","repeat":2,"samples":289,"p95Ms":42.20000000006985}
+{"core":"marshmallow","thickness":"thick","repeat":2,"samples":161,"p95Ms":58.699999999953434}
+{"core":"butter","thickness":"thin","repeat":0,"samples":210,"p95Ms":45.699999999953434}
+{"core":"butter","thickness":"thick","repeat":0,"samples":188,"p95Ms":52.59999999997672}
+{"core":"butter","thickness":"thick","repeat":1,"samples":178,"p95Ms":56.09999999997672}
+{"core":"butter","thickness":"thin","repeat":1,"samples":191,"p95Ms":45.59999999997672}
+{"core":"butter","thickness":"thin","repeat":2,"samples":201,"p95Ms":47.5}
+{"core":"butter","thickness":"thick","repeat":2,"samples":170,"p95Ms":57.90000000002328}
+Exit: 0

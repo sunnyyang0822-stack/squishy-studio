@@ -17,10 +17,10 @@ export const isThinWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.sty
 const isLegacyOrbClayWax = recipe => recipe.styleId === 'orb' && recipe.coreMaterial === 'clay' && isThinWaxRecipe(recipe);
 export const canRestartThinWax = (step, recipe) => isThinWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && isLegacyOrbClayWax(recipe));
 export const isMediumWaxRecipe = recipe => recipe.styleId !== 'paw' && Object.hasOwn(squishyStyles, recipe.styleId) && squishyStyles[recipe.styleId].supportedFeels.includes(recipe.coreMaterial === 'butter' ? 'slow-rebound' : recipe.coreMaterial) && (recipe.coreMaterial === 'clay' || recipe.styleId !== 'paw' && ['marshmallow', 'butter'].includes(recipe.coreMaterial)) && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'medium';
-// Thick wax composes with the three verified orb cores. Non-clay cores
-// remain making previews; their legacy final play still restores the bare core.
-export const isThickWaxRecipe = recipe => recipe.styleId === 'orb' && ['clay', 'marshmallow', 'butter'].includes(recipe.coreMaterial) && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thick';
-export const canRestartWax = (step, recipe) => canRestartThinWax(step, recipe) || isMediumWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && recipe.styleId === 'orb' && recipe.coreMaterial === 'clay') || isThickWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && recipe.coreMaterial === 'clay');
+// Thick wax composes with verified non-paw models and their registered cores.
+// Only the original clay orb keeps its existing final-play shell.
+export const isThickWaxRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && recipe.styleId !== 'paw' && squishyStyles[recipe.styleId].supportedFeels.includes(recipe.coreMaterial === 'butter' ? 'slow-rebound' : recipe.coreMaterial) && ['clay', 'marshmallow', 'butter'].includes(recipe.coreMaterial) && recipe.shellMaterial === 'wax' && recipe.waxThickness === 'thick';
+export const canRestartWax = (step, recipe) => canRestartThinWax(step, recipe) || isMediumWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && recipe.styleId === 'orb' && recipe.coreMaterial === 'clay') || isThickWaxRecipe(recipe) && (['shell', 'decoration'].includes(step) || step === 'play' && recipe.styleId === 'orb' && recipe.coreMaterial === 'clay');
 // Polish composes with the three registered cores; the paw stays excluded.
 export const isPolishRecipe = recipe => Object.hasOwn(squishyStyles, recipe.styleId) && recipe.styleId !== 'paw' && ['clay', 'marshmallow', 'butter'].includes(recipe.coreMaterial) && recipe.shellMaterial === 'polish';
 export const canRestartShell = (step, recipe) => canRestartWax(step, recipe) || isPolishRecipe(recipe) && ['shell', 'decoration', 'play'].includes(step);
@@ -93,7 +93,7 @@ export function createDetailController({ renderer, audio, onChange = () => {}, s
     const wasMaking = state.step === 'making';
     state = { ...state, step }; refreshDerived();
     if (step === 'making') { ++revision; pending?.abort(); pending = undefined; renderer.stopInput?.(); emit(); return; }
-    const preserveDamage = isMediumWaxRecipe(state.recipe) && (step !== 'play' || state.recipe.styleId === 'orb' && state.recipe.coreMaterial === 'clay') || isPolishRecipe(state.recipe) || (isThickWaxRecipe(state.recipe) || isThinWaxRecipe(state.recipe)) && (step !== 'play' || isLegacyOrbClayWax(state.recipe) || isThickWaxRecipe(state.recipe) && state.recipe.coreMaterial === 'clay');
+    const preserveDamage = isMediumWaxRecipe(state.recipe) && (step !== 'play' || state.recipe.styleId === 'orb' && state.recipe.coreMaterial === 'clay') || isPolishRecipe(state.recipe) || (isThickWaxRecipe(state.recipe) || isThinWaxRecipe(state.recipe)) && (step !== 'play' || isLegacyOrbClayWax(state.recipe) || isThickWaxRecipe(state.recipe) && state.recipe.styleId === 'orb' && state.recipe.coreMaterial === 'clay');
     if (wasMaking && step === 'play' && !preserveDamage) {
       // Preview-only recipes keep the legacy final core restore without
       // repairing the same recipe's temporarily hidden preview shell.

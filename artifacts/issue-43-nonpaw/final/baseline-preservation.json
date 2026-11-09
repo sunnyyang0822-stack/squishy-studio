@@ -1,0 +1,51 @@
+{
+  "recordedAt": "2026-11-08T08:55:27.397Z",
+  "initialBase": "b65038c2c6c82ed299b2e911700580fa66c4a4dd",
+  "integratedBase": "fa68f6c2e84ec97e03ece2d35b2ac126df2de162",
+  "head": "1a6db2e1e6a8b3614e23213cdc8b7a9956c4a068",
+  "branch": "codex/issue-43-thick-non-paw",
+  "shared": [
+    {
+      "path": "src/orb-deformation.mjs",
+      "headBlob": "25a9cccdb0edb4e691b6f5a9e5ee35d129807463",
+      "baselineBlob": "25a9cccdb0edb4e691b6f5a9e5ee35d129807463",
+      "matchesMain": true
+    },
+    {
+      "path": "src/orb-marshmallow.mjs",
+      "headBlob": "ad5075359505d744f33f6aeeef98be9ff02912b0",
+      "baselineBlob": "ad5075359505d744f33f6aeeef98be9ff02912b0",
+      "matchesMain": true
+    },
+    {
+      "path": "src/orb-slow-rebound.mjs",
+      "headBlob": "e3a6765822408c62e22b829258629c1d29e7de5f",
+      "baselineBlob": "e3a6765822408c62e22b829258629c1d29e7de5f",
+      "matchesMain": true
+    },
+    {
+      "path": "src/surface-clay.mjs",
+      "headBlob": "9ab9beafea47c710094e85a7daca3f6a37640a02",
+      "baselineBlob": "9ab9beafea47c710094e85a7daca3f6a37640a02",
+      "matchesMain": true
+    },
+    {
+      "path": "src/polish-shell.mjs",
+      "headBlob": "32df89d1dc68fbfeb1687b64cc244f719c450377",
+      "baselineBlob": "32df89d1dc68fbfeb1687b64cc244f719c450377",
+      "matchesMain": true
+    },
+    {
+      "path": "src/thin-wax.mjs",
+      "headBlob": "660bf21cf4a31184f83827a384e9f940e1210e08",
+      "baselineBlob": "660bf21cf4a31184f83827a384e9f940e1210e08",
+      "matchesMain": true
+    },
+    {
+      "path": "src/thin-wax-debris.mjs",
+      "headBlob": "dd0822c110f4e0324945e13e8502db04a6ec4e2f",
+      "baselineBlob": "dd0822c110f4e0324945e13e8502db04a6ec4e2f",
+      "matchesMain": true
+    }
+  ]
+}

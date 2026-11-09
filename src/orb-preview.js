@@ -458,7 +458,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       const thinRecipe = supportedThinCore && config.shellMaterial === 'wax' && config.waxThickness === 'thin' && (style.id === 'orb' || config.waxCollection === false);
       const mediumCore = style.id !== 'paw' && (feelId === 'clay' || ['marshmallow', 'slow-rebound'].includes(feelId) && config.waxCollection === false);
       const mediumRecipe = mediumCore && config.shellMaterial === 'wax' && config.waxThickness === 'medium' && (style.id === 'orb' || config.waxCollection === false);
-      const thickRecipe = supportedWaxCore && style.id === 'orb' && config.shellMaterial === 'wax' && config.waxThickness === 'thick';
+      const thickRecipe = supportedThinCore && style.id !== 'paw' && config.shellMaterial === 'wax' && config.waxThickness === 'thick' && (style.id === 'orb' || config.waxCollection === false);
       const waxRecipe = thinRecipe || mediumRecipe || thickRecipe;
       const polishRecipe = ['clay', 'marshmallow', 'slow-rebound'].includes(feelId) && style.id !== 'paw' && config.shellMaterial === 'polish';
       const changed = recipeKey !== undefined && recipeKey !== config.recipeKey;
@@ -478,7 +478,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, presetId, fe
       if (polish) { polish.group.visible = shellVisible && polishRecipe; polish.sync(); }
       if (waxRecipe && !wax) {
         const shellColor = orbColors.find(color => color.id === config.shellColor) || orbColors[0];
-        wax = getWaxPreset(thickRecipe ? 'thick-wax' : mediumRecipe ? 'medium-wax' : 'thin-wax').create({ styleId: style.id, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: thinRecipe && feelId === 'slow-rebound' && style.id === 'donut', cacheAttachedPanels: !mediumRecipe && style.id !== 'paw', fullSurfaceSupport: (feelId === 'marshmallow' || (thinRecipe || mediumRecipe) && feelId === 'slow-rebound') && isSurface });
+        wax = getWaxPreset(thickRecipe ? 'thick-wax' : mediumRecipe ? 'medium-wax' : 'thin-wax').create({ styleId: style.id, feelId, geometry, restPositions, restNormals, color: shellColor.hex, reducedMotion: motionPreference.matches, collectionEnabled, compactPanels: thinRecipe && feelId === 'slow-rebound' && style.id === 'donut', cacheAttachedPanels: !mediumRecipe && style.id !== 'paw', fullSurfaceSupport: (feelId === 'marshmallow' || feelId === 'slow-rebound') && isSurface });
         mesh.add(wax.group);
         pivot.updateMatrixWorld(true); wax.setWorldMatrix(mesh.matrixWorld);
       }

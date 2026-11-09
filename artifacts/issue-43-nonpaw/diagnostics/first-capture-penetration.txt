@@ -1,0 +1,13 @@
+AssertionError [ERR_ASSERTION]: {"thickness":0.042,"gap":0.004,"tolerance":0.00001,"attachedMinGap":0.003999941816729222,"attachedMinSignedDistance":0.0039902001440780665,"worstAttachedSample":{"panelId":11,"point":[-0.26775988936424255,-0.07644169280926386,0.03863622701073588],"distance":0.0039902001440780665,"sampleKind":"inner-face-center","sourceFace":6670,"renderTriangleId":15881,"panelTriangle":864,"cracked":false,"supportOnly":true,"complexSurface":false,"lift":0},"attachedMaxSignedDistance":0.004000054803871043,"worstAttachedMaxSample":{"panelId":2,"point":[-0.38704296946525574,1.081713080406189,0.11491472274065018],"distance":0.004000054803871043,"sampleKind":"inner-vertex","sourceFace":3650,"renderedVertex":1776},"attachedOuterMaxSignedDistance":0.04600005486241045,"attachedWallMaxSignedDistance":0.03199994175039268,"worstAttachedCorrection":null,"attachedCorrectionMax":0,"attachedCorrectionTotalMax":0,"attachedCorrectedSamples":0,"maxThicknessError":2.129195292924213e-7,"attachedSamples":7119,"attachedSurfaceSamples":85158,"attachedViolations":0,"detachedSweepSamples":0,"logicalSweepSamples":0,"duplicateSweepSamples":0,"zeroLengthSweepSamples":0,"detachedMinSignedDistance":-0.0004892968917093298,"detachedSamples":3846,"detachedInteriorSamples":12800,"detachedViolations":6,"wallSamples":7096,"drawCalls":1,"shellVertices":39096,"shellTriangles":42304,"patches":36,"debris":{"floorY":-1.35,"radius":1.35,"moving":2,"settled":0,"minY":-2.7485906197628487,"maxRadius":1.2982477790313687,"pileTop":-1.35,"gridCells":0},"panelAreaCV":0.20949091971501058,"panelAreaRange":[0.20858093511892453,0.5539406795504145],"method":"Random-spaced Voronoi-clipped original triangles; majority bound cracked support, frozen rigid detached templates; dynamic BVH sweeps and signed vertex/face/edge/wall checks"}
+
+6 !== 0
+
+    at geometryOK (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\tests\helpers\wax-style-probe.cjs:44:68)
+    at main (D:\squishy-studio\.worktrees\issue-43-thick-non-paw\scripts\capture-thick-nonpaw.cjs:106:90) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 6,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

@@ -6,7 +6,7 @@ export const thinWaxParameters = Object.freeze({ thickness: .014, gap: .004, dwe
 
 // A refitted triangle BVH, used for segment sweeps against the actual deformed
 // mesh. No sphere/radial proxy is used, including inside a torus hole.
-export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, motionTracking = false, queryCache = true, featureNormals = false, lazyFeatureNormals = true, exactGridTies = true, trackChanges = false, trackRelativeMotion = false, restPositions, featureTieConsensus = false, performanceOptimizations = false } = {}) {
+export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = false, motionTracking = false, queryCache = true, featureNormals = false, lazyFeatureNormals = true, exactGridTies = true, trackChanges = false, trackRelativeMotion = false, restPositions, featureTieConsensus = false, performanceOptimizations = false, shareClearance = false } = {}) {
   let countQueries = false;
   const p = geometry.attributes.position, index = geometry.index.array;
   const a = new THREE.Vector3(), b = a.clone(), c = a.clone(), hit = a.clone();
@@ -60,6 +60,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
   const gridSize = root.box.getSize(new THREE.Vector3()).divideScalar(cellSize).ceil().addScalar(2);
   const gridCells = gridSize.x * gridSize.y * gridSize.z;
   const gridHeads = nearestGrid && gridCells <= 1000000 ? new Int32Array(gridCells) : null;
+  const clearanceCells = shareClearance && features && gridHeads ? new Float64Array(gridCells * 5) : null;
   const cellRevision = gridHeads ? new Uint32Array(gridCells) : null, markedFrame = gridHeads ? new Uint32Array(gridCells) : null;
   const cacheOwner = {}; let refitFrame = 0, cacheEpoch = 0;
   let frameMotionSquared = 0, accumulatedMotion = 0;
@@ -111,7 +112,7 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     }
   }
   function rebuildGrid() {
-    if(!performanceOptimizations)return rebuildGridLegacy();
+    if (!performanceOptimizations && !clearanceCells) return rebuildGridLegacy();
     if (!gridHeads) return;
     const complete = !gridValid;
     if (complete) { gridHeads.fill(-1); faceFirst.fill(-1); linkCount = 0; freeLink = -1; }
@@ -512,7 +513,35 @@ export function createWaxCollisionTree(geometry, { leafSize = 4, nearestGrid = f
     if (featureTieRegion) rememberQuery(siteHint, point, ...featureTieRegion, lastNearestFace, distance, distanceSquared);
     return distance;
   }
-  return { refit, sweep, signedDistance, relativeMotionInRegion, getRefitFrame: () => refitFrame, intersectsChanges: box => !trackChanges || changedBounds.intersectsBox(box), clearanceDistance: performanceOptimizations ? (point, normal, hint, threshold) => signedDistance(point, normal, hint, threshold) : undefined, changedNearBox: performanceOptimizations ? box => changedBounds.intersectsBox(box) && changedLeafBounds.some(changed => changed.intersectsBox(box)) : undefined, getMotionBound: () => gridHeads || motionTracking ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
+  function clearanceDistance(point, normal, hint, threshold) {
+    if (!clearanceCells) return signedDistance(point, normal, hint, threshold);
+    const padding = 1e-9;
+    const bound = boxDistanceSquared(root.box, point);
+    if (bound > (threshold + padding) ** 2) return Math.sqrt(bound) - padding;
+    const x = Math.floor((point.x - gridOrigin.x) / cellSize);
+    const y = Math.floor((point.y - gridOrigin.y) / cellSize);
+    const z = Math.floor((point.z - gridOrigin.z) / cellSize);
+    if (x < 0 || y < 0 || z < 0 || x >= gridSize.x || y >= gridSize.y || z >= gridSize.z) return signedDistance(point, normal, hint);
+    const i = ((z * gridSize.y + y) * gridSize.x + x) * 5;
+    // A positive sample proves neighboring clearance after subtracting both
+    // the query displacement and the bound on the core's intervening motion.
+    // The cell only locates a candidate. Crossing a cell or returning a cached
+    // answer never substitutes a grid distance for an actual contact.
+    const radius = clearanceCells[i + 3] - (accumulatedMotion - clearanceCells[i + 4]);
+    const allowance = radius - threshold - padding;
+    if (allowance > 0) {
+      const dx = point.x - clearanceCells[i], dy = point.y - clearanceCells[i + 1], dz = point.z - clearanceCells[i + 2];
+      const delta = dx * dx + dy * dy + dz * dz;
+      if (delta < allowance * allowance) return radius - Math.sqrt(delta) - padding;
+    }
+    const distance = signedDistance(point, normal, hint);
+    if (distance > Math.max(threshold, radius)) {
+      clearanceCells[i] = point.x; clearanceCells[i + 1] = point.y; clearanceCells[i + 2] = point.z;
+      clearanceCells[i + 3] = distance; clearanceCells[i + 4] = accumulatedMotion;
+    }
+    return distance;
+  }
+  return { refit, sweep, signedDistance, relativeMotionInRegion, getRefitFrame: () => refitFrame, intersectsChanges: box => !trackChanges || changedBounds.intersectsBox(box), clearanceDistance: performanceOptimizations || shareClearance ? clearanceDistance : undefined, changedNearBox: performanceOptimizations ? box => changedBounds.intersectsBox(box) && changedLeafBounds.some(changed => changed.intersectsBox(box)) : undefined, getMotionBound: () => gridHeads || motionTracking ? accumulatedMotion : undefined, getLastNearestFace: () => lastNearestFace, getSurfaceTopology: () => features?.topology, getSurfaceRevision: () => surfaceRevision, getQueryCounters: (enable = false) => { if (enable) countQueries = true; return { enabled: countQueries, ...counters }; }, intersectsBox: box => root.box.intersectsBox(box) };
 }
 
 export const smallThinWaxParameters = Object.freeze({ ...thinWaxParameters, seedCount: 260, maxFragments: 280, maxLocalFragments: 280 });
