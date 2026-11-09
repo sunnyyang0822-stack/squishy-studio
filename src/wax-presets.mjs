@@ -49,7 +49,7 @@ export const thickWaxSurfaceParameters = Object.freeze({ ...thickWaxParameters, 
 // The torus needs surface-distance cells and a larger bounded collision solve.
 // Neither changes the physical thickness or the shared fracture timing.
 export const thickWaxDonutParameters = Object.freeze({ ...thickWaxSurfaceParameters, detachedCollisionIterations: 40, multiContactCollision: true });
-const thickWaxMarshmallowDonutParameters = Object.freeze({ ...thickWaxDonutParameters, detachedCollisionIterations: 4, acceptVerifiedDebrisClearance: true });
+const thickWaxMarshmallowDonutParameters = Object.freeze({ ...thickWaxDonutParameters, detachedCollisionIterations: 4, acceptVerifiedDebrisClearance: true, shareClearance: true });
 const thickWax = Object.freeze({
   id: 'thick-wax', material: 'wax', thickness: 'thick',
   parameters: thickWaxParameters,

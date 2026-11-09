@@ -156,7 +156,7 @@ function buildPanels(rest, index, count = 180, surfaceSites = false, compact = f
   return connectedPanels;
 }
 
-export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, compactPanels = false, relativeSupport = compactPanels, cacheAttachedPanels = true, supportCertificates = true, detachedClearanceCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false, attachedSupportPasses = 8 } = {}, config, makeCollisionTree) {
+export function createVoronoiWax({ geometry, restPositions, restNormals, color = '#eed3af', clock = () => performance.now() / 1000, reducedMotion = false, collectionEnabled = true, fullSurfaceSupport = false, compactPanels = false, relativeSupport = compactPanels, cacheAttachedPanels = true, supportCertificates = true, detachedClearanceCertificates = true, captureCorrectionGeometry = false, freezeRenderedFragments = false, detachedQueryHints = false, supportClusters = false, featureTieConsensus = false, performanceOptimizations = false, attachedSupportPasses = 8, sharedClearance = true } = {}, config, makeCollisionTree) {
   if (!geometry?.index || !geometry.attributes.normal) throw new TypeError('Thin wax requires indexed source geometry');
   const source = geometry.attributes.position.array, normals = geometry.attributes.normal.array;
   const rest = restPositions?.slice() || source.slice(), referenceNormals = restNormals?.slice() || normals.slice();
@@ -244,7 +244,8 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
   const material = new THREE.MeshStandardMaterial({ color, roughness: .64, metalness: 0, vertexColors: true });
   const mesh = new THREE.Mesh(shell, material); mesh.frustumCulled = false;
   const group = new THREE.Group(); group.name = 'Thin_Wax_Voronoi'; group.add(mesh);
-  const collisions = makeCollisionTree(geometry, { motionTracking: config.maxInwardDeformation !== undefined, nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, lazyFeatureNormals: !featureTieConsensus, exactGridTies: !featureTieConsensus, trackChanges: reuseAttached || relativeSupport, trackRelativeMotion: relativeSupport, restPositions: rest, featureTieConsensus, performanceOptimizations });
+  const shareClearance = fullSurfaceSupport && config.shareClearance && sharedClearance;
+  const collisions = makeCollisionTree(geometry, { motionTracking: config.maxInwardDeformation !== undefined, nearestGrid: fullSurfaceSupport || panels.some(panel => panel.complexSurface), featureNormals: fullSurfaceSupport, lazyFeatureNormals: !featureTieConsensus, exactGridTies: !featureTieConsensus, trackChanges: reuseAttached || relativeSupport, trackRelativeMotion: relativeSupport, restPositions: rest, featureTieConsensus, performanceOptimizations, shareClearance });
   const visibleCrackEdges = new Set();
   const debris = createWaxDebris({ thickness: config.thickness, reducedMotion, collectionEnabled });
   const worldMatrix = new THREE.Matrix4(), worldInverse = new THREE.Matrix4(), worldLinear = new THREE.Matrix3();
@@ -439,7 +440,7 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
         const id = site++;
         if (config.acceptVerifiedDebrisClearance && hasSiteClearance(id, point, safeDebrisClearance)) return true;
         detachedNearestSamples++;
-        const distance = collisions.signedDistance(point);
+        const distance = shareClearance ? collisions.clearanceDistance(point, undefined, undefined, safeDebrisClearance) : collisions.signedDistance(point);
         if (config.acceptVerifiedDebrisClearance) rememberSiteClearance(id, point, distance);
         return distance >= safeDebrisClearance;
       });
@@ -468,7 +469,8 @@ export function createVoronoiWax({ geometry, restPositions, restNormals, color =
             const dx = point.x - certificate.x, dy = point.y - certificate.y, dz = point.z - certificate.z;
             if (allowance > 0 && dx * dx + dy * dy + dz * dz < allowance * allowance) return;
           }
-          detachedNearestSamples++; const distance = hint ? collisions.signedDistance(point, normal, hint) : collisions.signedDistance(point, normal);
+          detachedNearestSamples++;
+          const distance = shareClearance ? collisions.clearanceDistance(point, normal, hint, requiredClearance) : collisions.signedDistance(point, normal, hint);
           rememberSiteClearance(id, point, distance);
           if (hint && Number.isFinite(motion)) {
             const saved = hint.clearance ||= {}; saved.x = point.x; saved.y = point.y; saved.z = point.z; saved.distance = distance; saved.motion = motion;
