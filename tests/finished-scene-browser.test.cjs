@@ -159,6 +159,22 @@ test('finished adapter rejects paused recipes, aborts races, and reports load fa
   } finally { await page.close(); }
 });
 
+test('initializing a damaged product locks background rotation until its real full restore completes', { timeout: 60000 }, async () => {
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${base}/tests/fixtures/finished-scene.html`); await page.evaluate(() => window.ready);
+    await page.locator('.orb-input').focus(); await page.keyboard.down('Space');
+    await page.waitForFunction(() => document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }).coreState.depth > .05);
+    await page.keyboard.up('Space'); assert.ok(maximumDepth(await diagnostic(page)) > .03);
+    await page.evaluate(() => { window.reopening = window.finished.initialize(window.recipe); });
+    await page.waitForFunction(() => document.querySelector('.orb-input').disabled);
+    await page.mouse.move(2, 2); await page.mouse.down(); await page.mouse.move(70, 35, { steps: 5 }); await page.mouse.up();
+    await page.evaluate(() => window.reopening);
+    assert.equal(maximumDepth(await diagnostic(page)), 0); assert.equal(await page.locator('.orb-input').isEnabled(), true);
+    await page.evaluate(() => window.finished.dispose());
+  } finally { await page.close(); }
+});
+
 test('finished polish regression retains the confirmed film for all seven styles and three cores', { timeout: 180000 }, async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
   try {

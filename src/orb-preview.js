@@ -423,7 +423,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, onSceneEvent
     const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
     const turn = new THREE.Quaternion(), worldPoint = new THREE.Vector3();
-    current.rotation = bindOrbRotation({ isSqueezing: current.input.isActive, rotate(dx, dy) {
+    current.rotation = bindOrbRotation({ isSqueezing: () => current.input.isActive() || surface.disabled || !mount.getClientRects().length || getComputedStyle(mount).visibility === 'hidden', rotate(dx, dy) {
       interruptRestore();
       up.set(0, 1, 0).applyQuaternion(camera.quaternion); right.set(1, 0, 0).applyQuaternion(camera.quaternion);
       pivot.quaternion.premultiply(turn.setFromAxisAngle(up, dx));

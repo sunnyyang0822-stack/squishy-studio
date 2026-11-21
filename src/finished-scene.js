@@ -14,7 +14,7 @@ export function createFinishedScene(mount, { onUnavailable = () => {}, onEvent, 
     },
     onSceneEvent(event) {
       if (disposed) return;
-      if (event.type === 'scene-ready' && pending?.key === event.recipeKey) { report('ready'); pending.resolve(); }
+      if (event.type === 'scene-ready' && pending?.key === event.recipeKey) { const request = pending; request.resolve(); report('ready'); }
       onEvent?.(event);
     },
   });
@@ -45,6 +45,7 @@ export function createFinishedScene(mount, { onUnavailable = () => {}, onEvent, 
       await ready;
     } catch (error) {
       if (!disposed && ownRevision === revision && error.name !== 'AbortError') report('failed', error);
+      else if (!disposed && ownRevision === revision) report('idle');
       throw error;
     } finally {
       handle?.dispose(); signal?.removeEventListener('abort', abort);

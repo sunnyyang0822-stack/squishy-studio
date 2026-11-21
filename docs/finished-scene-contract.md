@@ -37,8 +37,11 @@ scene.dispose();
 - 蜡为 `thin/medium/thick`；指甲油有效配方必须 `waxThickness:null`。糖、猫爪、未知材质/颜色明确拒绝 `UNSUPPORTED_RECIPE`，不静默回退裸芯或改成圆球黏土。
 - `initialize/update` 都在完整壳已真实绘制、芯和姿态完成原恢复时钟后 resolve，GLB/引擎/渲染错误可失败；不能以模块已下载冒充场景就绪。同配方再次打开也重建完整损伤状态，准备期间禁用新成品的输入，避免中途打断恢复后把旧压痕带入作品。实例切换仍用现有 `createModelPreview` 的 prepare/commit/dispose、revision 和 AbortSignal。
 - 更新最新请求生效，旧异步准备被取消/释放。加载失败保留已提交场景，调用方可重试。停止输入、取消、失焦、后台沿原宿主流程；dispose 幂等并释放输入、rAF、WebGL、外壳和碎片。
+- 后台旋转沿原鼠标手势，但已隐藏的挂载区和输入处于 disabled 的初始化成品不得获得全局旋转手势，避免打断完整恢复或让未选中的预览一起旋转。当前请求取消后状态回到 idle；ready 消费端同步切换/销毁不会抢走原请求的就绪 Promise。
 - `restore()` 仅在 ready 且无 pending 更新时执行，复用原宿主的完整壳 `reset` 与芯/颜色/姿态恢复时钟；不改配方。恢复为渐进过程，`shell-restore` 表示壳已完整重新绘制，芯仍可处于渐进恢复。
 - 成品显式传 `mode:'finished', waxCollection:false`，复用已确认的碎片掉落清理路径。没有新增收集盘玩法。三个蜡预设和三种内芯工厂、参数、几何安全检查均不变。
+- 初始化挂载区必须保留非零布局尺寸；合成期间可用 `visibility:hidden` 隐藏，但不要先 `display:none` 再等待真实绘制的 ready Promise 才显示，否则不会产生可绘制帧。离开合成/场景时由 A 取消传入的 AbortSignal。
+- `supports()` 表示当前已实现的配方与渲染能力，不等于发布验收。A 开放成品组合时还必须遵守 `artifacts/wax-product/matrix.md` 的性能阻塞；本轮存在长帧且真机未验收，不能仅凭 boolean 宣称所有组合流畅。
 
 ## C：真实事件合同 v1
 
@@ -76,6 +79,6 @@ scene.dispose();
 
 ## 共享文件与回滚
 
-唯一手改共享渲染文件为 `src/orb-preview.js`：增加可选真实事件观察器、渲染就绪通知与成品模式猫爪防护。其余新增模块与测试由 B 独占；`assets/orb-preview.js` 为该源码重新构建的产物。集成者先顺序合并本 PR，再由 A 接入页面提供者；不替 A 修改其 PR/Issue。
+唯一手改共享渲染文件为 `src/orb-preview.js`：增加可选真实事件观察器、渲染就绪通知、成品模式猫爪防护，以及隐藏/初始化时的全局旋转保护。其余新增模块与测试由 B 独占；`assets/orb-preview.js` 为该源码重新构建的产物。集成者先顺序合并本 PR，再由 A 接入页面提供者；不替 A 修改其 PR/Issue。
 
 回滚 B 对应提交并运行 `npm run build:orb` 即恢复旧共享宿主；A 若已接入应同时撤销提供者导入。没有数据/作品存储迁移。本 PR 仅关联 #3/#38/#41/#43/#53，不关闭这些 Issue，不自行合并。
