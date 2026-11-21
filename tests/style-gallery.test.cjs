@@ -15,16 +15,18 @@ before(async () => {
 after(async()=>{await browser?.close();server?.kill()});
 const ready=page=>page.waitForSelector('.toy-stage[data-state=ready] .toy-mount[data-render-count] canvas');
 
-test('八种样式登记与静态入口、真实模型登记及配方一致',async()=>{
+test('首版七种制作入口与猫爪暂停，原八种模型登记及配方仍一致',async()=>{
   const {galleryStyles,galleryHref}=await gallery;
-  assert.equal(galleryStyles.length,8);
-  assert.equal(new Set(galleryStyles.map(s=>s.id)).size,8);
+  assert.equal(galleryStyles.length,7);
+  assert.equal(new Set(galleryStyles.map(s=>s.id)).size,7);
   const { squishyStyles } = await import('../src/squishy-styles.mjs');
-  assert.deepEqual(galleryStyles, Object.values(squishyStyles));
+  assert.deepEqual(galleryStyles, Object.values(squishyStyles).filter(style=>style.id!=='paw'));
   const {styleNames,defaultRecipe}=await import('../detail/state.mjs');
-  assert.deepEqual(Object.keys(styleNames),galleryStyles.map(s=>s.id));assert.equal(defaultRecipe.styleId,'orb');
+  assert.deepEqual(Object.keys(styleNames),Object.keys(squishyStyles));assert.equal(defaultRecipe.styleId,'orb');
   const page=await browser.newPage();await page.goto(base+'/collections/');
   assert.equal(await page.locator('.style-card').count(),8);
+  assert.equal(await page.locator('#style-paw a, #style-paw button').count(),0);
+  assert.equal(await page.locator('#style-paw .style-state').innerText(),'暂停制作');
   for(const style of galleryStyles){
     const card=page.locator(`#style-${style.id}`);
     assert.equal(await card.getByRole('heading').innerText(),style.name);
@@ -43,7 +45,7 @@ test('八种样式登记与静态入口、真实模型登记及配方一致',asy
   await page.close();
 });
 
-test('八个入口请求对应真实模型；刷新、返回原样式、昼夜状态一致',async()=>{
+test('七个首版入口请求对应真实模型；旧详情、刷新、返回原样式、昼夜状态一致',async()=>{
   const {galleryStyles}=await gallery;
   const page=await browser.newPage();const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
@@ -115,7 +117,7 @@ test('五种尺寸昼夜大厅无溢出、入口44px；详情画布设置不重�
         const box=await link.boundingBox();assert.ok(box.width>=44&&box.height>=44,JSON.stringify(box));
       }
       const link=page.locator('#style-star a');await link.scrollIntoViewIfNeeded();
-      if(width===390){await Promise.all([page.waitForURL('**/squishy/cloud/**'),link.tap()])}
+      if(width===390){await Promise.all([page.waitForURL('**/make/**'),link.tap()])}
       else{await link.focus();assert.equal(await page.locator('#style-star').evaluate(el=>getComputedStyle(el).outlineStyle),'solid');await page.keyboard.press('Enter')}
       await ready(page);
       assert.equal(await page.locator('html').getAttribute('data-theme'),theme);
@@ -134,11 +136,11 @@ test('缩略图全部失败时仍有名称与完整入口，布局不塌陷；�
   await page.route('**/assets/style-thumbnails/*.svg',route=>route.abort());
   await page.goto(base+'/collections/');
   await page.waitForFunction(()=>[...document.querySelectorAll('.style-art-fallback')].every(el=>!el.hidden));
-  assert.equal(await page.locator('.style-entry').count(),8);
+  assert.equal(await page.locator('.style-entry').count(),7);
   for(const art of await page.locator('.style-art').all()){const box=await art.boundingBox();assert.ok(box.height>90)}
   await page.locator('#style-donut a').click();await ready(page);
   assert.equal(await page.locator('.toy-mount').getAttribute('data-style'),'donut');await page.close();
   const noJs=await browser.newPage({javaScriptEnabled:false});await noJs.goto(base+'/collections/');
   assert.equal(await noJs.getByRole('heading',{name:'云朵',exact:true}).isVisible(),true);
-  assert.equal(await noJs.locator('.style-entry').count(),8);await noJs.close();
+  assert.equal(await noJs.locator('.style-entry').count(),7);await noJs.close();
 });

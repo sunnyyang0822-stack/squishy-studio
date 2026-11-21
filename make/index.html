@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="day">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f9f3f4">
+  <script src="/theme-preference.js"></script>
+  <title>制作捏捏｜Squishy Studio</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/detail/detail.css">
+  <link rel="stylesheet" href="/make/page.css">
+  <script type="module" src="/make/page.js"></script>
+</head>
+<body class="detail-page v1-maker">
+  <header class="detail-topbar">
+    <a class="detail-back" href="/collections/"><span aria-hidden="true">←</span> 返回合集</a>
+    <nav class="workflow-progress" aria-label="制作步骤"><ol>
+      <li data-step="shape" data-status="complete"><span class="progress-label">造型</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="core"><span class="progress-label">内芯</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="shell"><span class="progress-label">壳片</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="making"><span class="progress-label">合成</span><span class="progress-track" aria-hidden="true"></span></li>
+      <li data-step="play"><span class="progress-label">成品</span><span class="progress-track" aria-hidden="true"></span></li>
+    </ol></nav>
+    <a class="detail-brand" href="/">Squishy Studio</a>
+  </header>
+  <main class="detail-main">
+    <section class="toy-area" aria-label="捏捏预览">
+      <div class="toy-stage" data-state="loading" aria-label="内芯试捏" role="region">
+        <div class="toy-mount"></div>
+      </div>
+      <div class="sample-stage" hidden role="region" aria-label="独立壳片选配">
+        <div class="samples-mount"></div>
+        <div class="sample-labels" role="group" aria-label="外壳材质">
+          <button type="button" data-shell="wax" aria-pressed="true">蜡皮</button>
+          <button type="button" data-shell="polish" aria-pressed="false">指甲油</button>
+        </div>
+      </div>
+      <div class="finished-stage" hidden role="region" aria-label="成品交互"><div class="finished-mount"></div></div>
+      <p class="preview-error" role="status" hidden></p>
+    </section>
+    <section class="step-panel" aria-label="制作设置" data-step="core">
+      <h1 class="maker-title" tabindex="-1">内芯试捏</h1>
+      <div class="maker-options">
+        <div class="core-settings">
+          <fieldset class="choice-group" aria-label="内芯材质"><legend>材质</legend><div class="text-options core-materials"></div></fieldset>
+          <fieldset class="choice-group" aria-label="内芯颜色"><legend>颜色</legend><div class="color-options core-colors"></div></fieldset>
+        </div>
+        <div class="shell-settings" hidden>
+          <p class="sample-hint">拖动壳片，转着看</p>
+          <fieldset class="choice-group" aria-label="外壳颜色"><legend>颜色</legend><div class="color-options shell-colors"></div></fieldset>
+          <fieldset class="choice-group thickness-group" aria-label="蜡皮厚度"><legend>厚度</legend><div class="text-options wax-thickness"></div></fieldset>
+          <div class="sample-tools" role="group" aria-label="壳片查看">
+            <button type="button" class="rotate-left" aria-label="壳片左转">左转</button>
+            <button type="button" class="rotate-right" aria-label="壳片右转">右转</button>
+            <button type="button" class="auto-rotate" aria-pressed="true">自动转动</button>
+          </div>
+        </div>
+        <div class="making-settings" hidden><p>正在合成</p><button type="button" class="skip-composition">继续</button></div>
+        <div class="play-settings" hidden>
+          <p class="recipe-caption"></p>
+          <button type="button" class="restore-product">恢复成品</button>
+        </div>
+      </div>
+      <p class="support-message" role="status" hidden></p>
+      <p class="maker-error" role="alert" hidden></p>
+      <button type="button" class="maker-retry" hidden>重试</button>
+      <output class="maker-status sr-only" aria-live="polite"></output>
+      <div class="step-navigation"><button type="button" class="maker-back" hidden>上一步</button><button type="button" class="maker-next">选壳片</button></div>
+    </section>
+    <noscript><p>请启用 JavaScript；也可返回合集选择造型。</p></noscript>
+  </main>
+</body>
+</html>

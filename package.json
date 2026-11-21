@@ -12,7 +12,8 @@
     "capture:showcase": "node capture-showcase.cjs",
     "capture:detail": "node capture-detail.cjs",
     "build:orb": "node scripts/build-orb.cjs",
-    "build": "npm run build:brand && npm run build:orb"
+    "build:shell-samples": "node scripts/build-shell-samples.cjs",
+    "build": "npm run build:brand && npm run build:orb && npm run build:shell-samples"
   },
   "repository": {
     "type": "git",

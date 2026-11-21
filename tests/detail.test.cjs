@@ -107,7 +107,7 @@ async function progress(page, index) {
   assert.equal(values[index].current,'step');
 }
 
-test('可用样式入口、旧详情路径、完整五步与返回修改保留选择', async () => {
+test('合集首版入口可用；旧详情路径的原五步与返回修改仍保留选择', async () => {
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -116,6 +116,10 @@ test('可用样式入口、旧详情路径、完整五步与返回修改保留�
   assert.equal(await page.locator('.collection-pending').count(),0,'旧合集占位卡片已移除');
   await page.getByRole('link', { name: '开始制作' }).and(page.locator('.collection-ready a[href*="style=orb"]')).click();
   await ready(page);
+  assert.equal(new URL(page.url()).pathname, '/make/');
+  // The first-version maker has its own complete-flow suite. Keep all original
+  // legacy detail assertions on the still-supported legacy route.
+  await page.goto(base + path + '?style=orb'); await ready(page);
   assert.match(page.url(), /\/squishy\/cloud\//);
   assert.equal(await page.locator('.step-head').evaluate(el => el.classList.contains('sr-only')), true);
   assert.deepEqual(await page.locator('.step-head').evaluate(el => [el.getBoundingClientRect().width, el.getBoundingClientRect().height]), [1,1]);
