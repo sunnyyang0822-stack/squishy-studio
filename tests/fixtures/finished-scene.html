@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>成品场景交互验证</title>
+<style>
+html,body{margin:0;height:100%;background:#f3eef0;font:16px sans-serif;color:#514754}
+.toy-mount{position:relative;width:100%;height:calc(100dvh - 64px);min-height:240px}
+canvas{display:block;width:100%;height:100%}.orb-input{position:absolute;background:transparent;border:0;touch-action:none;user-select:none}
+footer{height:64px;display:flex;align-items:center;gap:12px;padding:0 16px}button{padding:8px}
+</style>
+<main class="toy-mount"></main><footer><button id="restore">恢复成品</button><span id="status">加载中</span></footer>
+<script type="module">
+import { createFinishedScene } from '/src/finished-scene.js';
+window.sceneEvents = []; window.sceneStates = [];
+window.finished = createFinishedScene(document.querySelector('.toy-mount'), {
+  onEvent(event) { window.sceneEvents.push(event); },
+  onState(value) { window.sceneStates.push(value); document.querySelector('#status').textContent = value.state; },
+});
+const query = new URLSearchParams(location.search);
+window.recipe = { styleId: query.get('style') || 'orb', coreMaterial: query.get('core') || 'clay',
+  coreColor: 'mint', shellColor: 'rose', shellMaterial: query.get('shell') || 'wax', waxThickness: query.get('shell') === 'polish' ? null : query.get('thickness') || 'medium' };
+document.querySelector('#restore').onclick = () => window.finished.restore();
+window.ready = window.finished.initialize(window.recipe, { signal: new AbortController().signal });
+window.ready.catch(error => window.sceneError = { message: error.message, code: error.code });
+</script></html>
