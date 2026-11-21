@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 if (process.env.FINISHED_EVIDENCE === '1') process.env.PLAYWRIGHT_BROWSERS_PATH ||= path.resolve('.tmp/playwright');
 const { chromium } = require('playwright');
 const { installStyleProbe } = require('./helpers/squishy-browser.cjs');
@@ -35,15 +36,18 @@ for (const [style, core, thickness] of cases) for (const device of devices) test
   const mobile = device === 'mobile', name = `${style}-${core}-${thickness}-${device}`;
   const viewport = mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 };
   const capture = evidence && (style === 'orb' || style === 'donut');
-  const context = await browser.newContext({ viewport, isMobile: mobile, hasTouch: mobile, deviceScaleFactor: 1,
-    ...(capture ? { recordVideo: { dir: path.resolve('.tmp/finished-video'), size: viewport } } : {}) });
-  const page = await context.newPage(), errors = []; page.on('pageerror', e => errors.push(e.message));
-  const report = { style, core, thickness, device, viewport, dpr: 1, actualPhone: false, browser: browser.version(), complete: false };
+  let context, page;
+  const report = { style, core, thickness, device, viewport, dpr: 1, actualPhone: false, browser: browser.version(), complete: false,
+    bundleSha256: crypto.createHash('sha256').update(fs.readFileSync('assets/orb-preview.js')).digest('hex') };
   try {
+    context = await browser.newContext({ viewport, isMobile: mobile, hasTouch: mobile, deviceScaleFactor: 1,
+      ...(capture ? { recordVideo: { dir: path.resolve('.tmp/finished-video'), size: viewport } } : {}) });
+    page = await context.newPage(); const errors = []; page.on('pageerror', e => errors.push(e.message));
     const { getSquishyStyle } = await import('../src/squishy-styles.mjs');
     const mesh = await installStyleProbe(page, getSquishyStyle(style)); await installWaxStyleProbe(page);
     await page.goto(`${base}/tests/fixtures/finished-scene.html?style=${style}&core=${core}&thickness=${thickness}`);
     await page.evaluate(() => window.ready);
+    assert.equal(await page.locator('.orb-input').isEnabled(), true);
     await restored(page);
     let d = await diagnostic(page, true); geometryOK(d);
     assert.equal(d.enabled, true); assert.equal(d.presetId, `${thickness}-wax`);
@@ -66,10 +70,10 @@ for (const [style, core, thickness] of cases) for (const device of devices) test
     // Stop frame collection before exhaustive CPU geometry inspection.
     report.frames = await page.evaluate(() => { window.waxStyleObservers.delete(window.measureFrames); return window.frameIntervals; });
     d = await diagnostic(page, true); geometryOK(d); report.loadedGeometry = d.geometry; report.loadedDepth = maximumDepth(d);
-    const unloaded = new Promise(resolve => page.evaluate(() => {
+    await page.evaluate(() => {
       window.addEventListener('pointerup', () => { const d = document.querySelector('.toy-mount').thinWaxDiagnostics({ measure: false }); window.releaseSnapshot = { ...d, corePositions: [...d.corePositions] }; }, { once: true });
-    }).then(resolve));
-    await unloaded; await send('up', contact);
+    });
+    await send('up', contact);
     const release = await page.evaluate(() => window.releaseSnapshot); assert.ok(release); geometryOK(await diagnostic(page, true));
     await page.waitForTimeout(650);
     const recovered = await diagnostic(page, true); geometryOK(recovered);
@@ -92,10 +96,22 @@ for (const [style, core, thickness] of cases) for (const device of devices) test
     assert.ok(events.some(e => e.type === 'core-deform')); assert.ok(events.some(e => e.type === 'shell-crack')); assert.ok(events.some(e => e.type === 'shell-fracture'));
     if (core === 'marshmallow') assert.ok(!events.some(e => e.type === 'core-recover' && !e.restoring && !e.active));
     report.eventCounts = Object.fromEntries([...new Set(events.map(e => e.type))].map(type => [type, events.filter(e => e.type === type).length]));
+    await page.evaluate(() => window.sceneEvents.length = 0);
     await page.locator('#restore').click(); await restored(page); geometryOK(await diagnostic(page, true));
+    const restoreEvents = await page.evaluate(() => window.sceneEvents);
+    assert.ok(restoreEvents.some(e => e.type === 'shell-restore'));
+    const explicit = restoreEvents.slice(restoreEvents.findIndex(e => e.type === 'shell-restore'));
+    assert.ok(explicit.filter(e => e.type === 'core-recover').every(e => e.restoring), 'Explicit restoration stays identified through its final rendered frame');
     assert.deepEqual(await page.evaluate(() => window.finished.getState().recipe), await page.evaluate(() => window.recipe));
+    await send('down', contact); await page.waitForTimeout(150); await send('up', contact);
+    assert.ok(maximumDepth(await diagnostic(page)) > 0);
+    await page.evaluate(() => window.finished.initialize(window.recipe));
+    const reopened = await diagnostic(page); assert.equal(maximumDepth(reopened), 0); assert.equal(reopened.thinWax.detached, 0);
     const warmed = (await diagnostic(page)).resources.geometries;
-    for (let i = 0; i < 3; i++) { await page.evaluate(() => window.finished.update(window.recipe, { signal: new AbortController().signal })); await restored(page); }
+    for (let i = 0; i < 3; i++) {
+      await page.evaluate(() => window.finished.update(window.recipe, { signal: new AbortController().signal }));
+      const fresh = await diagnostic(page); assert.equal(maximumDepth(fresh), 0); assert.equal(fresh.thinWax.detached, 0);
+    }
     assert.equal((await diagnostic(page)).resources.geometries, warmed); assert.equal(await page.locator('canvas').count(), 1); assert.equal(await page.locator('.orb-input').count(), 1);
     await page.evaluate(() => { window.finished.dispose(); window.afterDisposeCount = window.sceneEvents.length; });
     await page.waitForTimeout(150); assert.equal(await page.locator('canvas').count(), 0); assert.equal(await page.locator('.orb-input').count(), 0);
@@ -107,7 +123,7 @@ for (const [style, core, thickness] of cases) for (const device of devices) test
   } catch (error) { report.error = { message: error.message, stack: error.stack }; throw error; }
   finally {
     fs.writeFileSync(`${output}/${name}.json`, JSON.stringify(report, null, 2));
-    const video = page.video(); await context.close();
+    const video = page?.video(); await context?.close();
     if (capture && video) { await video.saveAs(`${output}/${name}.webm`); await video.delete(); }
   }
 });
@@ -129,7 +145,17 @@ test('finished adapter rejects paused recipes, aborts races, and reports load fa
     await page.route('**/assets/models/squishy-cloud.glb', route => route.abort());
     const failure = await page.evaluate(async () => { try { await window.finished.update({ ...window.recipe, styleId: 'cloud' }); } catch { return window.finished.getState().state; } });
     assert.equal(failure, 'failed'); assert.equal(await page.locator('canvas').count(), 1);
-    await page.evaluate(() => window.finished.dispose());
+    await page.unroute('**/assets/models/squishy-cloud.glb');
+    await page.evaluate(() => window.finished.update(window.recipe));
+    await page.locator('canvas').evaluate(canvas => canvas.getContext('webgl2').getExtension('WEBGL_lose_context').loseContext());
+    await page.waitForFunction(() => window.finished.getState().state === 'failed');
+    await page.evaluate(() => window.finished.update(window.recipe));
+    assert.equal(await page.locator('canvas').count(), 1);
+    const disposedPending = await page.evaluate(async () => {
+      const request = window.finished.update({ ...window.recipe, styleId: 'cloud' }).catch(error => error.name);
+      window.finished.dispose(); return request;
+    });
+    assert.equal(disposedPending, 'AbortError'); assert.equal(await page.locator('canvas').count(), 0);
   } finally { await page.close(); }
 });
 

@@ -35,7 +35,7 @@ scene.dispose();
 
 - 六个字段与 A 一致。仅 `orb/cloud/cylinder/donut/pyramid/flower/star`；内芯 `clay/marshmallow/butter`，后者映射原 `slow-rebound + full-matte`。颜色使用 `detail/orb-colors.mjs` 的 ID。
 - 蜡为 `thin/medium/thick`；指甲油有效配方必须 `waxThickness:null`。糖、猫爪、未知材质/颜色明确拒绝 `UNSUPPORTED_RECIPE`，不静默回退裸芯或改成圆球黏土。
-- `initialize/update` 都返回首次真实绘制后的 Promise，GLB/引擎/渲染错误可失败；不能以模块已下载冒充场景就绪。同配方再次打开也重建完整损伤状态。实例切换仍用现有 `createModelPreview` 的 prepare/commit/dispose、revision 和 AbortSignal。
+- `initialize/update` 都在完整壳已真实绘制、芯和姿态完成原恢复时钟后 resolve，GLB/引擎/渲染错误可失败；不能以模块已下载冒充场景就绪。同配方再次打开也重建完整损伤状态，准备期间禁用新成品的输入，避免中途打断恢复后把旧压痕带入作品。实例切换仍用现有 `createModelPreview` 的 prepare/commit/dispose、revision 和 AbortSignal。
 - 更新最新请求生效，旧异步准备被取消/释放。加载失败保留已提交场景，调用方可重试。停止输入、取消、失焦、后台沿原宿主流程；dispose 幂等并释放输入、rAF、WebGL、外壳和碎片。
 - `restore()` 仅在 ready 且无 pending 更新时执行，复用原宿主的完整壳 `reset` 与芯/颜色/姿态恢复时钟；不改配方。恢复为渐进过程，`shell-restore` 表示壳已完整重新绘制，芯仍可处于渐进恢复。
 - 成品显式传 `mode:'finished', waxCollection:false`，复用已确认的碎片掉落清理路径。没有新增收集盘玩法。三个蜡预设和三种内芯工厂、参数、几何安全检查均不变。

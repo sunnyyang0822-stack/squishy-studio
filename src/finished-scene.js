@@ -38,6 +38,7 @@ export function createFinishedScene(mount, { onUnavailable = () => {}, onEvent, 
       if (disposed || controller.signal.aborted || ownRevision !== revision) throw abortError();
       recipe = Object.freeze({ ...config.recipe });
       handle.commit();
+      mount.querySelector('.orb-input')?.setAttribute('disabled', '');
       // Every initialize/open starts a complete product, even for the same
       // recipe as a previous, damaged scene. Updates never carry old damage.
       renderer.restore();
@@ -47,7 +48,7 @@ export function createFinishedScene(mount, { onUnavailable = () => {}, onEvent, 
       throw error;
     } finally {
       handle?.dispose(); signal?.removeEventListener('abort', abort);
-      if (ownRevision === revision) pending = undefined;
+      if (ownRevision === revision) { pending = undefined; mount.querySelector('.orb-input')?.removeAttribute('disabled'); }
     }
   }
   return {

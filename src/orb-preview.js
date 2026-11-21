@@ -299,6 +299,7 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, onSceneEvent
         scene.environmentIntensity = lighting.environment;
       }
       const dt = current.lastTime === null ? 1 / 60 : (time - current.lastTime) / 1000;
+      const restoringThisFrame = Boolean(restorePose);
       const colorStep = coating.step(dt);
       if (restorePose && colorStep.progress !== undefined) {
         const progress = colorStep.progress, blend = 1 - (1 - progress) ** 3;
@@ -378,9 +379,9 @@ export function createOrbPreview(mount, { onUnavailable = () => {}, onSceneEvent
       try {
         renderer.render(scene, camera);
         if (onSceneEvent) {
-          if (!current.ready) { current.ready = true; telemetry.emit('scene-ready'); }
+          if (!current.ready && (activeConfig.mode !== 'finished' || !restorePose)) { current.ready = true; telemetry.emit('scene-ready'); }
           if (current.shellRestored) { current.shellRestored = false; telemetry.reset(geometry.attributes.position.array, shellState()); }
-          telemetry.sample(geometry.attributes.position.array, shellState(), { elapsed: dt, active: current.input.isActive(), restoring: Boolean(restorePose), time: time / 1000, coreNeedsFrame: step.needsFrame || colorStep.needsFrame });
+          telemetry.sample(geometry.attributes.position.array, shellState(), { elapsed: dt, active: current.input.isActive(), restoring: restoringThisFrame, time: time / 1000, coreNeedsFrame: step.needsFrame || colorStep.needsFrame });
         }
         mount.dataset.renderCount = String(++current.count);
         if (needsFrame) invalidate();
