@@ -10,7 +10,7 @@ createServer(async (request, response) => {
   try {
     const requestUrl = new URL(request.url, 'http://localhost');
     const pathname = decodeURIComponent(requestUrl.pathname);
-    if (pathname === '/collections' || pathname === '/squishy/cloud') {
+    if (pathname === '/collections' || pathname === '/squishy/cloud' || pathname === '/make') {
       response.writeHead(308, { location: `${pathname}/${requestUrl.search}` });
       response.end();
       return;

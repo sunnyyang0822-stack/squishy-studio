@@ -1,0 +1,98 @@
+[
+  {
+    "theme": "day",
+    "viewport": [
+      1440,
+      900
+    ],
+    "document": [
+      1440,
+      900
+    ],
+    "physicalPhone": false
+  },
+  {
+    "theme": "night",
+    "viewport": [
+      1440,
+      900
+    ],
+    "document": [
+      1440,
+      900
+    ],
+    "physicalPhone": false
+  },
+  {
+    "theme": "day",
+    "viewport": [
+      390,
+      844
+    ],
+    "document": [
+      390,
+      844
+    ],
+    "physicalPhone": false
+  },
+  {
+    "theme": "night",
+    "viewport": [
+      390,
+      844
+    ],
+    "document": [
+      390,
+      844
+    ],
+    "physicalPhone": false
+  },
+  {
+    "theme": "day",
+    "viewport": [
+      320,
+      568
+    ],
+    "document": [
+      320,
+      643
+    ],
+    "physicalPhone": false
+  },
+  {
+    "theme": "night",
+    "viewport": [
+      320,
+      568
+    ],
+    "document": [
+      320,
+      643
+    ],
+    "physicalPhone": false
+  },
+  {
+    "theme": "day",
+    "viewport": [
+      844,
+      390
+    ],
+    "document": [
+      844,
+      390
+    ],
+    "physicalPhone": false
+  },
+  {
+    "theme": "night",
+    "viewport": [
+      844,
+      390
+    ],
+    "document": [
+      844,
+      390
+    ],
+    "physicalPhone": false
+  }
+]

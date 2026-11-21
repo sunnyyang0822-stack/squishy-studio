@@ -27,7 +27,8 @@ async function assertActualStyle(page, id) {
   assert.equal(await page.locator('.toy-mount').getAttribute('data-style'), id);
   assert.equal(await page.locator('.toy-mount').getAttribute('data-feel-id'), 'clay');
   assert.equal(await page.locator('.style-placeholder-note:visible').count(), 0);
-  assert.equal(await page.locator('.style-placeholder-note').textContent(), '');
+  if (new URL(page.url()).pathname === '/make/') assert.equal(await page.locator('.style-placeholder-note').count(), 0);
+  else assert.equal(await page.locator('.style-placeholder-note').textContent(), '');
   const models = await page.evaluate(() => performance.getEntriesByType('resource')
     .map(entry => new URL(entry.name).pathname).filter(path => path.endsWith('.glb')));
   assert.deepEqual([...new Set(models)], [`/assets/models/squishy-${id}.glb`], 'Only the selected real geometry is requested');
@@ -43,7 +44,7 @@ test('原有 Hero 样式文件保持基线原样', () => {
   assert.equal(createHash('sha256').update(css).digest('hex'), '3b957aaa4eb763352cc8d964fbb6a779b9d7005d0a7f0733831dd296feaa56c4');
 });
 
-test('Hero 后通过原生滚动到达四只可进入制作的样例和真实大厅链接', async () => {
+test('Hero 后通过原生滚动到达三只首版制作样例、暂停猫爪和真实大厅链接', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -57,8 +58,13 @@ test('Hero 后通过原生滚动到达四只可进入制作的样例和真实大
   assert.equal(await page.getByRole('heading', { name: '先看看，想捏哪一个' }).isVisible(), true);
   assert.equal(await page.locator('.sample').count(), 4);
   for (const sample of await page.locator('.sample').all()) {
-    assert.equal(await sample.locator('a').count(), 1);
-    assert.match(await sample.locator('a').getAttribute('href'), /^\/squishy\/cloud\/\?style=(cloud|paw|donut|flower)$/);
+    if (await sample.evaluate(el => el.classList.contains('sample-paw'))) {
+      assert.equal(await sample.locator('a').count(), 0);
+      assert.match(await sample.locator('figcaption').innerText(), /暂停制作/);
+    } else {
+      assert.equal(await sample.locator('a').count(), 1);
+      assert.match(await sample.locator('a').getAttribute('href'), /^\/make\/\?style=(cloud|donut|flower)$/);
+    }
     assert.equal(await sample.locator('img').getAttribute('loading'), 'lazy');
   }
   const entry = page.getByRole('link', { name: '去合集大厅挑选' });
@@ -192,12 +198,11 @@ test('主题存储被禁用时页面、图片和导航仍可用', async () => {
 
 const homeStyles = [
   { id: 'cloud', name: '云朵' },
-  { id: 'paw', name: '猫爪' },
   { id: 'donut', name: '甜甜圈' },
   { id: 'flower', name: '花朵' },
 ];
 
-test('四个非圆球样例复用大厅资产，点击加载对应黏土模型并可刷新返回', async () => {
+test('三个首版首页样例复用大厅资产，点击加载对应黏土模型并可刷新返回', async () => {
   const page = await browser.newPage({ reducedMotion: 'reduce' });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -236,7 +241,7 @@ test('首页样例支持键盘、触屏及减少动态效果，触控目标至�
       const box = await entry.boundingBox();
       assert.ok(box.width >= 44 && box.height >= 44, JSON.stringify(box));
     }
-    const entry = page.getByRole('link', { name: '猫爪：进入制作流程', exact: true });
+    const entry = page.getByRole('link', { name: '云朵：进入制作流程', exact: true });
     if (touch) await entry.tap();
     else {
       await entry.focus();
@@ -244,7 +249,7 @@ test('首页样例支持键盘、触屏及减少动态效果，触控目标至�
       assert.equal(focusVisible, true);
       await page.keyboard.press('Enter');
     }
-    await assertActualStyle(page, 'paw');
+    await assertActualStyle(page, 'cloud');
     await page.close();
   }
 });
